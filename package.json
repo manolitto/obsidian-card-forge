@@ -1,7 +1,7 @@
 {
   "name": "obsidian-card-forge",
   "version": "0.1.0",
-  "description": "Generate print-ready, double-sided card decks from your notes — for board games and tabletop RPGs.",
+  "description": "Generate print-ready, double-sided card decks from your notes — board game components, RPG reference cards, or any deck you print.",
   "main": "main.js",
   "license": "MIT",
   "repository": {
@@ -12,8 +12,10 @@
     "obsidian",
     "obsidian-plugin",
     "cards",
-    "ttrpg",
+    "card-deck",
     "board-games",
+    "ttrpg",
+    "print",
     "pdf"
   ],
   "scripts": {
