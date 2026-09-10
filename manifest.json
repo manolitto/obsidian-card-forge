@@ -1,0 +1,10 @@
+{
+  "id": "card-forge",
+  "name": "Card Forge",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.10",
+  "description": "Generate print-ready, double-sided card decks from your notes — for board games and tabletop RPGs.",
+  "author": "manolitto",
+  "authorUrl": "https://github.com/manolitto",
+  "isDesktopOnly": false
+}

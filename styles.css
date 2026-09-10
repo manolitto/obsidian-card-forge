@@ -1,0 +1,6 @@
+/*
+ * Plugin chrome only — sidebar, modals, settings.
+ *
+ * Card CSS does NOT belong here: it lives in resources/base-card.css and
+ * resources/systems/<system>/, and is loaded by the renderer.
+ */
