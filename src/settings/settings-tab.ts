@@ -14,18 +14,9 @@ export class CardForgeSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl)
-      .setName("Definitions folder")
-      .setDesc("Vault folder holding system definitions that extend the bundled ones.")
-      .addText((text) =>
-        text
-          .setPlaceholder("card-forge")
-          .setValue(this.plugin.settings.definitionsFolder)
-          .onChange(async (value) => {
-            this.plugin.settings.definitionsFolder = value.trim();
-            await this.plugin.saveSettings();
-          })
-      );
+    // The system list — bundled systems with an on/off switch, registered vault
+    // systems, and the "copy a bundled system into the vault" action — lands
+    // here in phase 7. See .claude/plans/reimplementation.md.
 
     new Setting(containerEl)
       .setName("Language")
