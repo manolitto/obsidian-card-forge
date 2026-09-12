@@ -10,9 +10,8 @@ export type TranslationTables = Record<string, Translations>;
  * Read an `i18n:` block — `{ <lang>: { key: text } }`, inline in the system or
  * card-type entry of `game-system.yaml` — into one table per language.
  *
- * Inline, not a file per language: the tables are small (the predecessor's 63
- * files held 1 to 30 keys each), every system has them, and a card type's
- * captions then sit beside the bindings they caption.
+ * Inline, not a file per language: the tables are small, every system has
+ * some, and a card type's captions then sit beside the bindings they caption.
  */
 export function parseTranslationTables(
   raw: unknown,

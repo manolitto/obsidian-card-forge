@@ -35,8 +35,10 @@ export type SystemEntry = BundledSystemEntry | VaultSystemEntry;
 
 export interface CardForgeSettings {
   /**
-   * The system registry. Systems are registered, never searched for — see
-   * `.claude/plans/reimplementation.md` and the scope notes.
+   * The system registry. Systems are registered, never searched for: an
+   * explicit entry is validated when it is added and its error reported where
+   * someone is looking, where a folder walk would meet half-built systems at a
+   * moment nobody is watching.
    *
    * Bundled entries are reconciled against the systems the build actually ships
    * (`reconcileSystemEntries`), so a system added by a plugin update arrives

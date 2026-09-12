@@ -8,8 +8,7 @@ import type { Diagnostics } from "./diagnostics";
  * Parsing happens at the boundary, where a document is read, so every layer
  * arrives typed; merging then only ever sees valid values. That is what keeps
  * a card type's `card-size: huge` from shadowing the system's valid `poker`:
- * the typo is reported and absent, and the layer below still answers — which
- * is what the predecessor's `parseCardSize` returned `undefined` for.
+ * the typo is reported and absent, and the layer below still answers.
  */
 
 /** Turn a YAML value into a typed one, or `undefined` when it is not one. */

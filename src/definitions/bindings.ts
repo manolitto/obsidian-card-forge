@@ -27,9 +27,7 @@ export function buildAliasMap(defs: PropertyDefsMap): AliasMap {
 
   // When several properties fill one slot, the first the note actually sets
   // wins — and "first" is the order of the resolved map: inherited properties
-  // before a layer's own, each in the order they were written. The predecessor
-  // tracked where each BINDING was declared instead; across its twelve systems
-  // the two orders never differed, so the simpler one stays.
+  // before a layer's own, each in the order they were written.
   for (const [canonical, def] of Object.entries(defs)) {
     for (const slot of def.slot ?? []) {
       const names = out[slot] ?? (out[slot] = []);

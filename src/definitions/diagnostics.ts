@@ -1,11 +1,10 @@
 /**
  * Where the definition layer reports a problem it can survive.
  *
- * The predecessor wrote straight to `console.warn` and deduped through a
- * module-global `warnOnce` set, which made warnings invisible to the UI,
- * un-assertable in tests, and stateful across a session. A sink passed in by
- * the caller fixes all three, and leaves where a message GOES to whoever knows
- * — a settings page listing what is wrong with a system, a render path, a test.
+ * A sink passed in by the caller, rather than `console.warn`: a warning is
+ * then visible to a settings page listing what is wrong with a system,
+ * assertable in a test, and free of session-global state. Where a message
+ * goes is decided by whoever knows.
  *
  * The render path's sink will need to dedup, since a card note re-renders on
  * every keystroke in an open preview. It arrives with that render path.

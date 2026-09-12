@@ -20,9 +20,9 @@ import {
  * The chain is baseline → system → card type → deck → note, and every layer
  * may set every key. A system sets defaults for its cards, a card type refines
  * them, a deck overrides them for one print run, and a note is the exception.
- * There is no per-key permission; the deck being a layer here is what makes
- * the predecessor's `overflow-support` and `copies-per-card` unnecessary —
- * they were `overflow-mode` and `copies` said on the deck, under other names.
+ * There is no per-key permission, and no deck-only key for what a deck can say
+ * with the card's own: a deck that wants no overflow on this print says
+ * `overflow-mode: none`, one that wants every card twice says `copies: 2`.
  *
  * What is resolved once per deck instead is `deck-settings.ts`.
  */
@@ -49,10 +49,10 @@ export type OverflowMode = "none" | "extra-cards" | "back-then-cards";
 export type CardSide = "front" | "back" | "both";
 
 /**
- * One way of laying a card out. The renderer produces every candidate, measures
- * what the decision names, and commits the winner, stamped as `.cf-layout-<name>`
- * so CSS can show or hide content per candidate. Meaning arrives with Phase 5;
- * the shape is data and is declared here.
+ * One way of laying a card out. The layout engine produces every candidate,
+ * measures what the decision names, and commits the winner, stamped as
+ * `.cf-layout-<name>` so CSS can show or hide content per candidate. The
+ * engine lives in `src/layout/`; the shape is data and is declared here.
  */
 export interface LayoutCandidate {
   name: string;

@@ -15,8 +15,8 @@ export class CardForgeSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     // The system list — bundled systems with an on/off switch, registered vault
-    // systems, and the "copy a bundled system into the vault" action — lands
-    // here in phase 7. See .claude/plans/reimplementation.md.
+    // systems, and the "copy a bundled system into the vault" action — is not
+    // built yet.
 
     new Setting(containerEl)
       .setName("Language")

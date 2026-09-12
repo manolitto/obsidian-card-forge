@@ -78,16 +78,16 @@ describe("mergePropertyDefs — aliases", () => {
   });
 
   it("only ever grows the list — nothing removes an inherited alias", () => {
-    // `aliases-replace:` was measured before it was ported: 351 uses of
-    // `aliases:` across the predecessor's twelve systems, zero of the escape
-    // hatch. An alias reserves no name, so an inherited one costs nothing.
+    // An alias reserves no name, so an inherited one costs a higher layer
+    // nothing; there is no way to take one away, and a key that tries is
+    // simply not a property field.
     const diagnostics = collectDiagnostics();
     const map = props(
-      ["image: { aliases: [img] }", "image: { aliases-replace: [bild] }"],
+      ["image: { aliases: [img] }", "image: { remove-aliases: [img] }"],
       diagnostics
     );
     expect(map["image"]?.aliases).toEqual(["img"]);
-    expect(diagnostics.matching("aliases-replace")).toHaveLength(1);
+    expect(diagnostics.matching("remove-aliases")).toHaveLength(1);
   });
 
   it("leaves an inherited list alone when the layer says nothing", () => {

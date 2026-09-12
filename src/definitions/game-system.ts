@@ -10,7 +10,7 @@ import { parseTranslationTables, type TranslationTables } from "./translations";
  * of, and the only place a system's own definition layers come from. Everything
  * else in `src/definitions/` folds what this hands over.
  *
- * It stops exactly where Phase 2 begins. A declared file arrives here as the
+ * It stops exactly where loading begins. A declared file arrives here as the
  * string an author wrote — checked for shape, branded `SystemPath`, never
  * resolved, never read. That is what keeps this module free of the vault and
  * testable from a string literal, and it is the line to defend when adding a
@@ -21,7 +21,7 @@ import { parseTranslationTables, type TranslationTables } from "./translations";
  * is inline. Images and fonts are NOT declared — every
  * reference to one carries its full relative path (`url(assets/x.webp)`,
  * `{{asset "…"}}`, a property's `default:`), so the reference is the
- * declaration, and Phase 2 derives the asset list by reading them.
+ * declaration, and the loader derives the asset list by reading them.
  *
  * "A system is a family of cards that share a look and a vocabulary" — not
  * necessarily a role-playing system.
@@ -52,8 +52,9 @@ export interface SystemDeclaration {
   languages: string[];
 
   /**
-   * The stylesheet. One, not a list: every one of the predecessor's systems had
-   * exactly one, and so did every card type that had any.
+   * The stylesheet. One, not a list: a system has one and a card type at most
+   * one of its own, and a list would ask "in what order?" for a question no
+   * system poses.
    */
   stylesheet?: SystemPath;
   /** The system layer of the translation chain, one table per language. Inline. */
@@ -79,13 +80,13 @@ export interface SystemDeclaration {
    * The system layer of the definition cascade. Absent when it declares none.
    *
    * A constant the design needs — a logo path, a wordmark line, a layout
-   * weight — is a property with a `default:`, not a separate `variables:`
-   * block. It then folds through the same cascade, is read under one name from
-   * one place, and may be bound to a slot like any other value.
+   * weight — is a property with a `default:`. It folds through the same
+   * cascade as every other value, is read under one name, and may be bound to
+   * a slot.
    *
-   * There is no `slots:` beside it. A slot exists because a template reads it,
-   * and how it renders is said there; what YAML says is which property fills
-   * it — `slot:` on the property. See `bindings.ts`.
+   * A slot is declared by the template that reads it, and how it renders is
+   * said there; what YAML says is which property fills it — `slot:` on the
+   * property. See `bindings.ts`.
    */
   properties?: PropertyDefsMap;
   /**
@@ -96,9 +97,8 @@ export interface SystemDeclaration {
    * There is one fixed vocabulary of card settings, `card-settings.ts`; a
    * system invents none. It sets defaults for its cards, and a card type, a
    * deck and a note may each override them. A key that is not a card setting
-   * — `page-margin:`, which all twelve predecessors wrote here and which is
-   * the deck's, since a deck holds cards of several card types — is reported
-   * and left out.
+   * — `page-margin:`, say, which is the deck's, since a deck holds cards of
+   * several card types — is reported and left out.
    */
   cardSettings: CardSettings;
 
@@ -110,8 +110,8 @@ export interface SystemDeclaration {
  * One card type — a face design and the vocabulary that fills it.
  *
  * A card type names its own templates out loud, even when five of them name the
- * same file. The sharing is unchanged; the reader no longer has to know a rule
- * to see it.
+ * same file. The sharing is visible; a reader does not have to know a cascade
+ * rule to see it.
  */
 export interface CardTypeDeclaration {
   /** Singular English, lowercase — `npc`, `gear`, `creature`. */

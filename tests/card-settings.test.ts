@@ -61,8 +61,9 @@ describe("the card-setting chain", () => {
   });
 
   it("says a deck setting is not a card setting, wherever it is written", () => {
-    // Not a permission: the deck fold reads these. All twelve predecessors
-    // wrote a `page-margin:` on the system, and it meant nothing.
+    // Not a permission: the deck fold reads these, and a deck holds cards of
+    // several card types, so a page margin on one of them could not even be
+    // disagreed with.
     const diagnostics = collectDiagnostics();
     const settings = resolve(["paper-size: A3\ncard-size: poker"], diagnostics);
     expect(settings).toEqual({ cardSize: { width: 63, height: 88 } });
@@ -150,21 +151,19 @@ describe("the card-setting keys", () => {
     expect(new Set(CARD_SETTING_KEYS).size).toBe(CARD_SETTING_KEYS.length);
   });
 
-  it("subsumes the deck-only overrides the predecessor had separate keys for", () => {
-    // `overflow-support: false` on a deck was `overflow-mode: none` on the
-    // deck layer; `copies-per-card: 2` was `copies: 2`. With the deck a layer
-    // of this chain, neither needs a name of its own.
+  it("has no deck-only key for what a deck can say with the card's own", () => {
+    // A deck that wants no overflow on this print says `overflow-mode: none`;
+    // one that wants every card twice says `copies: 2`. The deck is a layer of
+    // this chain, so neither needs a name of its own.
     expect(isCardSettingKey("overflow-mode")).toBe(true);
     expect(isCardSettingKey("copies")).toBe(true);
-    expect(isCardSettingKey("overflow-support")).toBe(false);
-    expect(isCardSettingKey("copies-per-card")).toBe(false);
   });
 
   it("counts roll expansion as a property of the kind of card", () => {
     expect(isCardSettingKey("expand-by-roll")).toBe(true);
   });
 
-  it("does not know the scalar front-face-count, which layouts: replaced", () => {
+  it("puts front-face parity on a layout candidate, not on a key of its own", () => {
     expect(isCardSettingKey("front-face-count")).toBe(false);
   });
 });

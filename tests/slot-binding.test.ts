@@ -115,8 +115,7 @@ describe("when several properties fill one slot", () => {
 
   it("puts a higher layer's own property behind the ones it inherited", () => {
     // Priority is the order of the resolved map — inherited first — and that
-    // is all. The predecessor tracked where each binding was declared instead;
-    // across twelve systems the two orders never differed.
+    // is all.
     const map = aliasMap(
       props([
         "name: { slot: front-header-title }",

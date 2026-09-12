@@ -20,10 +20,9 @@ import {
  *
  * Nothing in between has a say, and not because it is forbidden: a deck holds
  * cards of several card types, so a `page-margin:` on one of them could not
- * even be disagreed with. All twelve of the predecessor's systems wrote one,
- * and it meant nothing. A deck block also carries card settings — overrides
- * for every card it holds — and those go to `resolveCardSettings` as the deck
- * layer; the deck parser splits the two by key.
+ * even be disagreed with. A deck block also carries card settings — overrides
+ * for every card it holds — and those go to the card chain as the deck layer;
+ * the deck parser splits the two by key.
  */
 export interface DeckSettings {
   /** Paper the deck is imposed on. */

@@ -141,9 +141,8 @@ card-types:
 `;
 
   it("reads a card type's own files, named out loud", () => {
-    // One template serving five card types used to be an effect of the cascade.
-    // Now it is five visible lines: the sharing is the same, the reader no
-    // longer has to know a rule to see it.
+    // One template serving five card types is five visible lines, not a
+    // cascade rule the reader has to know.
     const gear = parse(SYSTEM)?.cardTypes["gear"];
     expect(gear?.frontTemplate).toBe("front.hbs");
     expect(gear?.backTemplate).toBe("back.hbs");
@@ -284,10 +283,10 @@ describe("everything that is not structure is a card setting", () => {
   });
 
   it("reports a deck setting a system wrote, as it reads the document", () => {
-    // `page-margin:` sat on all twelve of the predecessor's systems and meant
-    // nothing there: paper is a deck's business, and a deck holds cards of
-    // several card types. A system knows only card settings, so this is a
-    // plain "not a card setting" — no second rule needed.
+    // Paper is a deck's business, and a deck holds cards of several card
+    // types, so a page margin on a system could not even be disagreed with. A
+    // system knows only card settings, so this is a plain "not a card setting"
+    // — no second rule needed.
     const diagnostics = collectDiagnostics();
     const system = parse(`${MINIMAL}\npage-margin: 5`, diagnostics);
     expect(system?.cardSettings).toEqual({});
@@ -295,9 +294,10 @@ describe("everything that is not structure is a card setting", () => {
   });
 
   it("reports a key that is nothing at all", () => {
-    // Three keys of the predecessor's system file, and of this project's own
-    // first draft. Nothing read `version:`; `variables:` is a property with a
-    // default; `assets:` is derived from the references, which carry the path.
+    // Three keys that look plausible and are not the document's: nothing
+    // reads a `version:`; a constant is a property with a `default:`, not a
+    // `variables:` block; and assets are derived from the references that
+    // name them, not listed.
     const diagnostics = collectDiagnostics();
     parse(
       `${MINIMAL}\nversion: "1.0"\nvariables: { ornament: x.svg }\nassets: [x.svg]`,
