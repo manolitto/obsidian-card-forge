@@ -150,5 +150,3 @@ vite.config.ts.timestamp-*
 /dist/
 /data.json
 
-# Local git worktrees
-/.worktrees/
