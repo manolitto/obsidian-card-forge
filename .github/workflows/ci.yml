@@ -22,7 +22,5 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm test
+      # Also checks main.js against the bundle-size budget (postbuild).
       - run: npm run build
-
-      - name: Assert the bundle was produced
-        run: test -f main.js && ls -l main.js

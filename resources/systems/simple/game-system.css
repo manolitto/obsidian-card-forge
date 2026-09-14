@@ -1,0 +1,190 @@
+/*
+ * Simple — a minimal, game-agnostic card design.
+ *
+ * As little chrome as possible: a white field, one clean sans-serif, a single
+ * hairline accent, and room to breathe. The front is a title, a Markdown body
+ * and a muted source line; the back is an almost empty field with the game's
+ * name set large and the card's kind as a quiet, letter-spaced subtitle.
+ *
+ * Type: Source Sans 3, a humanist sans under the SIL Open Font License
+ * (fonts/source-sans-3-OFL.txt). Variable weight 400–700, upright and italic,
+ * split into latin and latin-ext faces so a card without umlauts loads half.
+ */
+
+/* ── Type face ─────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/source-sans-3-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/source-sans-3-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/source-sans-3-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/source-sans-3-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── Palette and base type ─────────────────────────────────────── */
+
+.card-root.simple {
+  --simple-ink:      #1f2124;   /* near-black text */
+  --simple-muted:    #8b9096;   /* footer, subtitle */
+  --simple-hairline: #d9dce0;   /* rules and separators */
+  --simple-paper:    #ffffff;
+
+  --simple-font: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  /* Body drawn at ~2.9 mm and title at ~4.7 mm on a 63 mm poker card. */
+  --card-font-size-min:        2.5mm;
+  --card-font-size-max:        3.1mm;
+  --card-font-size-title-min:  3.4mm;
+  --card-font-size-title-max:  5.5mm;
+
+  --simple-font-body:  clamp(var(--card-font-size-min),       calc(var(--card-width, 63mm) * 0.046), var(--card-font-size-max));
+  --simple-font-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.075), var(--card-font-size-title-max));
+
+  background-color: var(--simple-paper);
+  color: var(--simple-ink);
+  font-family: var(--simple-font);
+  font-weight: 400;
+  font-size: var(--simple-font-body);
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+
+.card-root.simple strong,
+.card-root.simple b { font-weight: 700; }
+.card-root.simple em,
+.card-root.simple i { font-style: italic; }
+.card-root.simple .cf-wikilink { font-style: normal; }
+
+/* A white field on every front and continuation face. */
+.card-root.simple.card-front,
+.card-root.simple.cf-body-continued {
+  background-color: var(--simple-paper);
+  background-image: none;
+}
+
+/* ── Front ─────────────────────────────────────────────────────── */
+
+/* Header: the title and a thin rule under it. */
+.card-root.simple .simple-header {
+  padding: 8% 9% 0;   /* generous top and side gutters; the rule closes it */
+}
+
+.card-root.simple .simple-title {
+  font-family: var(--simple-font);
+  font-weight: 700;
+  font-size: var(--simple-font-title);
+  line-height: 1.15;
+  letter-spacing: 0.002em;
+  color: var(--simple-ink);
+}
+
+/* The one accent: a hairline between title and body. */
+.card-root.simple .simple-rule {
+  height: 0;
+  border-top: 0.08em solid var(--simple-hairline);
+  margin-top: 0.5em;
+}
+
+.card-root.simple .simple-content {
+  padding: 0.7em 9% 0;
+}
+
+.card-root.simple .simple-body {
+  font-size: var(--simple-font-body);
+  line-height: 1.4;
+  color: var(--simple-ink);
+}
+
+/* Bullet lists with a tidy hanging indent. */
+.card-root.simple .simple-body ul {
+  margin: 0.3em 0;
+  padding-left: 1.2em;
+}
+.card-root.simple .simple-body li {
+  margin: 0.1em 0;
+}
+
+/* Footer: a small, quiet source line. */
+.card-root.simple .simple-footer {
+  padding: 0.4em 9% 8%;
+  font-size: 0.78em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--simple-muted);
+  text-align: right;
+}
+
+/* ── Back ──────────────────────────────────────────────────────── */
+
+.card-root.simple.simple-back {
+  background-color: var(--simple-paper);
+  background-image: none;
+}
+
+.simple-back-frame {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12% 10%;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* The game's name — the one dominant element on the back. */
+.simple-back-game {
+  font-family: var(--simple-font);
+  font-weight: 700;
+  font-size: 2.3em;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+  color: var(--simple-ink);
+}
+
+/* A short hairline between the game's name and the subtitle. */
+.simple-back-sep {
+  width: 2.4em;
+  height: 0;
+  border-top: 0.08em solid var(--simple-hairline);
+  margin: 0.9em 0;
+}
+
+/* The card's kind — quiet, letter-spaced, upper case. */
+.simple-back-type {
+  font-family: var(--simple-font);
+  font-weight: 600;
+  font-size: 0.95em;
+  line-height: 1.2;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--simple-muted);
+}

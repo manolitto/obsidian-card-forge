@@ -29,7 +29,7 @@ import { parseTranslationTables, type TranslationTables } from "./translations";
 /**
  * A path an author declared, relative to the system folder, that has been
  * checked to stay inside it — no `..` segment, nothing absolute, `/` as the
- * separator on every platform. Only `parsePath` makes one, so a reader that
+ * separator on every platform. Only `parseSystemPath` makes one, so a reader that
  * takes a `SystemPath` cannot be handed a string nobody checked. That is the
  * invariant "a system is one folder you can copy" rests on, and the
  * copy-into-vault action depends on it being true rather than merely usual.
@@ -213,7 +213,7 @@ export function parseSystemDeclaration(
     cardTypes: {},
   };
 
-  const stylesheet = parsePath(raw["stylesheet"], `${id}.stylesheet`, diagnostics);
+  const stylesheet = parseSystemPath(raw["stylesheet"], `${id}.stylesheet`, diagnostics);
   if (stylesheet) out.stylesheet = stylesheet;
 
   const hook = String(raw["markdown-image-partial"] ?? "")
@@ -294,7 +294,7 @@ function parseCardType(
     cardSettings: parseCardSettings(everythingBut(raw, CARD_TYPE_KEYS), diagnostics),
   };
 
-  const front = parsePath(
+  const front = parseSystemPath(
     raw["front-template"],
     `${context}.front-template`,
     diagnostics
@@ -303,9 +303,17 @@ function parseCardType(
   else
     diagnostics.warn(`${context} declares no front-template:; it cannot render a card`);
 
-  const back = parsePath(raw["back-template"], `${context}.back-template`, diagnostics);
+  const back = parseSystemPath(
+    raw["back-template"],
+    `${context}.back-template`,
+    diagnostics
+  );
   if (back) out.backTemplate = back;
-  const stylesheet = parsePath(raw["stylesheet"], `${context}.stylesheet`, diagnostics);
+  const stylesheet = parseSystemPath(
+    raw["stylesheet"],
+    `${context}.stylesheet`,
+    diagnostics
+  );
   if (stylesheet) out.stylesheet = stylesheet;
 
   const properties = parsePropertyDefs(raw["properties"], diagnostics);
@@ -333,7 +341,7 @@ function everythingBut(
  * `SystemPath` for what is refused and why; a Windows-style separator is
  * refused too, since a vault syncs across both.
  */
-function parsePath(
+export function parseSystemPath(
   raw: unknown,
   context: string,
   diagnostics: Diagnostics
@@ -369,7 +377,7 @@ function parsePathMap(
 ): Record<string, SystemPath> {
   const out: Record<string, SystemPath> = {};
   for (const [key, value] of Object.entries(asMapping(raw, context, diagnostics))) {
-    const path = parsePath(value, `${context}.${key}`, diagnostics);
+    const path = parseSystemPath(value, `${context}.${key}`, diagnostics);
     if (path) out[key.trim().toLowerCase()] = path;
   }
   return out;

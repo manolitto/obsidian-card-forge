@@ -1,0 +1,8 @@
+# The bundled systems, in the order they are listed to the user.
+#
+# Each entry is the path of a system's `game-system.yaml`, relative to
+# `resources/systems/`. The system's id is in that document; nothing here
+# repeats it. A folder under `resources/systems/` that this list does not name
+# is a build error, not a system.
+systems:
+  - simple/game-system.yaml

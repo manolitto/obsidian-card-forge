@@ -1,0 +1,74 @@
+id: simple
+name: Simple
+
+# A minimal, game-agnostic card design. The game a card belongs to is not
+# fixed by the system — the note says it, in `game-name` — so one design
+# serves any game. Every word on the card is the author's, so the templates
+# carry no captions and the system needs no translations; both languages are
+# declared so a note may set `language: en` or `language: de` freely.
+languages: [en, de]
+
+stylesheet: game-system.css
+
+# The back is a designed face — the game's name and the card's kind — so a
+# long front must not be cloned onto it. Spill onto further front/back pairs
+# instead. Rare; most Simple cards are short.
+overflow-mode: extra-cards
+
+card-size: poker
+
+# The five properties this design renders. Everything the baseline adds —
+# `image`, `tags`, `roll` and the rest — is inherited and simply not shown.
+properties:
+  name:
+    aliases: [title, titel, heading, überschrift, ueberschrift]
+    description:
+      en: "The card's title, shown in the header of the front. Falls back to the note's file name when unset."
+      de: "Titel der Karte, oben auf der Vorderseite. Fällt auf den Dateinamen zurück, wenn nicht gesetzt."
+    sample:
+      en: "Lantern of Revealing"
+      de: "Laterne der Enthüllung"
+
+  content:
+    aliases: [body, text, description, beschreibung]
+    description:
+      en: "The card body — free Markdown (bold, italic, lists, line breaks, wikilinks) shown in the front content area."
+      de: "Der Kartentext — freies Markdown (fett, kursiv, Listen, Zeilenumbrüche, Wikilinks) im Inhaltsbereich der Vorderseite."
+    sample:
+      en: "A hooded lantern that, once per day, sheds **bright light** and reveals what is *hidden*.\n\n- Radius: 30 ft\n- Duration: 1 minute"
+      de: "Eine Blendlaterne, die einmal pro Tag **helles Licht** verströmt und *Verborgenes* enthüllt.\n\n- Radius: 9 m\n- Dauer: 1 Minute"
+
+  reference:
+    aliases: [ref, source, quelle, referenz, page, seite]
+    description:
+      en: "A small source reference shown in the front footer — a rulebook page or a wikilink."
+      de: "Kleine Quellenangabe im Fuß der Vorderseite — eine Regelbuchseite oder ein Wikilink."
+    sample:
+      en: "Core Rules, p. 152"
+      de: "Grundregeln, S. 152"
+
+  game-name:
+    aliases: [game, game-title, system-name, spiel, spielname]
+    description:
+      en: "The name of the game this card belongs to — displayed prominently on the card back."
+      de: "Name des Spiels, zu dem die Karte gehört — prominent auf der Rückseite dargestellt."
+    sample:
+      en: "Chronicles of the Ember Coast"
+      de: "Chroniken der Glutküste"
+
+  card-type-label:
+    aliases: [subtitle, category, kategorie, type-label, kartentyp]
+    description:
+      en: "The kind of card (e.g. \"Item\", \"Spell\", \"NPC\") — shown as a subtitle beneath the game name on the back."
+      de: "Art der Karte (z. B. „Gegenstand“, „Zauber“, „NSC“) — als Untertitel unter dem Spielnamen auf der Rückseite."
+    sample:
+      en: "Magic Item"
+      de: "Magischer Gegenstand"
+
+card-types:
+  # The one, universal card type. A note reaches it by `card-type: simple` or
+  # by carrying the `simple` tag.
+  simple:
+    note-tags: [simple]
+    front-template: front.hbs
+    back-template: back.hbs

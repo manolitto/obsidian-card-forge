@@ -1,0 +1,136 @@
+/*
+ * The base stylesheet — the structure every card shares, whatever its system.
+ *
+ * Loaded first, under the system's stylesheet and the card type's. It knows
+ * nothing about any design: no colour, no type face, no ornament. What it
+ * fixes is the skeleton a face template is written against — a column of
+ * header, content and footer inside a box of the card's size — and the hooks
+ * the layout engine measures and scales.
+ *
+ * Sizes are relative. Box geometry is `%` of the parent, strokes and type are
+ * `em`, so a design drawn at poker size holds at mini or tarot. The one
+ * deliberate exception is the type-size budget on `.card-root`: a legibility
+ * floor on paper is an absolute quantity, and the clamp bounds say so in
+ * points.
+ */
+
+.card-root {
+  width: var(--card-width);
+  height: var(--card-height);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /*
+   * The type-size budget. A system sizes its body and title text as
+   *
+   *   font-size: clamp(var(--card-font-size-min),
+   *                    calc(var(--card-width) * <factor>),
+   *                    var(--card-font-size-max));
+   *
+   * so the size follows the card's width between a floor that keeps the
+   * smallest presets legible and a ceiling that keeps the largest from
+   * shouting. Titles get their own pair so they can plateau independently.
+   * A system whose design is drawn larger redeclares the bound it needs on
+   * its own selector.
+   */
+  --card-font-size-min: 6pt;
+  --card-font-size-max: 8.5pt;
+  --card-font-size-title-min: 9.5pt;
+  --card-font-size-title-max: 17pt;
+}
+
+/*
+ * The column. A face is header, then content, then footer, each a direct flex
+ * child of `.card-root`. The footer is a sibling of the content container and
+ * never inside it or absolutely positioned: flex reserves its height, so the
+ * content's slot ends exactly where the footer begins, and a footer reappears
+ * on every continuation face without anyone measuring it.
+ */
+.card-header {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+.card-footer {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* The wrapper a template puts around its scalable body. */
+.card-content-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── What the layout engine scales ─────────────────────────────── */
+
+.card-title {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.text-scalable {
+  display: inline-block;
+}
+
+.card-type-badge {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/*
+ * The body the font scaler fits. It stretches this box to (100 / scale)% and
+ * applies `transform: scale(scale)`, so the box's bottom edge lands on the
+ * footer's top edge. Content that cannot fit even at the floor is clipped
+ * there rather than painted over the footer; `overflow: hidden` leaves
+ * `scrollHeight` alone, so the scaler still sees the overflow it measures.
+ */
+.card-body-scalable {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.card-body-scalable > * {
+  flex-shrink: 0;
+}
+
+/* ── Vertical spacers ──────────────────────────────────────────── */
+
+/*
+ * `<span class="cf-fill-N"></span>` in a flex column claims a share of the
+ * free vertical space, N being its weight: `cf-fill-1` above an element and
+ * `cf-fill-2` below it parks the element a third of the way down. A basis of
+ * 0 means a spacer collapses to nothing on a full card, so it never takes
+ * room from content, and the shorthand restores `flex-shrink: 1` against the
+ * rule above.
+ */
+.cf-fill-1  { flex: 1  1 0; }
+.cf-fill-2  { flex: 2  1 0; }
+.cf-fill-3  { flex: 3  1 0; }
+.cf-fill-4  { flex: 4  1 0; }
+.cf-fill-5  { flex: 5  1 0; }
+.cf-fill-6  { flex: 6  1 0; }
+.cf-fill-7  { flex: 7  1 0; }
+.cf-fill-8  { flex: 8  1 0; }
+.cf-fill-9  { flex: 9  1 0; }
+.cf-fill-10 { flex: 10 1 0; }
+.cf-fill-11 { flex: 11 1 0; }
+.cf-fill-12 { flex: 12 1 0; }

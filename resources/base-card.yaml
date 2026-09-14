@@ -1,0 +1,128 @@
+# The baseline — the seed every system grows from.
+#
+# Two things live here, and a loader reads them as two layers:
+#
+#   properties:   the definition cascade's seed. The properties every card
+#                 has, whatever its system, so that a system — bundled or a
+#                 user's own — inherits them with their aliases and their
+#                 documentation instead of starting empty.
+#
+#   everything else — the lowest layer of the two setting chains. Card
+#                 settings (`card-size`, `overflow-mode`, …) are resolved once
+#                 per card through system, card type, deck and note; deck
+#                 settings (`paper-size`, `page-margin`, …) once per deck.
+#                 A system's `game-system.yaml` and a deck block are the next
+#                 layers up and may override any of them.
+#
+# Nothing here names a file. A reader's preference — the preview height, whether
+# textures print — is a plugin setting, not a value in this file.
+
+# ── Properties ───────────────────────────────────────────────────────
+#
+# An alias is a second name a note may write for the same value. Aliases add
+# up across layers — a system appends its own spellings and never loses these.
+
+properties:
+  name:
+    aliases: [display-name, title, label]
+  description:
+    aliases: [desc, summary]
+  image:
+    aliases: [picture, portrait, img, photo]
+  tags:
+    aliases: [tag]
+  language:
+    aliases: [lang]
+    description:
+      de: "Sprachcode der Karte (z. B. `de`, `en`). Wählt die Übersetzungstabelle, aus der die Beschriftungen kommen, und wird vom Deck-Filter `card-languages` zur Auswahl der Karten herangezogen."
+      en: "Card language code (e.g. `de`, `en`). Picks the translation table the captions come from, and is read by the deck-level `card-languages` filter to select cards."
+    sample:
+      de: de
+      en: en
+
+  # A card that comes from a roll table — a critical hit, a mishap, a treasure,
+  # an encounter — carries the result it is listed under. `roll` is the display
+  # form; `roll-min` and `roll-max` are the integer bounds a deck sorts, filters
+  # and expands by. German aliases are part of the baseline so a German system
+  # does not have to restate them.
+  roll:
+    aliases: [dice-roll, würfelwurf, wurf, tabellenwurf, würfelergebnis]
+    description:
+      de: "Würfelwurf (Bereich oder Einzelwert), unter dem diese Karte in der Quelltabelle erscheint. Anzeigeform — z. B. „01“, „23–24“, „98–100“. Für numerische Abfragen und Sortierung siehe `roll-min` und `roll-max`."
+      en: "Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. \"01\", \"23–24\", \"98–100\". For numeric queries and sorting see `roll-min` and `roll-max`."
+    sample:
+      de: "01"
+      en: "01"
+
+  roll-min:
+    aliases: [roll-from, wurf-min, wurf-von]
+    description:
+      de: "Untere Grenze des Würfelwurf-Bereichs als Ganzzahl. Bei Einzelwürfen `roll-min == roll-max`."
+      en: "Lower bound of the roll range as an integer. For single-value rolls, `roll-min == roll-max`."
+    sample:
+      de: 1
+      en: 1
+
+  roll-max:
+    aliases: [roll-to, wurf-max, wurf-bis]
+    description:
+      de: "Obere Grenze des Würfelwurf-Bereichs als Ganzzahl."
+      en: "Upper bound of the roll range as an integer."
+    sample:
+      de: 1
+      en: 1
+
+# ── Card settings ────────────────────────────────────────────────────
+
+# Physical geometry. A preset name, or `63 x 88 mm`, or
+# `{ width: 63, height: 88, orientation: portrait }`.
+card-size: poker
+
+# What a card does when its content will not fit even at the smallest type
+# size the stylesheet allows. `none` clips; `extra-cards` continues on further
+# front/back pairs; `back-then-cards` fills the back first. A design decides —
+# a system or card type sets this; a deck or note may override it for itself.
+overflow-mode: none
+
+# The ways a card may be laid out, and how the winner is chosen. One candidate
+# that accepts any parity of front faces is the layout engine's trivial case:
+# it always commits. A layer declaring its own `layouts:` replaces this list.
+layouts:
+  - { name: default, front-face-count: any, fallback: true }
+layout-decision:
+  order:
+    - { metric: printed-cards, direction: minimize }
+  tie-break: declaration-order
+
+# Which face the in-note preview shows. Deck output always renders both.
+side: both
+
+# Print one card per integer in the roll range. A roll-table card type says
+# `true` once; every other card is printed as it is.
+expand-by-roll: false
+
+# ── Deck settings ────────────────────────────────────────────────────
+
+# Paper the deck is imposed on. A preset name, or `210 x 297 mm`, or
+# `{ preset: A4, orientation: landscape }`. Without an orientation the deck
+# picks whichever fits more cards.
+paper-size: A4
+
+# Blank space around the card grid, in millimetres, on all four sides.
+page-margin: 10
+
+# Which edge of the paper is the binding when printing duplex, so that fronts
+# and backs align after the flip. `long-edge` or `short-edge`.
+duplex-flip: long-edge
+
+# Alignment marks at each card's outer corners. The fields merge across
+# layers, so a deck can change the colour without restating the geometry.
+cut-marks:
+  enabled: true
+  length: 3 # mm
+  margin: 0 # mm between the card corner and the mark; 0 makes the two arms meet at the corner
+  color: "#aaaaaa"
+  weight: 0.25 # mm
+
+# When a deck collects a folder, include its subfolders.
+folder-recursive: true
