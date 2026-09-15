@@ -16,9 +16,9 @@ export interface PrepareCardPropsOptions {
  * so canonical and alias names reach the same value.
  *
  * Nothing here reshapes a value. A note that writes one trait where the card
- * shows a list is the template's tolerance to extend — `{{#slot}}` lifts the
- * scalar when it renders — not this function's, which would have to guess the
- * shape from a declaration nothing else reads.
+ * shows a list is the template's tolerance to extend — the helper that serves
+ * the list can lift a scalar when it renders — not this function's, which
+ * would have to guess the shape from a declaration nothing else reads.
  *
  * The caller's object is not touched — a fresh copy is prepared and wrapped.
  */
@@ -39,7 +39,7 @@ export function prepareCardProps(
 
 /**
  * If neither `name` nor any of its aliases carries a value, fill it from the
- * note's filename, so a template can write `{{slots.title}}` without guarding.
+ * note's filename, so a template can read the title's slot without guarding.
  *
  * Runs on the underlying object, before the proxy exists, so it has to consult
  * the alias map by hand rather than read through it.

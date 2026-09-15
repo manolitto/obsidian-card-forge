@@ -1,16 +1,15 @@
 {{!--
-  Simple — shared card back.
-  Minimalist white field: the game name set large and centred, with the card
-  type as a quiet letter-spaced subtitle beneath a short hairline. Both are
-  author-provided (props.game-name / props.card-type-label); the subtitle and
-  its separator are omitted when no card type is given.
+  Simple — card back.
+  A white field: the game's name set large and centred, with the card's kind
+  as a quiet, letter-spaced subtitle beneath a short hairline. The subtitle
+  and its separator stay out when no kind is given.
 --}}
-<div class="card-root card-back-root simple simple-back">
+<div class="card-root card-back simple simple-back">
   <div class="simple-back-frame">
-    <div class="simple-back-game">{{scale-text props.game-name}}</div>
-    {{#if props.card-type-label}}
+    <div class="simple-back-game"><span class="text-scalable">{{slot "back-title"}}</span></div>
+    {{#if (slot "back-subtitle")}}
     <div class="simple-back-sep"></div>
-    <div class="simple-back-type">{{scale-text props.card-type-label}}</div>
+    <div class="simple-back-type"><span class="text-scalable">{{slot "back-subtitle"}}</span></div>
     {{/if}}
   </div>
 </div>

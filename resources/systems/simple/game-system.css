@@ -78,7 +78,6 @@
 .card-root.simple b { font-weight: 700; }
 .card-root.simple em,
 .card-root.simple i { font-style: italic; }
-.card-root.simple .cf-wikilink { font-style: normal; }
 
 /* A white field on every front and continuation face. */
 .card-root.simple.card-front,

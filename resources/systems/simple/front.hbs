@@ -1,26 +1,25 @@
 {{!--
   Simple — card front.
-  Minimalist: a title, a thin rule, the Markdown body, and a muted source
-  line in the footer. header → body → footer flex convention: the footer is a
-  flex sibling of `.card-content-container`, so it reappears on every overflow
-  continuation card. The overflow counter sits quietly beside the title and is
-  hidden (`:empty`) on single cards.
+  A title, a thin rule, the Markdown body, and a muted source line in the
+  footer. Header, content and footer are flex siblings under the root, so the
+  footer reappears on every continuation face. The overflow counter sits
+  beside the title and is hidden (`:empty`) on a single card.
 --}}
 <div class="card-root card-front simple simple-card">
 
   <div class="card-header simple-header">
-    <div class="card-title simple-title">{{scale-text props.name}}<span class="cf-overflow-counter"></span></div>
+    <div class="card-title simple-title"><span class="text-scalable">{{slot "front-title"}}</span><span class="cf-overflow-counter"></span></div>
     <div class="simple-rule"></div>
   </div>
 
   <div class="card-content-container simple-content">
-    {{#scale-body}}
-    <div class="simple-body">{{nl2br props.content}}</div>
-    {{/scale-body}}
+    <div class="card-body-scalable">
+      <div class="simple-body">{{slot "front-body" linebreaks=true}}</div>
+    </div>
   </div>
 
-  {{#if props.reference}}
-  <div class="card-footer simple-footer">{{wikilink-text props.reference}}</div>
+  {{#if (slot "front-reference")}}
+  <div class="card-footer simple-footer">{{slot "front-reference"}}</div>
   {{/if}}
 
 </div>

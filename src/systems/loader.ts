@@ -48,6 +48,12 @@ export interface LoadedCardType {
   properties: PropertyDefsMap;
   /** Both binding directions of `properties`, folded — see `bindings.ts`. */
   aliases: AliasMap;
+  /**
+   * The slot vocabulary: every `slot:` target across `properties`. A template
+   * may read exactly these; `{{slot "x"}}` with any other name is a typo,
+   * reported at render.
+   */
+  slots: ReadonlySet<string>;
   /** System, then card type. Resolved per language at render, since the note picks it. */
   translations: TranslationTables;
   /** Baseline → system → card type. The deck and the note fold on top at render. */
@@ -208,6 +214,7 @@ export async function loadSystem(
       declaration: cardType,
       properties,
       aliases: buildAliasMap(properties),
+      slots: slotVocabulary(properties),
       translations: mergeTranslations(declaration.translations, cardType.translations),
       cardSettings: mergeCardSettings([
         BASELINE.cardSettings,
@@ -248,6 +255,15 @@ async function assembleStylesheet(
     if (path) layers.push(await inlineStylesheet(await source.readText(path), source));
   }
   return layers.join("\n\n");
+}
+
+/** Every slot some property fills, in the order the resolved map binds them. */
+function slotVocabulary(properties: PropertyDefsMap): ReadonlySet<string> {
+  const slots = new Set<string>();
+  for (const def of Object.values(properties)) {
+    for (const slot of def.slot ?? []) slots.add(slot);
+  }
+  return slots;
 }
 
 /**
