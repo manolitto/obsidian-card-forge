@@ -1,3 +1,4 @@
+import { playwright } from "@vitest/browser-playwright";
 import { readFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { defineConfig } from "vitest/config";
@@ -24,10 +25,37 @@ const rawTextLoader = {
   },
 };
 
+// Two projects. Everything that never touches a layout runs in node; what
+// reads a layout — `scrollHeight`, a committed font size, a face that
+// overflows — runs in a real Chromium under `tests/browser/`, where those
+// numbers mean something. `npx playwright install chromium` fetches the
+// browser once per machine.
 export default defineConfig({
   plugins: [rawTextLoader],
   test: {
-    environment: "node",
-    include: ["tests/**/*.test.ts"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "node",
+          environment: "node",
+          include: ["tests/**/*.test.ts"],
+          exclude: ["tests/browser/**"],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: "browser",
+          include: ["tests/browser/**/*.test.ts"],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright(),
+            instances: [{ browser: "chromium" }],
+          },
+        },
+      },
+    ],
   },
 });
