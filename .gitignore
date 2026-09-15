@@ -156,3 +156,6 @@ vite.config.ts.timestamp-*
 
 # --- Failure screenshots of the browser test project ---
 /tests/**/__screenshots__/
+
+# --- vitest browser-mode failure artefacts ---
+/.vitest-attachments/
