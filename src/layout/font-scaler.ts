@@ -354,20 +354,30 @@ export function cfMeasureMarker(
 }
 
 /* Whitespace metric (trailing-face gap). Returns the unfilled fraction [0,1]
- * of the LAST committed front face's body — `1 − min(scrollHeight,
- * clientHeight) / clientHeight`. A full/clipped last face → 0; a sparse orphan
- * last face → toward 1. Earlier front faces are full by construction of the
- * greedy split, so the trailing face carries the gap. `frontRoots` is the ordered
- * list of committed FRONT `.card-root`s (the single body for a non-split card). */
+ * of the LAST committed front face's body — a full or clipped last face → 0,
+ * an empty one → 1, a sparse orphan last face → toward 1. Earlier front faces
+ * are full by construction of the greedy split, so the trailing face carries
+ * the gap. `frontRoots` is the ordered list of committed FRONT `.card-root`s
+ * (the single body for a non-split card).
+ *
+ * Measured as the last child's bottom against the body's own box, both
+ * `getBoundingClientRect` values so the body's transform scales numerator and
+ * denominator alike and cancels. Not `scrollHeight / clientHeight`: the
+ * scaler gives the body a DEFINITE height, and `scrollHeight` never reports
+ * less than the box, so underfill is invisible that way and the metric would
+ * read 0 for every face. Body children are `flex-shrink: 0` and do not grow,
+ * so the last child's bottom IS the content height. */
 export function cfMeasureWhitespace(frontRoots: ArrayLike<HTMLElement>): number {
   if (!frontRoots.length) return 0;
   const last = frontRoots[frontRoots.length - 1];
-  const body = last ? last.querySelector(".card-body-scalable") : null;
+  const body = last ? last.querySelector<HTMLElement>(".card-body-scalable") : null;
   if (!body) return 0;
-  const avail = body.clientHeight;
-  if (!(avail > 0)) return 0;
-  const content = Math.min(body.scrollHeight, avail);
-  const ws = 1 - content / avail;
+  const box = body.getBoundingClientRect();
+  if (!(box.height > 0)) return 0;
+  const child = body.lastElementChild;
+  if (!child) return 1;
+  const filled = (child.getBoundingClientRect().bottom - box.top) / box.height;
+  const ws = 1 - Math.min(filled, 1);
   return ws > 0 ? ws : 0;
 }
 
@@ -466,8 +476,9 @@ export function compareLayoutCandidates(
 }
 
 /* Collect the markers a config needs measured: every element-size decision key
- * plus every candidate's eligibleIf element. */
-function cfMarkersForConfig(cfg: LayoutConfig): Record<string, true> {
+ * plus every candidate's eligibleIf element. Exported for the overflow
+ * splitter's whole-group loop. */
+export function cfMarkersForConfig(cfg: LayoutConfig): Record<string, true> {
   const markers: Record<string, true> = {};
   const d = cfg.decision;
   if (d && d.order) {
