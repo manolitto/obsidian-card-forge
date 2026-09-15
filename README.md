@@ -15,10 +15,15 @@ ships several and lets you build your own in your vault.
 
 ```bash
 npm install
+npx playwright install chromium   # once per machine, for the browser tests
 npm run dev      # esbuild watch
 npm run build    # production build → main.js
 npm run check    # typecheck + lint + format + tests
 ```
+
+The tests are two vitest projects: `node` for everything that never touches
+a layout, and `browser` (`tests/browser/`) for what reads one — those run in
+a real Chromium, where a `scrollHeight` means something.
 
 To try it in Obsidian, link the checkout into a vault's plugin folder and
 enable the `hot-reload` community plugin there:

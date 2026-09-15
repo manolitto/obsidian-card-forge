@@ -1,16 +1,10 @@
 import { existsSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { basename, join } from "path";
-import { collectDiagnostics } from "../../src/definitions/diagnostics";
-import { BUNDLED_SYSTEMS } from "../../src/generated/bundled-systems";
-import { noteSystemId } from "../../src/render/card";
 import type { ImageSource } from "../../src/render/images";
-import { parseNote } from "../../src/render/note";
-import { CardRenderer, type RenderedCard } from "../../src/render/renderer";
+import type { RenderedCard } from "../../src/render/renderer";
 import { dataUri } from "../../src/systems/assets";
-import { BundledSystemSource } from "../../src/systems/bundled-source";
-import { loadSystem, type LoadedSystem } from "../../src/systems/loader";
-import { TemplateEngine } from "../../src/templates/engine";
 import { escapeHtml } from "../../src/templates/inline-markdown";
+import { loadedSystem, renderNote } from "./render";
 
 /**
  * The golden-render harness.
@@ -85,24 +79,9 @@ export function orphanGoldens(): string[] {
 }
 
 /** The cards a fixture note yields, each with every face its card type declares. */
-export async function renderFixture(fixture: Fixture): Promise<RenderedCard[]> {
-  const diagnostics = collectDiagnostics();
-  const note = parseNote(readFileSync(fixture.path, "utf-8"), fixture.path, diagnostics);
-  if (!note) throw new Error(`${fixture.path}: not a card note`);
-  const systemId = noteSystemId(note, diagnostics);
-  if (systemId !== fixture.system) {
-    throw new Error(
-      `${fixture.path}: names system "${systemId}" but sits under ${fixture.system}/`
-    );
-  }
-  const system = await loadedSystem(fixture.system);
-  const cards = await renderer.render(note, system, diagnostics);
-  if (diagnostics.messages.length > 0 || cards.length === 0) {
-    throw new Error(
-      `${fixture.path}:\n  ${diagnostics.messages.join("\n  ") || "yields no card"}`
-    );
-  }
-  return cards;
+export function renderFixture(fixture: Fixture): Promise<RenderedCard[]> {
+  const text = readFileSync(fixture.path, "utf-8");
+  return renderNote(text, fixture.path, fixture.system, fixtureImages);
 }
 
 /** The goldens a fixture's cards are compared against, in the order the cards come. */
@@ -184,28 +163,3 @@ const fixtureImages: ImageSource = {
     return dataUri(new Uint8Array(readFileSync(file)), file);
   },
 };
-
-const renderer = new CardRenderer(new TemplateEngine(), fixtureImages);
-const systems = new Map<string, Promise<LoadedSystem>>();
-
-/** A bundled system, loaded once per run with nothing to report. */
-function loadedSystem(id: string): Promise<LoadedSystem> {
-  let pending = systems.get(id);
-  if (!pending) {
-    pending = (async () => {
-      const bundled = BUNDLED_SYSTEMS.find((s) => s.id === id);
-      if (!bundled)
-        throw new Error(`no bundled system "${id}" for the fixtures under ${id}/`);
-      const diagnostics = collectDiagnostics();
-      const system = await loadSystem(new BundledSystemSource(bundled), id, diagnostics);
-      if (!system || diagnostics.messages.length > 0) {
-        throw new Error(
-          `${id} loads with problems:\n  ${diagnostics.messages.join("\n  ")}`
-        );
-      }
-      return system;
-    })();
-    systems.set(id, pending);
-  }
-  return pending;
-}
