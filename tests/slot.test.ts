@@ -2,7 +2,10 @@ import Handlebars from "handlebars";
 import { describe, expect, it } from "vitest";
 import { buildAliasMap } from "../src/definitions/bindings";
 import { prepareCardProps } from "../src/definitions/card-props";
+import type { Classifiers } from "../src/definitions/classifiers";
 import { collectDiagnostics } from "../src/definitions/diagnostics";
+import type { GlyphTables } from "../src/definitions/glyphs";
+import { blockMarkdown } from "../src/templates/block-markdown";
 import { STATE_KEY, type RenderState } from "../src/templates/context";
 import { registerHelpers } from "../src/templates/helpers";
 import { props } from "./helpers/definitions";
@@ -25,6 +28,9 @@ interface Options {
   data?: Record<string, unknown>;
   translations?: Record<string, string>;
   partials?: Record<string, string>;
+  images?: Record<string, string>;
+  glyphs?: GlyphTables;
+  classifiers?: Classifiers;
 }
 
 /** Compile on an isolated instance and render with the state in the data frame. */
@@ -40,9 +46,12 @@ function render(template: string, options: Options = {}) {
       defs: DEFS,
       fileName: "Note",
     }),
-    slots: new Set(Object.values(DEFS).flatMap((def) => def.slot ?? [])),
     translations: options.translations ?? {},
     assets: new Map(),
+    images: new Map(Object.entries(options.images ?? {})),
+    glyphs: options.glyphs ?? {},
+    classifiers: options.classifiers ?? {},
+    block: blockMarkdown((target, alt) => `<img src="${target}" alt="${alt}">`),
     diagnostics,
   };
   const partials: Record<string, Handlebars.TemplateDelegate> = {};
@@ -100,14 +109,14 @@ describe("{{slot}}", () => {
     );
   });
 
-  it("reports a name no property fills, naming the card type, and renders nothing", () => {
+  it("renders nothing for a place no property fills — one front may serve several card types", () => {
+    // The typo check is the loader's, on the bindings; here a place nobody
+    // fills is simply empty.
     const { html, diagnostics } = render(`[{{slot "front-tittle"}}]`, {
       data: { name: "x" },
     });
     expect(html).toBe("[]");
-    expect(diagnostics.messages).toEqual([
-      '{{slot "front-tittle"}}: "front-tittle" is not a slot any property of demo/gear fills; rendering nothing',
-    ]);
+    expect(diagnostics.messages).toEqual([]);
   });
 
   it("reports a bare call and a partial called without its name", () => {
@@ -167,9 +176,169 @@ describe("{{slot}}", () => {
       });
       expect(html).toBe("<em>a</em>");
       expect(diagnostics.messages).toEqual([
-        '{{slot "front-body"}}: "render" is not a switch (markdown, linebreaks are); ignoring it',
+        '{{slot "front-body"}}: "render" is not a switch (markdown, linebreaks, glyph, image, plain, list, fallback are); ignoring it',
       ]);
     });
+  });
+});
+
+describe("{{slot}} with the newer switches", () => {
+  it("list=true hands {{#each}} the items, every string field rendered", () => {
+    const { html } = render(
+      `{{#each (slot "front-body" list=true)}}<p>{{name}}: {{desc}}</p>{{/each}}`,
+      {
+        data: {
+          content: [
+            { name: "Kalt", desc: "*doppelt*" },
+            { Name: "Warm", desc: 1 },
+          ],
+        },
+      }
+    );
+    expect(html).toBe("<p>Kalt: <em>doppelt</em></p><p>Warm: 1</p>");
+  });
+
+  it("list=true lifts a scalar and a string list to items, and an empty value to nothing", () => {
+    expect(
+      render(`{{#each (slot "front-body" list=true)}}[{{this}}]{{/each}}`, {
+        data: { content: "one" },
+      }).html
+    ).toBe("[one]");
+    expect(
+      render(`{{#each (slot "front-body" list=true)}}[{{this}}]{{/each}}`, {
+        data: { content: ["a", "**b**"] },
+      }).html
+    ).toBe("[a][<strong>b</strong>]");
+    expect(render(`{{#if (slot "front-body" list=true)}}yes{{else}}no{{/if}}`).html).toBe(
+      "no"
+    );
+  });
+
+  it("glyph=true reads the card type's table for that slot", () => {
+    const glyphs = { "front-stat-1a": { "1h": "einhändig" } };
+    expect(
+      render(`{{slot "front-stat-1a" glyph=true}}`, { data: { griff: "1H" }, glyphs })
+        .html
+    ).toBe("einhändig");
+    expect(
+      render(`{{slot "front-stat-1a" glyph=true}}`, { data: { griff: "1H" } }).html
+    ).toBe("1H");
+  });
+
+  it("image=true yields the picture the note refers to, and reports a miss", () => {
+    const images = { "Beil.png": "data:image/png;base64,QQ==" };
+    expect(
+      render(`<img src="{{slot "front-body" image=true}}">`, {
+        data: { content: "[[Beil.png|the axe]]" },
+        images,
+      }).html
+    ).toBe('<img src="data:image/png;base64,QQ==">');
+    const { html, diagnostics } = render(`[{{slot "front-body" image=true}}]`, {
+      data: { content: "![[Nope.png]]" },
+      images,
+    });
+    expect(html).toBe("[]");
+    expect(diagnostics.messages).toEqual([
+      '{{slot "front-body" image=true}} in demo/gear: "![[Nope.png]]" is not a picture the vault has; rendering nothing',
+    ]);
+  });
+
+  it("fallback=(t …) renders when the slot is empty", () => {
+    const { html } = render(`{{slot "front-stat-1a" fallback=(t "side-ref")}}`, {
+      translations: { "side-ref": "Dragonbane" },
+    });
+    expect(html).toBe("Dragonbane");
+    expect(
+      render(`{{slot "front-stat-1a" fallback=(t "side-ref")}}`, { data: { grip: "2H" } })
+        .html
+    ).toBe("2H");
+  });
+
+  it("plain=true is what a comparison reads, and eq compares it", () => {
+    const data = { name: "[[Furcht|FURCHT]]", subtitle: "Furcht" };
+    expect(render(`{{slot "front-title" plain=true}}`, { data }).html).toBe("FURCHT");
+    expect(
+      render(
+        `{{#unless (eq (slot "front-title" plain=true) (slot "front-subtitle" plain=true))}}differ{{/unless}}`,
+        { data }
+      ).html
+    ).toBe("differ");
+    expect(
+      render(`{{#if (eq (slot "front-title" plain=true) "Note")}}same{{/if}}`).html
+    ).toBe("same");
+  });
+
+  it('markdown="block" renders a body with the embed hook', () => {
+    const { html } = render(`{{slot "front-body" markdown="block"}}`, {
+      data: { content: "Para.\n\n![[x.png|alt]]" },
+    });
+    expect(html).toBe('<p>Para.</p>\n<p><img src="x.png" alt="alt"></p>\n');
+  });
+
+  it("reports markdown= with a value that is none of the three", () => {
+    const { diagnostics } = render(`{{slot "front-body" markdown="blok"}}`);
+    expect(diagnostics.messages).toEqual([
+      '{{slot "front-body"}}: markdown=blok is neither true, false nor "block"; using the default',
+    ]);
+  });
+});
+
+describe("{{or}}", () => {
+  it("is the first present argument — a rendered 0 counts, an empty slot does not", () => {
+    const data = { griff: 0 };
+    expect(
+      render(`{{#if (or (slot "front-subtitle") (slot "front-stat-1a"))}}box{{/if}}`, {
+        data,
+      }).html
+    ).toBe("box");
+    expect(
+      render(`{{#if (or (slot "front-subtitle") (slot "front-stat-1a"))}}box{{/if}}`).html
+    ).toBe("");
+    expect(render(`{{or "" "b"}}`).html).toBe("b");
+  });
+});
+
+describe("{{slot-class}}", () => {
+  const classifiers = {
+    "front-stat-1a": {
+      match: [{ pattern: /^.{1,2}$/u, token: "narrow" }],
+      default: "wide",
+    },
+  };
+
+  it("buckets the display text through the slot's classifier", () => {
+    expect(
+      render(`x-{{slot-class "front-stat-1a"}}`, {
+        data: { griff: "[[Sieben|7]]" },
+        classifiers,
+      }).html
+    ).toBe("x-narrow");
+    expect(
+      render(`x-{{slot-class "front-stat-1a"}}`, { data: { griff: "9–10" }, classifiers })
+        .html
+    ).toBe("x-wide");
+  });
+
+  it("takes glyph= and fallback= like {{slot}}", () => {
+    const glyphs = { "front-stat-1a": { "1h": "einhändig" } };
+    expect(
+      render(`{{slot-class "front-stat-1a" glyph=true}}`, {
+        data: { griff: "1H" },
+        classifiers,
+        glyphs,
+      }).html
+    ).toBe("wide");
+    expect(
+      render(`{{slot-class "front-stat-1a" fallback="ab"}}`, { classifiers }).html
+    ).toBe("narrow");
+  });
+
+  it("reports a slot no classifier serves", () => {
+    const { html, diagnostics } = render(`{{slot-class "front-title"}}`, { classifiers });
+    expect(html).toBe("");
+    expect(diagnostics.messages).toEqual([
+      '{{slot-class "front-title"}}: no classifier of demo/gear serves "front-title"; rendering nothing',
+    ]);
   });
 });
 
@@ -189,10 +358,10 @@ describe("{{slot-label}} and {{t}}", () => {
     expect(diagnostics.messages).toEqual([]);
   });
 
-  it("checks the slot name too", () => {
-    const { diagnostics } = render(`{{slot-label "front-stat-9z"}}`);
+  it("reports a bare call too", () => {
+    const { diagnostics } = render(`{{slot-label}}`);
     expect(diagnostics.messages).toEqual([
-      '{{slot-label "front-stat-9z"}}: "front-stat-9z" is not a slot any property of demo/gear fills; rendering nothing',
+      "{{slot-label}} without a slot name in demo/gear; rendering nothing",
     ]);
   });
 

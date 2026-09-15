@@ -1,0 +1,63 @@
+{{!--
+  Dragonbane — the back of every card type.
+
+  Like front.hbs it renders PLACES, each named after where it sits:
+
+    back-header-title      big green display title, top      ALWAYS
+    back-image-primary     the illustration
+    back-footer-title      small parchment plaque, bottom    OPTIONAL
+
+  Unlike the front's places, these are filled once at SYSTEM level: every
+  Dragonbane card type answers them identically — `category` over
+  `subcategory`, family over shelf, AUSRÜSTUNG over „Kleidung". A card type
+  that wants a different answer overrides the binding in its own entry.
+
+  ONE arrangement, modelled on the deck's captioned backs ("IMPROVISIERTE
+  WAFFEN" over "GASTHAUS"). The deck also prints an uncaptioned variant with
+  the title BELOW the illustration ("SCHATZFUND", "ABENTEUER", "INITIATIVE").
+  Every card puts the title on top instead, so the backs of a mixed deck
+  read as one series and a fanned-out hand shows its titles in the same
+  place. The caption plaque is the only optional part.
+
+  `back-header-title` falls back to the card type's `back-label` — the roll
+  table's own name ("Dämonenwurf im Nahkampf", "Furcht", "Jagdbeute") reaches
+  it through the place, because one generic card type serves every table and
+  the caption therefore has to come from the card's data rather than from
+  the card type's translations.
+
+  `back-footer-title` prints only when it names something OTHER than the
+  header — repeating the line above it one size down would read as a mistake.
+
+  The illustration is whatever the card type binds to `back-image-primary`.
+  `back-image` is bound there system-wide (a vault image chosen per card),
+  and the creature card type binds its `artwork` behind it, because a
+  creature's picture serves both faces; `back-image` is bound FIRST, so an
+  explicit back picture always wins. Without either, the system logo — and a
+  card type with a bundled back of its own (gear) hides the logo and paints
+  the wrap in its stylesheet.
+--}}
+<div class="card-root card-back dragonbane {{card-type}}-card {{card-type}}-back">
+  <div class="db-strip db-strip-top"></div>
+
+  <div class="db-back-category"><span class="text-scalable">{{slot "back-header-title" plain=true fallback=(t "back-label")}}</span></div>
+
+  <div class="db-back-image-wrap">
+    {{#if (slot "back-image-primary")}}
+      <img class="db-back-image fade-edges" src="{{slot "back-image-primary" image=true}}" />
+    {{else}}
+      <img class="db-back-image db-back-logo-image" src="{{asset "assets/dragonbane-logo.png"}}" />
+    {{/if}}
+  </div>
+
+  {{#if (slot "back-footer-title")}}
+  {{#unless (eq (slot "back-header-title" plain=true fallback=(t "back-label")) (slot "back-footer-title" plain=true))}}
+  <div class="db-plaque-strip db-plaque-caption db-back-subcategory">
+    <span class="db-plaque-end db-plaque-end-left"></span>
+    <span class="db-plaque-text">{{slot "back-footer-title" markdown=false}}</span>
+    <span class="db-plaque-end db-plaque-end-right"></span>
+  </div>
+  {{/unless}}
+  {{/if}}
+
+  <div class="db-strip db-strip-bottom"></div>
+</div>

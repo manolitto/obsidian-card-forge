@@ -1,0 +1,73 @@
+/* Dragonbane generic card. Builds on the shared dragonbane cascade in
+   ../game-system.css — only what this card-type does differently lives here, no
+   re-declaration of the parchment / plaque / title boilerplate. All sizes are
+   relative (em / %), so the design holds at every card-size preset.
+
+   The body is whatever the note's markdown says, so what follows is a small
+   typographic house style for free prose: what a paragraph, a heading, a list,
+   a table and an embedded image look like on a Dragonbane card. Everything is
+   keyed on `.db-generic-body` rather than on the face, so a continuation face
+   — a clone of the front, carrying the same classes — sets identically. */
+
+.generic-card .db-generic-body {
+  font-family: var(--font-display);
+  font-size: 0.92em;
+  line-height: 1.35;
+  color: var(--db-text);
+  text-align: left;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.generic-card .db-generic-body > :first-child { margin-top: 0; }
+.generic-card .db-generic-body > :last-child { margin-bottom: 0; }
+
+.generic-card .db-generic-body p { margin: 0.35em 0; }
+
+/* Headings. `##` is reserved by the section splitter — it decides what reaches
+   the card at all — so a card's inner headings start at `###`. `h1`/`h2` are
+   styled alongside anyway: a note that opens with one would otherwise print it
+   unstyled, and an author can see a heading that looks wrong far more easily
+   than one that silently vanished. */
+.generic-card .db-generic-body h1,
+.generic-card .db-generic-body h2,
+.generic-card .db-generic-body h3,
+.generic-card .db-generic-body h4 {
+  font-family: var(--font-monumental);
+  font-weight: 700;
+  color: var(--db-green);
+  text-align: center;
+  font-size: 1.1em;
+  letter-spacing: 0.01em;
+  margin: 0.4em 0 0.15em;
+}
+
+.generic-card .db-generic-body ul,
+.generic-card .db-generic-body ol {
+  margin: 0.2em 0;
+  padding-left: 1.2em;
+}
+
+.generic-card .db-generic-body li { margin: 0.1em 0; }
+
+.generic-card .db-generic-body a {
+  color: var(--db-green-dark);
+  text-decoration: underline;
+}
+
+/* An embedded image (`![[logo.png]]`) is how this card gets a picture at all —
+   the template embeds none of its own. It renders through the system's
+   `card-image` partial, whose body form the system stylesheet styles: centred,
+   never upscaled past its own size, capped at half the card so a logo cannot
+   crowd out the text it belongs to. Retune with `--cf-body-image-max-height` /
+   `--cf-body-image-margin` on `.generic-card` rather than redeclaring the rule.
+
+   `--cf-front-image-max-height` remains the wrong knob here: it belongs to
+   `.cf-front-image-fill`, which this image is not (markdown flow content, not
+   the body column's flex slot).
+
+   Dragonbane DOES declare a `card-image.hbs` (../../card-image.hbs), so a body
+   picture is actually rendered through that partial and lands here as
+   `.db-body-image` — the front illustration minus its flex-slot wrap, styled in
+   ../game-system.css. This rule is what any OTHER `<img>` in the body falls back
+   to, and it stays because an author can still write raw `<img>` HTML. */

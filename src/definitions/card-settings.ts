@@ -14,6 +14,9 @@ import {
   type SettingTable,
 } from "./setting-chain";
 
+/** A language code as the translation tables key it: trimmed and lowercased. */
+const languageCode: Parse<string> = (raw) => nonEmptyString(raw)?.toLowerCase();
+
 /**
  * What a card's rendering can be told, resolved once per card.
  *
@@ -43,6 +46,14 @@ export interface CardSettings {
   copies?: number;
   /** Print one card per value of the roll range — a property of the kind of card. */
   expandByRoll?: boolean;
+  /**
+   * The language the card is printed in — which translation table captions
+   * come from, and the `lang` its root carries. A setting rather than a
+   * property: it says how the card comes out, not what the card is, and the
+   * loader puts the system's primary language under the system's own layer so
+   * a system that says nothing prints in the language it was written in.
+   */
+  language?: string;
 }
 
 export type OverflowMode = "none" | "extra-cards" | "back-then-cards";
@@ -92,6 +103,7 @@ const CARD_SETTINGS: SettingTable<CardSettings> = {
   displayHeight: { key: "display-height", parse: positiveNumber },
   copies: { key: "copies", parse: positiveInteger },
   expandByRoll: { key: "expand-by-roll", parse: booleanValue },
+  language: { key: "language", parse: languageCode },
 };
 
 /** The keys an author may write, in table order. */

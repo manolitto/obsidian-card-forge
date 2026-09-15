@@ -121,7 +121,6 @@ translations:
   de: { back-label: Rückseite }
 card-types:
   gear:
-    note-tags: [Ausrüstung]
     front-template: gear/front.hbs
     back-template: back.hbs
     stylesheet: gear/card-type.css
@@ -134,7 +133,7 @@ card-types:
     "game-system.css": `@font-face { font-family: X; src: url('fonts/x.woff2') format('woff2'); }
 .card-root.demo { background: url("assets/paper.webp"); }`,
     "gear/card-type.css": `.gear-frame { background-image: url(gear/assets/frame.png); }`,
-    "gear/front.hbs": `<div>{{> stat-cell for="stat-1a"}} {{asset "assets/logo.png"}}</div>`,
+    "gear/front.hbs": `<div>{{slot "header-title"}} {{> stat-cell for="stat-1a"}} {{asset "assets/logo.png"}}</div>`,
     "spell/front.hbs": `<div>{{slot "header-title"}}</div>`,
     "back.hbs": `<div class="back">{{t "back-label"}}</div>`,
     "partials/stat-cell.hbs": `<td>{{slot for}}</td>`,

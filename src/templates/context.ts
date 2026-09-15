@@ -1,33 +1,47 @@
 import type Handlebars from "handlebars";
+import type { Classifiers } from "../definitions/classifiers";
 import type { Diagnostics } from "../definitions/diagnostics";
+import type { GlyphTables } from "../definitions/glyphs";
 import type { Translations } from "../definitions/translations";
 
 /**
  * What a template sees, and what the helpers see. Two objects on purpose.
  *
- * The context is what a template author may read as a path — and there is
- * nothing in it yet. Every read a face makes goes through a helper: `slot`
- * for a value, `slot-label` for its caption, `t` for a translation, `asset`
- * for a file. The template never names a property, which is what lets a card
- * type rename, alias or re-bind its data without a face noticing.
+ * The context is what a template author may read as a path, and it holds
+ * three things about the card and nothing about its values: which card
+ * type, which system, which language — for a class on the root, a branch a
+ * design needs. Every value a face shows goes through a helper: `slot` for
+ * a value, `slot-label` for its caption, `slot-class` for a class chosen by
+ * it, `t` for a translation, `asset` for a file. The template never names a
+ * property, which is what lets a card type rename, alias or re-bind its data
+ * without a face noticing.
  *
  * The state is what those helpers need, and it travels in the Handlebars
  * data frame rather than in the context, so that a template cannot reach it
  * as a path and the context stays exactly what an author is meant to see.
  */
-export type TemplateContext = Record<string, never>;
+export interface TemplateContext {
+  "card-type": string;
+  system: string;
+  language: string;
+}
 
 export interface RenderState {
   /** `<system>/<card type>`, for messages. */
   where: string;
   /** The note's values, prepared — read through the alias proxy, so a slot name reaches its property. */
   props: Record<string, unknown>;
-  /** The slot vocabulary: every `slot:` target across the card type's properties. */
-  slots: ReadonlySet<string>;
   /** Resolved for the card's language, with the system's primary language behind it. */
   translations: Translations;
   /** Every `{{asset "…"}}` literal the engine found, read as a `data:` URI. */
   assets: ReadonlyMap<string, string>;
+  /** Every picture the note refers to that the vault could answer: link target → `data:` URI. */
+  images: ReadonlyMap<string, string>;
+  /** Per slot, system then card type. */
+  glyphs: GlyphTables;
+  classifiers: Classifiers;
+  /** A body rendered — `markdown="block"` — with the system's embed markup. */
+  block(text: string): string;
   diagnostics: Diagnostics;
 }
 
@@ -37,15 +51,18 @@ export const STATE_KEY = "cardForge";
 /**
  * A helper's arguments, taken apart: Handlebars always passes the options
  * object last, and a call with no argument at all — a bare `{{slot}}` —
- * passes only that. So the one positional argument is whatever comes before
- * it, or `undefined`.
+ * passes only that. So the positional arguments are whatever comes before
+ * it, and the first of them is the one most helpers read.
  */
 export function helperArgs(args: unknown[]): {
   argument: unknown;
+  positional: unknown[];
   options: Handlebars.HelperOptions;
 } {
+  const positional = args.slice(0, -1);
   return {
-    argument: args.length > 1 ? args[0] : undefined,
+    argument: positional[0],
+    positional,
     options: args[args.length - 1] as Handlebars.HelperOptions,
   };
 }

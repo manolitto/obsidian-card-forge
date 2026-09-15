@@ -134,3 +134,34 @@
 .cf-fill-10 { flex: 10 1 0; }
 .cf-fill-11 { flex: 11 1 0; }
 .cf-fill-12 { flex: 12 1 0; }
+
+/* ── What a note's own markdown puts on a card ──────────────────── */
+
+/*
+ * A picture embedded in a note's text — `![[picture.png]]` — in a system
+ * that declares no markdown-image partial. Flow content: it sits where the
+ * author put it and moves with the text when the overflow splitter
+ * paginates. Never wider than the column, never taller than half the card,
+ * so a logo cannot crowd out the text it belongs to; a system retunes the
+ * two variables rather than restating the rule.
+ */
+.cf-body-image {
+  display: block;
+  margin: var(--cf-body-image-margin, 0.5em auto);
+  max-width: 100%;
+  max-height: var(--cf-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
+  object-fit: contain;
+}
+
+/*
+ * A `%% card-break %%` line in the note's text. An invisible block the
+ * overflow splitter treats as a hard breakpoint: what precedes it stays on
+ * the current face, what follows flows onto a continuation face, even when
+ * everything would have fit on one card. `display: none` keeps it a
+ * zero-height block the splitter can still see as a top-level boundary.
+ * The paired markers — `cf-keep-together`, `cf-keep-with-next`,
+ * `cf-keep-with-prev` — are pure splitter signals and ship no rule.
+ */
+.cf-card-break {
+  display: none;
+}

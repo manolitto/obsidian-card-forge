@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 /dist/
 /data.json
 
+
+# --- Golden-fixture preview sheets, written by UPDATE_GOLDENS=1 ---
+/tests/fixtures/*/_preview.html

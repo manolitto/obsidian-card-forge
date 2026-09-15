@@ -19,11 +19,11 @@ describe("the card-setting chain", () => {
     // a deck overriding a card's size for one print run is the whole point of
     // the deck being a layer here.
     const settings = resolve([
-      "card-size: poker\noverflow-mode: none",
+      "card-size: poker\noverflow-mode: none\nlanguage: de",
       "overflow-mode: back-then-cards",
       "card-size: tarot",
       "card-size: 44 x 63 mm",
-      "copies: 3\nside: front\nexpand-by-roll: true\ndisplay-height: 350",
+      "copies: 3\nside: front\nexpand-by-roll: true\ndisplay-height: 350\nlanguage: EN",
     ]);
     expect(settings).toEqual({
       cardSize: { width: 44, height: 63 },
@@ -32,6 +32,7 @@ describe("the card-setting chain", () => {
       side: "front",
       expandByRoll: true,
       displayHeight: 350,
+      language: "en",
     });
   });
 

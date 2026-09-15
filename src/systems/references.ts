@@ -114,6 +114,26 @@ export function templatePartialCalls(hbs: string): Reference[] {
   return out;
 }
 
+/** Every mustache, so a literal outside one — in prose — does not count. */
+const TEMPLATE_MUSTACHE = /\{\{[^}]*\}\}/g;
+const STRING_LITERAL = /(['"])([^'"]*)\1/g;
+
+/**
+ * Every string literal inside a mustache, lowercased — the places a
+ * template reads, in the widest sense: `{{slot "front-stat-1a"}}` names
+ * one directly, and a partial called with `for="front-stat-1a"` reads it
+ * through a path, the literal being at the call site.
+ */
+export function templateStringLiterals(hbs: string): Set<string> {
+  const out = new Set<string>();
+  for (const mustache of hbs.matchAll(TEMPLATE_MUSTACHE)) {
+    for (const match of mustache[0].matchAll(STRING_LITERAL)) {
+      out.add((match[2] ?? "").trim().toLowerCase());
+    }
+  }
+  return out;
+}
+
 // ── YAML ────────────────────────────────────────────────────────────
 
 /**

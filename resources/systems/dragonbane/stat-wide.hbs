@@ -1,0 +1,13 @@
+{{!--
+  Dragonbane — ONE wide row of the stat box.
+
+  Called 8 times from front.hbs, once per row:
+
+      {{> stat-wide for="front-stat-1-wide" tail="front-stat-1-wide-tail"}}
+
+  Two places, because the row has two: the wrapping free text (`for`) and
+  the short value that stays appended to it instead of getting a row of its
+  own (`tail`) — „Voraussetzung: Äxte  STÄ: 7" is ONE line, as in the
+  rulebook's weapon table.
+--}}
+<p class="db-trait">{{#if (slot-label for)}}<span class="db-trait-name">{{slot-label for}}</span>{{/if}}{{slot for}}{{#if (slot tail)}} <span class="db-stat db-trait-tail">{{#if (slot-label tail)}}<span class="db-stat-label">{{slot-label tail}}</span> {{/if}}{{slot tail markdown=false glyph=true}}</span>{{/if}}</p>

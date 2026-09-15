@@ -1,15 +1,20 @@
 import Handlebars from "handlebars";
 import { helperArgs, stateOf } from "./context";
-import { slotHelper, slotLabelHelper } from "./slot";
+import { slotClassHelper, slotHelper, slotLabelHelper } from "./slot";
 
 /**
- * The helpers a face template may call. Four, and each is one lookup:
+ * The helpers a face template may call. Five lookups and two comparisons:
  *
  *   {{slot "name" …}}      the value at a place, rendered — see `slot.ts`
  *   {{slot-label "name"}}  its caption, or nothing
+ *   {{slot-class "name"}}  a class token chosen by what it shows
  *   {{t "key"}}            a translation, or the KEY when there is none — a
  *                          visible marker an author can spot on the card
  *   {{asset "path"}}       a file of the system as a `data:` URI
+ *   (or a b …)             the first argument that is present — for a hull
+ *                          around several places, `{{#if (or (slot "a") (slot "b"))}}`
+ *   (eq a b)               whether two values read the same — for a plaque
+ *                          that would only repeat the title
  *
  * Registered on an isolated instance, never the global one, so that two
  * engines — or two tests — cannot leak a helper into each other.
@@ -17,6 +22,19 @@ import { slotHelper, slotLabelHelper } from "./slot";
 export function registerHelpers(hb: typeof Handlebars): void {
   hb.registerHelper("slot", slotHelper);
   hb.registerHelper("slot-label", slotLabelHelper);
+  hb.registerHelper("slot-class", slotClassHelper);
+
+  // Handlebars' own truthiness: `""`, `0`, `[]` and `false` are absent. A
+  // rendered slot is a `SafeString` when it shows anything, `0` included.
+  hb.registerHelper("or", function (...args: unknown[]) {
+    const { positional } = helperArgs(args);
+    return positional.find((value) => Handlebars.Utils.isEmpty(value) === false) ?? "";
+  });
+
+  hb.registerHelper("eq", function (...args: unknown[]) {
+    const { positional } = helperArgs(args);
+    return String(positional[0] ?? "") === String(positional[1] ?? "");
+  });
 
   hb.registerHelper("t", function (...args: unknown[]) {
     const { argument: key, options } = helperArgs(args);

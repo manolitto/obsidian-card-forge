@@ -31,14 +31,18 @@ properties:
     aliases: [picture, portrait, img, photo]
   tags:
     aliases: [tag]
-  language:
-    aliases: [lang]
+
+  # The note's own text. What stands before the first `##` heading is the
+  # property `body`; every `##` heading below it is a property named after the
+  # heading in kebab-case (`## Vorderseite` → `vorderseite`). Both hold raw
+  # markdown and sit under everything else a note says — frontmatter, the
+  # block's `data:`, a table row — so a `## Beschreibung` section is a long
+  # `description` written where long text belongs. A card type binds them
+  # with `slot:` like any other value; this entry only says what `body` is.
+  body:
     description:
-      de: "Sprachcode der Karte (z. B. `de`, `en`). Wählt die Übersetzungstabelle, aus der die Beschriftungen kommen, und wird vom Deck-Filter `card-languages` zur Auswahl der Karten herangezogen."
-      en: "Card language code (e.g. `de`, `en`). Picks the translation table the captions come from, and is read by the deck-level `card-languages` filter to select cards."
-    sample:
-      de: de
-      en: en
+      de: "Der Notiztext vor der ersten `##`-Überschrift, als Markdown. Wird nicht im Block geschrieben, sondern ist die Notiz selbst; ein Kartentyp bindet ihn an einen Platz auf der Karte."
+      en: "The note's text before the first `##` heading, as markdown. Not written in the block — it is the note itself; a card type binds it to a place on the card."
 
   # A card that comes from a roll table — a critical hit, a mishap, a treasure,
   # an encounter — carries the result it is listed under. `roll` is the display

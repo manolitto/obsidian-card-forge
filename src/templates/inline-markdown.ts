@@ -58,6 +58,20 @@ export function wikilinkDisplayText(text: string): string {
   return stripTags(text).replace(WIKILINK, "$2");
 }
 
+/** A text that is one wikilink or embed, as its target; any other text, trimmed. */
+const ONE_WIKILINK = /^!?\[\[([^\]|]+)(?:\|[^\]]*)?\]\]$/;
+
+/**
+ * Where a link points: `[[Beil.png|the axe]]` and `![[Beil.png]]` both name
+ * `Beil.png`, and a bare `Beil.png` names itself. The key a resolved picture
+ * is looked up under.
+ */
+export function linkTarget(text: string): string {
+  const trimmed = text.trim();
+  const match = ONE_WIKILINK.exec(trimmed);
+  return match ? (match[1] as string).trim() : trimmed;
+}
+
 /** Wikilinks as styled spans; everything else is literal text, escaped. */
 export function wikilinkInline(text: string): string {
   return escapeHtml(stripTags(text)).replace(

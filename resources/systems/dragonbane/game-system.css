@@ -1,0 +1,1424 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Dragonbane — card system base.
+
+   Modelled on the official German card deck
+   "DB_DE_Box_Kartendeck_digital.pdf" (Fria Ligan / Uhrwerk, 2025), whose
+   cards are exactly 63 × 88 mm (poker). Every geometric constant below is
+   expressed as a fraction of `--card-width` / `--card-height` and was
+   measured off that PDF, so the design transfers to any card-size preset.
+
+   Reference anatomy (fractions of the card):
+
+     ornament strip (top)      x 2.88 – 97.0 %   centre y  9.09 %
+     title plaque              x 4.76 – 95.24 %  y 7.94 – 22.71 %
+     body text, first line     x 6.2 – 93.5 %    from y 26.2 %
+     vertical source reference x 94.6 – 97.4 %   vertically centred
+     ornament strip (bottom)   x 2.88 – 97.0 %   centre y 94.3 %
+     value plaque              x 19 – 81 %       y 77.0 – 88.9 %
+
+   The head sits higher than the print's (bar line at 5.37 % instead of
+   9.09 %), the top band carries no dragon-head cartouche, and every back
+   puts its title on top — three deliberate deviations, each decided, not
+   an oversight to correct.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Bundled fonts (embedded as data URIs at build time) ───────────────
+   The original deck is set throughout in `Hideout` (proprietary). The two
+   substitutes below were chosen by rendering a dozen candidates against
+   crops of the PDF:
+
+     Alegreya Sans  — body. Humanist sans with a single-storey `g` whose
+                      descender is cut straight off, slightly narrow, with
+                      calligraphically flared stems. Matches Hideout-Regular
+                      far more closely than Cabin / Fira Sans / Signika /
+                      PT Sans.
+     Colus          — titles and all-caps furniture. A chiselled Roman-caps
+                      display face. Alegreya SC is the closer literal match
+                      to Hideout-Bold's wedge serifs, but Colus is the house
+                      display face this system has always used and reads
+                      wider and cleaner in the plaque, so it stays. Both are
+                      OFL.
+
+   Colus ships a single weight; the display rules below ask for 700 and the
+   browser synthesises the bold, which is what thickens the chiselled stems
+   into the book-like cut.                                                */
+
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Alegreya Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/alegreya-sans-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Colus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/colus-regular.woff') format('woff');
+}
+
+/* ── Design tokens ────────────────────────────────────────────────────── */
+
+.card-root {
+  /* ── Colours (sampled from the official deck's rasterised pages) ── */
+  /* Verdigris sampled off the rasterised page: the ornaments' green averages
+     #286650 with highlights up to #4b9983, over an effectively black outline.
+     A single flat green reads too light and too blue; the two-tone pair
+     below is what the print's ink-under-verdigris looks like. */
+  --db-green: #317a61;          /* ornament body                           */
+  --db-green-light: #4b9983;    /* highlight facet inside a lozenge        */
+  --db-green-dark: #0a201a;     /* ornament outline                        */
+  --db-green-deep: #035e4a;     /* card-back display title (measured text)  */
+  /* Ink. The values sampled off the rasterised deck (#5e3919 / #46290a /
+     #6d523a) are screen-correct but print pale and distinctly orange: on
+     paper the warm hue lifts and the light Alegreya Sans stems lose density.
+     The three inks are therefore darkened and pulled back towards a neutral
+     brown — same hue family, roughly two thirds of the saturation and a third
+     less lightness. Deliberate deviation from the print sample. */
+  --db-title-ink: #402617;      /* title on the plaque, caption plaques    */
+  --db-text: #2e1e12;           /* body text and bullets                   */
+  --db-text-soft: #4f3f33;      /* secondary/quiet text                    */
+  --db-paper-bg: #f4f3ee;       /* card paper, centre                      */
+  --db-paper-warm: #f5ecd3;
+  --db-paper-edge: rgba(120, 96, 58, 0.22);  /* vignette at the card edge  */
+  --db-paper-shadow: rgba(120, 90, 40, 0.2);
+  --db-brown: #614F3D;          /* rules inside the stats box              */
+  --db-brown-light: #8a6442;
+  --db-table-dark: rgba(85, 34, 0, 0.13);
+
+  /* ── Fonts ── */
+  --font-body: "Alegreya Sans", "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* `--font-display` is the italic voice (flavour text, quotations). The
+     original sets those in the same face as the body, slanted. */
+  --font-display: var(--font-body);
+  --font-monumental: "Colus", "Trajan Pro", "Trajan", "Charlemagne Std", Georgia, serif;
+
+  /* ── Type scale ──
+     The original's body is 8.41 pt on a 63 mm card → 4.71 % of the card
+     width. Applied verbatim that would blow up to ~11.9 pt on the `large`
+     (88.9 mm) preset the stat-heavy card-types use, so `--card-font-size-max`
+     caps it just above the 8 pt the dense cards were tuned for. Result:
+     poker cards reproduce the original exactly, large cards keep their
+     density.
+
+     Every other role is a multiple of the body, matching the original's
+     ratios (title 10/8.41 = 1.19 — nudged to 1.25 because our cards carry
+     more text than a rules card does; back title 22/8.41 = 2.62; value
+     label 7.52/8.41 = 0.89; side reference 4/8.41 = 0.48).
+
+     The floor stays at 2 mm: the FontScaler shrinks a dense body to ~70 %
+     before clipping, and the heaviest monsters need that headroom. */
+  --card-font-size-min: 2mm;
+  --card-font-size-max: 3.1mm;
+  --card-font-size-title-min: 2.4mm;
+  --card-font-size-title-max: 3.9mm;
+
+  --font-size-body: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0471), var(--card-font-size-max));
+  --font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.0589), var(--card-font-size-title-max));
+
+  /* ── Geometry (fractions of the card, per the anatomy table above) ── */
+  --db-strip-inset: 2.88%;      /* left/right of an ornament strip           */
+  /* Both bands are drawn at the proportions they have in print (bottom
+     455 x 22, top 455 x 40 in viewBox units) and are sized from the element's
+     WIDTH, so the artwork never distorts: width = 100% - 2 x inset = 94.24 %
+     of the card. That lands the bottom band at 3.26 % of the card height,
+     matching the printed 8.1 pt. The offsets then put each band's BAR on its
+     reference line — 9.09 % at the top, 94.30 % at the bottom. */
+  --db-strip-h-bottom: calc(var(--card-width, 63mm) * 0.9424 * 22 / 455);
+  --db-strip-h-top: calc(var(--card-width, 63mm) * 0.9424 * 40 / 455);
+
+  /* THE knob for the whole head: where the top band's BAR sits, as a fraction
+     of the card height. The strip and the title plaque are both derived from
+     it, so the plaque's upper edge can never drift out from behind the bar.
+
+     A DELIBERATE DEVIATION from the print, which puts this line at 0.0909 and
+     leaves 6.1 % of the card empty above the ornament — more headroom than the
+     4.1 % it leaves below the bottom band. Pulling the line up to 0.0537 puts
+     the ornament 2.4 % from the card's edge and hands the reclaimed 3.7 % of
+     the card height to the body; everything below (plaque, body, footer)
+     follows. */
+  --db-strip-top-line: 0.0537;
+  --db-strip-top-offset: calc(var(--card-height, 88mm) * var(--db-strip-top-line) - var(--db-strip-h-top) / 2);
+  --db-strip-bottom-offset: calc(var(--card-height, 88mm) * 0.057 - var(--db-strip-h-bottom) / 2);
+  --db-plaque-inset: 4.76%;     /* left/right of the title plaque            */
+  /* The plaque starts exactly ON the bar line so its upper edge disappears
+     behind the ornament (the bar covers roughly +/- 0.5 % around the line).
+     Its height is the print's measured 13.71 % of the card, CAPPED against the
+     title it exists to carry.
+
+     The cap is needed because the two terms stop tracking each other on the big
+     presets: the plaque is a fraction of the card HEIGHT and grows without
+     limit, while `--font-size-title` is clamped by `--card-font-size-title-max`
+     and stops at 3.9 mm once the card is wider than 66 mm. On `large`
+     (88.9 x 127) that put 17.41 mm of parchment around letters only 5 % larger
+     than poker's, and the plaque read as an oversized signboard.
+
+     3.25 is the poker proportion itself (12.06 mm of plaque per 3.71 mm of
+     title), so the ceiling is the tuned poker head, expressed in the units that
+     make it hold: 12.68 mm at the default 3.9 mm cap.
+
+     The ceiling is measured against `--card-font-size-title-MAX`, not against
+     the resolved `--font-size-title`. The two are the same number on exactly
+     the presets that had the problem — anything wider than 66 mm runs at the
+     cap — but on the presets NARROWER than poker the resolved size is smaller
+     still, and dividing the plaque by it would shrink a head that was never too
+     big (bridge by 1.3 mm, mini by 0.2 mm). So poker and below are untouched to
+     the millimetre and only tarot / dixit / large come down.
+
+     Expressing the ceiling in title-font terms rather than as a flat mm value
+     also keeps the knob honest in the other direction: a card-type that raises
+     `--card-font-size-title-max` for a monumental name gets a plaque that grows
+     with it, because the height only stops when the type does. */
+  --db-plaque-top: calc(var(--card-height, 88mm) * var(--db-strip-top-line));
+  --db-plaque-height-ratio: 3.25;
+  --db-plaque-height: min(calc(var(--card-height, 88mm) * 0.1371),
+                          calc(var(--card-font-size-title-max) * var(--db-plaque-height-ratio)));
+  /* How deep the ornament reaches INTO the plaque. The bar is only +/- 8 % of
+     the band's height, but the two central lozenges are drawn from y 7 to 33
+     of the 40-unit viewBox, so their tips hang 28.6 % of the band's height
+     below its centre line — 1.49 mm at poker, where the bar alone would be
+     0.42 mm. Since the plaque's upper edge sits ON that centre line, this is
+     exactly the clearance the title's first line has to keep. Derived from
+     --db-strip-h-top, which is sized from the card WIDTH, so it tracks every
+     card-size preset; an em value would not, because the body font it scales
+     with is clamped by --card-font-size-max on the large presets. */
+  --db-plaque-ornament-dip: calc(var(--db-strip-h-top) * 0.286);
+  --db-body-inset-left: 6.2%;
+  --db-body-inset-right: 6.8%;   /* wider: leaves room for the vertical reference */
+}
+
+/* ═══ Card paper ══════════════════════════════════════════════════════ */
+
+.card-root.dragonbane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0.4em;
+  color: var(--db-text);
+  font-family: var(--font-body);
+  /* Vignette over the parchment: the official cards are near-white in the
+     middle and age towards the edges. A gradient used as an element
+     BACKGROUND is PDF-safe — only gradients clipped to text are not; those
+     come out of the Skia → Quartz path as stray rectangles. */
+  background:
+    radial-gradient(ellipse 118% 96% at 50% 44%,
+                    rgba(255, 255, 255, 0) 46%,
+                    var(--db-paper-edge) 100%),
+    url('assets/parchment_light.webp') center / 100% 100% no-repeat,
+    var(--db-paper-bg);
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0471), var(--card-font-size-max));
+}
+
+/* Print-friendly variant: drop the parchment photo AND the vignette, leaving
+   cards on plain white paper — the most ink-saving choice for home printers.
+   The decorative plaques stay: they are structural cues, not paper texture.
+   `cf-paper-plain` is injected by the renderer from the resolved
+   `paper-background` print-setting; it lands on `<body>` for PDF/HTML export
+   and on `.cf-preview-container` inside the in-note shadow DOM, so the
+   selector deliberately has no `body.` anchor. */
+.cf-paper-plain .card-root.dragonbane {
+  background: #ffffff;
+}
+
+/* ═══ Ornament strips ═════════════════════════════════════════════════
+   Redrawn after the print rather than inherited from the Dragonbrew
+   template. Both bands share a vocabulary measured off page 33 of the deck:
+
+     · a spindle bar, a touch thicker at the middle, 23 % of the band height
+     · arrowhead endcaps with an inner lozenge and two inward-curling volutes
+     · a centre knot of two interlaced tendrils, each spiralling in at both
+       ends, around a small lozenge
+
+   Every shape is a flat fill with a dark stroke — no gradient, no blur — so
+   the bands survive the Skia → Quartz PDF path.
+
+   NOTE: a data-URI SVG cannot read a CSS custom property, so the two greens
+   are spelled out as %23317a61 (body) and %230a201a (outline) in the markup.
+   Keep them in step with --db-green / --db-green-dark.
+
+   The printed TOP band carries an illustrated dragon-head cartouche in its
+   middle third. That is drawn artwork, not ornament, and is deliberately not
+   attempted here: the top band instead runs the same knotwork denser — paired
+   lozenges and volutes flanking an enlarged centre knot. Swap in a bitmap if
+   the real cartouche ever becomes available, the way the title plaque wears
+   `banner-n.webp`. */
+
+.card-root.dragonbane .db-strip {
+  flex: 0 0 auto;
+  margin-left: var(--db-strip-inset);
+  margin-right: var(--db-strip-inset);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+}
+
+.card-root.dragonbane .db-strip-bottom {
+  height: var(--db-strip-h-bottom);
+  margin-bottom: var(--db-strip-bottom-offset);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 455 22' width='455' height='22'><path d='M24 8.5 C140 7.8 315 7.8 431 8.5 L431 13.5 C315 14.2 140 14.2 24 13.5 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.6' stroke-linejoin='round'/><g><path d='M0 11.0 L6 6.8 L15 2.4000000000000004 L23 6.0 L23 16.0 L15 19.6 L6 15.2 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/><path d='M9.5 11.0 L14.6 6.6 L19.7 11.0 L14.6 15.4 Z' fill='%230a201a'/><path d='M11.8 11.0 L14.6 8.6 L17.4 11.0 L14.6 13.4 Z' fill='%234b9983'/><g fill='none' stroke='%230a201a' stroke-width='5.2' stroke-linecap='round'><path d='M22 4.4 C29.5 3.4000000000000004 32.5 8.4 29.4 10.4 C26.9 12.0 24.6 9.2 26.6 7.8'/><path d='M22 17.6 C29.5 18.6 32.5 13.6 29.4 11.6 C26.9 10.0 24.6 12.8 26.6 14.2'/></g><g fill='none' stroke='%23317a61' stroke-width='2.6' stroke-linecap='round'><path d='M22 4.4 C29.5 3.4000000000000004 32.5 8.4 29.4 10.4 C26.9 12.0 24.6 9.2 26.6 7.8'/><path d='M22 17.6 C29.5 18.6 32.5 13.6 29.4 11.6 C26.9 10.0 24.6 12.8 26.6 14.2'/></g></g><g transform='translate(455,0) scale(-1,1)'><path d='M0 11.0 L6 6.8 L15 2.4000000000000004 L23 6.0 L23 16.0 L15 19.6 L6 15.2 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/><path d='M9.5 11.0 L14.6 6.6 L19.7 11.0 L14.6 15.4 Z' fill='%230a201a'/><path d='M11.8 11.0 L14.6 8.6 L17.4 11.0 L14.6 13.4 Z' fill='%234b9983'/><g fill='none' stroke='%230a201a' stroke-width='5.2' stroke-linecap='round'><path d='M22 4.4 C29.5 3.4000000000000004 32.5 8.4 29.4 10.4 C26.9 12.0 24.6 9.2 26.6 7.8'/><path d='M22 17.6 C29.5 18.6 32.5 13.6 29.4 11.6 C26.9 10.0 24.6 12.8 26.6 14.2'/></g><g fill='none' stroke='%23317a61' stroke-width='2.6' stroke-linecap='round'><path d='M22 4.4 C29.5 3.4000000000000004 32.5 8.4 29.4 10.4 C26.9 12.0 24.6 9.2 26.6 7.8'/><path d='M22 17.6 C29.5 18.6 32.5 13.6 29.4 11.6 C26.9 10.0 24.6 12.8 26.6 14.2'/></g></g><g fill='none' stroke='%230a201a' stroke-width='6.0' stroke-linecap='round'><path d='M217.5 8.6 C212.0 7.0 211.5 1.4000000000000004 215.9 1.4000000000000004 C218.9 1.4000000000000004 219.3 5.2 216.9 4.8 M217.5 8.6 C223.0 10.1 232.0 11.9 237.5 13.4 C243.0 15.0 243.5 20.6 239.1 20.6 C236.1 20.6 235.7 16.8 238.1 17.2'/><path d='M217.5 13.4 C212.0 15.0 211.5 20.6 215.9 20.6 C218.9 20.6 219.3 16.8 216.9 17.2 M217.5 13.4 C223.0 11.9 232.0 10.1 237.5 8.6 C243.0 7.0 243.5 1.4000000000000004 239.1 1.4000000000000004 C236.1 1.4000000000000004 235.7 5.2 238.1 4.8'/></g><g fill='none' stroke='%23317a61' stroke-width='3.2' stroke-linecap='round'><path d='M217.5 8.6 C212.0 7.0 211.5 1.4000000000000004 215.9 1.4000000000000004 C218.9 1.4000000000000004 219.3 5.2 216.9 4.8 M217.5 8.6 C223.0 10.1 232.0 11.9 237.5 13.4 C243.0 15.0 243.5 20.6 239.1 20.6 C236.1 20.6 235.7 16.8 238.1 17.2'/><path d='M217.5 13.4 C212.0 15.0 211.5 20.6 215.9 20.6 C218.9 20.6 219.3 16.8 216.9 17.2 M217.5 13.4 C223.0 11.9 232.0 10.1 237.5 8.6 C243.0 7.0 243.5 1.4000000000000004 239.1 1.4000000000000004 C236.1 1.4000000000000004 235.7 5.2 238.1 4.8'/></g><path d='M227.5 5.8 L231.5 11.0 L227.5 16.2 L223.5 11.0 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/></svg>");
+}
+
+.card-root.dragonbane .db-strip-top {
+  height: var(--db-strip-h-top);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 455 40' width='455' height='40'><path d='M24 17.5 C140 16.8 315 16.8 431 17.5 L431 22.5 C315 23.2 140 23.2 24 22.5 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.6' stroke-linejoin='round'/><g><path d='M0 20.0 L6 15.8 L15 11.4 L23 15.0 L23 25.0 L15 28.6 L6 24.2 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/><path d='M9.5 20.0 L14.6 15.6 L19.7 20.0 L14.6 24.4 Z' fill='%230a201a'/><path d='M11.8 20.0 L14.6 17.6 L17.4 20.0 L14.6 22.4 Z' fill='%234b9983'/><g fill='none' stroke='%230a201a' stroke-width='5.2' stroke-linecap='round'><path d='M22 13.4 C29.5 12.4 32.5 17.4 29.4 19.4 C26.9 21.0 24.6 18.2 26.6 16.8'/><path d='M22 26.6 C29.5 27.6 32.5 22.6 29.4 20.6 C26.9 19.0 24.6 21.8 26.6 23.2'/></g><g fill='none' stroke='%23317a61' stroke-width='2.6' stroke-linecap='round'><path d='M22 13.4 C29.5 12.4 32.5 17.4 29.4 19.4 C26.9 21.0 24.6 18.2 26.6 16.8'/><path d='M22 26.6 C29.5 27.6 32.5 22.6 29.4 20.6 C26.9 19.0 24.6 21.8 26.6 23.2'/></g></g><g transform='translate(455,0) scale(-1,1)'><path d='M0 20.0 L6 15.8 L15 11.4 L23 15.0 L23 25.0 L15 28.6 L6 24.2 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/><path d='M9.5 20.0 L14.6 15.6 L19.7 20.0 L14.6 24.4 Z' fill='%230a201a'/><path d='M11.8 20.0 L14.6 17.6 L17.4 20.0 L14.6 22.4 Z' fill='%234b9983'/><g fill='none' stroke='%230a201a' stroke-width='5.2' stroke-linecap='round'><path d='M22 13.4 C29.5 12.4 32.5 17.4 29.4 19.4 C26.9 21.0 24.6 18.2 26.6 16.8'/><path d='M22 26.6 C29.5 27.6 32.5 22.6 29.4 20.6 C26.9 19.0 24.6 21.8 26.6 23.2'/></g><g fill='none' stroke='%23317a61' stroke-width='2.6' stroke-linecap='round'><path d='M22 13.4 C29.5 12.4 32.5 17.4 29.4 19.4 C26.9 21.0 24.6 18.2 26.6 16.8'/><path d='M22 26.6 C29.5 27.6 32.5 22.6 29.4 20.6 C26.9 19.0 24.6 21.8 26.6 23.2'/></g></g><path d='M249.5 20.0 L273.5 7.0 L301.5 15.8 L301.5 24.2 L273.5 33.0 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.8' stroke-linejoin='round'/><path d='M205.5 20.0 L181.5 7.0 L153.5 15.8 L153.5 24.2 L181.5 33.0 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.8' stroke-linejoin='round'/><g fill='none' stroke='%230a201a' stroke-width='6.4' stroke-linecap='round'>M257.5 25.5 C270.15 21.59 274.75 12.850000000000001 267.16 11.24 C261.18 10.320000000000002 259.8 16.76 265.09 16.990000000000002 M257.5 14.5 C270.15 18.41 274.75 27.15 267.16 28.759999999999998 C261.18 29.68 259.8 23.24 265.09 23.009999999999998 M197.5 25.5 C210.15 21.59 214.75 12.850000000000001 207.16 11.24 C201.18 10.320000000000002 199.8 16.76 205.09 16.990000000000002 M197.5 14.5 C210.15 18.41 214.75 27.15 207.16 28.759999999999998 C201.18 29.68 199.8 23.24 205.09 23.009999999999998</g><g fill='none' stroke='%23317a61' stroke-width='3.4' stroke-linecap='round'>M257.5 25.5 C270.15 21.59 274.75 12.850000000000001 267.16 11.24 C261.18 10.320000000000002 259.8 16.76 265.09 16.990000000000002 M257.5 14.5 C270.15 18.41 274.75 27.15 267.16 28.759999999999998 C261.18 29.68 259.8 23.24 265.09 23.009999999999998 M197.5 25.5 C210.15 21.59 214.75 12.850000000000001 207.16 11.24 C201.18 10.320000000000002 199.8 16.76 205.09 16.990000000000002 M197.5 14.5 C210.15 18.41 214.75 27.15 207.16 28.759999999999998 C201.18 29.68 199.8 23.24 205.09 23.009999999999998</g><path d='M262.5 20.0 L273.5 10.5 L284.5 20.0 L273.5 29.5 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.8' stroke-linejoin='round'/><path d='M268.44 20.0 L273.5 15.629999999999999 L278.56 20.0 L273.5 24.37 Z' fill='%230a201a'/><path d='M170.5 20.0 L181.5 10.5 L192.5 20.0 L181.5 29.5 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.8' stroke-linejoin='round'/><path d='M176.44 20.0 L181.5 15.629999999999999 L186.56 20.0 L181.5 24.37 Z' fill='%230a201a'/><g fill='none' stroke='%230a201a' stroke-width='6.0' stroke-linecap='round'><path d='M217.5 17.6 C212.0 16.0 211.5 10.4 215.9 10.4 C218.9 10.4 219.3 14.2 216.9 13.8 M217.5 17.6 C223.0 19.1 232.0 20.9 237.5 22.4 C243.0 24.0 243.5 29.6 239.1 29.6 C236.1 29.6 235.7 25.8 238.1 26.2'/><path d='M217.5 22.4 C212.0 24.0 211.5 29.6 215.9 29.6 C218.9 29.6 219.3 25.8 216.9 26.2 M217.5 22.4 C223.0 20.9 232.0 19.1 237.5 17.6 C243.0 16.0 243.5 10.4 239.1 10.4 C236.1 10.4 235.7 14.2 238.1 13.8'/></g><g fill='none' stroke='%23317a61' stroke-width='3.2' stroke-linecap='round'><path d='M217.5 17.6 C212.0 16.0 211.5 10.4 215.9 10.4 C218.9 10.4 219.3 14.2 216.9 13.8 M217.5 17.6 C223.0 19.1 232.0 20.9 237.5 22.4 C243.0 24.0 243.5 29.6 239.1 29.6 C236.1 29.6 235.7 25.8 238.1 26.2'/><path d='M217.5 22.4 C212.0 24.0 211.5 29.6 215.9 29.6 C218.9 29.6 219.3 25.8 216.9 26.2 M217.5 22.4 C223.0 20.9 232.0 19.1 237.5 17.6 C243.0 16.0 243.5 10.4 239.1 10.4 C236.1 10.4 235.7 14.2 238.1 13.8'/></g><path d='M227.5 14.8 L231.5 20.0 L227.5 25.2 L223.5 20.0 Z' fill='%23317a61' stroke='%230a201a' stroke-width='1.7' stroke-linejoin='round'/></svg>");
+}
+
+/* In-flow top band (card backs, which carry no title plaque): a plain margin
+   puts its bar on the same 9.09 % line as on the front. */
+.card-root.dragonbane > .db-strip-top {
+  margin-top: var(--db-strip-top-offset);
+}
+
+/* ═══ Front head: title plaque + overlapping ornament ═════════════════ */
+
+/* The head reserves the vertical band the plaque occupies and is the
+   containing block for the ornament strip, which overlaps the plaque's top
+   edge exactly as the dragon-head crest does in the original. */
+.card-root.dragonbane .db-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: var(--db-plaque-top) var(--db-plaque-inset) 0;
+}
+
+.card-root.dragonbane .db-head .db-strip-top {
+  position: absolute;
+  top: var(--db-strip-top-offset);
+  left: var(--db-strip-inset);
+  right: var(--db-strip-inset);
+  width: auto;
+  margin: 0;
+  z-index: 2;
+}
+
+/* ── The parchment plaque ──
+   `banner-n.webp` — a purpose-drawn horizontal parchment banner (1200 x 400)
+   whose notched, ink-edged border is part of the artwork. Stretched to the
+   plaque box (`100% 100%`), so the border stays on the border at any card
+   size; the plaque runs flatter than the image's 3:1, which widens the
+   notches slightly, and that reads fine at card scale.
+
+   The banner rather than the stats box's `scroll-n.webp`: that image is
+   600 x 3364, so on a wide, shallow plaque the aspect-preserving crop the
+   stats box uses shows only a sliver of the middle and reads as a flat fill
+   with no paper in it.
+
+   No gradient clipped to text and no blurred shadow, so the plaque survives
+   the Skia -> Quartz PDF path unchanged. */
+.card-root.dragonbane .db-title-plaque {
+  position: relative;
+  box-sizing: border-box;
+  min-height: var(--db-plaque-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  /* Horizontal padding clears the banner's end notches.
+
+     The VERTICAL padding is what a title needs to clear the two things that
+     eat into the plaque: the ornament dipping into its top edge, and the
+     banner's notched lower border.
+
+     It has to be spelled out because `min-height` only supplies that clearance
+     for as long as the title fits inside it. A one-line title is shorter than
+     the box, so `align-items: center` distributes the slack and the text lands
+     far below the ornament. From the SECOND line on the slack is gone —
+     content plus padding already exceeds the min-height — and the first line
+     falls back on the padding alone. A symmetric 0.42/0.40em would put the
+     first line's umlauts under the ornament bar and the last line's
+     descenders across the bottom border ("ÜBERMÄSSIG VIEL KÖRPERBEHAARUNG
+     (FÜR DEIN VOLK)", Erscheinungsbild 8).
+
+     TOP and BOTTOM are NOT the same distance, because the two things they
+     clear are not the same size. Below, the banner's notched border reaches a
+     few tenths of a millimetre into the box; 0.66em (~2 mm at poker) covers it
+     with room to spare, and that value is what the earlier descender bug was
+     tuned against — leave it alone.
+
+     Above, the threat is not the bar but the ornament's central lozenges,
+     which hang --db-plaque-ornament-dip (1.49 mm at poker) into the plaque,
+     three and a half times the bar's own reach. A symmetric 0.66em left the
+     first line's UMLAUT DOTS 0.33 mm under the lozenge tip — and Colus sets
+     them 0.13 mm ABOVE the line box, so the box-level arithmetic looked fine
+     while the render read as touching ("GERÜCHTE AUF DER STRASSE"). Every
+     German title with an umlaut on its first line was affected; it is only
+     visible on the wrapped ones because a single line is centred instead.
+
+     So the top clears the measured dip and adds 0.42em of air on top of it:
+     1.12 mm of daylight at poker and 1.17 mm on the `large` preset (measured
+     glyph ink to ornament ink, by rendering the face with and without the
+     title and diffing). Under an em-only value the large preset would be the
+     tighter of the two, since the body font it scales with is clamped there
+     and the band is not. */
+  padding: calc(var(--db-plaque-ornament-dip) + 0.42em) 1.6em 0.66em;
+  /* The banner is drawn 7 % taller than the box and anchored at the BOTTOM, so
+     its notched upper border — ink to 3 % of the image height, notch tips to
+     6 % — is pushed past the top of the box and clipped away by the background
+     painting area. What meets the box's upper edge is clean parchment, and
+     that edge sits on the ornament's bar (see --db-plaque-top), which paints
+     over it at z-index 2. The result: no visible top edge, the plaque reads as
+     emerging from behind the ornament. The left, right and bottom notches are
+     untouched. */
+  background: url('assets/banner-n.webp') center bottom / 100% 107% no-repeat;
+}
+
+/* ── Title ──
+   Deliberately modest: in the original it is only 1.19 × the body size.
+   The plaque, not the point size, is what makes it read as a title. Long
+   names wrap onto a second line (the original does this too — "DAS
+   WIRTSHAUS ZUM WEGENDE") and the FontScaler shrinks from there. */
+.card-root.dragonbane .card-title {
+  font-family: var(--font-monumental);
+  /* Colus ships regular-only; 700 triggers the synthetic bold that thickens
+     its chiselled stems into the heavier, book-like cut. */
+  font-weight: 700;
+  font-size: var(--font-size-title);
+  color: var(--db-title-ink);
+  line-height: 1.1;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  flex: 0 1 auto;
+  min-width: 0;
+  /* Override the base `.card-title` nowrap/clip so a long name wraps. */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+
+  /* Wrapping only helps a title that HAS a break opportunity. A single German
+     compound has none, so it stayed one line, the FontScaler ran out of room
+     at `--card-font-size-title-min` and the word simply overflowed its box —
+     to the RIGHT only, since Chrome does not re-centre an overflowing line —
+     which reads as a title shoved off-centre and, on a roll-table card, into
+     the roll die. "PERSÖNLICHKEITSVERÄNDERUNG" (Schwere Verletzungen 19) needs
+     19 % more width than the padded plaque has at the floor size.
+
+     `hyphens: auto` gives the compound the break it lacks. The renderer stamps
+     `lang=` on `.card-root`, so Chromium picks the
+     German dictionary and breaks at the compound seam —
+     "PERSÖNLICHKEITS- / VERÄNDERUNG" — two centred lines at the FULL title
+     size instead of one clipped line at the floor.
+
+     `hyphenate-limit-chars` is what keeps this off every OTHER title. Two
+     things would otherwise change look for no reason:
+
+       · the line breaker is greedy, so an unrestricted `hyphens: auto` sets
+         "GEBROCHENE NA- / SE" to pack the first line tighter;
+       · a word the FontScaler can still rescue would now hyphenate instead of
+         shrinking, because wrapping makes the FULL size "fit" and the search
+         only ever looks for the largest size that does. "GEDÄCHTNISVERLUST"
+         and "GEHIRNERSCHÜTTERUNG" would break in half where today they are
+         simply set a step smaller on one line.
+
+     The floor is 0.674 × the cascade size (2.4mm of 3.56mm at poker), so
+     shrinking alone carries a title of up to ~23 characters into the plaque.
+     20/5/4 — hyphenate only a word of at least 20 characters, leaving at
+     least 5 before and 4 after the break — puts the threshold just below
+     that: everything the FontScaler can handle keeps handling itself, and
+     only the compounds that would otherwise overflow get the hyphen.
+
+     `overflow-wrap: break-word` is the last resort for a word no dictionary
+     can break (a name, a language without hyphenation data): break it
+     anywhere rather than let it overflow the plaque again. It only fires when
+     the word cannot fit a line on its own, so it never affects normal text. */
+  hyphens: auto;
+  hyphenate-limit-chars: 20 5 4;
+  overflow-wrap: break-word;
+}
+
+/* "N / X" overflow page counter — a quiet subordinate beside the title.
+   It lives as a plaque flex sibling rather than inside `.card-title` so it
+   neither inherits the tracking nor inflates the title's measured height
+   (which would defeat the FontScaler's title auto-shrink on spawned
+   overflow faces). */
+.card-root.dragonbane .cf-overflow-counter {
+  flex: none;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.85em;
+  color: var(--db-text-soft);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── The plaque on a CONTINUATION face ──
+   From the second front face on, the title is no longer a headline — it is a
+   locator, repeating a name the reader already read on face 1. Slimming the
+   plaque there turns "which page am I holding" into a silhouette question:
+   a full-depth parchment band under the ornament is page 1, a shallow one is
+   a continuation, and the two are told apart across a fanned hand without
+   reading a word.
+
+   SAFE BY CONSTRUCTION, because it only ever SHRINKS the head. `.cf-front-continued`
+   is stamped by the overflow splitter AFTER the whole measure-split-scale
+   pass has run — the marker is a chrome-only hook that must not gate
+   front-body content size. Every continuation face was therefore paginated against the
+   FULL-height plaque, and shrinking it afterwards hands that face more room
+   than the splitter budgeted for. The body slot can only grow:
+   `.db-head` is `flex: 0 0 auto` above a `flex: 1 1 0` content container, so
+   whatever the head gives up goes straight to `.card-body-scalable`. The
+   splitter's re-check after the markers land can only find
+   LESS clipping than before, never more, and the face count is already fixed
+   at that point — so this cannot add a card either. The only cost is that a
+   continuation face ends a little emptier than it strictly had to be; the
+   slack lands in the trailing `.db-fill-*` spacer, i.e. at the bottom, which is
+   where it belongs. Growing anything here would clip instead — don't.
+
+   Why it lands at 58 % rather than a literal 50 %: the plaque is three terms,
+   and the biggest single one is not negotiable.
+
+     · TOP padding keeps --db-plaque-ornament-dip IN FULL, and that is 1.49mm
+       of the box at poker on its own. The band above is unchanged, so its
+       central lozenges still hang exactly as far into the plaque as before and
+       the first line still has to clear them. Only the 0.42em of air above the
+       dip is discretionary, and trimming it turns out not to pay: the numbers
+       below are glyph ink to ornament ink, measured by rendering the face
+       twice — once with `.card-title { visibility: hidden }` — and diffing.
+
+           air     0.35em   0.40em   0.45em   0.50em
+           daylight 0.46mm   0.58mm   0.69mm   0.85mm
+
+       Face 1 keeps 0.79mm under a 3.71mm title; 0.45em keeps 0.69mm under a
+       2.60mm one, which is MORE than parity and costs 0.1em. Do not "optimise"
+       this back down, and do not compute it — Colus sets umlaut dots ABOVE the
+       line box, so the box arithmetic reads comfortable at 0.15em where the
+       render already reads as touching. Re-measure after any change to the
+       title size: the relation is not monotonic in the obvious direction (a
+       SMALLER title lost daylight here, because the shorter line box moves the
+       ink up inside fixed padding).
+     · BOTTOM padding drops 0.66 -> 0.45em, and only where that is safe. The
+       banner's notched lower border scales with the box (10.25 % of the image,
+       drawn at 107 % of the box), so a 58 %-height plaque needs 0.26em of
+       clearance where the full one needed 0.445em. What does NOT scale is the
+       roll-table category tag: it hangs a FIXED 0.45em up from the plaque's
+       lower edge, and the 0.66em was tuned against a three-line title's
+       descenders clearing exactly that (see roll-table/card-type.css). Hence
+       the `:has()` below — it keys on the tag actually being present, which is
+       the real reason, rather than on `.roll-table-card`, which is merely
+       where that happens to be true today.
+     · The TITLE carries the rest: 0.70 x the cascade size (2.60mm at poker,
+       above the 2.4mm FontScaler floor, and below the body's 2.97mm — a
+       locator, deliberately no longer set larger than the text it labels).
+
+   Measured at poker: the plaque falls 13.71 % -> 7.97 % of the card height,
+   the whole head 19.08 % -> 13.34 %.
+
+   A long title may still push the plaque past the halved `min-height` — that
+   is fine and still cannot clip, because the invariant that matters is not the
+   min-height but that for the SAME title this plaque is never taller than the
+   face-1 plaque the splitter measured. It is strictly smaller in every term
+   (smaller font, less padding, same width, so never more lines). Verified
+   across one-, two- and three-line titles: head 19.08 -> 13.34 %,
+   19.98 -> 13.34 %, 24.61 -> 19.82 %. */
+.card-root.dragonbane.cf-front-continued .db-title-plaque {
+  min-height: calc(var(--db-plaque-height) * 0.5);
+  padding: calc(var(--db-plaque-ornament-dip) + 0.45em) 1.6em 0.45em;
+}
+
+/* The one plaque whose lower edge carries something of a fixed size: keep the
+   full, tuned descender budget under a roll-table's category tag. */
+.card-root.dragonbane.cf-front-continued .db-title-plaque:has(.roll-table-category) {
+  padding-bottom: 0.66em;
+}
+
+.card-root.dragonbane.cf-front-continued .card-title {
+  font-size: calc(var(--font-size-title) * 0.70);
+}
+
+/* ═══ Left edge: the English original name ═══════════════════════════
+   Every card-type, not just the rule card: `english-original` is bound to
+   `front-side-left` at system level, because "what is this called in the
+   English rulebook" is the same question on a weapon as on a spell — and 73
+   gear notes were already carrying an `Englisch:` that nothing rendered. These
+   rules lived in rule/card-type.css while only that card mapped the slot;
+   leaving them there after the property moved up is what made a gear card emit
+   the div and show nothing.
+
+   "engl.: Fireball", as at the foot of the user's own Zauber-Kartendeck — but
+   set down the LEFT edge, mirroring the source reference that runs up the
+   right one. It began life as a `.card-footer`, which is the base convention
+   for a footer and was the wrong shape here: a footer is a flex sibling, so
+   flex reserves its height on every card, and 2.8 % of the card went to a
+   four-word lookup aid whether the card could spare it or not. Absolutely
+   positioned it costs the body nothing at all — the single largest saving in
+   this stylesheet, and it lands where it is needed most, on the long spells.
+
+   It copies `.db-side-ref` exactly — same 0.48 em, same tracking, same caps,
+   same soft ink — so the two edges read as a matched pair rather than as two
+   unrelated marginal notes. The one difference is direction: the reference is
+   rotated 180° and reads bottom-to-top on the right, this one is unrotated and
+   reads top-to-bottom on the left, which is what makes them mirror-symmetric
+   about the card's vertical axis instead of both leaning the same way.
+
+   `translateY(-50%)` on a content-sized box rather than `top: 0; bottom: 0` —
+   NOT a style choice. See the note on `.db-side-ref` below: the box
+   is an orthogonal flow, and the Chromium build Obsidian's PDF export runs on
+   sizes that axis shrink-to-fit and ignores `bottom`, which pinned every
+   reference to the top corner of the exported deck. A physical transform owes
+   the writing mode nothing and lands correctly on both engines.
+
+   Clearance: the label occupies x 2.6 – 4.9 % and the body starts at
+   `--db-body-inset-left` (6.2 %), so 1.3 % of the card width (0.8 mm) stays
+   clear — the stats box, which starts at 7.1 %, keeps 2.3 %. */
+.card-root.dragonbane .db-side-english {
+  position: absolute;
+  top: 50%;
+  left: 2.6%;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+  font-family: var(--font-body);
+  font-size: 0.48em;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--db-text-soft);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-root.dragonbane .db-side-english-label::after {
+  content: ":";
+  margin-right: 0.35em;
+}
+
+/* ═══ Vertical source reference (right edge) ══════════════════════════
+   The original prints "DRAGONBANE GRUNDREGELN" rotated 90° along the right
+   edge of every card. It is absolutely positioned, i.e. OUT of the flex
+   flow, so it cannot disturb the FontScaler's height measurement; the body
+   keeps clear of it through `--db-body-inset-right`.
+
+   Centred by `top: 50%` + `translateY(-50%)` on a content-sized box — NOT by
+   stretching the box with `top: 0; bottom: 0` and centring inside it. The box
+   is an orthogonal flow (`writing-mode: vertical-rl` inside a horizontal card),
+   and there its INLINE size is the physical height. In the exported deck the
+   box measured exactly the length of its own text and sat pinned at `top: 0` —
+   i.e. Chromium 142, the engine Obsidian's PDF export runs on, sized that
+   inline axis shrink-to-fit and ignored `bottom`. Every reference printed in
+   the top-right corner across the ornament strip instead of down the middle of
+   the edge. (Chromium 151 stretches it correctly — hence: export only.)
+   `translateY` is a physical transform and owes the writing mode nothing, so
+   this formulation lands in the same place on both engines. */
+.card-root.dragonbane .db-side-ref {
+  position: absolute;
+  top: 50%;
+  right: 2.6%;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%) rotate(180deg);
+  font-family: var(--font-body);
+  font-size: 0.48em;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Opaque token, not a translucent ink: at 72 % alpha over the parchment this
+     composited to ~#5a524a, i.e. paler than the quiet-text token it should
+     match. Print showed it washing out first of all the type. */
+  color: var(--db-text-soft);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══ "Geht weiter" arrow ═════════════════════════════════════════════
+   An arrowhead low in the right-hand gutter, on every front face except the
+   last one, saying that the text runs on. The counter on the plaque already
+   says WHICH page this is; this says there IS another, and it says it at the
+   foot of the column, where a reader looks when the text stops.
+
+   `.cf-front-has-next` is the marker made for exactly this: the splitter
+   stamps it on every front face
+   followed by another. That it lands only AFTER the measure-split-scale pass
+   is harmless HERE, and only because the arrow is absolutely positioned — it
+   adds no height, so there is nothing to clip. The same marker must never
+   reveal anything that occupies flow (Eiserne Zeit's logo is the worked
+   example of why not).
+
+   PLACEMENT. Three things share the bottom of this card, and the arrow crosses
+   none of them (measured, poker):
+
+       body slot            x  6.2 – 93.2 %,  y 22.1 – 91.5 %
+       source reference     x 95.1 – 97.4 %,  y 36.9 – 63.1 %
+       bottom ornament      x  2.9 – 97.1 %,  y 92.7 – 95.9 %
+       -> arrow             x 93.8 – 97.1 %,  y 90.2 – 91.9 %
+
+   Horizontally it is flush right with the ORNAMENT BAND (`--db-strip-inset`),
+   not with the source reference. The band sits directly beneath it, so that is
+   an edge a reader's eye can actually check — against the reference, 30 % of
+   the card further up, alignment is unverifiable, and at the reference's 2.6 %
+   the arrow's tip overhung the band's by 0.27 %, which reads as loose. The
+   price is that the gap to the body box narrows to 0.62 % (0.39mm); acceptable
+   because Dragonbane's body sets ragged-right, so its last line reaching the
+   full box width at exactly this height is the rare case, and the two never
+   touch even then. Vertically it sits in the gutter's lower reach, clear of the reference
+   above (which is centred, 36.9–63.1 %) and stopping 0.8 % short of the
+   ornament below. It is NOT put in the 4.1 % of clear paper UNDER the ornament:
+   that band is the card's outer margin, and a mark 1mm from the trim is a mark
+   the cutter eats.
+
+   🔴 DRAWN, NOT TYPED — the same trap as the bullet and the Eiserne Zeit
+   arrow. Neither Colus nor Alegreya Sans carries U+2192 / U+27A1 / U+25B6
+   (checked, not assumed), so a text arrow falls through to the host font:
+   Type 3 in the PDF and a tofu box off macOS.
+
+   Shape and colour follow the deck's own vocabulary rather than a generic
+   triangle: this is the end lozenge of the ornament bands cut in half and
+   pointed — green body, ink outline, the notched back that the bands' volutes
+   also have. `stroke-linejoin: round` rather than miter, because at 2mm a
+   mitred tip is a spike whose overshoot would need viewBox room it cannot
+   spare; the rounding is invisible
+   at this size. The path is inset 10 units in a 100-unit viewBox against a
+   stroke half-width of 3.5, so nothing is clipped into a flat stub.
+
+   A data-URI SVG cannot read a custom property — keep the greens in step with
+   --db-green / --db-green-dark by hand. Flat fill plus flat stroke, no gradient
+   in text and no blurred shadow, so it survives Skia -> Quartz unchanged. */
+.card-root.dragonbane .db-cont-arrow {
+  display: none;
+  position: absolute;
+  right: var(--db-strip-inset);
+  /* Anchored from the bottom so it tracks the ornament band, not the text:
+     the band's upper edge is at 92.7 %, this leaves 0.8 % of air under the
+     arrow. */
+  bottom: 8.1%;
+  width: 0.7em;      /* ~2.1mm at poker */
+  height: 0.5em;     /* ~1.5mm — the viewBox aspect, so the dart is not skewed */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 72'><path d='M95 36 L10 5 L30 36 L10 67 Z' fill='%23317a61' stroke='%230a201a' stroke-width='7' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-root.dragonbane.cf-front-has-next .db-cont-arrow {
+  display: block;
+}
+
+/* ═══ Body ════════════════════════════════════════════════════════════ */
+
+.card-root.dragonbane .card-content-container {
+  background: transparent;
+  color: var(--db-text);
+  /* Top padding closes the 3.5 % gap the original leaves between the
+     plaque's lower edge and the first text line. */
+  padding: calc(var(--card-height, 88mm) * 0.030) var(--db-body-inset-right)
+           calc(var(--card-height, 88mm) * 0.012) var(--db-body-inset-left);
+  line-height: 1.37;   /* 11.5 pt leading on 8.41 pt text */
+}
+
+/* ── Bullet lists ──
+   Markdown lists inside a card body render as the original's ✦ (U+2726)
+   bullets in body ink, hanging outside the text block. */
+.card-root.dragonbane .card-content-container ul {
+  list-style: none;
+  margin: 0.25em 0;
+  padding-left: 2em;
+}
+
+.card-root.dragonbane .card-content-container ul > li {
+  position: relative;
+  margin: 0.18em 0;
+}
+
+/* The bullet is drawn as vector art rather than typed as U+2726: no bundled
+   face carries that glyph, so a text bullet falls through to the host's
+   ZapfDingbats and Skia embeds it as a Type 3 font — a face that cannot
+   carry a gradient through the PDF path, and unavailable off macOS anyway.
+   An inline SVG renders identically everywhere. */
+.card-root.dragonbane .card-content-container ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.5em;
+  top: 0.42em;
+  width: 0.6em;
+  height: 0.6em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'><path d='M8 0 C8.7 5.2 10.8 7.3 16 8 C10.8 8.7 8.7 10.8 8 16 C7.3 10.8 5.2 8.7 0 8 C5.2 7.3 7.3 5.2 8 0 Z' fill='%2346290a'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* A list line cut in half by the page break carries no second star on the
+   continuation — it is the same line, not a new bullet. The base stylesheet
+   resets `::marker` for that, which cannot reach a bullet drawn as `::before`,
+   so the system suppresses it itself. Only a mid-line cut is
+   tagged; a break BETWEEN items leaves the next item's star alone. */
+.card-root.dragonbane .card-content-container ul > li.cf-split-continuation::before {
+  content: none;
+}
+
+.card-root.dragonbane .card-content-container ol {
+  margin: 0.25em 0;
+  padding-left: 1.5em;
+}
+
+.card-root.dragonbane .card-content-container p {
+  margin: 0.28em 0;
+}
+
+.card-root.dragonbane .card-content-container > :first-child,
+.card-root.dragonbane .card-body-scalable > :first-child {
+  margin-top: 0;
+}
+
+/* ── Flavour / quotation ──
+   The original's story cards ("DIE INSEL IM NEBEL") set the whole body in
+   a slanted cut of the body face. */
+.card-root.dragonbane .db-flavor {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1em;
+  line-height: 1.37;
+  color: var(--db-text);
+  margin: 0.1em 0 0.35em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ═══ Small parchment plaque with ornamental ends ═════════════════════
+   The original uses this component twice: as a value slot ("WERT" above
+   "3W6 Silberstücke") and as a caption on card backs ("GASTHAUS"). It wears
+   the same `banner-n.webp` artwork as the title plaque, one size down, so the
+   two read as pieces of the same parchment rather than as two different
+   materials — not a solid green ribbon, which reads as a different object. */
+
+.card-root.dragonbane .db-plaque-strip {
+  position: relative;
+  box-sizing: border-box;
+  align-self: center;
+  flex: 0 0 auto;
+  display: grid;
+  place-content: center;
+  min-width: 44%;
+  max-width: 78%;
+  min-height: calc(var(--card-height, 88mm) * 0.095);
+  margin: 0.5em auto 0.3em;
+  /* Horizontal padding clears the banner's end notches, as on the title. */
+  padding: 0.3em 1.5em 0.28em;
+  text-align: center;
+  background: url('assets/banner-n.webp') center / 100% 100% no-repeat;
+}
+
+/* Green scroll ends — the ornament the deck sets at both short sides of a
+   plaque: two fat volutes with hollow eyes, BOTH TURNING THE SAME WAY, joined
+   in the middle by a sharp corner that juts outward, away from the plaque. The
+   shape is MIRROR-symmetric about its horizontal centre line — point symmetry
+   would force the volutes to oppose each other and make an S.
+
+   It is ONE continuous polyline (mirrored lower half, corner, upper half), so
+   the corner is a real mitre rather than two round stroke caps meeting at an
+   angle. The corner therefore sits exactly ON the mirror axis.
+
+   THE CORNER IS THE FIDDLY PART. A mitre reaches halfwidth / sin(half-angle)
+   past the centreline corner — with this band width that is far longer than
+   the printed ornament's little point, and a viewBox sized to the volutes just
+   clips it into a flat stub. Instead the centreline corner is placed so the
+   mitre's OUTER TIP
+   lands flush with the volutes' left edge:
+
+       corner_x = tip_x + halfwidth / sin(theta),  theta = atan(dy / (arm_x - corner_x))
+
+   solved by iteration. `tip_x` is the volute's ACTUAL leftmost ink, taken from
+   the sampled curve — NOT `centre - radius`. The spiral only reaches its outer
+   radius at its start angle (65°) and is already tighter by the time it comes
+   round to 180°, so the naive formula puts the edge 12.8 units too far left and
+   the point visibly overshoots. Measured properly the solve gives corner_x 27.6
+   for a 73° point, and the drawn aspect lands on 0.435 — exactly the reference's
+   — which is independent confirmation that the edge is now right.
+
+   The viewBox is the resulting ink bounds, so nothing is cut.
+
+   The band is a heavy ink stroke with a narrower verdigris stroke over it:
+   where successive turns of a volute come close, the ink between them stays
+   visible as the dark separating line the print has.
+
+   Size: the print's ornament is 9.5 x 22.0 pt, measured from the VERDIGRIS
+   pixels only — the plaque's dark edge sits inside the crop and inflates a
+   naive bounding box. Height is kept at that 12.87 % of the card width and the
+   width follows the drawn aspect (0.493), so the point is added
+   without squashing anything. Both derive from the width, so the aspect cannot
+   distort across card-size presets.
+
+   The overhang hides the plaque's own edge behind the ornament. The edge is a
+   vertical line, so it falls at column `overhang` of the ornament and the share
+   of it that stays hidden is that column's ink coverage —
+
+       overhang   70 %   65 %   60 %   55 %   50 %   45 %
+       hidden     86 %   91 %   95 %   99 %  100 %   97 %
+
+   Coverage peaks at 48 %; 50 % hides the edge completely while leaving half the
+   ornament outside the plaque. Re-measure after any shape change — the profile
+   belongs to the shape. */
+.card-root.dragonbane .db-plaque-end {
+  position: absolute;
+  top: 50%;
+  height: calc(var(--card-width, 63mm) * 0.1287);
+  width: calc(var(--card-width, 63mm) * 0.1287 * 0.435);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='1.9 1.2 95.1 218.6' width='95.1' height='218.6'><g fill='none' stroke-linecap='round' stroke-linejoin='miter' stroke-miterlimit='10'><path d='M39.1 182.6 L40.7 183.9 L42.7 184.9 L44.8 185.5 L47.1 185.8 L49.6 185.7 L52.0 185.1 L54.4 184.1 L56.6 182.6 L58.6 180.8 L60.3 178.5 L61.7 175.8 L62.5 173.0 L62.9 169.9 L62.7 166.7 L61.9 163.5 L60.6 160.4 L58.8 157.5 L56.3 155.0 L53.5 152.8 L50.2 151.1 L46.6 150.0 L42.7 149.5 L38.8 149.6 L34.8 150.5 L31.0 152.0 L27.4 154.3 L24.2 157.1 L21.5 160.6 L19.4 164.5 L17.9 168.8 L17.2 173.4 L17.3 178.1 L18.2 182.9 L19.9 187.5 L22.4 191.8 L25.7 195.6 L29.7 198.9 L34.2 201.6 L39.2 203.4 L44.5 204.4 L50.0 204.5 L55.5 203.6 L60.9 201.8 L66.0 199.0 L70.6 195.4 L74.5 191.0 L77.7 185.9 L80.0 180.2 L81.4 174.2 L81.7 167.9 L80.9 161.6 L79.0 155.4 L76.1 149.6 L72.2 144.2 L67.4 139.6 L61.7 135.8 L27.6 110.5 L61.7 85.2 L67.4 81.4 L72.2 76.8 L76.1 71.4 L79.0 65.6 L80.9 59.4 L81.7 53.1 L81.4 46.8 L80.0 40.8 L77.7 35.1 L74.5 30.0 L70.6 25.6 L66.0 22.0 L60.9 19.2 L55.5 17.4 L50.0 16.5 L44.5 16.6 L39.2 17.6 L34.2 19.4 L29.7 22.1 L25.7 25.4 L22.4 29.2 L19.9 33.5 L18.2 38.1 L17.3 42.9 L17.2 47.6 L17.9 52.2 L19.4 56.5 L21.5 60.4 L24.2 63.9 L27.4 66.7 L31.0 69.0 L34.8 70.5 L38.8 71.4 L42.7 71.5 L46.6 71.0 L50.2 69.9 L53.5 68.2 L56.3 66.0 L58.8 63.5 L60.6 60.6 L61.9 57.5 L62.7 54.3 L62.9 51.1 L62.5 48.0 L61.7 45.2 L60.3 42.5 L58.6 40.2 L56.6 38.4 L54.4 36.9 L52.0 35.9 L49.6 35.3 L47.1 35.2 L44.8 35.5 L42.7 36.1 L40.7 37.1 L39.1 38.4' stroke='%230a201a' stroke-width='30.6'/><path d='M39.1 182.6 L40.7 183.9 L42.7 184.9 L44.8 185.5 L47.1 185.8 L49.6 185.7 L52.0 185.1 L54.4 184.1 L56.6 182.6 L58.6 180.8 L60.3 178.5 L61.7 175.8 L62.5 173.0 L62.9 169.9 L62.7 166.7 L61.9 163.5 L60.6 160.4 L58.8 157.5 L56.3 155.0 L53.5 152.8 L50.2 151.1 L46.6 150.0 L42.7 149.5 L38.8 149.6 L34.8 150.5 L31.0 152.0 L27.4 154.3 L24.2 157.1 L21.5 160.6 L19.4 164.5 L17.9 168.8 L17.2 173.4 L17.3 178.1 L18.2 182.9 L19.9 187.5 L22.4 191.8 L25.7 195.6 L29.7 198.9 L34.2 201.6 L39.2 203.4 L44.5 204.4 L50.0 204.5 L55.5 203.6 L60.9 201.8 L66.0 199.0 L70.6 195.4 L74.5 191.0 L77.7 185.9 L80.0 180.2 L81.4 174.2 L81.7 167.9 L80.9 161.6 L79.0 155.4 L76.1 149.6 L72.2 144.2 L67.4 139.6 L61.7 135.8 L27.6 110.5 L61.7 85.2 L67.4 81.4 L72.2 76.8 L76.1 71.4 L79.0 65.6 L80.9 59.4 L81.7 53.1 L81.4 46.8 L80.0 40.8 L77.7 35.1 L74.5 30.0 L70.6 25.6 L66.0 22.0 L60.9 19.2 L55.5 17.4 L50.0 16.5 L44.5 16.6 L39.2 17.6 L34.2 19.4 L29.7 22.1 L25.7 25.4 L22.4 29.2 L19.9 33.5 L18.2 38.1 L17.3 42.9 L17.2 47.6 L17.9 52.2 L19.4 56.5 L21.5 60.4 L24.2 63.9 L27.4 66.7 L31.0 69.0 L34.8 70.5 L38.8 71.4 L42.7 71.5 L46.6 71.0 L50.2 69.9 L53.5 68.2 L56.3 66.0 L58.8 63.5 L60.6 60.6 L61.9 57.5 L62.7 54.3 L62.9 51.1 L62.5 48.0 L61.7 45.2 L60.3 42.5 L58.6 40.2 L56.6 38.4 L54.4 36.9 L52.0 35.9 L49.6 35.3 L47.1 35.2 L44.8 35.5 L42.7 36.1 L40.7 37.1 L39.1 38.4' stroke='%23317a61' stroke-width='15.3'/></g></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card-root.dragonbane .db-plaque-end-left {
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.card-root.dragonbane .db-plaque-end-right {
+  right: 0;
+  transform: translate(50%, -50%) scaleX(-1);
+}
+
+/* The text sits in its own element so the two absolutely-positioned scroll
+   ends never become grid items. */
+.card-root.dragonbane .db-plaque-text {
+  display: block;
+}
+
+/* Caption voice — card-back captions. Same size and ink as the card title. */
+.card-root.dragonbane .db-plaque-caption {
+  font-family: var(--font-monumental);
+  font-weight: 700;
+  font-size: var(--font-size-title);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--db-title-ink);
+  line-height: 1.1;
+}
+
+/* Value voice — the "3W6 Silberstücke" slot. Body face and size. */
+.card-root.dragonbane .db-plaque-value {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1em;
+  color: var(--db-text);
+  line-height: 1.2;
+}
+
+/* The small all-caps label the original prints above a value plaque. */
+.card-root.dragonbane .db-plaque-label {
+  flex: 0 0 auto;
+  text-align: center;
+  font-family: var(--font-monumental);
+  font-weight: 700;
+  font-size: 0.89em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--db-title-ink);
+  margin: 0.35em 0 0;
+}
+
+.card-root.dragonbane .db-plaque-label + .db-plaque-strip {
+  margin-top: 0.15em;
+}
+
+/* ═══ Plain section heading ═══════════════════════════════════════════
+   A heading that names the block under it ("MONSTERANGRIFFE" over the
+   attack table) — set as bare type, NOT on a plaque.
+
+   The plaque is a component of the card's furniture: a piece of parchment
+   pinned to the paper, with the scroll ends that mark the deck's captions.
+   Inside the body it competes with the block it introduces — 9.5 % of the card
+   height plus its own margins for one word, on cards whose text already runs
+   onto a second face. A heading is not a caption; it needs the caps, the ink
+   and the tracking, and none of the parchment.
+
+   The size sits between the small `.db-plaque-label` (0.89em) and the card
+   title: large enough to read as a break in the column, small enough that the
+   card keeps one title. The tracking is the label's 0.09em — Colus caps set
+   tight otherwise, and this heading is one long word.
+
+   `align-self: center` because the body is a flex COLUMN: a block child
+   stretches to full width and `text-align` would centre the text inside that
+   full-width box, which is the same result here but breaks the moment the
+   heading is given a rule or a background. */
+.card-root.dragonbane .db-section-heading {
+  flex: 0 0 auto;
+  align-self: center;
+  max-width: 100%;
+  text-align: center;
+  font-family: var(--font-monumental);
+  font-weight: 700;
+  font-size: 1.2em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--db-title-ink);
+  line-height: 1.15;
+  /* Asymmetric on purpose: the heading belongs to what FOLLOWS it, so it keeps
+     its distance from the block above and sits close to its own table. */
+  margin: 0.6em 0 0.1em;
+}
+
+/* ═══ Stats box ═══════════════════════════════════════════════════════
+   The original deck carries no stat blocks (its cards are rules cards), so
+   this component has no direct model there. It keeps the bundled
+   `scroll-n.webp` parchment box — the same visual family as the plaques —
+   with tones aligned to the new palette. */
+
+.card-root.dragonbane .db-stats-box {
+  position: relative;
+  padding: 0.25em 1.2em 0.2em;
+  margin: 0.75em 0.2em 0.55em;
+  /* `center / 100%` keeps the scroll image's 600 × 3364 aspect, so only the
+     middle parchment slice shows; the decorative ends come from the arrow
+     strips below. */
+  background: url('assets/scroll-n.webp') center / 100% no-repeat;
+}
+
+/* Top strip: left tip + right tip + bar. */
+.card-root.dragonbane .db-stats-box::before {
+  content: "";
+  position: absolute;
+  inset: -0.3em -0.6em auto;
+  height: 0.6em;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg height='16' width='4' xmlns='http://www.w3.org/2000/svg'><path d='M2 2 L0 8 L2 14 L4 8 Z' fill='%233a2a17'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg height='16' width='4' xmlns='http://www.w3.org/2000/svg'><path d='M2 2 L0 8 L2 14 L4 8 Z' fill='%233a2a17'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg height='16' width='170' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><path d='M2 6 L2 10 L168 10 L168 6 Z' fill='%233a2a17'/></svg>");
+  background-size: 1em 0.6em, 1em 0.6em, calc(100% - 0.4em) 0.6em;
+  background-position: left center, right center, center;
+  background-repeat: no-repeat;
+}
+
+/* Bottom strip: the same three plus a centre dingbat. */
+.card-root.dragonbane .db-stats-box::after {
+  content: "";
+  position: absolute;
+  inset: auto -0.6em -0.4em;
+  height: 0.85em;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg height='16' width='4' xmlns='http://www.w3.org/2000/svg'><path d='M2 2 L0 8 L2 14 L4 8 Z' fill='%233a2a17'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg height='16' width='4' xmlns='http://www.w3.org/2000/svg'><path d='M2 2 L0 8 L2 14 L4 8 Z' fill='%233a2a17'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg height='16' width='170' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><path d='M2 6 L2 10 L168 10 L168 6 Z' fill='%233a2a17'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg height='16' width='10' xmlns='http://www.w3.org/2000/svg'><path d='M5 0 Q3 6, 1 6 L1 10 Q3 10, 5 16 Q7 10, 9 10 L9 6 Q7 6, 5 0 Z' fill='%233a2a17'/></svg>");
+  background-size: 1em 0.6em, 1em 0.6em, calc(100% - 0.4em) 0.6em, 1.4em 0.85em;
+  background-position: left center, right center, center, center;
+  background-repeat: no-repeat;
+}
+
+.card-root.dragonbane .db-stats-row {
+  display: flex;
+  align-items: baseline;
+  /* row-gap × column-gap kept separate on purpose: the 1.6 em is horizontal
+     breathing room BETWEEN stats on one line. As a shorthand it would also
+     apply vertically, so a wrapping row would gain a 1.6 em blank band. */
+  gap: 0.1em 1.6em;
+  padding: 0.3em 0.45em;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.card-root.dragonbane .db-stats-row + .db-stats-row {
+  border-top: 0.1em solid var(--db-brown);
+}
+
+.card-root.dragonbane .db-stat {
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+
+.card-root.dragonbane .db-stat-label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--db-text);
+}
+
+.card-root.dragonbane .db-stat-label::after {
+  content: ":";
+  color: var(--db-text);
+  margin-right: 0.35em;
+}
+
+/* A single full-width entry — "Fertigkeiten: …", "Waffen: …". */
+.card-root.dragonbane .db-stats-row-wide {
+  display: block;
+}
+
+.card-root.dragonbane .db-stats-row-traits {
+  flex-direction: column;
+  gap: 0.1em;
+}
+
+/* The prose entries — "Effekt: …", "Merkmale: …", "Fertigkeiten: …". German
+   compounds ("Geschicklichkeitsproben", "Befestigungsanlagen") are long enough
+   to strand a whole line on a 63 mm card, so they hyphenate.
+
+   `hyphens: auto` alone does nothing: the browser needs a `lang` ancestor to
+   pick a dictionary, and the template engine stamps one on `.card-root` from
+   the card's `language:` — so each card breaks by the rules of ITS OWN
+   language, and a card that declares none simply doesn't hyphenate. Verified
+   against this stylesheet: with `lang="de"` the paragraph re-breaks, with
+   `lang="en"` or no lang it renders exactly as `hyphens: none`.
+
+   `overflow-wrap: break-word` stays as the backstop for what no dictionary can
+   split — a wikilink target, a long dice string. Matches `.db-effect-text` and
+   `.db-flavor`, which have carried both since the redesign. Plain text layout,
+   so nothing here troubles the Skia → Quartz PDF path. */
+.card-root.dragonbane .db-trait {
+  margin: 0.1em 0;
+  width: 100%;
+  white-space: normal;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.card-root.dragonbane .db-trait-name {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--db-text);
+}
+
+.card-root.dragonbane .db-trait-name::after {
+  content: ":";
+  margin-right: 0.35em;
+}
+
+/* A short value trailing a wide row's free text — the `…-wide-tail` slot. It
+   sits INSIDE the row's `<p class="db-trait">` rather than in a row of its
+   own, because it belongs to the text before it: "Voraussetzung: Äxte  STÄ: 7"
+   is one statement, and the printed weapon table sets it that way too.
+
+   `.db-stat` already supplies `white-space: nowrap`, so the pair never breaks
+   across lines while the free text in front of it wraps freely. All this rule
+   adds is the gap. A plain word space is not enough — at 0.35em after the
+   label's colon the two run together ("Äxte STÄ: 7" reads as one phrase), and
+   the point of the trailing value is that it is a SEPARATE datum. 0.9em is
+   roughly the space a hand-written "und" would take, which is how the
+   rulebook's weapon table reads the pair. */
+.card-root.dragonbane .db-trait-tail {
+  margin-left: 0.9em;
+}
+
+/* ── The tight row rhythm, shared by the two dense card types ──
+   Row padding halved (0.3 → 0.15 em per edge, i.e. 0.3 em off every row), the
+   box's leading tightened from the body's 1.37 to 1.25, and the prose
+   paragraph's own margin dropped — it keeps a slightly airier 1.3 leading
+   because it is the one entry that runs to several lines.
+
+   The rows are short labelled values, not running prose, so they carry the
+   tighter setting without looking cramped. Ausrüstung needs it (up to eight
+   stat rows plus a prose Effekt, and every em saved goes to the illustration);
+   the roll-table cards adopt it so a Jagdbeute card's Voraussetzungen /
+   Rationen block sets identically to the same two rows on a gear card — the
+   decks are shuffled together at the table. The rule cards (Fertigkeit /
+   Talent / Zauber) join for both reasons at once: a Zauber carries up to six
+   labelled rows AND the full rulebook paragraph beneath them, which is the
+   tightest squeeze in the set, and its "Reichweite: 20 Meter" has to set like
+   the identical row on a gear card.
+
+   Deliberately NOT applied to `.dragonbane` as a whole: the monster and NSC
+   fronts keep the system's roomier default spacing above. */
+.card-root.dragonbane.gear-card .db-stats-box,
+.card-root.dragonbane.roll-table-card .db-stats-box,
+.card-root.dragonbane.rule-card .db-stats-box {
+  line-height: 1.25;
+}
+
+.card-root.dragonbane.gear-card .db-stats-row,
+.card-root.dragonbane.roll-table-card .db-stats-row,
+.card-root.dragonbane.rule-card .db-stats-row {
+  padding-top: 0.15em;
+  padding-bottom: 0.15em;
+}
+
+.card-root.dragonbane.gear-card .db-trait,
+.card-root.dragonbane.roll-table-card .db-trait,
+.card-root.dragonbane.rule-card .db-trait {
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* ═══ Short-text body (roll-table cards) ══════════════════════════════
+   One entry of a dice table: short prose, no real stat block. The die
+   result itself sits on the title plaque as `.roll-table-badge`.
+
+   Left-aligned and top-anchored, as every prose card in the original deck
+   is ("DIE INSEL IM NEBEL", "DAS WIRTSHAUS ZUM WEGENDE") — the text starts
+   directly under the plaque and runs ragged-right. */
+
+.card-root.dragonbane .db-effect-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  text-align: left;
+  flex: 0 0 auto;
+  padding: 0.1em 0;
+}
+
+.card-root.dragonbane .db-effect-text {
+  font-family: var(--font-body);
+  font-size: 1em;
+  line-height: 1.37;
+  color: var(--db-text);
+  margin: 0.2em 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.card-root.dragonbane .db-effect-label {
+  font-weight: 700;
+  color: var(--db-text);
+  margin-right: 0.35em;
+}
+
+.card-root.dragonbane .db-effect-label::after {
+  content: ":";
+  margin-right: 0.2em;
+}
+
+/* Footer property row for short-text cards (Heilungsdauer and similar). */
+.card-root.dragonbane .db-footer-stat {
+  text-align: center;
+  font-size: 0.95em;
+  margin: 0.3em 0.6em 0.2em;
+  padding-top: 0.3em;
+  border-top: 0.1em solid var(--db-brown);
+  color: var(--db-text);
+}
+
+.card-root.dragonbane .db-footer-stat .db-effect-label {
+  font-weight: 700;
+}
+
+/* ═══ Front illustration ══════════════════════════════════════════════
+   The wrap flex-grows into whatever vertical space is left after the
+   mandatory content; the image inside scales `contain` so it never crops.
+
+   The `min-height` floor MUST be font-relative (`em`), never a percentage:
+   the FontScaler measures the body twice — once with an indefinite height,
+   once stretched to a definite one — and a `%` floor resolves to 0 in the
+   first pass but to a real value in the second, so the reappearing image
+   overflows the fitted allocation.
+
+   The floor is what the wrap is worth on a text-dense card, so it decides how
+   small the picture may get. The wrap is the ONLY elastic element in the body
+   column (`.card-body-scalable > *` is `flex-shrink: 0`), so the image absorbs
+   every bit of text growth at a CONSTANT font size — and the FontScaler's
+   `transform: scale()` only fires once the wrap is pinned here and the text
+   STILL overflows. Raising the floor therefore doesn't gently trade text for
+   picture: it flips a card from "no scaling at all" to "scaling", a visible
+   step. Measured on the Ausrüstung deck (63 mm, body 2.967 mm ≈ 11.2 px):
+
+     wrap at floor   Fackel, Laterne, Gift (Lähmung)
+     wrap ≈ 8 em     Dudelsack, Duftwasser, Fass, Feldration, Heiltrank,
+                     Köcher, Lampenöl, Rucksack — a cluster that an 8 em
+                     floor would tip into scaling all at once
+
+   6 em lifts the three pinned cards and leaves that cluster untouched. */
+.card-root.dragonbane .db-front-image-wrap {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25em 0;
+  overflow: hidden;
+  min-height: 6em;
+}
+
+/* `max-width/max-height` fit the picture inside the wrap WITHOUT upscaling a
+   small image. The no-crop `object-fit: contain` comes from the base
+   `.cf-front-image` primitive. */
+.card-root.dragonbane .db-front-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* The same illustration, embedded by the note's own markdown (`![[x.png]]`)
+   and rendered through `card-image.hbs` with `placement: "body"` — the front
+   picture minus its wrap. The wrap is `flex: 1 1 0` with a `min-height`, i.e.
+   the body column's flex slot; between two paragraphs it would let the picture
+   take every pixel the text did not.
+
+   Without the wrap the cap above means nothing: `max-height: 100%` measured
+   against an indefinite height is exactly the value the FontScaler's two passes
+   disagree about, so it is restated here as a
+   DEFINITE length. Written with both classes so it wins over the rule above
+   regardless of source order. Retune with the two base variables. */
+.card-root.dragonbane .db-front-image.db-body-image {
+  margin: var(--cf-body-image-margin, 0.5em auto);
+  max-width: 100%;
+  max-height: var(--cf-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
+}
+
+/* ═══ Card back ═══════════════════════════════════════════════════════
+   One arrangement, framed by the two ornament strips: green display title on
+   top, then the image, then an OPTIONAL caption plaque
+   ("IMPROVISIERTE WAFFEN" over "GASTHAUS").
+
+   The original also prints an uncaptioned variant with the title BELOW the
+   image ("SCHATZFUND", "ABENTEUER"); we deliberately keep the title on top
+   everywhere so a mixed deck's backs read as one series. See `back.hbs`. */
+
+.card-root.dragonbane.card-back {
+  display: flex;
+  flex-direction: column;
+
+  /* Vertical rhythm of the back, both as fractions of the card HEIGHT so the
+     arrangement holds at every size preset — and, unlike an `em` on the
+     display title, does not swing with the title's width-scaled clamp.
+
+     `--db-back-gap` is the single breathing space between two stacked blocks
+     (title → image, image → plaque). The original prints ~4.8–5.2 % between
+     every pair of blocks; ours is tighter because the raised head (see
+     `--db-strip-top-line`) hands the illustration extra room.
+
+     `--db-back-image-max` caps how tall the illustration may grow. Without it
+     the wrap's `flex: 1` gave the picture every last millimetre of the column,
+     so it butted against the bottom ornament while all the slack collected
+     under the title — the face read bottom-heavy. With a cap, the leftover is
+     split evenly above and below by the wrap's `align-items: center`, and the
+     picture sits centred in the band between title and bottom strip.
+
+     Reference: the original's illustration is 36.5 % of the card height
+     (measured off the deck's captioned backs, pages 12/19/26). Ours may reach
+     62 % because the card carries no other furniture. */
+  --db-back-gap: calc(var(--card-height, 88mm) * 0.035);
+  --db-back-image-max: calc(var(--card-height, 88mm) * 0.62);
+}
+
+.card-root.dragonbane .db-back-category {
+  flex: 0 0 auto;
+  font-family: var(--font-monumental);
+  font-weight: 700;
+  /* The width term is the print: 2.6 × the body, the original's 22 pt against
+     8.41 pt, which lands on 7.72 mm at poker.
+
+     The CEILING is deliberately BELOW that — 1.585 × the title cap = 6.18 mm,
+     a fifth under the printed size — and therefore binds from ~50 mm of card
+     width upward, i.e. on every preset except `mini`. The print can afford a
+     display line that spans the card because its backs carry nothing else; our
+     backs pair it with an illustration and, on most card-types, a caption
+     plaque, and at the printed size the title dominated the face. A user
+     decision, settled — do not restore the printed size.
+
+     It stays a multiple of `--card-font-size-title-max` rather than a flat mm
+     for the same reason the plaque's height cap does: a card-type that raises
+     the title cap for a monumental name gets a back title that grows with it. */
+  font-size: clamp(calc(var(--card-font-size-title-min) * 1.6),
+                   calc(var(--card-width, 63mm) * 0.1225),
+                   calc(var(--card-font-size-title-max) * 1.585));
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--db-green-deep);
+  padding: 0 4%;
+  /* Top margin only — it anchors the title under the ornament. The gap BELOW
+     is the wrap's `--db-back-gap`, so the whole rhythm below the title is
+     driven by one knob instead of by the title's own font size. */
+  margin: 0.25em 0 0;
+}
+
+/* The caption plaque, when present, ends the face; the original sets it at
+   77–89 % — clear of the bottom ornament. Its own top margin (an `em` of the
+   plaque's text, meant for in-body use on the front) is dropped so the gap
+   above it is `--db-back-gap` like every other gap on this face. */
+.card-root.dragonbane.card-back .db-plaque-strip {
+  margin-top: 0;
+  margin-bottom: calc(var(--card-height, 88mm) * 0.035);
+}
+
+/* The illustration reaches close to the card edges, as in the original. */
+.card-root.dragonbane .db-back-image-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  /* Equal gap above and below: the wrap owns the space between the title and
+     the picture AND between the picture and whatever follows (caption plaque
+     or bottom ornament). */
+  margin: var(--db-back-gap) 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* An `<img>` (not a background) so the box matches the visible image
+   bounds. Edge fading is applied at the pixel level via canvas — the
+   `.fade-edges` class marks images for that processing. */
+.card-root.dragonbane .db-back-image {
+  max-width: 100%;
+  /* Never taller than the wrap, and never taller than the cap — whichever
+     bites first. When the cap bites, the wrap centres the picture in the
+     leftover space instead of letting it run down onto the bottom ornament. */
+  max-height: min(100%, var(--db-back-image-max));
+  object-fit: contain;
+  display: block;
+}
+
+/* The logo, shown when the card has no picture of its own: tighter sizing
+   and no edge fade — a wordmark should stay crisp, not bleed into the paper.
+   A card type with a bundled back of its own hides it and paints the wrap
+   instead (gear). */
+.card-root.dragonbane .db-back-image.db-back-logo-image {
+  max-width: 84%;
+  max-height: 62%;
+  object-fit: contain;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* ── The three spacers of the shared front ──
+   `.db-fill-top`, `.db-fill-mid` and `.db-fill-bottom` are always in the
+   markup of front.hbs (left out only when the card has an illustration). By
+   default they take no room: a card type that wants its blocks parked at a
+   particular height gives each a flex weight in its own stylesheet —
+   `flex-basis: 0`, so a full card collapses them and reads exactly as
+   without them, and a sparse card hands its slack out in the ratio set. */
+.card-root.dragonbane .db-fill-top,
+.card-root.dragonbane .db-fill-mid,
+.card-root.dragonbane .db-fill-bottom {
+  flex: 0 1 0;
+}

@@ -37,3 +37,11 @@ export function collectDiagnostics(): CollectedDiagnostics {
 
 /** A sink for callers that genuinely have nowhere to put the message. */
 export const IGNORE_DIAGNOSTICS: Diagnostics = { warn() {} };
+
+/**
+ * The same sink, every message prefixed — so a parser that knows only its
+ * document can be handed a sink that knows which note the document is in.
+ */
+export function prefixDiagnostics(sink: Diagnostics, prefix: string): Diagnostics {
+  return { warn: (message) => sink.warn(`${prefix}${message}`) };
+}

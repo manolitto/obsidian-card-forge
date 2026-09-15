@@ -1,0 +1,382 @@
+{{!--
+  Dragonbane — the front of every card type but generic.
+
+  One front template, not one per card type. It renders a fixed set of
+  PLACES, each named after where it sits on the card, never after what a
+  particular card type puts there:
+
+      front-header-title        the title on the plaque
+      front-header-die          the die hanging off the plaque's lower right
+      front-header-subtitle     the small tag on the plaque's lower left
+      front-image-top / -bottom the illustration, above or below the body
+      front-stat-1a … 8c        the stat box's short cells, by row and column
+      front-stat-1-wide … 8        a stat row given over to one wrapping value
+      front-stat-1-wide-tail … 8   a short value trailing that wide row
+      front-stat-list           trailing labelled rows built from a data list
+      front-trait-list          the same shape of list, as ONE unruled block
+      front-table               a caption line plus a roll/name/desc table
+      front-detail-text         a block shown only in the detailed display mode
+      front-text-top   / -bottom    prose above / below the stat box
+      front-effect-top / -bottom    prose carrying the "Effekt" label
+      front-note-top   / -bottom    quiet italic afterword
+      front-side-left  / -right     the two rotated edge labels
+
+  A card type fills a place by naming it on one of its properties in
+  game-system.yaml (`grip: { slot: front-stat-1a }`) and captions it in its
+  translations (`front-stat-1a-label: "Griff"`). A place the card type does
+  not fill has no value and renders nothing — which is how one template
+  serves a weapon and a roll-table row without a single branch on the card
+  type. How a place renders is said here, on the call: the stat cells are
+  `markdown=false` (a value shows its link styled and nothing else), the
+  prose is markdown, the two titles are `plain=true` for the FontScaler.
+
+  The stat box is eight rows, each either up to three short cells or one
+  wide wrapping value with an optional short tail. What repeats is the
+  markup, not the decision, so a cell and a wide row are each one partial:
+
+      {{> stat-cell for="front-stat-1a"}}
+      {{> stat-wide for="front-stat-1-wide" tail="front-stat-1-wide-tail"}}
+
+  The row structure stays here: the `{{#if …-wide}} … {{else if …a/b/c}}`
+  decides whether a row is wide or three cells, and that is the arrangement
+  of the card, which belongs visibly here.
+
+  The blocks appear in ONE fixed DOM order for every card type. That is a
+  requirement, not a simplification: the overflow splitter paginates by DOM
+  order, so reordering the body per card type with CSS `order` would break
+  every card that runs onto a second face. Where two card types genuinely
+  disagree about position, the place exists TWICE — `front-text-top` above
+  the stat box, `front-text-bottom` below it — and each card type fills the
+  one it wants.
+
+  The three spacers (`.db-fill-top`, `-mid`, `-bottom`) are always in the
+  markup; a card type's stylesheet gives each the flex weight its vertical
+  rhythm wants, or none. They are left out when the card has an
+  illustration: `.db-front-image-wrap` is itself a `flex: 1 1 0` slot and
+  would lose its room to them.
+--}}
+<div class="card-root card-front dragonbane {{card-type}}-card">
+  <div class="db-head">
+    <div class="db-title-plaque">
+      {{#if (slot "front-header-die")}}
+      <span class="roll-table-badge"><span class="roll-table-badge-num roll-table-badge-num-{{slot-class "front-header-die"}}">{{slot "front-header-die" markdown=false}}</span></span>
+      {{/if}}
+
+      {{!-- The subtitle tag mirrors the die on the opposite edge. Suppressed
+            when it would only repeat the title — `front-header-title` falls
+            back to the note's basename, so a table whose rows carry no names
+            of their own titles every card "FURCHT", and a tag reading FURCHT
+            hanging off a plaque reading FURCHT is a mistake, not a label. --}}
+      {{#if (slot "front-header-subtitle")}}
+      {{#unless (eq (slot "front-header-title" plain=true) (slot "front-header-subtitle" plain=true))}}
+      <span class="roll-table-category roll-table-category-{{slot-class "front-header-subtitle"}}"><span class="roll-table-category-text">{{slot "front-header-subtitle" markdown=false}}</span></span>
+      {{/unless}}
+      {{/if}}
+
+      <div class="card-title"><span class="text-scalable">{{slot "front-header-title" plain=true}}</span></div>
+      <span class="cf-overflow-counter"></span>
+    </div>
+    <div class="db-strip db-strip-top"></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-lead-text")}}
+    <p class="db-flavor">{{slot "front-lead-text"}}</p>
+    {{/if}}
+
+    {{#unless (or (slot "front-image-top") (slot "front-image-bottom"))}}
+    <span class="db-fill-top"></span>
+    {{/unless}}
+
+    {{!-- The same partial the engine renders every `![[bild.png]]` of a
+          note body through — see card-image.hbs. --}}
+    {{#if (slot "front-image-top")}}
+    {{> card-image url=(slot "front-image-top" image=true) alt="" placement="front"}}
+    {{/if}}
+
+    {{#if (or (slot "front-text-top") (slot "front-effect-top") (slot "front-note-top"))}}
+    <div class="db-effect-block db-effect-block-top">
+      {{#if (slot "front-text-top")}}
+      <p class="db-effect-text">{{slot "front-text-top"}}</p>
+      {{/if}}
+      {{#if (slot "front-effect-top")}}
+      <p class="db-effect-text"><span class="db-effect-label">{{t "effect-label"}}</span>{{slot "front-effect-top"}}</p>
+      {{/if}}
+      {{#if (slot "front-note-top")}}
+      <p class="db-effect-text"><em>{{slot "front-note-top"}}</em></p>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- ── The stat box ────────────────────────────────────────────────
+          Eight rows, each either up to three short nowrap cells (`.db-stat`)
+          or one wrapping free-text value (`.db-stats-row-wide`). A row is
+          wide exactly when the card type fills its `-wide` place instead of
+          its a/b/c cells — nothing extra to declare. --}}
+    {{#if (or (slot "front-stat-1a") (slot "front-stat-1b") (slot "front-stat-1c") (slot "front-stat-1-wide") (slot "front-stat-1-wide-tail")
+              (slot "front-stat-2a") (slot "front-stat-2b") (slot "front-stat-2c") (slot "front-stat-2-wide") (slot "front-stat-2-wide-tail")
+              (slot "front-stat-3a") (slot "front-stat-3b") (slot "front-stat-3c") (slot "front-stat-3-wide") (slot "front-stat-3-wide-tail")
+              (slot "front-stat-4a") (slot "front-stat-4b") (slot "front-stat-4c") (slot "front-stat-4-wide") (slot "front-stat-4-wide-tail")
+              (slot "front-stat-5a") (slot "front-stat-5b") (slot "front-stat-5c") (slot "front-stat-5-wide") (slot "front-stat-5-wide-tail")
+              (slot "front-stat-6a") (slot "front-stat-6b") (slot "front-stat-6c") (slot "front-stat-6-wide") (slot "front-stat-6-wide-tail")
+              (slot "front-stat-7a") (slot "front-stat-7b") (slot "front-stat-7c") (slot "front-stat-7-wide") (slot "front-stat-7-wide-tail")
+              (slot "front-stat-8a") (slot "front-stat-8b") (slot "front-stat-8c") (slot "front-stat-8-wide") (slot "front-stat-8-wide-tail")
+              (slot "front-stat-list" list=true) (slot "front-trait-list" list=true))}}
+    <div class="db-stats-box">
+      {{#if (or (slot "front-stat-1-wide") (slot "front-stat-1-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-1-wide" tail="front-stat-1-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-1a") (slot "front-stat-1b") (slot "front-stat-1c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-1a"}}
+        {{> stat-cell for="front-stat-1b"}}
+        {{> stat-cell for="front-stat-1c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-2-wide") (slot "front-stat-2-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-2-wide" tail="front-stat-2-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-2a") (slot "front-stat-2b") (slot "front-stat-2c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-2a"}}
+        {{> stat-cell for="front-stat-2b"}}
+        {{> stat-cell for="front-stat-2c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-3-wide") (slot "front-stat-3-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-3-wide" tail="front-stat-3-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-3a") (slot "front-stat-3b") (slot "front-stat-3c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-3a"}}
+        {{> stat-cell for="front-stat-3b"}}
+        {{> stat-cell for="front-stat-3c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-4-wide") (slot "front-stat-4-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-4-wide" tail="front-stat-4-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-4a") (slot "front-stat-4b") (slot "front-stat-4c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-4a"}}
+        {{> stat-cell for="front-stat-4b"}}
+        {{> stat-cell for="front-stat-4c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-5-wide") (slot "front-stat-5-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-5-wide" tail="front-stat-5-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-5a") (slot "front-stat-5b") (slot "front-stat-5c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-5a"}}
+        {{> stat-cell for="front-stat-5b"}}
+        {{> stat-cell for="front-stat-5c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-6-wide") (slot "front-stat-6-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-6-wide" tail="front-stat-6-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-6a") (slot "front-stat-6b") (slot "front-stat-6c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-6a"}}
+        {{> stat-cell for="front-stat-6b"}}
+        {{> stat-cell for="front-stat-6c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-7-wide") (slot "front-stat-7-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-7-wide" tail="front-stat-7-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-7a") (slot "front-stat-7b") (slot "front-stat-7c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-7a"}}
+        {{> stat-cell for="front-stat-7b"}}
+        {{> stat-cell for="front-stat-7c"}}
+      </div>
+      {{/if}}
+
+      {{#if (or (slot "front-stat-8-wide") (slot "front-stat-8-wide-tail"))}}
+      <div class="db-stats-row db-stats-row-wide">
+        {{> stat-wide for="front-stat-8-wide" tail="front-stat-8-wide-tail"}}
+      </div>
+      {{else if (or (slot "front-stat-8a") (slot "front-stat-8b") (slot "front-stat-8c"))}}
+      <div class="db-stats-row">
+        {{> stat-cell for="front-stat-8a"}}
+        {{> stat-cell for="front-stat-8b"}}
+        {{> stat-cell for="front-stat-8c"}}
+      </div>
+      {{/if}}
+
+      {{!-- Rows the card carries as DATA rather than as fixed places: a list
+            of {name, desc} pairs, each set as one wide row. This is how a
+            table whose columns differ per table (Rationen, Voraussetzungen,
+            Heilungsdauer) reaches the same stat box as a fixed card type. --}}
+      {{#each (slot "front-stat-list" list=true)}}
+      <div class="db-stats-row db-stats-row-wide">
+        <p class="db-trait"><span class="db-trait-name">{{name}}</span>{{desc}}</p>
+      </div>
+      {{/each}}
+
+      {{!-- The same {name, desc} shape as `front-stat-list`, set as ONE row
+            instead of one row per item. The difference is the rule between
+            rows, and it is the whole point of having two places: a table
+            row's values ("Rationen: 2W6") read as a table and want the rules,
+            while a creature's traits ("Regeneration: Ein Troll heilt …") are
+            prose paragraphs that the same rules would chop up. --}}
+      {{#if (slot "front-trait-list" list=true)}}
+      <div class="db-stats-row db-stats-row-traits">
+        {{#each (slot "front-trait-list" list=true)}}
+        <p class="db-trait"><span class="db-trait-name">{{name}}</span>{{desc}}</p>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- A captioned roll/name/description table — the Monsterangriffe. Its
+          items carry `roll`, `name` and `desc`; the caption and the two column
+          heads come from the card type's translations, like every other label.
+
+          The caption is `.db-section-heading`, the plain centred caps line,
+          NOT a `.db-plaque-strip`: the heading belongs to the table under it
+          and its margins are asymmetric for exactly that reason, while a
+          plaque reads as a component in its own right.
+
+          Heading and table are two top-level blocks, so the splitter is free
+          to cut between them. It takes BOTH of the following to keep them
+          together, and they cover two different paths — removing either one
+          strands the heading on one of them, so do not "simplify" this.
+
+          The table breaks between rows by default — the common path. A table
+          paginates between the `<tr>`s of its `<tbody>`, and the `<thead>` is
+          repeated on the continuation so the tail keeps its column labels. The
+          heading then belongs to the fitting PREFIX and the table surrenders
+          only the rows that have no room.
+
+          `cf-keep-with-next` on the heading — the remaining path. When not even
+          ONE row fits beside the prefix, the whole table moves on, which would
+          leave the heading behind as the last block; the marker pulls the
+          heading along with it. It is a no-op when the heading is block 0 of a
+          continuation face, and without a splittable table it would merely drag
+          the heading off a face it fitted on — with the table splittable it
+          fires only where it is right. --}}
+    {{#if (slot "front-table" list=true)}}
+    {{#if (slot-label "front-table")}}
+    <div class="db-section-heading cf-keep-with-next">{{slot-label "front-table"}}</div>
+    {{/if}}
+    <table class="db-attack-table">
+      <thead>
+        <tr>
+          <th class="db-attack-th-roll">{{t "front-table-col-1-label"}}</th>
+          <th class="db-attack-th-name">{{t "front-table-col-2-label"}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each (slot "front-table" list=true)}}
+        <tr>
+          <td class="db-attack-roll">{{roll}}</td>
+          <td class="db-attack-cell"><span class="db-attack-name">{{name}}</span>{{desc}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{/if}}
+
+    {{!-- The middle spacer — only with something on BOTH sides of it,
+          otherwise its share would open a hole in an arbitrary place. Nested
+          rather than one condition: there is `or` but no `and`. --}}
+    {{#unless (or (slot "front-image-top") (slot "front-image-bottom"))}}
+    {{#if (or (slot "front-stat-1a") (slot "front-stat-1b") (slot "front-stat-1c") (slot "front-stat-1-wide") (slot "front-stat-1-wide-tail")
+              (slot "front-stat-2a") (slot "front-stat-2b") (slot "front-stat-2c") (slot "front-stat-2-wide") (slot "front-stat-2-wide-tail")
+              (slot "front-stat-3a") (slot "front-stat-3b") (slot "front-stat-3c") (slot "front-stat-3-wide") (slot "front-stat-3-wide-tail")
+              (slot "front-stat-4a") (slot "front-stat-4b") (slot "front-stat-4c") (slot "front-stat-4-wide") (slot "front-stat-4-wide-tail")
+              (slot "front-stat-5a") (slot "front-stat-5b") (slot "front-stat-5c") (slot "front-stat-5-wide") (slot "front-stat-5-wide-tail")
+              (slot "front-stat-6a") (slot "front-stat-6b") (slot "front-stat-6c") (slot "front-stat-6-wide") (slot "front-stat-6-wide-tail")
+              (slot "front-stat-7a") (slot "front-stat-7b") (slot "front-stat-7c") (slot "front-stat-7-wide") (slot "front-stat-7-wide-tail")
+              (slot "front-stat-8a") (slot "front-stat-8b") (slot "front-stat-8c") (slot "front-stat-8-wide") (slot "front-stat-8-wide-tail")
+              (slot "front-stat-list" list=true) (slot "front-trait-list" list=true))}}
+    {{#if (or (slot "front-text-bottom") (slot "front-effect-bottom") (slot "front-note-bottom"))}}
+    <span class="db-fill-mid"></span>
+    {{/if}}
+    {{/if}}
+    {{/unless}}
+
+    {{#if (or (slot "front-text-bottom") (slot "front-effect-bottom") (slot "front-note-bottom"))}}
+    <div class="db-effect-block db-effect-block-bottom">
+      {{#if (slot "front-text-bottom")}}
+      <p class="db-effect-text">{{slot "front-text-bottom"}}</p>
+      {{/if}}
+      {{#if (slot "front-effect-bottom")}}
+      <p class="db-effect-text"><span class="db-effect-label">{{t "effect-label"}}</span>{{slot "front-effect-bottom"}}</p>
+      {{/if}}
+      {{#if (slot "front-note-bottom")}}
+      <p class="db-effect-text"><em>{{slot "front-note-bottom"}}</em></p>
+      {{/if}}
+    </div>
+    {{/if}}
+
+    {{!-- GM-only material: hidden by default, revealed only in the "detailed"
+          display mode, which stamps `.cf-detailed` on `.card-root`. The card
+          type's CSS owns that gate; the place only supplies the text. --}}
+    {{#if (slot "front-detail-text")}}
+    <div class="db-gm-note">
+      {{#if (slot-label "front-detail-text")}}<span class="db-gm-note-label">{{slot-label "front-detail-text"}}</span>{{/if}}
+      {{slot "front-detail-text"}}
+    </div>
+    {{/if}}
+
+    {{!-- The illustration again, at the FOOT of the body. A card type fills
+          either this or `front-image-top`, never both: the picture is one
+          picture, and which end of the card it belongs at is exactly the sort
+          of decision a place's name is supposed to carry. The creature
+          cards lead with their stat block and close with the portrait; the
+          gear and rule cards lead with the picture. --}}
+    {{#if (slot "front-image-bottom")}}
+    {{> card-image url=(slot "front-image-bottom" image=true) alt="" placement="front"}}
+    {{/if}}
+
+    {{#unless (or (slot "front-image-top") (slot "front-image-bottom"))}}
+    <span class="db-fill-bottom"></span>
+    {{/unless}}
+
+    </div>
+  </div>
+
+  <div class="db-strip db-strip-bottom"></div>
+
+  {{!-- The two edge labels, a mirrored pair. Both are absolutely positioned,
+        i.e. OUT of the flex flow, so neither costs the body a single line. The
+        left one appears only when a card type fills it; the right one falls
+        back to "DRAGONBANE". --}}
+  {{#if (slot "front-side-left")}}
+  <div class="db-side-english">{{#if (slot-label "front-side-left")}}<span class="db-side-english-label">{{slot-label "front-side-left"}}</span>{{/if}}{{slot "front-side-left" markdown=false}}</div>
+  {{/if}}
+
+  <div class="db-side-ref">{{slot "front-side-right" markdown=false fallback=(t "side-ref")}}</div>
+
+  {{!-- "Geht weiter" — an arrowhead in the right-hand gutter, above the bottom
+        ornament. Hidden by default; the stylesheet reveals it under the
+        splitter's `.cf-front-has-next`, i.e. on every front face EXCEPT the
+        last. Absolutely positioned like the edge labels, so it costs the body
+        nothing and cannot clip.
+
+        Only on the front. `back.hbs` is a different construction and its face
+        never continues: a card that fits keeps its designed back, and one that
+        overflows has that back replaced by a CLONE of this front, which brings
+        the arrow with it. --}}
+  <div class="db-cont-arrow"></div>
+</div>

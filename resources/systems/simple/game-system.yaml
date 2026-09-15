@@ -31,8 +31,12 @@ properties:
       en: "Lantern of Revealing"
       de: "Laterne der Enthüllung"
 
+  # `body` last: it is also the note's own text before the first `##`
+  # heading, and an alias is tried in declaration order — so a note that
+  # writes its text under any other name keeps it, and one that writes
+  # nothing in the block shows the note itself.
   content:
-    aliases: [body, text, description, beschreibung]
+    aliases: [text, description, beschreibung, body]
     slot: front-body
     description:
       en: "The card body — free Markdown (bold, italic, lists, line breaks, wikilinks) shown in the front content area."
@@ -72,9 +76,8 @@ properties:
       de: "Magischer Gegenstand"
 
 card-types:
-  # The one, universal card type. A note reaches it by `card-type: simple` or
-  # by carrying the `simple` tag.
+  # The one, universal card type. As the system's only one, a note need not
+  # even name it.
   simple:
-    note-tags: [simple]
     front-template: front.hbs
     back-template: back.hbs

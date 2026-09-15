@@ -7,8 +7,10 @@ import { readAssetUri } from "../systems/assets";
 import type { LoadedSystem } from "../systems/loader";
 import { templateAssetReferences } from "../systems/references";
 import { MissingFileError } from "../systems/source";
+import { blockMarkdown } from "./block-markdown";
 import { STATE_KEY, type RenderState, type TemplateContext } from "./context";
 import { registerHelpers } from "./helpers";
+import { escapeHtml } from "./inline-markdown";
 
 /** One face of one card, to render. */
 export interface FaceRequest {
@@ -19,6 +21,13 @@ export interface FaceRequest {
   props: Record<string, unknown>;
   language: string;
   cardSize: CardSize;
+  /**
+   * The pictures the note refers to, resolved before the render: link target
+   * → `data:` URI. Helpers are synchronous and the vault is not, so what a
+   * face may show has to be read first; `image=true` and a body's
+   * `![[embed]]` look it up here, and a miss is reported at the call.
+   */
+  images?: ReadonlyMap<string, string>;
 }
 
 /**
@@ -45,6 +54,7 @@ export class TemplateEngine {
 
   async renderFace(request: FaceRequest, diagnostics: Diagnostics): Promise<string> {
     const { system, cardTypeId, face, props, language, cardSize } = request;
+    const images = request.images ?? new Map<string, string>();
     const cardType = system.cardTypes[cardTypeId];
     if (!cardType) throw new Error(`${system.id} has no card type "${cardTypeId}"`);
     const path =
@@ -61,19 +71,35 @@ export class TemplateEngine {
       templates.partials(),
     ]);
 
+    const where = `${system.id}/${cardTypeId}`;
     const state: RenderState = {
-      where: `${system.id}/${cardTypeId}`,
+      where,
       props,
-      slots: cardType.slots,
       translations: resolveTranslations(
         [cardType.translations],
         language,
         system.declaration.languages[0]
       ),
       assets: templates.assets,
+      images,
+      glyphs: cardType.glyphs,
+      classifiers: cardType.classifiers,
+      block: blockMarkdown(
+        embedRenderer(
+          system,
+          partials[system.declaration.markdownImagePartial ?? ""],
+          images,
+          where,
+          diagnostics
+        )
+      ),
       diagnostics,
     };
-    const context: TemplateContext = {};
+    const context: TemplateContext = {
+      "card-type": cardTypeId,
+      system: system.id,
+      language,
+    };
 
     let html: string;
     try {
@@ -175,6 +201,36 @@ class SystemTemplates {
     }
     await Promise.all(reads);
   }
+}
+
+/**
+ * What an `![[embed]]` in a body becomes: the system's markdown-image
+ * partial when it declares one, called with `url`, `alt` and
+ * `placement="body"` so a body picture gets the design's chrome; a bare
+ * `<img class="cf-body-image">` otherwise. A picture the vault could not
+ * answer is reported and shows as its alt text in a link span, so the miss
+ * is visible on the card rather than a blank.
+ */
+function embedRenderer(
+  system: LoadedSystem,
+  partial: Compiled | undefined,
+  images: ReadonlyMap<string, string>,
+  where: string,
+  diagnostics: Diagnostics
+): (target: string, alt: string) => string {
+  return (target, alt) => {
+    const url = images.get(target.trim());
+    if (url === undefined) {
+      diagnostics.warn(
+        `![[${target}]] in a body of ${where}: not a picture the vault has; showing its text`
+      );
+      return `<span class="cf-wikilink">${escapeHtml(alt)}</span>`;
+    }
+    if (partial) {
+      return partial({ url, alt, placement: "body" } as unknown as TemplateContext);
+    }
+    return `<img class="cf-body-image" src="${escapeHtml(url)}" alt="${escapeHtml(alt)}">`;
+  };
 }
 
 /** The element every face starts with. */

@@ -1,28 +1,34 @@
 import { existsSync, readFileSync, unlinkSync } from "fs";
 import { relative } from "path";
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
+import type { RenderedCard } from "../src/render/renderer";
 import {
-  FACES,
   FIXTURES_DIR,
-  goldenPath,
+  goldenPaths,
   listFixtures,
   orphanGoldens,
   renderFixture,
   writeGoldens,
+  writePreview,
+  type Fixture,
 } from "./helpers/render-fixture";
 
 const UPDATE = process.env["UPDATE_GOLDENS"] === "1";
 const fixtures = listFixtures();
+const rendered = new Map<string, { fixture: Fixture; cards: RenderedCard[] }[]>();
 
 describe.each(fixtures.map((f) => [`${f.system}/${f.name}`, f] as const))(
   "fixture %s",
   (_label, fixture) => {
     it("renders byte-exact against its goldens", async () => {
-      const faces = await renderFixture(fixture);
-      if (UPDATE) writeGoldens(fixture, faces);
-      for (const face of FACES) {
-        const path = goldenPath(fixture, face);
-        const html = faces[face];
+      const cards = await renderFixture(fixture);
+      if (UPDATE) {
+        writeGoldens(fixture, cards);
+        const list = rendered.get(fixture.system) ?? [];
+        list.push({ fixture, cards });
+        rendered.set(fixture.system, list);
+      }
+      for (const { path, html } of goldenPaths(fixture, cards)) {
         if (html === undefined) {
           expect(
             existsSync(path),
@@ -54,4 +60,9 @@ it("has a fixture note for every golden", () => {
 
 it("has at least one fixture", () => {
   expect(fixtures.length).toBeGreaterThan(0);
+});
+
+afterAll(async () => {
+  if (!UPDATE) return;
+  for (const [system, list] of rendered) await writePreview(system, list);
 });
