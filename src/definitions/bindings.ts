@@ -13,7 +13,7 @@ import type { PropertyDefsMap } from "./property-defs";
  * A slot is declared nowhere but in the template that reads it. A card type
  * says which of its values fills a place (`slot:` — data, so YAML); the
  * template says what the place is and how it renders (`{{slot "front-stat-1a"
- * render="markdown"}}` — layout, so the template). No third list.
+ * linebreaks=true}}` — layout, so the template). No third list.
  */
 export type AliasMap = Record<string, string[]>;
 
