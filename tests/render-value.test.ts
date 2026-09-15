@@ -15,8 +15,14 @@ const spec = (overrides: Partial<RenderSpec>): RenderSpec => ({
 });
 
 describe("the defaults", () => {
-  it("are markdown on, linebreaks off", () => {
-    expect(DEFAULT_SPEC).toEqual({ markdown: true, linebreaks: false });
+  it("are markdown on, everything else off", () => {
+    expect(DEFAULT_SPEC).toEqual({
+      markdown: true,
+      linebreaks: false,
+      glyph: false,
+      image: false,
+      plain: false,
+    });
   });
 
   it("render prose with its link styled and its markdown interpreted", () => {
@@ -111,6 +117,49 @@ describe("HTML in a value", () => {
   ])("is escaped under %o", (s) => {
     expect(renderValue("<script>x</script> \"q\" 'a'", s)).toBe(
       "&lt;script&gt;x&lt;/script&gt; &quot;q&quot; &#39;a&#39;"
+    );
+  });
+});
+
+describe("the rows the switches add", () => {
+  const env = {
+    glyph: (text: string) => ({ "1h": "einhändig" })[text.toLowerCase()] ?? text,
+    image: (link: string) =>
+      link === "[[Beil.png]]" ? "data:image/png;base64,QQ==" : undefined,
+    block: (text: string) => `<block>${text}</block>`,
+  };
+
+  it("glyph: maps the raw value first, each item of a list, and leaves the rest", () => {
+    expect(renderValue("1H", spec({ glyph: true }), env)).toBe("einhändig");
+    expect(renderValue(["1h", "x"], spec({ glyph: true }), env)).toBe("einhändig, x");
+    expect(renderValue("1H", spec({}), env)).toBe("1H");
+  });
+
+  it("image: yields the resolved URI and nothing else, and nothing for a miss", () => {
+    expect(renderValue("[[Beil.png]]", spec({ image: true }), env)).toBe(
+      "data:image/png;base64,QQ=="
+    );
+    expect(renderValue("[[Nope.png]]", spec({ image: true }), env)).toBe("");
+  });
+
+  it("fallback: steps in for an empty value, through the same switches, and not for 0", () => {
+    const s = spec({ fallback: "*Dragonbane*" });
+    expect(renderValue("", s)).toBe("<em>Dragonbane</em>");
+    expect(renderValue(undefined, s)).toBe("<em>Dragonbane</em>");
+    expect(renderValue(0, s)).toBe("0");
+    expect(renderValue("", spec({ fallback: "1h", glyph: true }), env)).toBe("einhändig");
+    expect(renderValue("", spec({ fallback: "" }))).toBe("");
+  });
+
+  it("plain: display text only — no span, no markdown, escaped", () => {
+    expect(renderValue(PROSE, spec({ plain: true }))).toBe(
+      "Wirkt gegen jeden Untoten &amp; **Geister**."
+    );
+  });
+
+  it('markdown="block": the body renderer in place of the inline step', () => {
+    expect(renderValue("a\n\nb", spec({ markdown: "block" }), env)).toBe(
+      "<block>a\n\nb</block>"
     );
   });
 });

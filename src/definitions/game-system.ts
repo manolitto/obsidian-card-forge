@@ -1,5 +1,7 @@
 import type { Diagnostics } from "./diagnostics";
 import { parseCardSettings, type CardSettings } from "./card-settings";
+import { parseClassifiers, type Classifiers } from "./classifiers";
+import { parseGlyphTables, type GlyphTables } from "./glyphs";
 import { parsePropertyDefs, type PropertyDefsMap } from "./property-defs";
 import { parseTranslationTables, type TranslationTables } from "./translations";
 
@@ -17,7 +19,7 @@ import { parseTranslationTables, type TranslationTables } from "./translations";
  * key.
  *
  * What is declared is what nothing points at: the faces, the stylesheets, the
- * partials. What is small and every system writes — `properties:`, `i18n:` —
+ * partials. What is small and every system writes — `properties:`, `translations:` —
  * is inline. Images and fonts are NOT declared — every
  * reference to one carries its full relative path (`url(assets/x.webp)`,
  * `{{asset "…"}}`, a property's `default:`), so the reference is the
@@ -59,6 +61,10 @@ export interface SystemDeclaration {
   stylesheet?: SystemPath;
   /** The system layer of the translation chain, one table per language. Inline. */
   translations: TranslationTables;
+  /** How a value at a slot is spelled out — see `glyphs.ts`. The system's layer, per slot. */
+  glyphs: GlyphTables;
+  /** A class token chosen by what a slot shows — see `classifiers.ts`. The system's layer, per slot. */
+  classifiers: Classifiers;
   /** Partial name → the template implementing it. */
   partialTemplates: Record<string, SystemPath>;
   /**
@@ -116,13 +122,6 @@ export interface SystemDeclaration {
 export interface CardTypeDeclaration {
   /** Singular English, lowercase — `npc`, `gear`, `creature`. */
   id: string;
-  /**
-   * Tags on a note that classify it as this card type when it names no `card-type:`.
-   *
-   * Not lowercased and not translated: these are the tags as they appear in the
-   * vault, and a German vault tags its cards in German.
-   */
-  noteTags: string[];
 
   /** The front face. A card type without one cannot render. */
   frontTemplate?: SystemPath;
@@ -131,6 +130,9 @@ export interface CardTypeDeclaration {
   /** The card type's own stylesheet, loaded after the system's. */
   stylesheet?: SystemPath;
   translations: TranslationTables;
+  /** The card type's layer, per slot, over the system's. */
+  glyphs: GlyphTables;
+  classifiers: Classifiers;
 
   properties?: PropertyDefsMap;
   /** The card type's layer of the card-setting chain — see `SystemDeclaration`. */
@@ -147,6 +149,8 @@ const SYSTEM_KEYS: readonly string[] = [
   "languages",
   "stylesheet",
   "translations",
+  "glyphs",
+  "classifiers",
   "partial-templates",
   "markdown-image-partial",
   "properties",
@@ -154,11 +158,12 @@ const SYSTEM_KEYS: readonly string[] = [
 ];
 
 const CARD_TYPE_KEYS: readonly string[] = [
-  "note-tags",
   "front-template",
   "back-template",
   "stylesheet",
   "translations",
+  "glyphs",
+  "classifiers",
   "properties",
 ];
 
@@ -204,6 +209,8 @@ export function parseSystemDeclaration(
       `${id}.translations`,
       diagnostics
     ),
+    glyphs: parseGlyphTables(raw["glyphs"], `${id}.glyphs`, diagnostics),
+    classifiers: parseClassifiers(raw["classifiers"], `${id}.classifiers`, diagnostics),
     partialTemplates: parsePathMap(
       raw["partial-templates"],
       `${id}.partial-templates`,
@@ -285,10 +292,15 @@ function parseCardType(
 
   const out: CardTypeDeclaration = {
     id,
-    noteTags: parseStringList(raw["note-tags"], `${context}.note-tags`, diagnostics),
     translations: parseTranslationTables(
       raw["translations"],
       `${context}.translations`,
+      diagnostics
+    ),
+    glyphs: parseGlyphTables(raw["glyphs"], `${context}.glyphs`, diagnostics),
+    classifiers: parseClassifiers(
+      raw["classifiers"],
+      `${context}.classifiers`,
       diagnostics
     ),
     cardSettings: parseCardSettings(everythingBut(raw, CARD_TYPE_KEYS), diagnostics),

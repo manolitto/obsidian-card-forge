@@ -42,7 +42,8 @@ describe("a vault system", () => {
     const library = libraryWith([VAULT_ENTRY], vault);
     await library.get("demo");
 
-    vault.files["Systems/demo/spell/front.hbs"] = `<div>{{> stat-cell}}</div>`;
+    vault.files["Systems/demo/spell/front.hbs"] =
+      `<div>{{slot "header-title"}}{{> stat-cell}}</div>`;
     expect(library.invalidate("Systems/demo/spell/front.hbs")).toEqual(["demo"]);
     const result = await library.load("demo");
     expect(result.system).toBeDefined();

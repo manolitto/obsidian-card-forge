@@ -1,0 +1,940 @@
+id: dragonbane
+name: Dragonbane
+
+# Modelled on the official German card deck (Fria Ligan / Uhrwerk): poker
+# cards, parchment, two-tone green knotwork, a title plaque, a rotated source
+# reference along the right edge. Written in German throughout — the
+# property aliases and the captions follow the German Regelbuch's
+# terminology, so a card can be read beside the open page. The sample
+# values are invented: realistic in shape, but no item, creature, table or
+# spell of any published book.
+languages: [de]
+
+stylesheet: game-system.css
+
+# One front for four of the five card types. It renders PLACES named after
+# where they sit — `front-stat-1a`, `front-text-top` — and each card type says
+# which of its properties fills which place, with `slot:` on the property.
+# See front.hbs for the vocabulary and stat-cell.hbs / stat-wide.hbs for the
+# two repeated pieces of the stat box.
+partial-templates:
+  stat-cell: stat-cell.hbs
+  stat-wide: stat-wide.hbs
+  card-image: card-image.hbs
+
+# Every `![[picture]]` in a note's body renders through the same partial the
+# front uses for its own illustration, so a body picture gets the design's
+# borderless seat and soft edge.
+markdown-image-partial: card-image
+
+# The card back is a designed face — the family title, the illustration, the
+# caption plaque — so a long front fills it first and only then spawns
+# further cards; and the printed pair is kept odd, so the last face is the
+# real back.
+overflow-mode: back-then-cards
+layouts:
+  - { name: default, front-face-count: odd, fallback: true }
+
+# ── Shared vocabulary ─────────────────────────────────────────────────
+#
+# A property lives here only if it is bound here to a fixed place AND
+# behaves identically for every card type — no card type overrides it,
+# neither its place nor its documentation. That is the card back (its
+# picture and its two classification lines) and the two rotated EDGE
+# labels. The card's BODY is where a card type says what it is, so nothing
+# there is bound system-wide; the edges are furniture around the body, and
+# furniture is the system's.
+properties:
+  back-image:
+    slot: back-image-primary
+    aliases: [rückenbild, rueckenbild, bild-rückseite]
+    description:
+      de: "Bild für die Kartenrückseite als Wikilink. Ohne Angabe zeigt die Rückseite das Bild, das der Kartentyp dafür vorsieht (bei Kreaturen das Porträt), sonst das Dragonbane-Logo. `front-image` zählt hier nicht mit – es gilt nur für die Vorderseite."
+      en: "Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the Dragonbane logo. `front-image` does not feed this — it is front-only."
+    sample: "[[Medaillon.png]]"
+
+  # The back's two classification lines: `category` is the big green display
+  # title at the top, `subcategory` the small parchment plaque below the
+  # illustration. Family, then shelf within it — AUSRÜSTUNG over „Kleidung".
+  # Not named `card-type`: that key holds the machine id in every note's
+  # block, and one name for two meanings in one file is a trap.
+  category:
+    slot: back-header-title
+    aliases: [heading, tabelle, tabellentitel, kategorie, überschrift, ueberschrift]
+    description:
+      de: "Kartenfamilie – der große grüne Titel oben auf der Rückseite. Ohne Angabe steht dort die Bezeichnung des Kartentyps („Ausrüstung“, „Waffe“). Bei Würfeltabellen trägt man hier den Tabellennamen ein („Dämonenwurf im Nahkampf“, „Furcht“, „Jagdbeute“); er dient dann auch als Titel-Rückfall, wenn die Tabellenzeile keinen eigenen Namen hat. In einer Tabellennotiz einmal im Frontmatter für alle Zeilen setzbar."
+      en: "Card family — the large green title at the top of the back. Without it the card type's own label appears there (\"Ausrüstung\", \"Waffe\"). For roll tables put the table's name here (\"Demon Roll in Melee\", \"Fear\", \"Hunting\"); it then doubles as the title fallback when the table row has no name of its own. In a table note, set once in the frontmatter for all rows."
+    sample:
+      de: "Fischfang"
+      en: "Fishing"
+
+  subcategory:
+    slot: back-footer-title
+    aliases: [type, art, unterkategorie, typ]
+    description:
+      de: "Feinere Einordnung innerhalb der Kartenfamilie – erscheint als kleine Pergamentplakette unter dem Bild der Rückseite (z. B. „Kleidung“, „Werkzeug“, „Handelsware“). Ohne Angabe entfällt die Plakette; stimmt der Wert mit `category` überein, wird sie ebenfalls unterdrückt."
+      en: "Finer grouping within the card family — rendered as the small parchment plaque under the back's illustration (e.g. \"Clothing\", \"Tool\", \"Trade good\"). Without it the plaque is omitted; if the value equals `category` it is suppressed as well."
+    sample:
+      de: "Werkzeug"
+      en: "Tool"
+
+  # The two upright edge labels. System-wide because every card answers them
+  # the same way: on the right where to look it up, on the left what it is
+  # called in the English original.
+  book-reference:
+    slot: front-side-right
+    aliases: [reference, buch, quelle, referenz]
+    description:
+      de: "Quellenangabe – Buchtitel mit Seitenzahl oder Wikilink in den Vault. Steht hochkant am rechten Kartenrand; ohne Angabe steht dort „DRAGONBANE“."
+      en: "Source reference — book title with page number, or a wikilink into the vault. Set upright along the card's right edge; falls back to \"DRAGONBANE\"."
+    sample:
+      de: "Regelbuch S. 73"
+      en: "Rules p. 73"
+
+  english-original:
+    slot: front-side-left
+    aliases: [english, englisch, english-name, originalname]
+    description:
+      de: "Englischer Originalname, klein und hochkant am linken Kartenrand – Gegenstück zur Quellenangabe rechts. Hilft beim Nachschlagen im englischen Regelwerk. Ohne Angabe entfällt die Zeile."
+      en: "English original name, set small and upright along the card's left edge — the counterpart to the source reference on the right. Omitted when unset."
+    sample: "Boat hook"
+
+# The strings the shared front and back read that are not a place's caption.
+# A card type's table overrides these per key.
+translations:
+  de:
+    back-label: "Dragonbane"
+    # The rotated reference along the right edge, when a card sets none.
+    side-ref: "Dragonbane"
+    # Prefixed to every `effect` a card renders, on the roll-table front as
+    # well as in the gear stat block.
+    effect-label: "Effekt"
+    # The upright label on the LEFT edge. Only the rule card fills that place
+    # (with the English original name); set in caps by the stylesheet.
+    front-side-left-label: "engl."
+    # The attack table's two column heads are read with `{{t}}`, not as a
+    # place's caption (one place, two columns), so they must exist — empty —
+    # for a card type that does not name them.
+    front-table-col-1-label: ""
+    front-table-col-2-label: ""
+
+# How much room two places on the title plaque need, by what they will
+# show. The plaque's little die holds a bare one- or two-digit result at
+# full size; a range ("9–10") or three digits steps the numeral down. The
+# table-name tag is shrink-to-fit and every Regelbuch table fits at the full
+# size — the longest, „Dämonenwurf im Fernkampf", runs ~52 % of the card —
+# so `wide` is an escape hatch for a name of your own, not something the
+# bundled tables reach. Stepping the long ones down was tried and rejected:
+# FURCHT and DÄMONENWURF at two sizes read as an accident side by side.
+classifiers:
+  front-header-die:
+    match:
+      - { pattern: "^.{1,2}$", token: narrow }       # "7", "20"
+      - { pattern: "^\\d[–—-]\\d$", token: narrow }  # "1–2", "5-6"
+    default: wide                                    # "9–10", "11–12", "100"
+  front-header-subtitle:
+    match:
+      - { pattern: "^.{1,24}$", token: narrow }      # every Regelbuch table
+    default: wide                                    # a longer name of your own
+
+card-types:
+  # ── gear: everything a character carries ───────────────────────────
+  # Trade goods, tools, weapons, armour — one card type, because the field
+  # sets barely overlap and a torch is a light source AND an improvised
+  # weapon. What a card IS lives in `subcategory` („Nahkampfwaffe",
+  # „Kleidung", „Rüstung"), which also captions the back. Every stat cell
+  # is conditional; map another property onto a free place rather than
+  # adding a card type per item class.
+  #
+  # Rows 1–2 run in the column order of the rulebook's weapon table (GRW
+  # S. 74): Griff, Reichweite, Schaden, Haltbarkeit — with the Rüstungswert
+  # riding row 2 as a third cell it never shares, since no note carries an
+  # armour rating beside a damage or durability value. Then Preis /
+  # Verfügbarkeit, Gewicht / Anwendungen, and the closing block: Merkmale,
+  # Voraussetzung with the minimum STR trailing it in the same row, Effekt.
+  gear:
+    front-template: front.hbs
+    back-template: back.hbs
+    stylesheet: gear/card-type.css
+    card-size: poker
+
+    # `Griff: 1H` is stored as the rulebook's abbreviation and printed in
+    # full. Keyed on the PLACE, not on `grip`: it is the cell that renders
+    # it, and a card type putting something else in row 1's left cell
+    # brings its own table, or none.
+    glyphs:
+      front-stat-1a:
+        1h: "einhändig"
+        2h: "zweihändig"
+
+    translations:
+      de:
+        back-label: "Ausrüstung"
+        front-stat-1a-label: "Griff"
+        front-stat-1b-label: "Reichweite"
+        front-stat-2a-label: "Schaden"
+        front-stat-2b-label: "Haltbarkeit"
+        front-stat-2c-label: "Rüstungswert"
+        front-stat-3a-label: "Preis"
+        front-stat-3b-label: "Verfügbarkeit"
+        front-stat-4a-label: "Gewicht"
+        front-stat-4b-label: "Anwendungen"
+        front-stat-5-wide-label: "Merkmale"
+        front-stat-6-wide-label: "Voraussetzung"
+        # The minimum STR trails the skill in the same row („Voraussetzung:
+        # Äxte  STÄ: 7"). The label is deliberately the rulebook's bare
+        # abbreviation; the property name `min-strength` is what tells it
+        # apart from a `Reichweite: STÄ`.
+        front-stat-6-wide-tail-label: "STÄ"
+        front-stat-8-wide-label: "Effekt"
+
+    properties:
+      name:
+        slot: front-header-title
+        description:
+          de: "Name des Gegenstands."
+          en: "Item's name."
+        sample:
+          de: "Bootshaken"
+          en: "Boat hook"
+
+      # This card shows its picture on the FRONT, and that answers the
+      # question — so `bild` and `image`, the spellings the notes use, are
+      # aliases here rather than a cascade.
+      front-image:
+        slot: front-image-top
+        aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+        description:
+          de: "Bild des Gegenstands als Wikilink. Erscheint auf der Vorderseite."
+          en: "Picture as a wikilink. Rendered on the card front."
+        sample: "[[Bootshaken.png]]"
+
+      # ── Weapons ──
+      grip:
+        slot: front-stat-1a
+        aliases: [griff]
+        description:
+          de: "Griff – \"1H\" für einhändig oder \"2H\" für zweihändig."
+          en: "Grip — \"1H\" for one-handed or \"2H\" for two-handed."
+        sample: "2H"
+
+      range:
+        slot: front-stat-1b
+        aliases: [reichweite]
+        description:
+          de: "Reichweite in Metern bei Fernkampfwaffen, oder kurzer Wert wie \"2\" / \"STÄ\" für Nahkampfwaffen."
+          en: "Range in metres for ranged weapons, or a short value like \"2\" / \"STR\" for melee weapons."
+        sample: "2"
+
+      damage:
+        slot: front-stat-2a
+        aliases: [schaden]
+        description:
+          de: "Schaden als Würfelnotation (deutsch \"W\", z. B. \"2W8\")."
+          en: "Damage as dice notation (lower-case \"d\" in English, e.g. \"2d8\")."
+        sample:
+          de: "W8"
+          en: "d8"
+
+      durability:
+        slot: front-stat-2b
+        aliases: [haltbarkeit]
+        description:
+          de: "Haltbarkeit – wie viel Schaden die Waffe beim Parieren abfängt, ohne beschädigt zu werden."
+          en: "Durability — how much damage the weapon can parry before it gets damaged."
+        sample: 8
+
+      # ── Armour ──
+      armor-rating:
+        slot: front-stat-2c
+        aliases: [rüstungswert]
+        description:
+          de: "Rüstungswert – wie viele Schadenspunkte die Rüstung von einem Angriff abzieht. Helme nutzen \"+1\" / \"+2\", da sie zusätzlich getragen werden."
+          en: "Armor Rating — how many damage points the armor subtracts from an attack. Helmets use \"+1\" / \"+2\" because they're worn in addition."
+        sample: 3
+
+      # ── Trade: a ware, and wares are the gear card ──
+      price:
+        slot: front-stat-3a
+        aliases: [preis]
+        description:
+          de: "Übliche Kosten der Ware in Gold-, Silber- oder Kupfermünzen."
+          en: "Typical cost of the item in gold, silver or copper coins."
+        sample:
+          de: "4 Silber"
+          en: "4 silver"
+
+      availability:
+        slot: front-stat-3b
+        aliases: [verfügbarkeit, verfuegbarkeit]
+        description:
+          de: "Verfügbarkeit der Ware: Gewöhnlich, Ungewöhnlich, Selten oder Einzigartig."
+          en: "Supply rating of the item: Common, Uncommon, Rare or Unique."
+        sample:
+          de: "Ungewöhnlich"
+          en: "Uncommon"
+
+      # ── Encumbrance and consumption ──
+      weight:
+        slot: front-stat-4a
+        aliases: [gewicht]
+        description:
+          de: "Traglast als Vielfaches der Standard-Einheit (1 = ein normaler Gegenstand). Verwende \"1/4\" für Kleinstgegenstände, \"–\" für vernachlässigbares Gewicht und \"Bündel\" für lose gebündelte Gegenstände."
+          en: "Encumbrance as a multiple of the standard unit (1 = one normal item). Use \"1/4\" for tiny items, \"–\" for negligible weight, and \"Bundle\" for loosely bundled items."
+        sample: 1
+
+      uses:
+        slot: front-stat-4b
+        aliases: [anwendungen, ladungen, charges]
+        description:
+          de: "Anzahl der Anwendungen, bis der Gegenstand verbraucht ist (z. B. 10 Verbände, 10 Portionen Duftwasser)."
+          en: "Number of uses before the item is consumed (e.g. 10 bandages, 10 doses of perfume)."
+        sample: 6
+
+      # A comma-separated STRING, not a list. `traits` on a creature is a
+      # list of {name, desc} pairs set as prose; on a piece of gear it is a
+      # handful of rulebook keywords in one wide row. Same word, two value
+      # shapes — which is why each card type declares it for itself.
+      traits:
+        slot: front-stat-5-wide
+        aliases: [merkmale]
+        description:
+          de: "Merkmale der Waffe als kommagetrennte Liste (Hieb, Stich, Wucht, Lang, Niederwerfend, Unauffällig)."
+          en: "Weapon features as a comma-separated list (Slashing, Piercing, Bludgeoning, Long, Toppling, Subtle)."
+        sample:
+          de: "Stich, Lang"
+          en: "Piercing, Long"
+
+      skill:
+        slot: front-stat-6-wide
+        aliases: [fertigkeit]
+        description:
+          de: "Fertigkeit, mit der die Waffe geführt wird (z. B. Schwerter, Äxte, Bögen). Freitext für Sonderfälle erlaubt (\"beliebige Nahkampffertigkeit (außer …)\"). Erscheint als breite Schlusszeile \"Voraussetzung\"; die Mindest-STÄ steht daneben."
+          en: "Skill used to wield the weapon (e.g. Swords, Axes, Bows). Free text is allowed for special cases. Rendered as the wide closing \"Requirement\" line, with the minimum STR beside it."
+        sample:
+          de: "Speere"
+          en: "Spears"
+
+      # Canonical is `min-strength`, not `strength`: on a weapon card "STÄ"
+      # names two things — the minimum the wielder needs, and (on six melee
+      # weapons) the attribute the weapon's REACH is measured against,
+      # written `Reichweite: STÄ`. The printed label stays the rulebook's
+      # bare "STÄ"; the data key carries the distinction.
+      min-strength:
+        slot: front-stat-6-wide-tail
+        aliases: [strength, stä, stärke, staerke, mindest-stä, mindeststärke]
+        description:
+          de: "Mindest-STÄ, um die Waffe wirksam ohne Nachteil zu führen. Steht als eigener Wert hinter der Fertigkeit, in der Spaltenreihenfolge der Waffentabelle des Regelbuchs (GRW S. 74)."
+          en: "Minimum STR required to wield the weapon effectively without a bane. Rendered as a value of its own after the skill, in the rulebook weapon table's column order (Rules p. 74)."
+        sample: 10
+
+      effect:
+        slot: front-stat-8-wide
+        aliases: [effekt]
+        description:
+          de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+          en: "Mechanical effect — what the card does when it triggers."
+        sample:
+          de: "Kann ein Boot in Reichweite heranziehen."
+          en: "Can pull a boat within reach closer."
+
+  # ── creature: Monster AND NSC ──────────────────────────────────────
+  # One card type for everything the GM fields: the beasts of the wild and
+  # the named people of a town. They agree in
+  # everything a card type decides — size, layouts, the shared front, the
+  # picture on both faces — and differ only in which stat rows they fill,
+  # with no field in common across the vault's notes. What a card IS lives
+  # in `category` („Monster" / „NSC"), and the gain is the mixed form: a
+  # named opponent with an attack table AND skills.
+  #
+  # The stat box, top to bottom (every cell conditional, empty rows collapse):
+  #
+  #   row 1   TP | WP | Schadensbonus     three cells — measured to fit one
+  #                                       line, because all three are short
+  #   row 2   Grimmigkeit | Größe         (monster only)
+  #   row 3   Bewegung | Rüstung
+  #   row 4   Fertigkeiten ······· wide   (NSC only)
+  #   row 5   Waffen ············· wide   (NSC only)
+  #   block   traits / talents ··· ONE block without rules
+  #   table   monster-attacks            (monster only)
+  #   detail  gm-notes                   (detailed display mode only)
+  #   picture artwork                    always on the back, on the front when
+  #                                      there is room
+  creature:
+    front-template: front.hbs
+    back-template: back.hbs
+    stylesheet: creature/card-type.css
+    card-size: large
+
+    # The picture sits on the back; the `front-image` candidate shows it on
+    # the front as well when that prints fewer cards.
+    layouts:
+      - { name: with-back, front-face-count: odd, fallback: true }
+      - { name: front-image, front-face-count: even }
+    layout-decision:
+      order:
+        - { metric: printed-cards, direction: minimize }
+        - { metric: whitespace, direction: minimize }
+      tie-break: declaration-order
+
+    translations:
+      de:
+        # The green back title when a note carries no `Kategorie:` — the
+        # generic term rather than a guess between Monster and NSC.
+        back-label: "Kreatur"
+        front-stat-1a-label: "TP"
+        front-stat-1b-label: "WP"
+        front-stat-1c-label: "Schadensbonus"
+        front-stat-2a-label: "Grimmigkeit"
+        front-stat-2b-label: "Größe"
+        front-stat-3a-label: "Bewegung"
+        front-stat-3b-label: "Rüstung"
+        front-stat-4-wide-label: "Fertigkeiten"
+        front-stat-5-wide-label: "Waffen"
+        front-table-label: "MONSTERANGRIFFE"
+        front-table-col-1-label: "W6"
+        front-table-col-2-label: "ANGRIFF"
+        front-detail-text-label: "SL-Notiz"
+
+    properties:
+      # A card type may set a system property's DEFAULT: that does not
+      # change what the property means, it answers what this card is when
+      # the note says nothing. `Kategorie: Monster` in the note overrides it.
+      category:
+        default: "Kreatur"
+
+      name:
+        slot: front-header-title
+        description:
+          de: "Name der Kreatur – des Monsters oder des NSCs."
+          en: "Name of the creature — monster or NPC."
+        sample:
+          de: "Nebelkrähe"
+          en: "Mist Crow"
+
+      description:
+        slot: front-lead-text
+        aliases: [beschreibung]
+        description:
+          de: "Kurze Beschreibung / Flavortext, über dem Werteblock."
+          en: "Short flavour description, above the stat block."
+        sample:
+          de: "Ein Vogel aus Nebel und Federn, der Reisenden am Seeufer die Wegzeichen stiehlt."
+          en: "A bird of mist and feathers that steals waymarks from travellers on the lake shore."
+
+      # ONE picture, TWO places — named after what it shows, not where it
+      # sits. Always on the back; on the front only when the `front-image`
+      # layout candidate wins. `back-image` is bound to the same back place
+      # at system level, i.e. earlier, so an explicit back picture wins over
+      # the artwork. Not `portrait`: that is an alias of the baseline's
+      # `image`, and a name that is another property's alias is a collision.
+      artwork:
+        slot: [front-image-bottom, back-image-primary]
+        aliases: [image, bild, vorderbild, vorderseitenbild, bild-vorderseite]
+        description:
+          de: "Bild der Kreatur als Wikilink. Erscheint auf der Rückseite und – wenn der Platz reicht – auch unten auf der Vorderseite."
+          en: "Picture of the creature as a wikilink. Rendered on the back, and at the foot of the front when there is room for it."
+        sample: "[[Nebelkrähe.png]]"
+
+      hit-points:
+        slot: front-stat-1a
+        aliases: [tp, lp, lebenspunkte]
+        description:
+          de: "Trefferpunkte (TP) – bei 0 ist die Kreatur ausgeschaltet."
+          en: "Hit Points (HP) — the creature is taken out at 0."
+        sample: 9
+
+      willpower-points:
+        slot: front-stat-1b
+        aliases: [wp, willenskraftpunkte]
+        description:
+          de: "Willenskraftpunkte (WP) – werden für heroische Talente und Magie ausgegeben."
+          en: "Willpower Points (WP) — spent on heroic abilities and magic."
+        sample: 6
+
+      damage-bonus:
+        slot: front-stat-1c
+        aliases: [schadensbonus]
+        description:
+          de: "Schadensbonus aus STÄ – als Würfelbonus auf Nahkampfschaden (z. B. \"+W4\") oder \"–\" wenn keiner."
+          en: "Damage Bonus from STR — added as a die to melee damage (e.g. \"+d4\") or \"–\" if none."
+        sample:
+          de: "–"
+          en: "–"
+
+      ferocity:
+        slot: front-stat-2a
+        aliases: [grimmigkeit]
+        description:
+          de: "Grimmigkeit – Anzahl der Angriffe pro Runde."
+          en: "Ferocity — number of attacks per round."
+        sample: 1
+
+      size:
+        slot: front-stat-2b
+        aliases: [größe, groesse]
+        description:
+          de: "Größe (winzig, klein, normal, groß, riesig, schwergewichtig)."
+          en: "Size (tiny, small, normal, large, huge, swarm)."
+        sample:
+          de: "klein"
+          en: "small"
+
+      movement:
+        slot: front-stat-3a
+        aliases: [bewegung]
+        description:
+          de: "Bewegungsweite in Metern (z. B. \"10 m\" oder \"6 m, schwimmend 12 m\")."
+          en: "Movement rate in metres (e.g. \"10 m\" or \"6 m, swim 12 m\")."
+        sample: "4 m, fliegend 16 m"
+
+      armor:
+        slot: front-stat-3b
+        aliases: [rüstung]
+        description:
+          de: "Rüstung – bei Monstern die natürliche Panzerung als Würfelnotation oder Beschreibung, bei NSCs die getragene Rüstung mit ihrem Wert."
+          en: "Armor — a monster's natural armor as dice notation or a description, an NPC's worn armor with its rating."
+        sample:
+          de: "Nebelgefieder (W4)"
+          en: "Mist plumage (d4)"
+
+      skills:
+        slot: front-stat-4-wide
+        aliases: [fertigkeiten]
+        description:
+          de: "Fertigkeiten und Werte als kommagetrennte Liste (Großbuchstaben für Kompetenzen, gefolgt von der Stufe)."
+          en: "Skills and ratings as a comma-separated list (uppercase skill names followed by their level)."
+        sample:
+          de: "AUFMERKSAMKEIT 12, SPEERE 10, SCHWIMMEN 14"
+          en: "AWARENESS 12, SPEARS 10, SWIMMING 14"
+
+      weapons:
+        slot: front-stat-5-wide
+        aliases: [waffen]
+        description:
+          de: "Bewaffnung des NSCs als kurze Liste mit Namen und wichtigen Werten in Klammern (Schaden, Merkmale)."
+          en: "NPC's armament as a short list of names with key stats in parentheses (damage, features)."
+        sample:
+          de: "Bootshaken (W8, Stich/Lang), Fischmesser (W6, Stich)"
+          en: "Boat hook (d8, piercing/long), Fish knife (d6, piercing)"
+
+      # As ONE block without rules, not as a row per item: the entries are
+      # whole sentences („Nebelflug: Im Nebel ist die Krähe unsichtbar, bis
+      # …") that a rule between each two would chop up.
+      traits:
+        slot: front-trait-list
+        aliases: [merkmale]
+        description:
+          de: "Liste besonderer Eigenschaften, jede mit Namen und Beschreibung."
+          en: "List of special traits, each with a name and a description."
+        sample:
+          de:
+            - name: "Nebelflug"
+              desc: "Im Nebel ist die Krähe unsichtbar, bis sie angreift."
+            - name: "Schwarmruf"
+              desc: "Ruft je Runde eine weitere Krähe herbei, solange sie kreischt."
+          en:
+            - name: "Mist flight"
+              desc: "Invisible in mist until it attacks."
+            - name: "Flock call"
+              desc: "Summons one more crow per round while it shrieks."
+
+      talents:
+        slot: front-trait-list
+        aliases: [talente]
+        description:
+          de: "Liste heroischer Talente, jedes mit Namen und Kurzbeschreibung."
+          en: "List of heroic abilities, each with a name and a short description."
+        sample:
+          de:
+            - name: "Aalglatt"
+              desc: "Vorteil auf AUSWEICHEN, wenn der Boden nass ist."
+            - name: "Standfest im Boot"
+              desc: "Kein Nachteil für Proben auf schwankendem Untergrund."
+          en:
+            - name: "Slippery"
+              desc: "Boon on EVADE when the ground is wet."
+            - name: "Sea legs"
+              desc: "No bane on rolls made on a rocking deck."
+
+      monster-attacks:
+        slot: front-table
+        aliases: [monsterangriffe]
+        description:
+          de: "Tabelle der Monsterangriffe (W6-Tabelle: roll, name, desc je Eintrag)."
+          en: "Monster attack table (d6: roll, name, desc per entry)."
+        sample:
+          de:
+            - roll: "1-2"
+              name: "Hackschnabel"
+              desc: "Schaden W6. Das Ziel lässt fallen, was es in der Hand hält."
+            - roll: "3-4"
+              name: "Krallen"
+              desc: "Zwei Angriffe je W4 Hiebschaden."
+            - roll: "5-6"
+              name: "Kreischen"
+              desc: "Alle in 10 m müssen einen Wurf auf WIL bestehen oder sind bis zum Ende der Runde benommen."
+          en:
+            - roll: "1-2"
+              name: "Pecking beak"
+              desc: "Damage d6. The target drops what it holds."
+            - roll: "3-4"
+              name: "Talons"
+              desc: "Two attacks dealing d4 slashing damage each."
+            - roll: "5-6"
+              name: "Shriek"
+              desc: "Everyone within 10 m must pass a WIL roll or is dazed until the end of the round."
+
+      gm-notes:
+        slot: front-detail-text
+        aliases: [sl-notiz, sl-notizen, gm-note]
+        description:
+          de: "Geheime Notizen für den Spielleiter (Taktik, Schwächen, Hintergrund). Nur im Detail-Modus sichtbar."
+          en: "Secret GM notes (tactics, weaknesses, lore). Only shown in detailed display mode."
+        sample:
+          de: "Greift an, wer die Laterne trägt. Flieht bei unter 3 TP in den Nebel."
+          en: "Attacks whoever carries the lantern. Flees into the mist below 3 HP."
+
+  # ── rule: Fertigkeiten, Talente, Zauber ────────────────────────────
+  # One card type for the three rule-element families, because the rulebook
+  # already sets them as one shape: a name, a short list of labelled values,
+  # then prose. Only WHICH labels appear differs, and the three label sets
+  # barely overlap — `Voraussetzung` is the single shared key. So the front
+  # renders the union in one fixed order and every row is conditional:
+  #
+  #   1  attribute + rank + wp-cost      (attribute and rank never co-occur)
+  #   2  prerequisite                    wide — free text, must wrap
+  #   4  casting-requirement             wide — "Wort, Geste, Fokus (…)"
+  #   5  casting-time + range + duration one wrapping row, no rules between
+  #
+  # Read down a Zauber and you get Rang, Voraussetzung, Vorgabe, Zauberdauer,
+  # Reichweite, Wirkungsdauer — the printed order. What the card IS lives in
+  # `category` („Fertigkeit", „Talent", „Zauber") and `subcategory`
+  # („Grundfertigkeit", „Heroisches Talent", „Elementarismus"). Do not add a
+  # card type per family; add a conditional row here.
+  rule:
+    front-template: front.hbs
+    back-template: back.hbs
+    stylesheet: rule/card-type.css
+    card-size: poker
+
+    translations:
+      de:
+        back-label: "Regel"
+        # „WP" as the short form: on a Zauber the row already carries the
+        # Rang, and the full word with „2 je Kraftstufe" would wrap to three
+        # lines.
+        front-stat-1a-label: "Attribut"
+        front-stat-1b-label: "Rang"
+        front-stat-1c-label: "WP"
+        front-stat-2-wide-label: "Voraussetzung"
+        front-stat-4-wide-label: "Vorgabe"
+        front-stat-5a-label: "Zauberdauer"
+        front-stat-5b-label: "Reichweite"
+        front-stat-5c-label: "Wirkungsdauer"
+
+    # German note keys drive the aliases, because that is what the vault
+    # writes. The two "requirement" keys the English rules keep apart and
+    # German does not: EN "Prerequisite" (what you must already have) is DE
+    # „Voraussetzung" → `prerequisite`; EN "Requirement" (what casting costs
+    # you in word and gesture) is DE „Vorgabe" → `casting-requirement`.
+    properties:
+      name:
+        slot: front-header-title
+        description:
+          de: "Name der Fertigkeit, des Talents oder des Zaubers."
+          en: "Name of the skill, ability or spell."
+        sample:
+          de: "Glutgriff"
+          en: "Ember Grip"
+
+      front-image:
+        slot: front-image-top
+        aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+        description:
+          de: "Bild zur Regel, zum Talent oder zum Zauber als Wikilink. Erscheint auf der Vorderseite."
+          en: "Picture as a wikilink. Rendered on the card front."
+        sample: "[[Glutgriff.png]]"
+
+      # ── 1 · Fertigkeiten ──
+      attribute:
+        slot: front-stat-1a
+        aliases: [attribut, eigenschaft, grundeigenschaft]
+        description:
+          de: "Grundeigenschaft, auf die eine Fertigkeit probt: STÄ, KON, GEW, INT, WIL oder CHA."
+          en: "Attribute a skill is rolled against: STR, CON, AGL, INT, WIL or CHA."
+        sample:
+          de: "GEW"
+          en: "AGL"
+
+      # ── 2 · Zauber ──
+      rank:
+        slot: front-stat-1b
+        aliases: [rang, grad, zauberrang]
+        description:
+          de: "Rang des Zaubers (1–5) oder „Zaubertrick“. Als Zeichenkette angeben, damit „Zaubertrick“ neben den Zahlen möglich bleibt."
+          en: "Rank of the spell (1–5) or \"Magic trick\". Quote it so \"Magic trick\" can stand alongside the numbers."
+        sample: "1"
+
+      # ── 3 · Talente und Zauber ──
+      prerequisite:
+        slot: front-stat-2-wide
+        aliases: [voraussetzung, vorbedingung]
+        description:
+          de: "Was der Charakter mitbringen muss: bei Talenten eine Fertigkeit auf 12 („Ausweichen 12“) oder ein Beruf, bei Zaubern die Magieschule bzw. der vorausgesetzte Zauber. „–“ für keine."
+          en: "What the character must already have: for abilities a skill at 12 (\"Evade 12\") or a profession, for spells the school of magic or the prerequisite spell. \"–\" for none."
+        sample:
+          de: "[[Aschenatem]]"
+          en: "[[Ash Breath]]"
+
+      # For a Zauber the value follows the Regelbuch's KRAFTSTUFE rule
+      # (S. 58), and it is DATA, not a formula: „1" for a Zaubertrick, „2 je
+      # Kraftstufe" for a scaling spell, „2" for the four that do not scale
+      # — and that a spell scales at all is stated only in its prose.
+      wp-cost:
+        slot: front-stat-1c
+        aliases: [willenskraftpunkte, wp, willenskraft, willpower-points, willpower]
+        description:
+          de: "Willenskraftpunkte für den Einsatz. Talente: fester Wert, „–“ für dauerhafte, „variabel“ bei abhängigen Kosten. Zauber: „1“ für Zaubertricks, „2 je Kraftstufe“ für skalierende, „2“ für Zauber ohne Kraftstufen (Regelbuch S. 58)."
+          en: "Willpower Points to use it. Abilities: a fixed number, \"–\" for permanent ones, \"variable\" when the cost depends on the use. Spells: \"1\" for magic tricks, \"2 per power level\" for scaling ones, \"2\" for spells without power levels (Rules p. 58)."
+        sample: "3"
+
+      # ── 5 · Zauber ──
+      casting-requirement:
+        slot: front-stat-4-wide
+        aliases: [vorgabe, requirement, komponenten, components]
+        description:
+          de: "Vorgabe – was das Wirken verlangt: Wort, Geste, Fokus (…) oder Zutat (…). Im englischen Regelwerk „Requirement“."
+          en: "Requirement — what casting demands: word, gesture, focus (…) or ingredient (…)."
+        sample:
+          de: "Wort, Geste"
+          en: "Word, gesture"
+
+      casting-time:
+        slot: front-stat-5a
+        aliases: [zauberdauer, wirkdauer, zeitaufwand]
+        description:
+          de: "Zauberdauer – Aktion, Reaktion, Viertel oder Tagesabschnitt."
+          en: "Casting time — action, reaction, stretch or shift."
+        sample:
+          de: "Aktion"
+          en: "Action"
+
+      range:
+        slot: front-stat-5b
+        aliases: [reichweite]
+        description:
+          de: "Reichweite des Zaubers in Metern, oder „Berührung“ bzw. „Selbst“."
+          en: "Range of the spell in metres, or \"Touch\" / \"Self\"."
+        sample:
+          de: "10 Meter"
+          en: "10 meters"
+
+      duration:
+        slot: front-stat-5c
+        aliases: [wirkungsdauer, dauer]
+        description:
+          de: "Wirkungsdauer – Sofort, Viertel, Tagesabschnitt oder Dauerhaft."
+          en: "Duration — instant, stretch, shift or permanent."
+        sample:
+          de: "Sofort"
+          en: "Instant"
+
+      # The prose, BELOW the stat box — the rulebook paragraph.
+      description:
+        slot: front-text-bottom
+        aliases: [beschreibung]
+        description:
+          de: "Beschreibung oder Regeltext der Karte – der Absatz unter dem Werteblock."
+          en: "Description or rule text of the card — the paragraph below the stat block."
+        sample:
+          de: "Deine Hand glüht wie ein Stück Kohle aus dem Herd. Was du berührst, beginnt zu schwelen."
+          en: "Your hand glows like a coal from the hearth. Whatever you touch begins to smoulder."
+
+      effect:
+        slot: front-effect-bottom
+        aliases: [effekt]
+        description:
+          de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+          en: "Mechanical effect — what the card does when it triggers."
+        sample:
+          de: "Berührungsangriff: W6 Feuerschaden, je Kraftstufe +W6."
+          en: "Touch attack: d6 fire damage, +d6 per power level."
+
+      note:
+        slot: front-note-bottom
+        aliases: [anmerkung]
+        description:
+          de: "Freier Anmerkungstext, der unauffällig auf der Karte erscheint."
+          en: "Free-form note rendered unobtrusively on the card."
+        sample:
+          de: "Optional: nur bei Tageslicht."
+          en: "Optional: only in daylight."
+
+  # ── roll-table: one entry of any dice table in the Regelbuch ───────
+  # Dämonenwurf im Nah- und Fernkampf, Furcht, Schwere Verletzungen,
+  # Magischer Fehlschlag, Jagdbeute, Schwächen, Mementos, Erscheinungsbild —
+  # one card type covers every table, the table's name being `category`.
+  # A note per row, or a table note: the block's `table:` maps the columns
+  # (`roll: Würfelwurf`, `stats: [Voraussetzungen, Rationen]`) and every row
+  # is a card. The die result lives in the baseline's `roll` / `roll-min` /
+  # `roll-max` and renders as the badge on the title plaque.
+  roll-table:
+    front-template: front.hbs
+    back-template: back.hbs
+    stylesheet: roll-table/card-type.css
+    # A row is short — a poker card holds it comfortably, four to an A4 sheet.
+    card-size: poker
+    expand-by-roll: true
+
+    translations:
+      de:
+        back-label: "Würfeltabelle"
+
+    properties:
+      # The row's own name first, the table's name behind it — the order of
+      # the bindings is the priority: a card shows its row's name and falls
+      # back to its table's only when the row has none (Furcht). Swap the
+      # two and every card in the deck is titled after its table.
+      name:
+        slot: front-header-title
+        description:
+          de: "Titel der Tabellenzeile (z. B. „Ruderbruch“, „Nebelbarsch“). Fehlt er, rückt `category` als Titel nach – für Tabellen, deren Zeilen keine eigenen Namen tragen."
+          en: "Title of the table row (e.g. \"Oar snapped\", \"Mist perch\"). When absent, `category` takes its place — for tables whose rows carry no names."
+        sample:
+          de: "Ruderbruch"
+          en: "Oar snapped"
+
+      # The table's name on the FRONT. Its own property with `category` as
+      # an alias, not `category` re-bound: `slot:` replaces across layers,
+      # and re-binding `category` here would take the back's title binding
+      # away from it. Through the alias the front reads the same value
+      # without touching the back.
+      table-name:
+        slot: [front-header-title, front-header-subtitle]
+        aliases: [category]
+        description:
+          de: "Name der Tabelle, zu der diese Zeile gehört – erscheint als kleine Pergament-Fahne an der Titelplakette und, wenn die Zeile keinen eigenen Namen trägt, als Titel. Liest denselben Wert wie `category`."
+          en: "Name of the table this row belongs to — rendered as the small parchment tag on the title plaque, and as the title when the row carries no name of its own. Reads the same value as `category`."
+        sample:
+          de: "Fischfang"
+          en: "Fishing"
+
+      roll:
+        slot: front-header-die
+        aliases: [wuerfelwurf]
+
+      front-image:
+        slot: front-image-top
+        aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+        description:
+          de: "Bild zu dieser Tabellenzeile als Wikilink. Erscheint auf der Vorderseite."
+          en: "Picture as a wikilink. Rendered on the card front."
+        sample: "[[Nebelbarsch.png]]"
+
+      description:
+        slot: front-text-top
+        aliases: [beschreibung]
+        description:
+          de: "Der erzählerische Teil des Tabelleneintrags – was passiert."
+          en: "The narrative half of the table entry — what happens."
+        sample:
+          de: "Das Ruder bricht mitten im Schlag, und das Boot dreht sich quer zur Strömung."
+          en: "The oar snaps mid-stroke and the boat swings across the current."
+
+      effect:
+        slot: front-effect-top
+        aliases: [effekt]
+        description:
+          de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+          en: "Mechanical effect — what the card does when it triggers."
+        sample:
+          de: "Bis zum Ende des Tagesabschnitts Nachteil auf SEEFAHRT."
+          en: "Bane on SEAMANSHIP until the end of the shift."
+
+      note:
+        slot: front-note-top
+        aliases: [anmerkung]
+        description:
+          de: "Freier Anmerkungstext, der unauffällig auf der Karte erscheint."
+          en: "Free-form note rendered unobtrusively on the card."
+        sample:
+          de: "Optional: nur bei Nebel würfeln."
+          en: "Optional: roll only in mist."
+
+      # Table-specific values (Rationen, Voraussetzungen, Heilungsdauer, …)
+      # as labelled rows in the stat box: a list of {name, desc} pairs, which
+      # is what a table note's `stats: [Voraussetzungen, Rationen]` column
+      # map produces from the row's cells.
+      stats:
+        slot: front-stat-list
+        aliases: [werte, angaben]
+        description:
+          de: "Freie Beschriftung/Wert-Paare für tabellenspezifische Angaben – „Rationen: 2W6“, „Voraussetzungen: Waffe oder Falle“, „Heilungsdauer: W6 Tage Ruhe“."
+          en: "Free label/value pairs for table-specific values — \"Rations: 2d6\", \"Requirements: weapon or trap\", \"Healing time: d6 days of rest\"."
+        sample:
+          de:
+            - name: "Voraussetzungen"
+              desc: "Angel oder Netz"
+            - name: "Rationen"
+              desc: "W6"
+          en:
+            - name: "Requirements"
+              desc: "Rod or net"
+            - name: "Rations"
+              desc: "d6"
+
+  # ── generic: the free card ─────────────────────────────────────────
+  # Open a note, write the text, done. The body is the note's markdown —
+  # paragraphs, sub-headings, lists, tables and embedded pictures included.
+  # The card knows only two values: the title on the plaque and the source
+  # reference along the edge. A deck cover, a licence page, a house rule.
+  generic:
+    front-template: generic/front.hbs
+    back-template: back.hbs
+    stylesheet: generic/card-type.css
+    card-size: poker
+    # One note, one physical card: a long text fills the back first and only
+    # then spawns further cards. A generic card has no designed back to keep,
+    # so the system's odd face count does not apply.
+    overflow-mode: back-then-cards
+    layouts:
+      - { name: default, front-face-count: any, fallback: true }
+
+    properties:
+      name:
+        slot: front-header-title
+        description:
+          de: "Titel auf der Pergament-Plakette am Kopf der Karte. Ohne Angabe der Dateiname der Notiz."
+          en: "Title on the parchment plaque at the head of the card. Falls back to the note's file name."
+        sample:
+          de: "Lizenzen & Danksagungen"
+          en: "Licences & Credits"
+
+      # The body, from three sources in this order — the first the note
+      # actually sets wins: `content` in the block, a `## Vorderseite`
+      # section, the note's own text before its first heading. That text is
+      # the baseline's `body`, which is an alias here and not a binding of
+      # its own: a bound `body` would sit first among the place's
+      # properties, being inherited, and win over the other two.
+      content:
+        slot: front-body
+        aliases: [text, inhalt, kartentext, body]
+        description:
+          de: "Kartentext als Markdown, direkt im card-forge-Block. Hat Vorrang vor dem Notiztext. Für Tabellen und eingebettete Bilder den Notiztext benutzen."
+          en: "Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures."
+        sample:
+          de: "Zusammenstellung und Gestaltung: **dein Name hier**."
+          en: "Compiled and designed by **your name here**."
+
+      vorderseite:
+        slot: front-body
+        aliases: [front-side]
+        description:
+          de: "Der Abschnitt unter einer `## Vorderseite`-Überschrift in der Notiz füllt die Karte, wenn der Block keinen `content` setzt. Voll gerendert – Tabellen, Überschriften, Listen und eingebettete Bilder inklusive."
+          en: "The section under a `## Vorderseite` heading in the note fills the card when the block sets no `content`. Fully rendered — tables, headings, lists and embedded pictures included."
+
+      # The generic front has no left edge label — the card knows a title
+      # and a source, nothing else — so the system-wide binding is undone.
+      english-original:
+        slot: ~

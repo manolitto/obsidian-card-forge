@@ -1,0 +1,148 @@
+/* ── Dragonbane — Regel-Karte (Fertigkeit / Talent / Zauber) ─────────
+   The system's look: parchment, title plaque, ornament strips, stat block, body
+   and vertical reference all come from `game-system.css`. Local to this card
+   type are only the footer with the English original name and the vertical
+   rhythm that keeps a long spell on one face.
+
+   Sizes are relative — em throughout, so
+   the footer tracks every card-size preset. Flat colour, no shadow, no
+   gradient clipped to text: nothing here troubles the Skia → Quartz PDF path
+   (a gradient clipped to text and a blurred shadow both come out of the
+   Skia → Quartz PDF path as stray rectangles). */
+
+/* ═══ Vertical rhythm ════════════════════════════════════════════════
+   The Zauber cards are the densest thing in the Dragonbane set — up to six
+   labelled rows AND a full rulebook paragraph on a 63 × 88 mm face. Everything
+   below follows one rule: turn FIXED whitespace into ELASTIC whitespace.
+
+   A fixed gap costs the same on every card, so it is paid for by the spell with
+   no room to spare, while buying nothing on the Fertigkeit whose lower half is
+   empty. A `.db-fill-*` spacer is the opposite — `flex-basis: 0`, so it
+   collapses to nothing exactly where the space is needed and opens up exactly
+   where it isn't. So the fixed gaps here are cut to the minimum the ornaments
+   need, and front.hbs hands the remainder to three spacers at 1 : 1 : 7 —
+   a token share to the top and middle, the rest pooled at the foot.
+
+   1 · The body's top padding. The system sets 3.0 % of the card height for
+       every Dragonbane card, reproducing the printed gap between the plaque and
+       the first text line. On a rule card it is the single largest fixed cost
+       (2.6 mm at poker) and it is spent whether or not the card can afford it,
+       so it drops to 0.4 % and the spacer above the stat box gives back
+       whatever a given card can spare. The other three edges keep the system's
+       values; only the top is restated.
+
+       0.4 % is what makes a FULL card read as balanced. There the spacers are
+       all collapsed, so the top gap is the padding plus the box's margin and
+       nothing else, while the bottom gap is a hairline — and 1.2 % of padding
+       up top against 0.3 % down below was visibly lopsided even though both had
+       been trimmed. Plaque-edge to stat-box ornament is now 0.4 % (0.35 mm),
+       the same order as the prose's clearance to the bottom band.
+
+       On a sparse card the spacer reopens it regardless, so this costs
+       nothing there: Elementarismus, Robust and Akrobatik keep the 4 – 8 % they
+       had after the spacer pass.
+
+       The bottom edge follows for the same reason. The system's 1.2 % was
+       calibrated for cards that end in a stat block or an illustration; a rule
+       card ends in running prose, which brings its own air (see 4 below). At
+       0.5 % — 0.44 mm at poker — the last descender clears the bottom ornament
+       band by a hair more than the first cap clears the stat box's strip
+       (0.30 mm), which is deliberate: the band below is a much heavier piece of
+       artwork than that thin strip and crowds the text sooner at the same
+       measured distance. The spacer below the prose reopens a real gap on
+       every card that isn't full. */
+.card-root.dragonbane.rule-card .card-content-container {
+  padding-top: calc(var(--card-height, 88mm) * 0.004);
+  padding-bottom: calc(var(--card-height, 88mm) * 0.005);
+}
+
+/* 2 · Above the picture — same reasoning as the gear card: that top padding
+      reproduces the gap to the first TEXT line, and an image, having neither
+      baseline nor ascender gap, reads as sitting too low at that distance. The
+      pull is half the padding, so it tracks the reduced value above rather
+      than the system's. Scoped to `:first-child` so a card WITHOUT a
+      picture keeps the text distance. */
+.card-root.dragonbane.rule-card .card-body-scalable > .db-front-image-wrap:first-child {
+  margin-top: calc(var(--card-height, 88mm) * -0.006);
+}
+
+/* 3 · The gaps around the stat box are cut to the minimum its own ornament
+      strips need, and the rest is handed to the three `.db-fill-*` spacers in
+      front.hbs. That inversion is the point: a FIXED gap costs the same on
+      every card, so it is paid for by the spell that has no room to spare,
+      while a spacer collapses to nothing exactly there and opens up on the
+      Fertigkeit that has height going begging.
+
+      Between the last stat row and the first line of prose the system's
+      defaults would stack 1.05 em of whitespace — 0.2 em box padding + 0.55 em
+      box margin + 0.1 em block padding + 0.2 em paragraph margin, four rules
+      none of which knows about the other three. It is 0.7 em here: the strip below the box
+      (`::after`, inset −0.4 em) keeps 0.1 em of clear air, and the paragraph's
+      own leading supplies the rest.
+
+      Above the box, the margin is exactly the strip's own overhang (`::before`,
+      inset −0.3 em), so the strip lands flush on the container's content edge
+      and the whole gap to the plaque is the 0.4 % padding. Nothing is clipped:
+      what sits above the strip is padding, not content. Going below 0.3 em
+      would push the strip up into the plaque. */
+.card-root.dragonbane.rule-card .db-stats-box {
+  margin-top: 0.3em;
+  margin-bottom: 0.5em;
+}
+
+/* The block's own 0.1 em top and bottom padding go with them — it sits between
+   the stat box's margin above and the last line's leading below, so it was a
+   third rule padding the same two gaps. */
+.card-root.dragonbane.rule-card .db-effect-block {
+  padding: 0;
+}
+
+/* The prose block's LEADING half-leading, the mirror of 4 below: the same
+   0.185 em of empty line box that hangs under the last descender also sits
+   above the first cap height. Cancelling it here pulls the first line up under
+   the stat box's bottom ornament, leaving 0.1 em (0.30 mm) of clear air from
+   the strip to the caps — the same clearance the last line has to the card's
+   bottom band, so the block is bounded equally at both ends.
+
+   The arithmetic, from the box's visible lower edge: 0.5 em box margin
+   − 0.4 em strip overhang (`::after`) − 0.185 em cancelled leading + 0.185 em
+   of leading that is empty box, not ink = 0.1 em to the first cap. Reducing
+   the box margin instead would move the STRIP, not the text, and 0.4 em of it
+   is the strip itself. */
+.card-root.dragonbane.rule-card .db-effect-block > :first-child {
+  margin-top: -0.185em;
+}
+
+.card-root.dragonbane.rule-card .db-front-image-wrap {
+  margin-bottom: 0.1em;
+}
+
+/* 4 · The prose block's trailing half-leading.
+      On a FULL card — the one that needs the room — the gap between the last
+      line of text and the bottom ornament is not padding at all. Prose
+      sets at `line-height: 1.37`, so every line box is 0.37 em taller than the
+      type; CSS splits that leading evenly, which hangs 0.185 em of empty box
+      BELOW the final descender. It is invisible between lines, where it is
+      doing its job, and reads as a stray gap at the block's foot, where it is
+      not — which is why trimming the padding alone never quite closed it.
+
+      Cancelling it with an equal negative margin pulls the block's box down to
+      the last descender. Only on the LAST child, so inter-paragraph rhythm is
+      untouched, and it feeds straight into the FontScaler: `scrollHeight`
+      shrinks by the same 0.185 em, so a long spell gets it back as type size
+      rather than as blank paper. */
+.card-root.dragonbane.rule-card .db-effect-block > :last-child {
+  margin-bottom: -0.185em;
+}
+
+/* The three spacers at 1 : 1 : 7 — a token share to the top and middle, so
+   the plaque, the stat box and the prose stay one tight block in the card's
+   upper half, the way the rulebook sets a rule entry, its ✦ list directly
+   beneath the heading and the text directly beneath that; everything left
+   over pools at the foot as ONE band of paper rather than three gaps that
+   each read as a seam. An even 1 : 3 : 4 split makes a short Fertigkeit's
+   parts drift apart; on a Zauber that fills the face the two are identical,
+   since every spacer collapses either way. */
+.card-root.dragonbane.rule-card .db-fill-top { flex-grow: 1; }
+.card-root.dragonbane.rule-card .db-fill-mid { flex-grow: 1; }
+.card-root.dragonbane.rule-card .db-fill-bottom { flex-grow: 7; }

@@ -1,0 +1,257 @@
+/* ── Dragonbane — roll-table card type ───────────────────────────────
+   Everything structural — parchment, title plaque, ornament strips, the stat
+   block, body, vertical reference — comes from `game-system.css`. The only
+   thing local to this card-type is the roll die on the title plaque.
+
+   Sizes are relative: em throughout, so
+   the die tracks every card-size preset.
+
+   The official deck has no roll marker — its table cards are printed one per
+   row without the die result. Addressing a table row is metadata, not the
+   headline, so it hangs off the plaque's lower-right edge as a small die
+   rather than sitting as a display numeral in the body. */
+
+/* The die straddles the plaque's lower-right corner, so a wrapped title's
+   second line must stop before it. Padded symmetrically — only the right side
+   needs the room, but matching it on the left is what keeps the title
+   optically centred on the plaque instead of shoved left.
+
+   The die reaches 2.73em in from the plaque's right edge (its own 2.23em plus
+   the 0.5em offset), so 2.95em leaves 0.22em (~0.65mm at poker) of air. It was
+   measured at 2.4em first, and a two-line title then ran up to within a
+   quarter of a pixel of the die's upper-left facet ("… TEIGIGER TEINT",
+   Erscheinungsbild 3) — near-misses that tight read as a collision in print.
+
+   The selector carries the full `.card-root.dragonbane` prefix on purpose:
+   `game-system.css` sets the plaque's padding through the `padding:` SHORTHAND
+   on `.card-root.dragonbane .db-title-plaque` (0-3-0), so a bare
+   `.roll-table-card .db-title-plaque` (0-2-0) loses the cascade despite coming
+   later, and the override is silently dead. */
+.card-root.dragonbane.roll-table-card .db-title-plaque {
+  padding-left: 2.95em;
+  padding-right: 2.95em;
+}
+
+/* ── The die ──
+   A d20 silhouette: a pointy-top hexagon with the classic inscribed triangle
+   through its alternating vertices, which is where the numeral sits (the
+   triangle's centroid is the hexagon's centre, so "centred in the box" IS
+   "centred in the facet").
+
+   Drawn two-tone like every other Dragonbane ornament — a heavy ink stroke
+   with a narrower verdigris stroke over it
+   — over a parchment fill, so the die reads as an opaque token laid ON the
+   plaque rather than a hole cut into it.
+
+   viewBox 96 x 108 = the hexagon's 2R x R*sqrt(3) plus the miter overshoot of
+   the ink stroke (halfwidth / sin 60 deg = 4.0 at the side vertices), so no
+   corner is clipped into a flat stub. A data-URI SVG cannot read a custom
+   property, so the greens are spelled out — keep them in step with
+   --db-green / --db-green-dark / --db-green-light / --db-paper-warm.
+
+   Flat strokes and fills only: no gradient clipped to text, no blurred shadow,
+   so the token survives the Skia -> Quartz PDF path. */
+.roll-table-card .roll-table-badge {
+  position: absolute;
+  right: 0.5em;
+  /* Centred ON the plaque's lower edge — half the die overlaps the parchment,
+     half hangs onto the body below, which is what makes it read as applied
+     rather than printed. */
+  bottom: 0;
+  transform: translateY(50%);
+  box-sizing: border-box;
+  height: 2.5em;                    /* ~7mm at poker */
+  width: 2.23em;                    /* 96/108 of the height — hexagon aspect */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 108'><path d='M48 6 L89.57 30 L89.57 78 L48 102 L6.43 78 L6.43 30 Z' fill='%23f5ecd3' stroke='%230a201a' stroke-width='9' stroke-linejoin='miter'/><path d='M48 6 L89.57 30 L89.57 78 L48 102 L6.43 78 L6.43 30 Z' fill='none' stroke='%23317a61' stroke-width='4.6' stroke-linejoin='miter'/><path d='M48 10 L86.1 76 L9.9 76 Z' fill='none' stroke='%234b9983' stroke-width='2.2' stroke-linejoin='miter'/></svg>") center / 100% 100% no-repeat;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.roll-table-card .roll-table-badge-num {
+  font-family: var(--font-monumental);   /* Colus, as the title */
+  font-weight: 700;
+  /* Sized so a two-digit result ("20", the top of a d20 table) — and a range
+     of two single digits, whose en-dash is narrow — still clear the facet
+     lines. Anything wider takes the `-wide` step below. */
+  font-size: 0.9em;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--db-green-deep);
+  white-space: nowrap;
+  /* The inscribed triangle's centroid sits on the hexagon's centre, but the
+     numeral's optical centre is a hair above its box's middle in Colus. */
+  margin-top: 0.06em;
+}
+
+/* A roll label too wide for the die — a two-digit range ("9–10", "11–12"),
+   or any three characters without a narrow dash among them ("100"). The
+   classifier for `front-header-die` in game-system.yaml picks the token; its comment
+   carries the measured widths.
+
+   The die cannot grow to meet these: its clear interior is ~72 % of its box,
+   so holding "11–12" at the full 0.9em would need a ~3.3 x 3.7em token
+   (~10mm tall at poker) that collides with the plaque's title padding and
+   makes those six cards conspicuously different from the rest of the deck.
+   Stretching the background SVG instead is not an option either — it is
+   painted at `100% 100%`, so a wider box distorts the strokes and the
+   inscribed facet.
+
+   So the numeral steps down instead. The size is set by matching FILL, not by
+   picking a round number: measured live, the widest label the die already
+   accepts at the full 0.9em is "1–2" at 58.4 % of the badge box (its en-dash
+   is narrow, so three characters cost less than they look). 0.59em puts the
+   worst case — "11–12", the widest label in the Regelbuch's tables — at the
+   same 58 %, so a range reads as large as the die has ever allowed and no
+   smaller. It is small in absolute terms, about 1.7mm at poker, but still
+   above the card's own side reference at 0.48em.
+
+   Letter-spacing is deliberately NOT reset here: the inherited 0.01em is what
+   keeps the two sizes looking like one typographic voice.
+
+   This is a fallback in any case — a deck with `expand-by-roll: true` prints
+   one card per result and never reaches this rule at all. */
+.roll-table-card .roll-table-badge-num-wide {
+  font-size: 0.59em;
+}
+
+/* ── The category tag ──
+   The table's name on the plaque's lower-LEFT edge, mirroring the die on the
+   right. Same construction, deliberately: `banner-n.webp` at a third size, so it
+   reads as a scrap of the same parchment pinned to the plaque rather than as a
+   different material — the deck already reuses that one banner for its title
+   plaque and its small caption strips.
+
+   It is NOT the scroll-ended `.db-plaque-strip`: those green volutes are
+   0.1287 of the card wide EACH, so on a tag this small the ornament would be
+   half the component and out-shout the name it frames. The plain notched banner
+   keeps the tag as quiet as the label it is.
+
+   WHAT IT MAY NOT DO is reach the title. The die is 2.5em tall and centred on
+   the plaque's edge, so 1.25em of it climbs back up — far past the plaque's
+   0.66em bottom padding, which is exactly why it had to buy horizontal
+   clearance from the title (the 2.95em padding at the top of this file). This
+   tag stays under that padding instead and therefore costs the title no width
+   at all, at one, two or three lines.
+
+   The budget is `height x (1 - translateY)` against the plaque's 0.66em bottom
+   padding: 1.25em x 0.36 = 0.45em, a third of it spare. Change either number
+   and check it — at the original translateY(50%) the same height left only a
+   fiftieth of an em, which measured as 0.12mm of daylight under the descenders
+   of a three-line title. */
+.roll-table-card .roll-table-category {
+  position: absolute;
+  left: 0.5em;                      /* the die's inset, mirrored */
+  bottom: 0;
+  /* NOT the die's 50 %. Centring the tag on the plaque's edge — which is what
+     the die does, and what this started as — buries 0.63em of it in the
+     parchment, and a tag with more of itself on the plaque than off it stops
+     hanging FROM the edge and starts sitting ON it.
+
+     64 % is measured, not chosen: `banner-n.webp`'s notched lower border runs to
+     10.25 % of the image height (scanned for ink, the solid band alone is
+     1.75 %), and the plaque draws that image at 107 % of its own height, so the
+     decoration reaches 0.445em — 1.32mm at poker — up from the edge. At 64 %
+     the tag's overlap is exactly that 0.445em: it covers the ornamental border
+     it hangs from, and not a millimetre of the clean field above it.
+
+     The move also buys the title room it did not have. At 50 % the tag climbed
+     0.63em into a 0.66em bottom padding — inside it, but by a fiftieth of an
+     em, which on the three-line titles was 0.12mm of daylight under the
+     descenders of "(FÜR DEIN VOLK)". Now it is 0.22em. */
+  transform: translateY(64%);
+  box-sizing: border-box;
+  height: 1.25em;                   /* ~3.5mm at poker — see above */
+  /* A backstop, not a working limit: the longest table name in the Regelbuch
+     ("Dämonenwurf im Fernkampf") reaches 59 % of the card at the size below,
+     and past roughly this point the tag stops reading as a label ON the plaque
+     and starts reading as a second title under it. Only a much longer name of
+     the author's own can hit it — `category-width` steps those down first. */
+  max-width: 62%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Horizontal padding clears the banner's end notches, as on both plaques.
+     0.75em is the smallest inset at which the notch tips stay off the first and
+     last letter at this size. */
+  padding: 0 0.75em;
+  background: url('assets/banner-n.webp') center / 100% 100% no-repeat;
+  z-index: 3;
+  pointer-events: none;
+  /* The clip belongs HERE, on the 1.25em tag, not on the text span inside it.
+     A capital umlaut in Colus reaches above the font's own ascent, so at
+     `line-height: 1` the dots stand outside the span's box — and clipping the
+     SPAN sheared them off: "DÄMONENWURF IM NAHKAMPF" printed as "DAMONENWURF",
+     an Ä silently demoted to an A in the one place a reader checks which table
+     a card came from. The span is centred in a box more than twice its height,
+     so the same clip one level out cannot reach them. */
+  overflow: hidden;
+}
+
+.roll-table-card .roll-table-category-text {
+  font-family: var(--font-monumental);   /* Colus, as the title and the die */
+  font-weight: 700;
+  /* Between the die's wide numeral (0.59em) and the card's side reference
+     (0.48em): the tag is furniture of the same order as those two, and reading
+     it is optional — the name is on the back and, for most tables, in the card
+     title as well. */
+  font-size: 0.52em;
+  line-height: 1;
+  letter-spacing: 0.09em;                /* the caps tracking of .db-plaque-label */
+  text-transform: uppercase;
+  color: var(--db-title-ink);            /* the title's ink, not the body's */
+  white-space: nowrap;
+}
+
+/* A table name longer than anything in the Regelbuch — the author's own. No
+   bundled card reaches this rule; see the measured table beside
+   the classifier for `front-header-subtitle` in game-system.yaml for why the threshold sits above every
+   printed table rather than in the middle of them.
+
+   0.41em is the die's `-wide` step (0.59 of 0.9) applied to this tag's 0.52em,
+   so the two components thin out by the same ratio when they run out of room,
+   and it buys about 30 characters more before the cap. Letter-spacing is
+   deliberately not reset — the inherited 0.09em is what keeps the two sizes
+   one voice, the same argument as the die's. */
+.roll-table-card .roll-table-category-wide .roll-table-category-text {
+  font-size: 0.41em;
+}
+
+/* ── Body type size ──
+   A table row is one or two sentences, so the body face is mostly empty and
+   the deck's 8.41 pt reads undersized on it — that size is calibrated for the
+   dense monster and gear cards, not for this one. Stepping the body up by a
+   fifth (8.41 → 10.1 pt at poker) fills the measure and stays well inside the
+   FontScaler's headroom: the longest rows (Furcht 8, "Völlig panisch") shrink
+   back towards the deck's size instead of clipping, so the gain is real on the
+   short rows and free on the long ones.
+
+   Applied to the content container, not to `.card-root`, so the roll die, the
+   title and the side reference keep their tuned sizes; everything in the body
+   is `em`-relative and follows along. */
+.roll-table-card .card-content-container {
+  font-size: 1.2em;
+}
+
+/* The image wrap's floor is `6em` system-wide, i.e. relative to the body font —
+   so the step above would have grown the reserved picture area by a fifth too,
+   and the illustrated rows (Jagdbeute, Mementos) carry a stat block underneath
+   that would not fit. Divide it back out: 5 × 1.2 = the same 6em of the
+   unscaled body, so the picture keeps exactly the height it had.
+
+   The selector repeats `.card-root.dragonbane` for the same cascade reason
+   as the plaque padding above — the system rule is scoped that way and would
+   otherwise win on specificity. */
+.card-root.dragonbane.roll-table-card .db-front-image-wrap {
+  min-height: 5em;
+}
+
+/* Golden section, not flush top. A table row is often a single sentence
+   („Du erleidest den Zustand Verängstigt."), which would leave two thirds
+   of the card empty below it. The 3 : 5 spacer pair parks the block's
+   centre at 37.5 % of the body — the optical centre, a touch above the
+   geometric middle. A full card collapses both and reads exactly as before. */
+.card-root.dragonbane.roll-table-card .db-fill-top { flex-grow: 3; }
+.card-root.dragonbane.roll-table-card .db-fill-bottom { flex-grow: 5; }

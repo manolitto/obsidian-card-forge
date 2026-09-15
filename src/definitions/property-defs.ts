@@ -27,12 +27,11 @@ export interface PropertyDef {
   /**
    * The value when the note answers neither this key nor any of its aliases.
    *
-   * Deliberately NOT localizable, and the reason is structural rather than a
-   * simplification: defaults are applied while preparing the props, and the
-   * card's language is resolved afterwards — from those props, since `language`
-   * is itself a property a note may set. A localized default would need the
-   * language before the language exists. Where a per-language fallback is
-   * genuinely wanted, keep it in the template against a translation key.
+   * One value, not one per language: no bundled system has wanted a default
+   * that differs by language, and a per-language fallback is usually a
+   * translation key the template reads. The card's language is settled
+   * before the props are prepared, so localising this is a small change the
+   * day a system asks for it.
    */
   default?: unknown;
   /**

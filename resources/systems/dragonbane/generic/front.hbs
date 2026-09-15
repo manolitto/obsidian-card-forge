@@ -1,0 +1,55 @@
+{{!--
+  Dragonbane — the generic card, front.
+
+  The build is that of the other card types, but without their content
+  structure: title plaque with the overlapping ornament band, the body below
+  it, the second band at the foot, the source reference along the right edge.
+
+    ┌────────────────────────────────┐
+    │  ✦───  parchment plaque  ───✦  │  .db-head / .db-title-plaque
+    │▀▀▀▀▀ ornament band ▀▀▀▀▀▀▀▀▀▀▀▀│  .db-strip-top (overlaps the plaque)
+    │                              ║ │
+    │   card text as markdown      ║ │  .db-generic-body
+    │                              ║ │
+    │▄▄▄▄▄ ornament band ▄▄▄▄▄▄▄▄▄▄▄▄│  .db-strip-bottom
+    └────────────────────────────────┘
+       ║ = .db-side-ref, along the right edge
+
+  The card deliberately knows ONLY a title and a source as values. Everything
+  else — running text, sub-headings, lists, tables AND pictures — the author
+  writes as markdown, in the note itself. The body is one place,
+  `front-body`, and the card type says what fills it, in order: `content` in
+  the block, a `## Vorderseite` section, and failing both the note's own text
+  before its first heading. Open a note, write the card.
+
+  The logo comes from the note too: `![[mein-logo.png]]` becomes a real
+  `<img>` through card-image.hbs, and where it stands in the text it stands
+  on the card. The template embeds NO picture of its own.
+
+  The author steers the pagination as well: what must stay together goes
+  between `%% keep-together %%` and `%% /keep-together %%`, a hard break is
+  `%% card-break %%`. Both are Obsidian comments, so invisible in the note.
+--}}
+<div class="card-root card-front dragonbane generic-card generic-front">
+  <div class="db-head">
+    <div class="db-title-plaque">
+      <div class="card-title"><span class="text-scalable">{{slot "front-header-title" plain=true}}</span></div>
+      <span class="cf-overflow-counter"></span>
+    </div>
+    <div class="db-strip db-strip-top"></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-body")}}
+    <div class="db-generic-body">{{slot "front-body" markdown="block"}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  <div class="db-strip db-strip-bottom"></div>
+
+  <div class="db-side-ref">{{slot "front-side-right" markdown=false fallback=(t "side-ref")}}</div>
+</div>

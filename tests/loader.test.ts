@@ -35,6 +35,47 @@ describe("a complete system", () => {
     expect(gear.cardSettings.overflowMode).toBe("none");
     expect(system!.cardTypes["spell"]!.properties["grip"]).toBeUndefined();
   });
+
+  it("puts the system's first language under the system's own settings layer", async () => {
+    // A system that says nothing prints in the language it was written in;
+    // one that says `language:` overrides that, and a card type may again.
+    const files = completeSystem();
+    const { system: silent } = await load(files);
+    expect(silent!.cardTypes["gear"]!.cardSettings.language).toBe("en");
+
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString().replace(
+      "card-size: poker",
+      "card-size: poker\nlanguage: de"
+    );
+    const { system: spoken } = await load(files);
+    expect(spoken!.cardTypes["gear"]!.cardSettings.language).toBe("de");
+  });
+
+  it("merges glyphs and classifiers per slot, card type over system", async () => {
+    const files = completeSystem();
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString()
+      .replace(
+        "card-types:",
+        [
+          "glyphs: { stat-1a: { 1h: one }, header-title: { x: system-x } }",
+          "classifiers: { stat-1a: { default: sys } }",
+          "card-types:",
+        ].join("\n")
+      )
+      .replace(
+        "    properties:\n      grip:",
+        "    glyphs: { stat-1a: { 2h: two } }\n    classifiers: { header-title: { default: type } }\n    properties:\n      grip:"
+      );
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([]);
+    const gear = system!.cardTypes["gear"]!;
+    expect(gear.glyphs).toEqual({
+      "stat-1a": { "2h": "two" },
+      "header-title": { x: "system-x" },
+    });
+    expect(Object.keys(gear.classifiers)).toEqual(["stat-1a", "header-title"]);
+    expect(system!.cardTypes["spell"]!.glyphs["stat-1a"]).toEqual({ "1h": "one" });
+  });
 });
 
 describe("the stylesheet a card renders under", () => {
@@ -142,10 +183,54 @@ describe("check 2 — what exists must be declared or referenced", () => {
   });
 });
 
+describe("the slot check", () => {
+  it("catches a typo in a template's read through the binding it orphans", async () => {
+    // The templates are the declaration: a place exists because one reads
+    // it. So the binding is what can be wrong, and a misspelt read shows as
+    // the binding it leaves without a reader.
+    const files = completeSystem();
+    files["spell/front.hbs"] = `<div>\n{{slot "header-tittle"}}</div>`;
+    const { diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      'demo: card-types.spell binds "category" to slot "header-title", which no template of the card type reads',
+    ]);
+  });
+
+  it("lets one template offer places no card type fills yet", async () => {
+    // spell/front.hbs reads stat-1a, which only gear binds, and stat-9z,
+    // which nobody binds; both render empty on a spell, and neither is a
+    // mistake.
+    const files = completeSystem();
+    files["spell/front.hbs"] =
+      `<div>{{slot "header-title"}} {{slot "stat-1a"}} {{slot "stat-9z"}}</div>`;
+    const { diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([]);
+  });
+
+  it("reports a binding no template of the card type mentions, in wording", async () => {
+    const files = completeSystem();
+    files["spell/front.hbs"] = `<div>{{slot "header-title"}}</div>`;
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString().replace(
+      "  spell:\n",
+      "  spell:\n    properties: { level: { slot: stat-2a } }\n"
+    );
+    const { diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      'demo: card-types.spell binds "level" to slot "stat-2a", which no template of the card type reads',
+    ]);
+  });
+
+  it("counts a partial's literals and a partial call's for= for every card type", async () => {
+    const { diagnostics } = await load(completeSystem()); // gear's stat-1a is read as {{slot for}}
+    expect(diagnostics.messages).toEqual([]);
+  });
+});
+
 describe("check 3 — partials both ways", () => {
   it("reports a declared partial that nothing calls", async () => {
     const files = completeSystem();
-    files["gear/front.hbs"] = `<div>{{asset "assets/logo.png"}}</div>`;
+    files["gear/front.hbs"] =
+      `<div>{{slot "header-title"}} {{slot "stat-1a"}} {{asset "assets/logo.png"}}</div>`;
     const { diagnostics } = await load(files);
     expect(diagnostics.messages).toEqual([
       'demo: partial-templates: declares "stat-cell", which no template calls',
@@ -154,7 +239,7 @@ describe("check 3 — partials both ways", () => {
 
   it("reports a call to a partial nobody declares, naming the caller", async () => {
     const files = completeSystem();
-    files["spell/front.hbs"] = `<div>\n{{> stat-wide}}</div>`;
+    files["spell/front.hbs"] = `<div>{{slot "header-title"}}\n{{> stat-wide}}</div>`;
     const { diagnostics } = await load(files);
     expect(diagnostics.messages).toEqual([
       'demo: spell/front.hbs, line 2 calls partial "stat-wide", which partial-templates: does not declare',
@@ -208,7 +293,7 @@ describe("the baseline", () => {
       "description",
       "image",
       "tags",
-      "language",
+      "body",
       "roll",
       "roll-min",
       "roll-max",

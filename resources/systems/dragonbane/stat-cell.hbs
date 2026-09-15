@@ -1,0 +1,23 @@
+{{!--
+  Dragonbane — ONE cell of the stat box.
+
+  Called 24 times from front.hbs, once per row and column:
+
+      {{> stat-cell for="front-stat-1a"}}
+
+  The place's name arrives as the hash parameter `for` and so lands in the
+  partial's context, where the helpers read it as a path. It is called `for`
+  and not `slot` because a helper carries that name: a bare {{slot}} would
+  call the helper, which then renders nothing. A name that works in only
+  one of two positions is a trap, not a shortcut.
+
+  `glyph=true`: a stored abbreviation prints in full when the card type
+  declares a table for the cell (`Griff: 1H` → „einhändig"), and passes
+  through when it does not. `markdown=false`: a value shows its link styled
+  and nothing else reinterpreted.
+
+  Deliberately one line: the hulls stand with their content on one line and
+  are therefore not "standalone" for Handlebars, so the calling line's
+  indentation is kept.
+--}}
+{{#if (slot for)}}<span class="db-stat">{{#if (slot-label for)}}<span class="db-stat-label">{{slot-label for}}</span> {{/if}}{{slot for markdown=false glyph=true}}</span>{{/if}}

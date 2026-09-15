@@ -1,7 +1,9 @@
 import { load } from "js-yaml";
 import { buildAliasMap, type AliasMap } from "../definitions/bindings";
 import { mergeCardSettings, type CardSettings } from "../definitions/card-settings";
+import { mergeClassifiers, type Classifiers } from "../definitions/classifiers";
 import type { Diagnostics } from "../definitions/diagnostics";
+import { mergeGlyphTables, type GlyphTables } from "../definitions/glyphs";
 import {
   parseSystemDeclaration,
   parseSystemPath,
@@ -18,6 +20,7 @@ import {
   stylesheetReferences,
   templateAssetReferences,
   templatePartialCalls,
+  templateStringLiterals,
   type Reference,
 } from "./references";
 import type { SystemSource } from "./source";
@@ -48,15 +51,18 @@ export interface LoadedCardType {
   properties: PropertyDefsMap;
   /** Both binding directions of `properties`, folded — see `bindings.ts`. */
   aliases: AliasMap;
-  /**
-   * The slot vocabulary: every `slot:` target across `properties`. A template
-   * may read exactly these; `{{slot "x"}}` with any other name is a typo,
-   * reported at render.
-   */
+  /** The places this card type fills: every `slot:` target across `properties`. */
   slots: ReadonlySet<string>;
   /** System, then card type. Resolved per language at render, since the note picks it. */
   translations: TranslationTables;
-  /** Baseline → system → card type. The deck and the note fold on top at render. */
+  /** System, then card type, per slot. */
+  glyphs: GlyphTables;
+  classifiers: Classifiers;
+  /**
+   * Baseline → system → card type. The deck and the note fold on top at
+   * render. The system's primary language sits under the system's own layer,
+   * so a system that says nothing prints in the language it was written in.
+   */
   cardSettings: CardSettings;
 }
 
@@ -151,7 +157,9 @@ export async function loadSystem(
 
   // ── Templates: faces, partials, and the calls between them ───────
   const partialsCalled = new Map<string, string>(); // name → first caller
+  const templates = new Map<string, string>(); // path → text, for the slot check
   const scanTemplate = (path: SystemPath, hbs: string): void => {
+    templates.set(path, hbs);
     referenced(templateAssetReferences(hbs), path);
     for (const call of templatePartialCalls(hbs)) {
       if (!partialsCalled.has(call.path))
@@ -216,13 +224,18 @@ export async function loadSystem(
       aliases: buildAliasMap(properties),
       slots: slotVocabulary(properties),
       translations: mergeTranslations(declaration.translations, cardType.translations),
+      glyphs: mergeGlyphTables(declaration.glyphs, cardType.glyphs),
+      classifiers: mergeClassifiers(declaration.classifiers, cardType.classifiers),
       cardSettings: mergeCardSettings([
         BASELINE.cardSettings,
+        { language: declaration.languages[0] },
         declaration.cardSettings,
         cardType.cardSettings,
       ]),
     };
   }
+
+  checkSlots(declaration, cardTypes, templates, report);
 
   const stylesheets = new Map<string, Promise<string>>();
   return {
@@ -255,6 +268,51 @@ async function assembleStylesheet(
     if (path) layers.push(await inlineStylesheet(await source.readText(path), source));
   }
   return layers.join("\n\n");
+}
+
+/**
+ * The slot check. A place exists because a template reads it, so the
+ * templates are the declaration and a binding is what can be wrong: a
+ * `slot:` naming a place no template of the card type mentions reaches the
+ * card nowhere. That catches a typo on either side — in the binding, or in
+ * the template's read of a place somebody binds. The other direction is
+ * not an error: one front may offer places no card type fills yet, and a
+ * card type fills the ones it has something for. A partial is any card
+ * type's, so its literals count for every one.
+ */
+function checkSlots(
+  declaration: SystemDeclaration,
+  cardTypes: Record<string, LoadedCardType>,
+  templates: ReadonlyMap<string, string>,
+  report: (message: string) => void
+): void {
+  const partialLiterals = new Set<string>();
+  for (const path of Object.values(declaration.partialTemplates)) {
+    for (const literal of templateStringLiterals(templates.get(path) ?? "")) {
+      partialLiterals.add(literal);
+    }
+  }
+  for (const cardType of Object.values(cardTypes)) {
+    const mentioned = new Set(partialLiterals);
+    for (const path of [
+      cardType.declaration.frontTemplate,
+      cardType.declaration.backTemplate,
+    ]) {
+      if (!path) continue;
+      for (const literal of templateStringLiterals(templates.get(path) ?? "")) {
+        mentioned.add(literal);
+      }
+    }
+    for (const [property, def] of Object.entries(cardType.properties)) {
+      for (const slot of def.slot ?? []) {
+        if (!mentioned.has(slot)) {
+          report(
+            `card-types.${cardType.declaration.id} binds "${property}" to slot "${slot}", which no template of the card type reads`
+          );
+        }
+      }
+    }
+  }
 }
 
 /** Every slot some property fills, in the order the resolved map binds them. */

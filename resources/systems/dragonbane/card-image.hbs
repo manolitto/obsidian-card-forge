@@ -1,0 +1,31 @@
+{{!--
+  Dragonbane — the ONE definition of a card illustration.
+
+  Two callers, one partial:
+
+    • front.hbs, for its two picture places (placement="front")
+      → {{> card-image url=(slot "front-image-top" image=true) alt="" placement="front"}}
+    • the engine, for every `![[bild.png]]` in a note's body, at exactly the
+      spot it stands there (placement="body") — in practice the generic
+      card, the one Dragonbane card type that renders note markdown.
+
+  The WRAP belongs to the face and must NOT go into the text flow.
+  `.db-front-image-wrap` is `flex: 1 1 0` with a `min-height` — the flex
+  slot of the body column. Set between two paragraphs, the picture would
+  take every pixel the text leaves over. What carries over is what really
+  makes the design: the borderless seat (`cf-front-image`) and the soft edge
+  (`fade-edges`).
+
+  The cap therefore has to be restated for the body form: `.db-front-image`
+  caps at `max-height: 100%` — "100 % of the wrap", and without a wrap that
+  measures against an indefinite height, exactly the value the FontScaler's
+  two passes disagree about. `.db-body-image` in game-system.css sets an
+  absolute length instead.
+--}}
+{{#if (eq placement "body")}}
+<img class="db-front-image db-body-image cf-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
+{{else}}
+<div class="db-front-image-wrap">
+  <img class="db-front-image cf-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
+</div>
+{{/if}}

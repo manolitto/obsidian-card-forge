@@ -1,28 +1,40 @@
 import { existsSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "fs";
-import { load } from "js-yaml";
-import { join } from "path";
-import { prepareCardProps } from "../../src/definitions/card-props";
+import { basename, join } from "path";
 import { collectDiagnostics } from "../../src/definitions/diagnostics";
 import { BUNDLED_SYSTEMS } from "../../src/generated/bundled-systems";
+import { noteSystemId } from "../../src/render/card";
+import type { ImageSource } from "../../src/render/images";
+import { parseNote } from "../../src/render/note";
+import { CardRenderer, type RenderedCard } from "../../src/render/renderer";
+import { dataUri } from "../../src/systems/assets";
 import { BundledSystemSource } from "../../src/systems/bundled-source";
 import { loadSystem, type LoadedSystem } from "../../src/systems/loader";
-import { CARD_PRESETS, DEFAULT_CARD_PRESET } from "../../src/model/card-size";
 import { TemplateEngine } from "../../src/templates/engine";
+import { escapeHtml } from "../../src/templates/inline-markdown";
 
 /**
  * The golden-render harness.
  *
  * A fixture is a note under `tests/fixtures/<system>/` — a markdown file with
  * a `card-forge` block, exactly what a user writes. Each renders through the
- * real loader and the real engine, and the HTML of every face the card type
- * declares is compared byte for byte against the committed golden beside it.
- * A change to a template, a stylesheet, or a binding then shows up as a diff
- * someone can read, rather than as a card that looks slightly off.
+ * real note parser, the real loader and the real renderer, and the HTML of
+ * every face of every card it yields is compared byte for byte against the
+ * committed golden beside it. A change to a template, a stylesheet, a
+ * binding or the parser then shows up as a diff someone can read, rather
+ * than as a card that looks slightly off.
+ *
+ * A note is one card and its goldens are `<name>.front.html` and
+ * `<name>.back.html`; a table note is several, numbered from 1:
+ * `<name>.1.front.html`. Pictures resolve against the fixture folder by
+ * basename, so a fixture that embeds `![[Beil.png]]` keeps `Beil.png` beside
+ * it.
  *
  *   UPDATE_GOLDENS=1 npx vitest run tests/golden.test.ts
  *
- * regenerates the goldens and prunes any whose fixture is gone. Without the
- * flag, such an orphan is a failure.
+ * regenerates the goldens, prunes any whose fixture is gone, and writes a
+ * gitignored `_preview.html` per system — every face at card size under the
+ * system's stylesheet — for looking at in a browser. Without the flag, an
+ * orphan golden is a failure.
  */
 
 export const FIXTURES_DIR = join(__dirname, "..", "fixtures");
@@ -49,17 +61,21 @@ export function listFixtures(): Fixture[] {
   return out;
 }
 
-export function goldenPath(fixture: Fixture, face: Face): string {
-  return join(FIXTURES_DIR, fixture.system, `${fixture.name}.${face}.html`);
+/** `<name>.<face>.html` for a one-card note, `<name>.<n>.<face>.html` for a table's rows. */
+export function goldenPath(fixture: Fixture, face: Face, index?: number): string {
+  const number = index === undefined ? "" : `.${index + 1}`;
+  return join(FIXTURES_DIR, fixture.system, `${fixture.name}${number}.${face}.html`);
 }
 
-/** Every golden file that has no fixture note. */
+const GOLDEN_FILE = /^(.+?)(?:\.(\d+))?\.(front|back)\.html$/;
+
+/** Every golden file that no fixture note produces. */
 export function orphanGoldens(): string[] {
   const fixtures = new Set(listFixtures().map((f) => `${f.system}/${f.name}`));
   const out: string[] = [];
   for (const system of readdirSync(FIXTURES_DIR).sort()) {
     for (const file of readdirSync(join(FIXTURES_DIR, system)).sort()) {
-      const match = /^(.+)\.(front|back)\.html$/.exec(file);
+      const match = GOLDEN_FILE.exec(file);
       if (match && !fixtures.has(`${system}/${match[1]}`)) {
         out.push(join(FIXTURES_DIR, system, file));
       }
@@ -68,71 +84,108 @@ export function orphanGoldens(): string[] {
   return out;
 }
 
-/** Render every face the fixture's card type declares. */
-export async function renderFixture(
-  fixture: Fixture
-): Promise<Partial<Record<Face, string>>> {
-  const system = await loadedSystem(fixture.system);
-  const note = readFileSync(fixture.path, "utf-8");
-  const { card, data } = cardBlock(note, fixture.path);
-  const cardTypeId = card["card-type"];
-  const cardType = system.cardTypes[cardTypeId];
-  if (!cardType)
+/** The cards a fixture note yields, each with every face its card type declares. */
+export async function renderFixture(fixture: Fixture): Promise<RenderedCard[]> {
+  const diagnostics = collectDiagnostics();
+  const note = parseNote(readFileSync(fixture.path, "utf-8"), fixture.path, diagnostics);
+  if (!note) throw new Error(`${fixture.path}: not a card note`);
+  const systemId = noteSystemId(note, diagnostics);
+  if (systemId !== fixture.system) {
     throw new Error(
-      `${fixture.path}: ${fixture.system} has no card type "${cardTypeId}"`
+      `${fixture.path}: names system "${systemId}" but sits under ${fixture.system}/`
     );
-
-  const props = prepareCardProps(data, {
-    aliases: cardType.aliases,
-    defs: cardType.properties,
-    fileName: fixture.name,
-  });
-  const language = card.language ?? system.declaration.languages[0] ?? "";
-
-  const out: Partial<Record<Face, string>> = {};
-  for (const face of FACES) {
-    const declared =
-      face === "front"
-        ? cardType.declaration.frontTemplate
-        : cardType.declaration.backTemplate;
-    if (!declared) continue;
-    const diagnostics = collectDiagnostics();
-    out[face] = await engine.renderFace(
-      {
-        system,
-        cardTypeId,
-        face,
-        props,
-        language,
-        cardSize: cardType.cardSettings.cardSize ?? CARD_PRESETS[DEFAULT_CARD_PRESET],
-      },
-      diagnostics
-    );
-    if (diagnostics.messages.length > 0) {
-      throw new Error(
-        `${fixture.path} (${face}):\n  ${diagnostics.messages.join("\n  ")}`
-      );
-    }
   }
-  return out;
+  const system = await loadedSystem(fixture.system);
+  const cards = await renderer.render(note, system, diagnostics);
+  if (diagnostics.messages.length > 0 || cards.length === 0) {
+    throw new Error(
+      `${fixture.path}:\n  ${diagnostics.messages.join("\n  ") || "yields no card"}`
+    );
+  }
+  return cards;
 }
 
-/** Write the goldens for one fixture. */
-export function writeGoldens(
+/** The goldens a fixture's cards are compared against, in the order the cards come. */
+export function goldenPaths(
   fixture: Fixture,
-  faces: Partial<Record<Face, string>>
-): void {
-  for (const face of FACES) {
-    const path = goldenPath(fixture, face);
-    const html = faces[face];
+  cards: RenderedCard[]
+): { path: string; html?: string }[] {
+  const single = cards.length === 1;
+  return cards.flatMap((card, index) =>
+    FACES.map((face) => ({
+      path: goldenPath(fixture, face, single ? undefined : index),
+      html: card.faces[face],
+    }))
+  );
+}
+
+/** Write the goldens for one fixture, removing any for a face the card type does not declare. */
+export function writeGoldens(fixture: Fixture, cards: RenderedCard[]): void {
+  for (const { path, html } of goldenPaths(fixture, cards)) {
     if (html !== undefined) writeFileSync(path, html);
     else if (existsSync(path)) unlinkSync(path);
   }
 }
 
+// ── The preview sheet ────────────────────────────────────────────
+
+/**
+ * Every face of every card of a system's fixtures, at card size, under the
+ * stylesheet each card renders with. Written beside the goldens, gitignored:
+ * a face can be looked at before there is a UI to show it in.
+ */
+export async function writePreview(
+  systemId: string,
+  rendered: { fixture: Fixture; cards: RenderedCard[] }[]
+): Promise<void> {
+  const system = await loadedSystem(systemId);
+  const styles = new Map<string, string>();
+  const faces: string[] = [];
+  for (const { fixture, cards } of rendered) {
+    for (const [index, card] of cards.entries()) {
+      if (!styles.has(card.cardTypeId)) {
+        styles.set(card.cardTypeId, await system.stylesheet(card.cardTypeId));
+      }
+      const label = cards.length === 1 ? fixture.name : `${fixture.name} · ${index + 1}`;
+      for (const face of FACES) {
+        const html = card.faces[face];
+        if (html === undefined) continue;
+        faces.push(
+          `<figure><figcaption>${escapeHtml(label)} — ${face}</figcaption>${html}</figure>`
+        );
+      }
+    }
+  }
+  const sheet = [
+    "<!doctype html>",
+    `<html><head><meta charset="utf-8"><title>${escapeHtml(systemId)} fixtures</title>`,
+    "<style>",
+    "body { margin: 2rem; background: #888; font: 12px system-ui, sans-serif; color: #fff; }",
+    "main { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }",
+    "figure { margin: 0; }",
+    "figcaption { margin-bottom: .4rem; }",
+    ".card-root { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.4); }",
+    "</style>",
+    ...[...styles.values()].map((css) => `<style>\n${css}\n</style>`),
+    "</head><body><main>",
+    ...faces,
+    "</main></body></html>",
+  ].join("\n");
+  writeFileSync(join(FIXTURES_DIR, systemId, "_preview.html"), sheet);
+}
+
 // ── The pieces ──────────────────────────────────────────────────────
 
-const engine = new TemplateEngine();
+/** Pictures come from the fixture folder, by the link's basename. */
+const fixtureImages: ImageSource = {
+  async resolve(link, fromNotePath) {
+    const file = join(fromNotePath, "..", basename(link.replace(/#.*$/, "")));
+    if (!existsSync(file)) return undefined;
+    return dataUri(new Uint8Array(readFileSync(file)), file);
+  },
+};
+
+const renderer = new CardRenderer(new TemplateEngine(), fixtureImages);
 const systems = new Map<string, Promise<LoadedSystem>>();
 
 /** A bundled system, loaded once per run with nothing to report. */
@@ -155,27 +208,4 @@ function loadedSystem(id: string): Promise<LoadedSystem> {
     systems.set(id, pending);
   }
   return pending;
-}
-
-interface CardBlock {
-  card: { "card-type": string; language?: string };
-  data: Record<string, unknown>;
-}
-
-/**
- * The `card-forge` block of a note, read with a regex and a YAML parse. That is
- * all a fixture needs; the note's frontmatter and body are the renderer's to
- * read, and this harness grows those steps with it.
- */
-function cardBlock(note: string, path: string): CardBlock {
-  const match = /^```card-forge[ \t]*\n([\s\S]*?)\n```[ \t]*$/m.exec(note);
-  if (!match) throw new Error(`${path}: no card-forge block`);
-  const doc = load(match[1] as string) as Partial<CardBlock> | undefined;
-  const cardType = doc?.card?.["card-type"];
-  if (typeof cardType !== "string")
-    throw new Error(`${path}: the block names no card-type`);
-  return {
-    card: { "card-type": cardType, language: doc?.card?.language },
-    data: doc?.data ?? {},
-  };
 }

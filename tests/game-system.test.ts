@@ -131,11 +131,15 @@ id: dragonbane
 languages: [de]
 card-types:
   gear:
-    note-tags: [Ausrüstung, Waffe]
     front-template: front.hbs
     back-template: back.hbs
     stylesheet: gear/card-type.css
     translations: { de: { front-stat-1a-label: Griff } }
+    glyphs: { front-stat-1a: { 1h: einhändig, 2h: zweihändig } }
+    classifiers:
+      front-header-die:
+        match: [{ pattern: "^.{1,2}$", token: narrow }]
+        default: wide
   Monster:
     front-template: front.hbs
 `;
@@ -151,10 +155,24 @@ card-types:
     expect(parse(SYSTEM)?.cardTypes["monster"]?.frontTemplate).toBe("front.hbs");
   });
 
-  it("keeps the tags as the vault writes them", () => {
-    // The ids are singular English and lowercased; the tags are not. A German
-    // vault tags its cards in German, and these have to match what is there.
-    expect(parse(SYSTEM)?.cardTypes["gear"]?.noteTags).toEqual(["Ausrüstung", "Waffe"]);
+  it("reads a card type's glyphs and classifiers, keyed by slot", () => {
+    const gear = parse(SYSTEM)?.cardTypes["gear"];
+    expect(gear?.glyphs).toEqual({
+      "front-stat-1a": { "1h": "einhändig", "2h": "zweihändig" },
+    });
+    expect(gear?.classifiers["front-header-die"]?.default).toBe("wide");
+    expect(gear?.classifiers["front-header-die"]?.match[0]?.token).toBe("narrow");
+  });
+
+  it("does not classify a note by its tags — a block names its card type", () => {
+    // A card type is named in the block, or implied when the system has one;
+    // a `note-tags:` list is a key the parser does not know, and says so.
+    const diagnostics = collectDiagnostics();
+    parse(
+      "id: x\nlanguages: [de]\ncard-types: { gear: { front-template: f.hbs, note-tags: [Waffe] } }",
+      diagnostics
+    );
+    expect(diagnostics.matching("note-tags: is not a card setting")).toHaveLength(1);
   });
 
   it("says so when a card type has no front face", () => {
