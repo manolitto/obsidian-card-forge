@@ -1,3 +1,6 @@
+/// <reference types="vite/client" />
+import sourceSans from "../../../resources/systems/simple/fonts/source-sans-3-normal-latin.woff2?inline";
+import { FACE_CLASS } from "../../../src/layout/overflow-splitter";
 import { BASELINE } from "../../../src/systems/baseline";
 
 /**
@@ -30,6 +33,34 @@ export function mountFace(html: string, css = ""): MountedFace {
 }
 
 /**
+ * The host the overflow splitter works in: one `.cf-face` wrapper per face,
+ * in print order, inside one container the splitter appends to. Same
+ * stylesheet handling as `mountFace`.
+ */
+export interface MountedHost {
+  container: HTMLElement;
+  unmount(): void;
+}
+
+export function mountHost(faces: string[], css = ""): MountedHost {
+  const style = document.createElement("style");
+  style.textContent = `${BASELINE.stylesheet}\n${css}`;
+  const container = document.createElement("div");
+  container.innerHTML = faces
+    .map((face) => `<div class="${FACE_CLASS}">${face}</div>`)
+    .join("");
+  document.head.append(style);
+  document.body.append(container);
+  return {
+    container,
+    unmount() {
+      container.remove();
+      style.remove();
+    },
+  };
+}
+
+/**
  * A poker-size face with the three-part column the base stylesheet lays
  * out: a title in the header, a scalable body, a footer. The card's own type
  * — sizes, floors — is the caller's `css`.
@@ -50,9 +81,35 @@ export function faceHtml(opts: {
 </div>`;
 }
 
+/** A designed back the size of `faceHtml`'s front: a body holding one logo line. */
+export function backHtml(): string {
+  return `<div class="card-root card-back" style="--card-width: 63mm; --card-height: 88mm;">
+  <div class="card-body-scalable"><p class="logo">Logo</p></div>
+</div>`;
+}
+
 /** `n` short paragraphs of filler, enough alike that their height scales with `n`. */
 export function paragraphs(n: number): string {
   const text =
     "The lantern sheds a steady light across the chamber, and what was hidden steps forward.";
   return Array.from({ length: n }, () => `<p>${text}</p>`).join("");
+}
+
+/**
+ * A type face for the tests that count lines and paragraphs, inlined so
+ * every machine measures the same glyphs; a system font would make a
+ * paragraph count on one machine a different count on the next. `fontReady`
+ * installs it on the page once and resolves when it has decoded; a test
+ * awaits it before measuring anything set in `TEST_FONT_FAMILY`.
+ */
+export const TEST_FONT_FAMILY = "Test Sans";
+
+export async function fontReady(): Promise<void> {
+  if (!document.getElementById("test-font")) {
+    const style = document.createElement("style");
+    style.id = "test-font";
+    style.textContent = `@font-face { font-family: "${TEST_FONT_FAMILY}"; src: url("${sourceSans}") format("woff2"); }`;
+    document.head.append(style);
+  }
+  await document.fonts.load(`12px "${TEST_FONT_FAMILY}"`);
 }

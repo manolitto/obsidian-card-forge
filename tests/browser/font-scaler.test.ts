@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  cfMeasureWhitespace,
   processBody,
   readScaleFromTransform,
   resolveBodyMinScale,
@@ -221,5 +222,26 @@ describe("processBody", () => {
     const root = mount(faceHtml({ body: paragraphs(2) }));
     processBody(body(root), parity);
     expect(layoutClasses(root)).toEqual([]);
+  });
+});
+
+describe("cfMeasureWhitespace", () => {
+  it("reads the unfilled share of the last front face's body", () => {
+    const empty = mount(faceHtml({ body: "" }));
+    expect(cfMeasureWhitespace([empty])).toBe(1);
+    mounted!.unmount();
+
+    const half = mount(faceHtml({ body: paragraphs(2) }));
+    const ws = cfMeasureWhitespace([half]);
+    expect(ws).toBeGreaterThan(0.3);
+    expect(ws).toBeLessThan(0.8);
+    mounted!.unmount();
+
+    // A scaled body measures in the same frame: the transform cancels. The
+    // search commits the largest scale that fits, and lines wrap whole, so a
+    // full body still leaves under a line's worth of gap.
+    const full = mount(faceHtml({ body: paragraphs(7) }));
+    scaleOneBody(body(full));
+    expect(cfMeasureWhitespace([full])).toBeLessThan(0.2);
   });
 });
