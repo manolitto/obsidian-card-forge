@@ -1,9 +1,10 @@
-import { Platform, Plugin, type TAbstractFile } from "obsidian";
+import { getLanguage, Platform, Plugin, type TAbstractFile } from "obsidian";
 import { DeckExporter, type ExportFormat } from "./export/exporter";
 import { CardForgeSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
 import { DEFAULT_SETTINGS, type CardForgeSettings } from "./settings/types";
 import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
+import { resolveUiLanguage, setUiLanguage, t } from "./ui/strings";
 
 export default class CardForgePlugin extends Plugin {
   override settings: CardForgeSettings = { ...DEFAULT_SETTINGS };
@@ -33,12 +34,12 @@ export default class CardForgePlugin extends Plugin {
     this.exporter = new DeckExporter(this.app, this.systems, this.manifest.dir ?? "");
     this.addCommand({
       id: "export-deck-pdf",
-      name: "Export deck as PDF",
+      name: t("command.export-pdf"),
       checkCallback: (checking) => this.exportDeck("pdf", checking, Platform.isDesktop),
     });
     this.addCommand({
       id: "export-deck-html",
-      name: "Export deck as HTML",
+      name: t("command.export-html"),
       checkCallback: (checking) => this.exportDeck("html", checking, true),
     });
 
@@ -65,10 +66,12 @@ export default class CardForgePlugin extends Plugin {
     ) as CardForgeSettings;
     saved.systems = reconcileSystemEntries(saved.systems, BUNDLED_IDS);
     this.settings = saved;
+    setUiLanguage(resolveUiLanguage(saved.language, getLanguage()));
   }
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
     this.systems.setEntries(this.settings.systems);
+    setUiLanguage(resolveUiLanguage(this.settings.language, getLanguage()));
   }
 }
