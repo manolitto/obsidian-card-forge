@@ -90,37 +90,48 @@ export function resolveCards(
 }
 
 /**
- * The card type the block names — or the system's only one when it names
- * none, since a `card-type:` line there could name nothing else.
+ * The card type a note is — the id its block names, or the system's only
+ * one when it names none, since a `card-type:` line there could name
+ * nothing else. `undefined`, silently, when the note names a type the
+ * system lacks or names none of several: a deck filters on the answer
+ * without wanting a report, and `resolveCards` reports when it renders.
  */
+export function noteCardTypeId(
+  note: CardNote,
+  system: { cardTypes: Record<string, unknown> }
+): string | undefined {
+  const ids = Object.keys(system.cardTypes);
+  const named = String(note.card["card-type"] ?? "")
+    .trim()
+    .toLowerCase();
+  if (named) return system.cardTypes[named] ? named : undefined;
+  return ids.length === 1 ? ids[0] : undefined;
+}
+
 function resolveCardType(
   note: CardNote,
   system: LoadedSystem,
   diagnostics: Diagnostics
 ): LoadedCardType | undefined {
+  const id = noteCardTypeId(note, system);
+  if (id !== undefined) return system.cardTypes[id];
+
   const ids = Object.keys(system.cardTypes);
-  const named = String(note.card["card-type"] ?? "")
-    .trim()
-    .toLowerCase();
+  const named = String(note.card["card-type"] ?? "").trim();
   if (!named) {
-    const only = ids.length === 1 ? system.cardTypes[ids[0] as string] : undefined;
-    if (only) return only;
     diagnostics.warn(
       `${note.path}: the card-forge block names no card-type:, and ${system.id} has ${
         ids.length === 0 ? "none" : `${ids.length}: ${ids.join(", ")}`
       }`
     );
-    return undefined;
-  }
-  const cardType = system.cardTypes[named];
-  if (!cardType) {
+  } else {
     diagnostics.warn(
-      `${note.path}: ${system.id} has no card type "${named}"${
+      `${note.path}: ${system.id} has no card type "${named.toLowerCase()}"${
         ids.length > 0 ? ` (it has ${ids.join(", ")})` : ""
       }`
     );
   }
-  return cardType;
+  return undefined;
 }
 
 function everythingBut(
