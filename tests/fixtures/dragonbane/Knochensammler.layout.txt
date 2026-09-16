@@ -1,0 +1,20 @@
+Knochensammler · 1 card · 2 faces · clipped: no
+1. front [cf-overflow-active cf-layout-front-image cf-front-first cf-front-has-next] scale 0.71
+   p.db-flavor "Ein gebeugter Riese aus verwachsenen Gebeinen, …"
+   div.db-stats-box
+     div.db-stats-row "TP 46"
+     div.db-stats-row "Grimmigkeit 2 Größe groß"
+     div.db-stats-row "Bewegung 10 m Rüstung Knochenpanzer (W8)"
+     div.db-stats-row.db-stats-row-traits
+       p.db-trait "Aus Gebein gefügt Stich- und Schusswaffen …"
+       p.db-trait "Zusammenfügen Steht der Knochensammler zu Beginn …"
+       p.db-trait "Klappernde Last Sein Näherkommen ist auf …"
+       p.db-trait "Kein Herz Immun gegen Gift, Krankheit …"
+       p.db-trait "Sammelwut Ein Gegner, der unter 0 …"
+   div.db-section-heading.cf-keep-with-next "MONSTERANGRIFFE"
+   table.db-attack-table.cf-split-head (2 rows) "W6 ANGRIFF 1 Knochenhagel Er reißt …"
+2. front [cf-overflow-active cf-layout-front-image cf-front-continued] scale 0.71
+   table.db-attack-table.cf-split-continuation (6 rows) "W6 ANGRIFF 2 Zermalmender Griff Er …"
+   div.db-gm-note "SL-Notiz Nicht böse, nur unersättlich. Ein …"
+   div.db-front-image-wrap
+     img.db-front-image.cf-front-image.fade-edges
