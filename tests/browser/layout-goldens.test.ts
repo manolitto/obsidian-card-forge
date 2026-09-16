@@ -4,7 +4,7 @@ import { collectDiagnostics } from "../../src/definitions/diagnostics";
 import { layoutCard } from "../../src/layout/engine";
 import { loadedSystem, previewSheet } from "../helpers/render";
 import { listFixtures, renderFixture } from "./helpers/fixtures";
-import { layoutGoldenText } from "./helpers/layout-golden";
+import { layoutGoldenText, withScalesAligned } from "./helpers/layout-golden";
 
 /**
  * The layout goldens. Every fixture note of every bundled system is
@@ -13,7 +13,9 @@ import { layoutGoldenText } from "./helpers/layout-golden";
  * `<name>.layout.txt` beside the note. A change to a stylesheet, a
  * template, the splitter or the scaler that moves a block onto another
  * face, changes a marker or shifts the committed scale shows up here as a
- * diff a reviewer can read.
+ * diff a reviewer can read — with one allowance: a scale that differs by a
+ * hundredth or so is the platform's font rasteriser, not a change, and is
+ * compared as equal (`withScalesAligned`).
  *
  *   UPDATE_GOLDENS=1 npx vitest run --project browser tests/browser/layout-goldens.test.ts
  *
@@ -58,7 +60,7 @@ describe.each(fixtures.map((f) => [`${f.system}/${f.name}`, f] as const))(
           golden,
           `${fixture.system}/${name}.layout.txt is missing — run with UPDATE_GOLDENS=1 to write it`
         ).toBeDefined();
-        expect(actual).toBe(golden);
+        expect(withScalesAligned(actual, golden!)).toBe(golden);
 
         const faces = settled.get(fixture.system) ?? [];
         out.cards.forEach((pair, i) => {

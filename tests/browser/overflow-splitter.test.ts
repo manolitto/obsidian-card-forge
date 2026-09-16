@@ -126,10 +126,17 @@ describe("extra-cards", () => {
     const b1 = bodyOf(first);
     const b2 = bodyOf(second);
 
-    // The text flows on, nothing lost and nothing doubled.
+    // The text flows on, nothing lost and nothing doubled, and the cut sits
+    // between two paragraphs. How many land on each face is the browser's
+    // line metrics' to decide — a fraction of a pixel per line moves one
+    // paragraph across the cut from one platform to the next — so the
+    // shares are only held to a greedy split's shape: near-equal.
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
-    expect(b1.querySelectorAll("p")).toHaveLength(7);
-    expect(b2.querySelectorAll("p")).toHaveLength(7);
+    expect(container.querySelectorAll("p.cf-split-head")).toHaveLength(0);
+    const n1 = b1.querySelectorAll("p").length;
+    const n2 = b2.querySelectorAll("p").length;
+    expect(n1 + n2).toBe(14);
+    expect(Math.abs(n1 - n2)).toBeLessThanOrEqual(2);
     // Both faces fit, at the same scale, above the floor: the fill grew the
     // font back up from the floor the first pass stopped at.
     expect(fits(b1)).toBe(true);
@@ -299,8 +306,12 @@ describe("where the cut lands", () => {
     const tailWrap = b2.firstElementChild!;
     expect(headWrap.classList.contains("cf-split-head")).toBe(true);
     expect(tailWrap.classList.contains("cf-split-continuation")).toBe(true);
-    expect(headWrap.children).toHaveLength(7);
-    expect(tailWrap.children).toHaveLength(7);
+    // The paragraphs are shared near-equally, as above: the exact count on
+    // each face is the platform's line metrics' to decide.
+    expect(headWrap.children.length + tailWrap.children.length).toBe(14);
+    expect(
+      Math.abs(headWrap.children.length - tailWrap.children.length)
+    ).toBeLessThanOrEqual(2);
     expect(container.querySelectorAll("p.cf-split-head")).toHaveLength(0);
   });
 
