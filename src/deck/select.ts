@@ -2,6 +2,7 @@ import type { Diagnostics } from "../definitions/diagnostics";
 import { noteCardTypeId } from "../render/card";
 import type { CardNote } from "../render/note";
 import type { DeckSelection } from "./block";
+import type { TaggedNote } from "./source";
 
 /**
  * Which of a folder's card notes are the deck, and in what order its cards
@@ -10,13 +11,6 @@ import type { DeckSelection } from "./block";
  * `roll-min`, which a table note has once per row and a German note under
  * an alias, so it runs on the cards the render produced.
  */
-
-/** A card note as the vault lists it — with the tags the vault knows it by. */
-export interface TaggedNote {
-  note: CardNote;
-  /** Frontmatter and inline tags, without the `#`. */
-  tags: readonly string[];
-}
 
 /** What the filter reads of a system: its card types, in declaration order, with the language each resolves to. */
 export interface SelectionSystem {
