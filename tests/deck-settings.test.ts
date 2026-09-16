@@ -67,6 +67,18 @@ describe("the deck-setting fold", () => {
     expect(diagnostics.matching("A7")).toHaveLength(1);
   });
 
+  it("knows two paper backgrounds and no third", () => {
+    const diagnostics = collectDiagnostics();
+    expect(resolve(["paper-background: plain"]).paperBackground).toBe("plain");
+    expect(
+      resolve(
+        ["paper-background: textured", "paper-background: plain-everywhere"],
+        diagnostics
+      ).paperBackground
+    ).toBe("textured");
+    expect(diagnostics.matching("plain-everywhere")).toHaveLength(1);
+  });
+
   it("says a card setting is not a deck setting", () => {
     // A deck block does carry card settings — as overrides for every card it
     // holds — but the deck parser hands those to the card chain. Here they
