@@ -20,9 +20,11 @@ export interface RenderedCard {
   /** The note's name — a table note's rows share it and differ by position. */
   name: string;
   cardTypeId: string;
-  /** Baseline → system → card type → note. */
+  /** Baseline → system → card type → deck → note. */
   settings: CardSettings;
   faces: Partial<Record<"front" | "back", string>>;
+  /** `roll-min` as an integer, when the card has one — what a deck sorts by. */
+  rollMin?: number;
 }
 
 export class CardRenderer {
@@ -40,9 +42,10 @@ export class CardRenderer {
   async render(
     note: CardNote,
     system: LoadedSystem,
-    diagnostics: Diagnostics
+    diagnostics: Diagnostics,
+    deckLayer?: CardSettings
   ): Promise<RenderedCard[]> {
-    const cards = resolveCards(note, system, diagnostics);
+    const cards = resolveCards(note, system, diagnostics, deckLayer);
     if (cards.length === 0) return [];
 
     // Every picture any card of the note refers to, read once per note.
@@ -75,6 +78,7 @@ export class CardRenderer {
         cardTypeId: card.cardTypeId,
         settings: card.settings,
         faces,
+        ...(card.rollMin === undefined ? {} : { rollMin: card.rollMin }),
       });
     }
     return out;
