@@ -1,0 +1,14 @@
+Fischspeer · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   span.db-fill-top
+   div.db-stats-box
+     div.db-stats-row "Griff zweihändig Reichweite 2"
+     div.db-stats-row "Schaden W8 Haltbarkeit 7"
+     div.db-stats-row "Preis 3 Silber Verfügbarkeit Ungewöhnlich"
+     div.db-stats-row "Gewicht 1"
+     div.db-stats-row.db-stats-row-wide
+       p.db-trait "Merkmale Stich, Lang"
+     div.db-stats-row.db-stats-row-wide
+       p.db-trait "Voraussetzung Speere STÄ 9"
+   span.db-fill-bottom
+2. back [cf-layout-default] scale —

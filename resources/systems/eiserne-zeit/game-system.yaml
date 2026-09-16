@@ -1,0 +1,116 @@
+id: eiserne-zeit
+name: Eiserne Zeit
+
+# Eiserne Zeit (Gazer Press, Vienna) — an OSR game set in a grim early-modern
+# borderland. The design is measured off the class booklet "Der Hundeführer"
+# (A5) and the two character sheets (A4): uncompromisingly black and white,
+# heavy grotesque headlines over Garamond body text, and the torn paper edge
+# as the one running signature. There is no accent colour anywhere in the
+# material, and the design must not invent one.
+#
+# The material is German throughout. English is offered too, so a note may
+# set `language: en` — the templates are language-neutral and the one caption
+# comes from the translation table.
+languages: [de, en]
+
+stylesheet: game-system.css
+
+# The one illustration partial. The front renders its picture through it,
+# and every `![[picture]]` in a note's text goes through the same partial, so
+# a picture in the text and a picture in the slot cannot drift apart.
+partial-templates:
+  card-image: card-image.hbs
+markdown-image-partial: card-image
+
+# One note is ONE physical card. When the front's text overflows, the rest
+# fills the back first — the engine replaces the designed back with a copy of
+# the front — and only then spawns further cards. The price: an overflowing
+# card loses its logo back and carries text there instead. A card that fits
+# keeps the logo back untouched. That is the trade `back-then-cards` means.
+overflow-mode: back-then-cards
+
+card-size: poker
+
+# ── Properties ──────────────────────────────────────────────────────
+#
+# The card deliberately knows only a title, a picture, a source and a card
+# kind as values. Everything that is content — stats, subtitles, headings,
+# tables — the author writes as markdown in the note itself, and a card type
+# called `generic` should know nothing of races and hit points.
+#
+# Every place is read by both faces: the head band, the foot band and the
+# edge reference are the same construction on the front and on the back, so
+# one binding serves both. `description` is bilingual throughout; `sample`
+# too as soon as it holds natural language.
+properties:
+  name:
+    slot: head-title
+    aliases: [titel, überschrift, ueberschrift, heading, bezeichnung]
+    description:
+      de: "Titel der Karte — weiß im schwarzen Kopfband. Fällt auf den Dateinamen zurück, wenn nicht gesetzt."
+      en: "Card title — white inside the black header band. Falls back to the note's file name when unset."
+    sample:
+      de: "Wolfsfalle"
+      en: "Wolf Trap"
+
+  image:
+    slot: front-image
+    aliases: [bild, illustration]
+    description:
+      de: "Optionales Bild als Wikilink (`[[Bild.png]]`), Embed (`![[Bild.png]]`) oder Dateiname. Sitzt unter dem Kopfband über die volle Satzbreite. Das System ist rein schwarz-weiß — harte Tuschezeichnung passt, Graustufenfoto nicht."
+      en: "Optional picture as a wikilink (`[[picture.png]]`), embed (`![[picture.png]]`) or file name. Sits below the header band across the full measure. The system is strictly black and white — a hard ink drawing fits, a greyscale photo does not."
+    sample: "[[wolfsfalle.png]]"
+
+  # The body, from two sources — the first the note sets wins: `content` in
+  # the block, else the note's own text before its first `##` heading. That
+  # text is the baseline's `body`, an alias here rather than a binding of its
+  # own: bound, it would sit first among the place's properties, being
+  # inherited, and win over the block. The note's text is the recommended
+  # way — open a note, write the card — and the block's `content` is for a
+  # short card that would otherwise leave the note empty.
+  content:
+    slot: front-body
+    aliases: [text, inhalt, kartentext, body]
+    description:
+      de: "Kartentext als Markdown, direkt im card-forge-Block. Hat Vorrang vor dem Notiztext. Für Tabellen und eingebettete Bilder den Notiztext benutzen."
+      en: "Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures."
+    sample:
+      de: "Eine gestellte Falle aus Eisen, schwer wie ein Mühlstein.\n- Auslösen: GES-Probe\n- Schaden: 1w8"
+      en: "A set iron trap, heavy as a millstone.\n- Trigger: DEX check\n- Damage: 1d8"
+
+  reference:
+    slot: side-reference
+    aliases: [referenz, quelle, buch, source, seite, page]
+    description:
+      de: "Quellenangabe. Läuft gedreht die rechte Kante entlang, in Versalien. Konvention: Buchtitel, Komma, Seite — „Der Hundeführer, S. 8“."
+      en: "Source reference. Runs rotated along the right edge, in caps. Convention: book title, comma, page — \"The Dog Handler, p. 8\"."
+    sample:
+      de: "Der Hundeführer, S. 8"
+      en: "The Dog Handler, p. 8"
+
+  card-type-label:
+    slot: foot-label
+    aliases: [kartentyp, kategorie, category, type-label, rubrik]
+    description:
+      de: "Beschriftung des schwarzen Fußbands, in weißen Versalien auf jeder Seite der Karte (z. B. „AUSRÜSTUNG“, „GEFÄHRTE“). Ohne Angabe steht dort die Beschriftung des Kartentyps."
+      en: "Label of the black foot band, in white caps on every face of the card (e.g. \"GEAR\", \"COMPANION\"). Falls back to the card type's own label when unset."
+    sample:
+      de: "Ausrüstung"
+      en: "Gear"
+
+card-types:
+  # The free card, and the system's only one — so a note need not name it.
+  # Front AND back carry the base design: the black head band with its torn
+  # edge and the title, the running card-kind foot, the source along the
+  # edge; the back's body is the steel logo, the front's is the note's text.
+  generic:
+    front-template: front.hbs
+    back-template: back.hbs
+    # What the foot band says when the note sets no `card-type-label`.
+    # "Karte" is deliberately neutral — the generic card can be anything;
+    # a concrete rubric is the card's own to set.
+    translations:
+      de:
+        back-label: "Karte"
+      en:
+        back-label: "Card"

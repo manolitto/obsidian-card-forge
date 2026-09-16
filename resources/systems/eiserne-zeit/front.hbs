@@ -1,0 +1,90 @@
+{{!--
+  Eiserne Zeit — the generic card, front.
+
+  Front and back are one construction: title head, body, card-kind foot.
+  Every face of an overflowing card carries all three.
+
+    ┌────────────────────────────────┐
+    │ ███ black head band, title ████│  .ez-band      (10 % of the height — half on later faces)
+    │▀▚▄▀▀▄▄▀  torn edge  ▄▀▀▚▄▀▀▚▄▀│  .ez-torn
+    │  card text as markdown       ║ │  .ez-body
+    │         ▓ steel logo ▓       ║ │  .ez-logo-band (on the LAST face only)
+    │▄▀▀▚▄▀▀▄  torn edge  ▚▄▀▀▄▀▚▄▀▀│  .ez-torn-foot
+    │ ███  GEAR                  ███ │  .ez-foot      (every face)
+    └────────────────────────────────┘
+       ║ = .ez-side-ref, along the right edge
+
+  The card knows ONLY a title, a picture, a source and a card kind as values.
+  Everything that is content — stats, subtitles, headings, tables — the author
+  writes as markdown in the note, and the body is one place, `front-body`,
+  filled by `content` in the block or, failing that, the note's own text
+  before its first heading. Open a note, write the card.
+
+  The author steers the pagination the same way: what must stay together goes
+  between `%% keep-together %%` and `%% /keep-together %%`, a hard break is
+  `%% card-break %%`. Both are Obsidian comments, invisible in the note.
+
+  The logo is the LAST block of the body, not a band below it — that is the
+  whole trick. The splitter moves content from the end forward, so what comes
+  last can land on no face but the last one; earlier faces never carry it and
+  lose no room to it. The obvious alternative — a band under the body, shown
+  on the last face by CSS — does NOT work: `.cf-front-has-next` and the other
+  position markers are stamped AFTER the measure-split-scale pass, and content
+  hanging on them would add height to the last face after its body was
+  measured, clipping the text above it. Reserving the band on every face and
+  hiding it with `visibility` would be correct but costs 17 % of the card
+  height on every face — measured, and enough to push a dense card's command
+  block off the front. The band is shown by `.cf-overflow-active` instead,
+  which the splitter stamps BEFORE it measures; on a card that fits, the
+  designed back is the last face and carries the logo itself.
+
+  The band centres and sizes the logo by flex alone: `flex: 1 1 0` takes all
+  the space left over. The back (back.hbs) builds the same nesting so that ONE
+  stylesheet rule serves both faces.
+
+  The page counter sits INSIDE the title's `.text-scalable` span, not beside
+  it. The span is an inline-block: a wrapped title makes it as wide as the
+  whole box, and a counter next to it would find no room and drop onto a line
+  of its own — a two-word name printed as a three-line head. Inside the span
+  it runs in the same inline flow and settles behind the last word. The font
+  scaler measures the span, so the counter is counted; a card that fits never
+  shows it.
+--}}
+<div class="card-root card-front eiserne-zeit generic-card">
+
+  <div class="ez-head">
+    <div class="ez-band">
+      <div class="card-title"><span class="text-scalable">{{slot "head-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+    </div>
+    <div class="ez-torn"></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-image")}}
+    {{> card-image url=(slot "front-image" image=true) alt="" placement="front"}}
+    {{/if}}
+
+    {{#if (slot "front-body")}}
+    <div class="ez-body">{{slot "front-body" markdown="block"}}</div>
+    {{/if}}
+
+    <div class="ez-logo-band">
+      <img class="ez-logo" src="{{asset "assets/eiserne-zeit-logo.png"}}" alt="" />
+    </div>
+
+    </div>
+  </div>
+
+  <div class="ez-foot">
+    <span class="ez-cont-arrow" aria-hidden="true"></span>
+    <div class="ez-torn ez-torn-foot"></div>
+    <div class="ez-foot-label"><span class="text-scalable">{{slot "foot-label" plain=true fallback=(t "back-label")}}</span></div>
+  </div>
+
+  {{#if (slot "side-reference")}}
+  <div class="ez-side-ref">{{slot "side-reference" markdown=false}}</div>
+  {{/if}}
+
+</div>

@@ -381,6 +381,44 @@ describe("where the cut lands", () => {
       Array.from({ length: 30 }, (_, i) => `Row ${i + 1}${(i + 1) * 7}`)
     );
   });
+
+  it("never cuts inside a table cell, even to fill the face", () => {
+    // Inside one wrapper: a short line, then a table whose rows are each a
+    // few lines long. Breaking between the wrapper's children keeps only the
+    // short line, so the fill guard takes its flat cut — which goes through
+    // a paragraph but snaps to a row here: the head keeps whole rows under
+    // its head row, the continuation repeats the head, and every cell is
+    // where it was.
+    const rows = Array.from(
+      { length: 12 },
+      (_, i) =>
+        `<tr><td>${i + 1}</td><td>Row ${i + 1} ${Array.from({ length: 12 }, (_, w) => `word${w + 1}`).join(" ")}</td></tr>`
+    ).join("");
+    const table = `<table><thead><tr><th>Roll</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const body = `<div class="wrap"><p>Short.</p>${table}</div>`;
+    const { container, result } = split(body, "extra-cards");
+    expect(result.clipped).toBe(false);
+    const tables = Array.from(container.querySelectorAll("table"));
+    expect(tables.length).toBeGreaterThan(1);
+    for (const t of tables) {
+      expect(t.querySelector("thead")!.textContent).toBe("RollResult");
+      for (const row of Array.from(t.querySelectorAll("tbody tr"))) {
+        expect(row.children).toHaveLength(2);
+        expect(row.firstElementChild!.textContent).toMatch(/^\d+$/);
+      }
+    }
+    expect(tables[0]!.querySelectorAll("tbody tr").length).toBeGreaterThan(0);
+    const cells = Array.from(container.querySelectorAll("tbody tr")).map(
+      (r) => r.firstElementChild!.textContent
+    );
+    expect(cells).toEqual(Array.from({ length: 12 }, (_, i) => `${i + 1}`));
+    // Only the head row was added; every other word is where it was.
+    const rowWords = (root: ParentNode) =>
+      Array.from(root.querySelectorAll("tbody tr")).flatMap(words);
+    const source = document.createElement("div");
+    source.innerHTML = body;
+    expect(rowWords(container)).toEqual(rowWords(source));
+  });
 });
 
 describe("%% card-break %%", () => {

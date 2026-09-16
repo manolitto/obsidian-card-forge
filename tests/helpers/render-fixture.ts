@@ -3,8 +3,7 @@ import { basename, join } from "path";
 import type { ImageSource } from "../../src/render/images";
 import type { RenderedCard } from "../../src/render/renderer";
 import { dataUri } from "../../src/systems/assets";
-import { escapeHtml } from "../../src/templates/inline-markdown";
-import { loadedSystem, renderNote } from "./render";
+import { loadedSystem, previewSheet, renderNote } from "./render";
 
 /**
  * The golden-render harness.
@@ -119,7 +118,7 @@ export async function writePreview(
 ): Promise<void> {
   const system = await loadedSystem(systemId);
   const styles = new Map<string, string>();
-  const faces: string[] = [];
+  const faces: { caption: string; html: string }[] = [];
   for (const { fixture, cards } of rendered) {
     for (const [index, card] of cards.entries()) {
       if (!styles.has(card.cardTypeId)) {
@@ -128,29 +127,14 @@ export async function writePreview(
       const label = cards.length === 1 ? fixture.name : `${fixture.name} · ${index + 1}`;
       for (const face of FACES) {
         const html = card.faces[face];
-        if (html === undefined) continue;
-        faces.push(
-          `<figure><figcaption>${escapeHtml(label)} — ${face}</figcaption>${html}</figure>`
-        );
+        if (html !== undefined) faces.push({ caption: `${label} — ${face}`, html });
       }
     }
   }
-  const sheet = [
-    "<!doctype html>",
-    `<html><head><meta charset="utf-8"><title>${escapeHtml(systemId)} fixtures</title>`,
-    "<style>",
-    "body { margin: 2rem; background: #888; font: 12px system-ui, sans-serif; color: #fff; }",
-    "main { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }",
-    "figure { margin: 0; }",
-    "figcaption { margin-bottom: .4rem; }",
-    ".card-root { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.4); }",
-    "</style>",
-    ...[...styles.values()].map((css) => `<style>\n${css}\n</style>`),
-    "</head><body><main>",
-    ...faces,
-    "</main></body></html>",
-  ].join("\n");
-  writeFileSync(join(FIXTURES_DIR, systemId, "_preview.html"), sheet);
+  writeFileSync(
+    join(FIXTURES_DIR, systemId, "_preview.html"),
+    previewSheet(`${systemId} fixtures`, styles.values(), faces)
+  );
 }
 
 // ── The pieces ──────────────────────────────────────────────────────

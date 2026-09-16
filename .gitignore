@@ -153,6 +153,7 @@ vite.config.ts.timestamp-*
 
 # --- Golden-fixture preview sheets, written by UPDATE_GOLDENS=1 ---
 /tests/fixtures/*/_preview.html
+/tests/fixtures/*/_layout-preview.html
 
 # --- Failure screenshots of the browser test project ---
 /tests/**/__screenshots__/

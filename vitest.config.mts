@@ -2,6 +2,11 @@ import { playwright } from "@vitest/browser-playwright";
 import { readFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { defineConfig } from "vitest/config";
+import {
+  layoutGolden,
+  orphanLayoutGoldens,
+  writeLayoutPreview,
+} from "./tests/helpers/golden-commands.ts";
 
 // Mirror esbuild's `.yaml` / `.css` text loaders (see esbuild.config.mjs) so
 // modules that import bundled resources as raw text also load under vitest.
@@ -29,7 +34,8 @@ const rawTextLoader = {
 // reads a layout — `scrollHeight`, a committed font size, a face that
 // overflows — runs in a real Chromium under `tests/browser/`, where those
 // numbers mean something. `npx playwright install chromium` fetches the
-// browser once per machine.
+// browser once per machine. The layout goldens' file side runs here in node,
+// as browser commands (`tests/helpers/golden-commands.ts`).
 export default defineConfig({
   plugins: [rawTextLoader],
   test: {
@@ -53,6 +59,7 @@ export default defineConfig({
             headless: true,
             provider: playwright(),
             instances: [{ browser: "chromium" }],
+            commands: { layoutGolden, orphanLayoutGoldens, writeLayoutPreview },
           },
         },
       },

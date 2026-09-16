@@ -1,0 +1,5 @@
+laterne-der-enthuellung · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.simple-body "Eine Blendlaterne, die einmal pro Tag …"
+     ul (2 items) "Radius: 9 m Dauer: 1 Minute"
+2. back [cf-layout-default] scale —

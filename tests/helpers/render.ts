@@ -7,6 +7,7 @@ import { CardRenderer, type RenderedCard } from "../../src/render/renderer";
 import { BundledSystemSource } from "../../src/systems/bundled-source";
 import { loadSystem, type LoadedSystem } from "../../src/systems/loader";
 import { TemplateEngine } from "../../src/templates/engine";
+import { escapeHtml } from "../../src/templates/inline-markdown";
 
 /**
  * Rendering a fixture note through the real pipeline — the note parser, the
@@ -66,4 +67,37 @@ export function loadedSystem(id: string): Promise<LoadedSystem> {
     systems.set(id, pending);
   }
   return pending;
+}
+
+// ── The preview sheet ────────────────────────────────────────────
+
+/**
+ * Faces at card size on a grey sheet, each captioned, under the stylesheets
+ * they render with: the page a face can be looked at on before there is a
+ * UI to show it in. Both goldens write one — the render goldens for the
+ * faces as rendered, the layout goldens for the faces as settled.
+ */
+export function previewSheet(
+  title: string,
+  stylesheets: Iterable<string>,
+  faces: { caption: string; html: string }[]
+): string {
+  return [
+    "<!doctype html>",
+    `<html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title>`,
+    "<style>",
+    "body { margin: 2rem; background: #888; font: 12px system-ui, sans-serif; color: #fff; }",
+    "main { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }",
+    "figure { margin: 0; }",
+    "figcaption { margin-bottom: .4rem; }",
+    ".card-root { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.4); }",
+    "</style>",
+    ...[...stylesheets].map((css) => `<style>\n${css}\n</style>`),
+    "</head><body><main>",
+    ...faces.map(
+      ({ caption, html }) =>
+        `<figure><figcaption>${escapeHtml(caption)}</figcaption>${html}</figure>`
+    ),
+    "</main></body></html>",
+  ].join("\n");
 }

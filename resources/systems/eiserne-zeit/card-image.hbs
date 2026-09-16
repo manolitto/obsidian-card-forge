@@ -1,0 +1,20 @@
+{{!--
+  Eiserne Zeit — the ONE definition of a card picture.
+
+  Two callers, the same markup:
+
+    • front.hbs, for the picture under the head band (placement="front")
+      → {{> card-image url=(slot "front-image" image=true) alt="" placement="front"}}
+    • the engine, for every `![[picture.png]]` in a note's text, at exactly
+      the spot it stands there (placement="body")
+
+  That is the point of the partial: the picture in the text and the picture
+  in the slot cannot drift apart, because there is only one definition.
+
+  Eiserne Zeit needs no branch on `placement`: the picture is a plain `<img>`
+  without a frame and without a positioning wrapper, the same at the head of
+  the body as in the middle of the text. It is flow content — it moves with
+  its paragraph when the splitter paginates — not the flex slot of the body
+  column, so it carries no fill class and no measurement marker.
+--}}
+<img class="ez-image" src="{{url}}" alt="{{alt}}" />

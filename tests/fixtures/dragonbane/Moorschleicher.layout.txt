@@ -1,0 +1,16 @@
+Moorschleicher · 1 card · 2 faces · clipped: no
+1. front [cf-layout-with-back cf-front-first] scale 0.95
+   p.db-flavor "Ein flacher, schlammfarbener Leib mit zu …"
+   div.db-stats-box
+     div.db-stats-row "TP 28"
+     div.db-stats-row "Grimmigkeit 2 Größe normal"
+     div.db-stats-row "Bewegung 8 m, schwimmend 12 m …"
+     div.db-stats-row.db-stats-row-traits
+       p.db-trait "Sumpftarnung Im Wasser oder Schilf gelingt …"
+       p.db-trait "Zäh Der erste Treffer je Runde …"
+   div.db-section-heading.cf-keep-with-next "MONSTERANGRIFFE"
+   table.db-attack-table (4 rows) "W6 ANGRIFF 1–2 Zungenpeitsche Schaden W10. …"
+   div.db-gm-note "SL-Notiz Lockt Beute mit einem leisen …"
+   div.db-front-image-wrap
+     img.db-front-image.cf-front-image.fade-edges
+2. back [cf-layout-with-back] scale —
