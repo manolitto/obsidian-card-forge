@@ -1,0 +1,15 @@
+2 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 14 marks
+   front #1 at 10.5, 16.5 simple/lantern-of-revealing
+   front #2 at 73.5, 16.5 simple/laterne-der-enthuellung
+   front #3 at 136.5, 16.5 simple/linked-reference
+   front #4 at 10.5, 104.5 simple/no-card-type-label
+   front #5 at 73.5, 104.5 simple/no-card-type-named
+   front #6 at 136.5, 104.5 simple/Rope of Climbing
+2. back · 14 marks
+   back #1 at 136.5, 16.5 simple/lantern-of-revealing
+   back #2 at 73.5, 16.5 simple/laterne-der-enthuellung
+   back #3 at 10.5, 16.5 simple/linked-reference
+   back #4 at 136.5, 104.5 simple/no-card-type-label
+   back #5 at 73.5, 104.5 simple/no-card-type-named
+   back #6 at 10.5, 104.5 simple/Rope of Climbing

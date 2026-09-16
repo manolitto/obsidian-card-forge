@@ -15,11 +15,16 @@ describe("parsePaperSize", () => {
     expect(parsePaperSize("A3 portrait")?.orientation).toBe("portrait");
   });
 
-  it("takes explicit dimensions as written, portrait", () => {
+  it("takes explicit dimensions as written, the wider way round being landscape", () => {
     expect(parsePaperSize("210 x 297 mm")).toEqual({
       width: 210,
       height: 297,
       orientation: "portrait",
+    });
+    expect(parsePaperSize("297 x 210")).toEqual({
+      width: 297,
+      height: 210,
+      orientation: "landscape",
     });
   });
 

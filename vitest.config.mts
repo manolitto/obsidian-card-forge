@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { defineConfig } from "vitest/config";
 import {
+  deckGolden,
   layoutGolden,
   orphanLayoutGoldens,
   writeLayoutPreview,
@@ -59,7 +60,12 @@ export default defineConfig({
             headless: true,
             provider: playwright(),
             instances: [{ browser: "chromium" }],
-            commands: { layoutGolden, orphanLayoutGoldens, writeLayoutPreview },
+            commands: {
+              deckGolden,
+              layoutGolden,
+              orphanLayoutGoldens,
+              writeLayoutPreview,
+            },
           },
         },
       },

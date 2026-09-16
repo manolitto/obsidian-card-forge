@@ -1,0 +1,15 @@
+2 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 0 marks
+   front #1 at 10.5, 16.5 generic/Beizjagd
+   front #2 at 73.5, 16.5 generic/Der Wanderfalke
+   front #3 at 136.5, 16.5 generic/Falkenauge
+   front #4 at 10.5, 104.5 generic/Reisegepäck
+   front #5 at 73.5, 104.5 generic/Sturmruf
+   front #6 at 136.5, 104.5 generic/Sturmruf
+2. back · 0 marks
+   back #1 at 136.5, 16.5 generic/Beizjagd
+   back #2 at 73.5, 16.5 generic/Der Wanderfalke
+   back #3 at 10.5, 16.5 generic/Falkenauge
+   back #4 at 136.5, 104.5 generic/Reisegepäck
+   back #5 at 73.5, 104.5 generic/Sturmruf
+   back #6 at 10.5, 104.5 generic/Sturmruf

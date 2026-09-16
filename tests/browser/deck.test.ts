@@ -1,10 +1,18 @@
 import { describe, expect, it } from "vitest";
+import { commands } from "vitest/browser";
 import { buildDeck, type DeckProgress } from "../../src/deck/pipeline";
 import type { DeckSource } from "../../src/deck/source";
 import { collectDiagnostics } from "../../src/definitions/diagnostics";
+import { composeDeck, compositionText } from "../../src/export/compose";
 import { parseNote } from "../../src/render/note";
 import { loadedSystem } from "../helpers/render";
 import { deckNote, fixtureDeckSource, fixtureRenderer } from "./helpers/fixtures";
+
+declare module "vitest/browser" {
+  interface BrowserCommands {
+    deckGolden(system: string, actual: string): Promise<string | undefined>;
+  }
+}
 
 /**
  * The deck pipeline over each bundled system's fixture folder: the `_deck.md`
@@ -175,3 +183,26 @@ describe("buildDeck over the fixture folders", () => {
     expect(built.outputPath.pdf).toBe("Volk/Deck.pdf");
   });
 });
+
+/**
+ * The composition goldens: each fixture deck onto pages, as text —
+ * `tests/fixtures/<system>/_deck.compose.txt`. Page count, then per page
+ * each cell's side, place and name, so a card that moved reads as one
+ * line. `UPDATE_GOLDENS=1` rewrites them.
+ */
+describe.each(["simple", "dragonbane", "eiserne-zeit"])(
+  "the %s deck composes",
+  (system) => {
+    it("as its composition golden says", async () => {
+      const { built } = await build(system);
+      const { pages, grid } = composeDeck(built);
+      const actual = compositionText(pages, grid);
+      const golden = await commands.deckGolden(system, actual);
+      expect(
+        golden,
+        `${system}/_deck.compose.txt is missing — run with UPDATE_GOLDENS=1 to write it`
+      ).toBeDefined();
+      expect(actual).toBe(golden);
+    });
+  }
+);

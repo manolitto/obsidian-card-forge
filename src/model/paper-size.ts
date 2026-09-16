@@ -29,8 +29,9 @@ const ORIENTATIONS: readonly PaperOrientation[] = ["portrait", "landscape", "aut
  *
  * Accepts a preset name with an optional orientation (`"A4"`, `"A4 landscape"`,
  * case-insensitive) or explicit dimensions (`"210 x 297 mm"`), which are taken
- * as written. A preset alone means `auto`. Returns `undefined` for anything
- * else, so the layer below can answer instead.
+ * as written — the wider way round is `landscape`. A preset alone means
+ * `auto`. Returns `undefined` for anything else, so the layer below can answer
+ * instead.
  */
 export function parsePaperSize(raw: unknown): PaperSize | undefined {
   if (typeof raw !== "string") return undefined;
@@ -43,7 +44,7 @@ export function parsePaperSize(raw: unknown): PaperSize | undefined {
     const width = Number(dims[1]);
     const height = Number(dims[2]);
     return width > 0 && height > 0
-      ? { width, height, orientation: "portrait" }
+      ? { width, height, orientation: width > height ? "landscape" : "portrait" }
       : undefined;
   }
 
