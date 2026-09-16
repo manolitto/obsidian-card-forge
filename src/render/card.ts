@@ -26,12 +26,14 @@ import { tableRows } from "./table";
  */
 export interface ResolvedCard {
   cardTypeId: string;
-  /** Baseline → system → card type → note. */
+  /** Baseline → system → card type → deck → note. */
   settings: CardSettings;
   /** The fold above, prepared: lowercased, defaults filled, the alias proxy on. */
   props: Record<string, unknown>;
   /** `settings.language`, or `""` when no layer says. */
   language: string;
+  /** `roll-min` as an integer, when the card has one — what a deck sorts by. */
+  rollMin?: number;
 }
 
 /** The two keys of `card:` that are not settings. */
@@ -55,11 +57,18 @@ export function noteSystemId(
   return undefined;
 }
 
-/** The note's cards, resolved against the system its block names. `[]` when it cannot be. */
+/**
+ * The note's cards, resolved against the system its block names. `[]` when
+ * it cannot be. `deckLayer` is the deck's card settings when the note is
+ * rendered as part of one — it folds between the card type and the note,
+ * so a deck overrides what a kind of card says and a note still has the
+ * last word.
+ */
 export function resolveCards(
   note: CardNote,
   system: LoadedSystem,
-  diagnostics: Diagnostics
+  diagnostics: Diagnostics,
+  deckLayer?: CardSettings
 ): ResolvedCard[] {
   const cardType = resolveCardType(note, system, diagnostics);
   if (!cardType) return [];
@@ -68,7 +77,7 @@ export function resolveCards(
     everythingBut(note.card, CARD_KEYS),
     prefixDiagnostics(diagnostics, `${note.path}: card.`)
   );
-  const settings = mergeCardSettings([cardType.cardSettings, noteSettings]);
+  const settings = mergeCardSettings([cardType.cardSettings, deckLayer, noteSettings]);
   const language = settings.language ?? "";
 
   const below = {
@@ -77,16 +86,86 @@ export function resolveCards(
     ...lowercased(note.data),
   };
   const rows = note.table ? tableRows(note, note.table, diagnostics) : [{}];
+  const prepare = (raw: Record<string, unknown>): Record<string, unknown> =>
+    prepareCardProps(raw, {
+      aliases: cardType.aliases,
+      defs: cardType.properties,
+      fileName: note.name,
+    });
 
-  return rows.map((row) => ({
-    cardTypeId: cardType.declaration.id,
-    settings,
-    language,
-    props: prepareCardProps(
-      { ...below, ...lowercased(row) },
-      { aliases: cardType.aliases, defs: cardType.properties, fileName: note.name }
-    ),
-  }));
+  return rows.flatMap((row) => {
+    const raw = { ...below, ...lowercased(row) };
+    const props = prepare(raw);
+    const range = rollRange(props);
+    if (!range)
+      return [{ cardTypeId: cardType.declaration.id, settings, language, props }];
+    if (!settings.expandByRoll || range.min === range.max) {
+      return [
+        {
+          cardTypeId: cardType.declaration.id,
+          settings,
+          language,
+          props,
+          rollMin: range.min,
+        },
+      ];
+    }
+    // One card per value; the canonical keys are written over the raw
+    // fold, so they win however the note spelled the range.
+    return rollValues(range, props["roll"]).map(({ value, roll }) => ({
+      cardTypeId: cardType.declaration.id,
+      settings,
+      language,
+      props: prepare({ ...raw, roll, "roll-min": value, "roll-max": value }),
+      rollMin: value,
+    }));
+  });
+}
+
+// ── The roll range ─────────────────────────────────────────────────
+
+/**
+ * The card's roll range, when both bounds are integers and in order. A
+ * range a note got backwards is no range — nothing is printed for it and
+ * nothing is reported: `roll-min` above `roll-max` reads as a table typo
+ * the card shows as written.
+ */
+function rollRange(
+  props: Record<string, unknown>
+): { min: number; max: number } | undefined {
+  const min = integer(props["roll-min"]);
+  const max = integer(props["roll-max"]);
+  if (min === undefined || max === undefined || min > max) return undefined;
+  return { min, max };
+}
+
+/**
+ * Every value of the range with its display form, padded the way the
+ * source `roll` was: `"03–07"` yields `"03"` … `"07"`, `"9–10"` yields
+ * `"9"`, `"10"`. Only a run that carries a leading zero is evidence of
+ * padding — the longest run would read `"9–10"` as two digits and invent a
+ * zero the table never printed.
+ */
+function rollValues(
+  range: { min: number; max: number },
+  sourceRoll: unknown
+): { value: number; roll: string }[] {
+  const runs = typeof sourceRoll === "string" ? (sourceRoll.match(/\d+/g) ?? []) : [];
+  const width = Math.max(
+    0,
+    ...runs.filter((r) => r.length > 1 && r.startsWith("0")).map((r) => r.length)
+  );
+  const out: { value: number; roll: string }[] = [];
+  for (let value = range.min; value <= range.max; value++) {
+    out.push({ value, roll: String(value).padStart(width, "0") });
+  }
+  return out;
+}
+
+function integer(raw: unknown): number | undefined {
+  if (typeof raw === "number") return Number.isInteger(raw) ? raw : undefined;
+  if (typeof raw !== "string" || !/^\s*-?\d+\s*$/.test(raw)) return undefined;
+  return Number(raw);
 }
 
 /**
