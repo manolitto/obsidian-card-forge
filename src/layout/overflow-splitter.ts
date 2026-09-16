@@ -465,8 +465,13 @@ function trimBodyToFirstNWords(
   // HERE makes it work at any depth, exactly as `cf-keep-together` does.
   // Skipped when nothing renders before the child (that would empty the face —
   // same rule as above, so an oversized single entry still force-splits).
-  const breakChild =
-    keepAncestor || !respectBreakChildren ? null : breakChildBoundary(body, cutNode);
+  // The flat cut (`respectBreakChildren: false`) may go through a paragraph,
+  // but never through a table cell — see `tableRowBoundary`.
+  const breakChild = keepAncestor
+    ? null
+    : respectBreakChildren
+      ? breakChildBoundary(body, cutNode)
+      : tableRowBoundary(body, cutNode);
 
   // When the cut falls strictly inside a block, every element ancestor of
   // `cutNode` up to (but not including) `body` is straddled: extractContents()
@@ -649,6 +654,43 @@ function pullBackForKeepMarkers(body: HTMLElement, el: Node): Node {
     best = prev;
   }
   return best;
+}
+
+/* The flat cut's one exception: a table. A word-level cut through a cell does
+ * not yield a shorter table — `extractContents` clones the row with only the
+ * cell the cut fell in, so the continuation opens with a row missing its
+ * leading cells, under no head. A table has no meaningful word-level cut point
+ * (the reason a top-level one is atomic), so even the fill guard's flat cut,
+ * which is free to go through a paragraph, snaps to the start of the ROW the
+ * cut fell in — or before the whole table when the cut fell in its head or in
+ * its first row, since a head-only table is not a split either. Null when
+ * nothing renders before that boundary on this face: an oversized row is then
+ * force-split like any oversized block, and the cut lands inside it. */
+function tableRowBoundary(
+  body: HTMLElement,
+  cutNode: Text
+): { wrapper: Element | null; child: Node } | null {
+  let table: Element | null = null;
+  let row: Element | null = null;
+  for (let a = cutNode.parentNode; a && a !== body; a = a.parentNode) {
+    if (a.nodeType !== 1) continue;
+    const tag = (a as Element).tagName.toLowerCase();
+    if (tag === "tr" && !row) row = a as Element;
+    if (tag === "table") {
+      table = a as Element;
+      break;
+    }
+  }
+  if (!table) return null;
+  const rows = breakableChildren(table);
+  const index = row ? rows.indexOf(row) : -1;
+  const boundary = index > 0 ? row! : table;
+  if (!hasContentBeforeMarker(body, boundary)) return null;
+  const cut = pullBackForKeepMarkers(body, boundary);
+  return {
+    wrapper: table.contains(cut) && cut !== table ? table : null,
+    child: cut,
+  };
 }
 
 /* Where a cut inside a breakable container should be moved back to: the

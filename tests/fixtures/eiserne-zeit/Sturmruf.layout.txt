@@ -1,0 +1,19 @@
+Sturmruf · 2 cards · 4 faces · clipped: no
+1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 0.89
+   div.ez-body.cf-split-head
+     p "Stufe 3 · Dauer: eine Stunde …"
+     p "Die Falknerin hebt die Faust, und …"
+2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued cf-front-has-next] scale 0.89
+   div.ez-body.cf-split-continuation.cf-split-head
+     p "Wer das Ritual spricht, verliert 1w4 …"
+     hr
+     h3 "Fehlschlag (1w6)"
+     p "Misslingt die INT-Probe, würfle auf der …"
+3. front [cf-overflow-active cf-layout-default cf-front-continued cf-front-has-next] scale 0.89
+   div.ez-body.cf-split-continuation.cf-split-head
+     table.cf-split-head (4 rows) "1w6 Wirkung 1 Der Sturm zieht …"
+4. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 0.89
+   div.ez-body.cf-split-continuation
+     table.cf-split-continuation (4 rows) "1w6 Wirkung 4 Ein Regen aus …"
+   div.ez-logo-band
+     img.ez-logo

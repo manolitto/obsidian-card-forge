@@ -1,0 +1,761 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Eiserne Zeit — card system base.
+
+   Modelled on the class booklet "Der Hundeführer" (A5, 12 pages) and the
+   two character sheets (A4) of Gazer Press, Vienna. Every geometric
+   constant below is a fraction of `--card-width` / `--card-height` and was
+   read off the rasterised PDF, so the design transfers to any card-size
+   preset.
+
+   The design in one sentence: uncompromisingly black and white, heavy
+   grotesque headlines over Garamond body text, and the torn paper edge as
+   the one running signature. There is not a single colour value in the
+   whole material — the only colour is the steel logo on the back cover.
+   Do not invent an accent colour: the effect depends on there not being
+   one.
+
+   PDF safety: the design is inherently safe — flat fills, no gradient in
+   text, no blurred shadow. The torn edge is a filled path and flattens to
+   an ordinary vector area in Skia.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Bundled fonts (embedded as data URIs at build time) ───────────────
+   Body: EB Garamond — the same face the booklet uses, free under the OFL.
+   Licence: fonts/eb-garamond-OFL.txt.
+
+   Display: Archivo Black, standing in for the booklet's commercial Worker
+   Black. Chosen from four free candidates (Archivo Black, Chivo 900, Rubik
+   900, Saira 900) rendered against a crop of the booklet's title page at
+   matched width: the same squarish skeleton, flat-cut terminals, a
+   straight R leg. What Worker Black has over it — notched cuts on the
+   crossbars — no free face carries, and at a 5 mm card title the notches
+   are invisible anyway. Licence: fonts/archivo-black-OFL.txt.
+
+   Worker Black also has true small caps, which is how the booklet sets its
+   subheads. Archivo Black has none, so subheads run in caps with letter
+   spacing instead.                                                        */
+
+@font-face {
+  font-family: 'Archivo Black';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/archivo-black-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Archivo Black';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/archivo-black-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/eb-garamond-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/eb-garamond-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/eb-garamond-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/eb-garamond-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── System variables and base type ─────────────────────────────────── */
+
+.card-root.eiserne-zeit {
+  /* The palette. Purely achromatic, five values — the material has no
+     more. Sampled from the rasterised PDF, not estimated. */
+  --ez-black:    #000000;   /* bands, table heads, text, label tabs */
+  --ez-paper:    #ffffff;   /* card paper */
+  --ez-zebra:    #ededed;   /* alternating table rows (measured 0.928) */
+  --ez-caption:  #575756;   /* captions, the edge reference */
+  --ez-hairline: #000000;   /* hairlines — the original has no grey for them */
+
+  --ez-font-display: "Archivo Black", "Helvetica Neue", Impact, sans-serif;
+  --ez-font-body:    "EB Garamond", Garamond, "Times New Roman", serif;
+
+  /* The type-size budget. The body runs at the booklet's ABSOLUTE size:
+     10 pt = 3.53 mm, as in the A5 rulebook. Relative to the card that is far
+     more than in the book (5.6 % of the card width against 2.4 % of the page
+     width) — which is the point: a card is read in the hand, not on the
+     table. Factor 3.53 ÷ 63.
+
+     The two bounds do different things, and that is why they have to be
+     moved together:
+       --card-font-size-max  caps the START size. Only sparse cards feel
+         it; a full card is brought down by the font scaler anyway.
+       --card-font-size-min  is the FLOOR the font scaler may shrink a full
+         card to. Below it, content breaks onto the back instead.
+
+     On an OVERFLOWING card the floor IS the printed size. The scaler
+     shrinks to the floor, finds the text still does not fit, and hands over
+     to the splitter — and the scale then stays locked for every face of the
+     group. A lower floor is therefore NOT a safety margin; it is simply
+     smaller text on every face. It belongs as HIGH as it will go.
+
+     What it does decide is WHERE the splitter cuts: the larger the type, the
+     sooner the first `keep-together` block stops fitting on face 1 and moves
+     to the next face whole — leaving half the front blank. The floor is the
+     knob between "large text" and "the block stays on the front".
+
+     The floor and the head band's height are coupled and must be tuned
+     together. Later faces carry half the band, so face 1 is the SMALLEST
+     face of the deck; make the difference too large and there is a class
+     of blocks that fits every face EXCEPT the first — the splitter pushes
+     them on and leaves face 1 empty. At a 13.5 % band that happened, with
+     a feedback loop through the page counter ("1 / 10" is wider than
+     "1 / 2", wraps under the title, makes the head taller, face 1 smaller
+     still), up to a card of ten faces, nine of them empty.
+
+     Measured on the longest block of a dense deck (746 characters: a race
+     line, a stat line and four commands), room left on face 1:
+
+         band 13.5 % · floor 2.56 mm → −2.2 %  ✗  (face 1 stayed empty)
+         band 11 %   · floor 2.56 mm →  0.3 %
+         band 10 %   · floor 2.50 mm →  3.3 %
+         band 10 %   · floor 2.45 mm →  8.7 %  ← in use
+         band  9 %   · floor 2.45 mm →  9.7 %
+
+     8.7 % is deliberately generous: three earlier settings sat between 0.4
+     and 5.5 % and were each tipped over by a sentence appended to a stat
+     line. The threshold depends on the chrome AND on the card text — after a
+     change to either, re-measure against the longest card, not the first
+     one at hand.
+
+     Only dense cards are affected. The start size stays 3.53 mm, so a
+     sparse card still runs at the full book size.
+
+     The title: 30 pt : 10 pt = 3 : 1 in the book. On a card that would be
+     monstrous — the title runs at ~1.4 : 1 (4.98 mm), which in the head band
+     gives the same optical weight as 30 pt in an A5 measure. The floors are
+     absolute lengths, as the base stylesheet asks: a legibility floor on
+     paper is an absolute quantity. */
+  --card-font-size-min:       2.45mm;
+  --card-font-size-max:       3.7mm;
+  --card-font-size-title-min: 3.2mm;
+  --card-font-size-title-max: 6.0mm;
+
+  --ez-font-size-body:  clamp(var(--card-font-size-min),       calc(var(--card-width, 63mm) * 0.056), var(--card-font-size-max));
+  --ez-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.079), var(--card-font-size-title-max));
+
+  /* Geometry. One knob for the head: --ez-band-height. The band and its torn
+     edge both derive from it, so the edge cannot drift off the band when the
+     height is retuned. The book's band is 7.1 % of the page height; the
+     card's carries a real title rather than a running head and gets 10 %
+     (see the type-size budget above for why not more).
+
+     --ez-band-height is deliberately a FACTOR, not a percentage: the band
+     sits in `.ez-head`, an auto-height box, and a percentage `min-height`
+     against an auto height resolves to 0 — the band would then be only as
+     tall as its title. The factor is multiplied against --card-height.
+
+     The torn edge's amplitude is 2.12 mm in the A5 print (8 of 78 px of the
+     header-band bitmap); on the card it is 1.8 % of the height, 1.6 mm on
+     poker.
+
+     The measure: 7.4 % side margin in the book. On 63 mm that is 4.7 mm, and
+     the card keeps the value unchanged. */
+  --ez-band-height: 0.10;
+  --ez-torn-height: calc(var(--card-height, 88mm) * 0.018);
+  /* The mean blackness of the torn edge. The profile is solid black at the
+     top and only frays towards the bottom, so it visually lengthens the band
+     by its area mean. Integrated over the three SVG profiles: 0.737 (front
+     head) / 0.724 (foot) / 0.617 (back head) of the amplitude. The common
+     value 0.72 sits right for the front head; the 0.1 mm the back head
+     deviates by cannot be seen at 63 mm. */
+  --ez-torn-ink: calc(var(--ez-torn-height) * 0.72);
+  --ez-margin-x: 7.4%;
+  /* Wider on the right than on the left: the source reference runs along
+     that edge (.ez-side-ref) and the body has to keep clear of it. */
+  --ez-body-inset-right: 11%;
+
+  /* The logo. A floor, so that a full face pulls the logo down to it rather
+     than displacing text (6 mm on poker), and a margin of air inside its
+     band on all four sides — see the logo section for why the inset is a cap
+     on the image and not padding on the band. */
+  --ez-logo-min: calc(var(--card-height, 88mm) * 0.068);
+  --ez-logo-inset: 8%;
+
+  background-color: var(--ez-paper);
+  color: var(--ez-black);
+  font-family: var(--ez-font-body);
+  font-weight: 400;
+  font-size: var(--ez-font-size-body);
+  line-height: 1.32;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ── The signature: the torn paper edge ───────────────────────────────
+   In the book a bitmap with an alpha channel (1157 × 78 px, indexed plus a
+   soft mask), placed identically on every content page and pulled past the
+   bleed on both sides, so the tear never visibly repeats.
+
+   The profile here is read out of exactly that bitmap — the alpha channel
+   at threshold 127 — column by column, converted to a polyline, simplified
+   with Douglas–Peucker and written as an inline SVG. Nothing is redrawn by
+   eye.
+
+   A card carries three torn edges, and each pulls a DIFFERENT window of the
+   same profile: x 0–430 for the front's head, x 340–770 for the back's head,
+   x 690–1120 for the foot. That is what the bleed overhang buys in print,
+   and it is why a new element must not reuse one of these windows —
+   regenerate a fresh one from the bitmap instead. `preserveAspectRatio=
+   'none'` stretches the window across the card, compressing it ≈ 1.7 ×; the
+   tear therefore reads a little finer than in the book, which is right at
+   63 mm.                                                                    */
+
+.card-root.eiserne-zeit .ez-torn {
+  flex-shrink: 0;
+  height: var(--ez-torn-height);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 10' preserveAspectRatio='none'><path d='M0 0 H400 L400.0 7.5 L398.1 10.0 L392.5 10.0 L390.7 7.5 L389.7 8.8 L386.9 8.8 L386.0 7.5 L385.1 7.5 L384.1 6.2 L382.3 6.2 L381.4 5.0 L380.4 5.0 L379.5 3.8 L377.6 3.8 L375.8 6.2 L374.8 6.2 L373.0 8.8 L369.2 8.8 L368.3 7.5 L366.4 7.5 L365.5 6.2 L363.6 6.2 L362.7 5.0 L361.8 5.0 L360.8 3.8 L359.9 3.8 L359.0 2.5 L358.0 2.5 L357.1 3.8 L356.2 3.8 L355.2 2.5 L354.3 2.5 L353.4 3.8 L352.4 3.8 L351.5 5.0 L349.7 5.0 L348.7 3.8 L347.8 3.8 L346.9 2.5 L345.0 2.5 L344.1 3.8 L341.3 3.8 L340.3 5.0 L339.4 5.0 L337.5 7.5 L335.7 7.5 L334.7 8.8 L331.0 8.8 L330.1 10.0 L327.3 10.0 L326.3 8.8 L325.4 8.8 L324.5 7.5 L320.7 7.5 L318.9 10.0 L316.1 10.0 L315.2 8.8 L314.2 8.8 L313.3 7.5 L312.4 7.5 L311.4 6.2 L310.5 7.5 L307.7 7.5 L306.8 6.2 L305.8 6.2 L304.9 7.5 L303.0 5.0 L301.2 5.0 L300.2 3.8 L295.6 3.8 L294.6 2.5 L292.8 5.0 L289.0 5.0 L287.2 7.5 L285.3 7.5 L284.4 8.8 L282.5 8.8 L281.6 7.5 L280.7 8.8 L278.8 8.8 L277.9 10.0 L266.7 10.0 L265.7 8.8 L262.9 8.8 L262.0 10.0 L261.1 10.0 L260.1 8.8 L255.5 8.8 L253.6 6.2 L252.7 6.2 L251.7 7.5 L246.2 7.5 L245.2 6.2 L238.7 6.2 L237.8 7.5 L232.2 7.5 L231.2 8.8 L217.2 8.8 L216.3 10.0 L214.5 10.0 L210.7 5.0 L208.9 5.0 L207.9 6.2 L205.1 6.2 L204.2 7.5 L203.3 6.2 L202.3 7.5 L200.5 7.5 L199.5 6.2 L198.6 6.2 L197.7 5.0 L196.7 5.0 L195.8 6.2 L193.0 6.2 L192.1 5.0 L191.1 6.2 L189.3 6.2 L188.3 8.8 L187.4 10.0 L162.2 10.0 L161.3 8.8 L157.6 8.8 L156.6 7.5 L144.5 7.5 L142.7 5.0 L141.7 5.0 L140.8 3.8 L138.0 3.8 L137.1 5.0 L135.2 5.0 L131.5 0.0 L130.5 2.5 L128.7 2.5 L127.7 3.8 L125.9 3.8 L124.9 5.0 L124.0 5.0 L123.1 6.2 L117.5 6.2 L116.6 7.5 L114.7 7.5 L113.8 8.8 L110.0 8.8 L109.1 7.5 L108.2 8.8 L107.2 8.8 L106.3 7.5 L105.4 7.5 L104.4 8.8 L97.0 8.8 L96.0 10.0 L86.7 10.0 L83.9 6.2 L68.1 6.2 L67.1 5.0 L66.2 5.0 L65.3 6.2 L58.7 6.2 L57.8 7.5 L56.9 7.5 L55.9 8.8 L54.1 8.8 L53.1 7.5 L52.2 7.5 L51.3 8.8 L49.4 8.8 L48.5 10.0 L47.6 10.0 L44.8 6.2 L42.9 6.2 L42.0 5.0 L41.0 5.0 L40.1 3.8 L36.4 3.8 L35.4 5.0 L33.6 5.0 L31.7 7.5 L30.8 7.5 L29.8 8.8 L28.0 8.8 L27.0 10.0 L21.4 10.0 L19.6 7.5 L15.9 7.5 L14.9 6.2 L14.0 6.2 L13.1 7.5 L12.1 7.5 L11.2 8.8 L9.3 8.8 L8.4 10.0 L0.0 10.0 Z' fill='%23000'/></svg>");
+}
+
+/* The foot's window, flipped by `scaleY(-1)` so the tear forms its upper edge. */
+.card-root.eiserne-zeit .ez-torn-foot {
+  transform: scaleY(-1);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 10' preserveAspectRatio='none'><path d='M0 0 H400 L400.0 8.8 L398.1 8.8 L397.2 10.0 L391.6 10.0 L390.7 8.8 L389.7 8.8 L388.8 7.5 L385.1 7.5 L384.1 6.2 L383.2 6.2 L382.3 7.5 L381.4 7.5 L380.4 8.8 L379.5 8.8 L378.6 10.0 L377.6 8.8 L372.0 8.8 L371.1 10.0 L370.2 8.8 L368.3 8.8 L367.4 7.5 L363.6 7.5 L362.7 6.2 L359.9 6.2 L359.0 5.0 L358.0 6.2 L357.1 6.2 L355.2 8.8 L354.3 8.8 L353.4 10.0 L346.9 10.0 L345.0 7.5 L344.1 7.5 L343.1 6.2 L342.2 6.2 L341.3 5.0 L337.5 5.0 L336.6 6.2 L328.2 6.2 L327.3 7.5 L323.5 7.5 L322.6 8.8 L319.8 8.8 L318.9 7.5 L317.0 7.5 L316.1 6.2 L315.2 7.5 L314.2 6.2 L313.3 6.2 L312.4 5.0 L310.5 5.0 L309.6 6.2 L305.8 6.2 L304.9 7.5 L288.1 7.5 L287.2 8.8 L283.4 8.8 L282.5 7.5 L280.7 7.5 L279.7 6.2 L278.8 6.2 L277.9 5.0 L276.9 5.0 L274.1 1.2 L273.2 2.5 L272.3 5.0 L271.3 5.0 L270.4 6.2 L268.5 6.2 L267.6 7.5 L263.9 7.5 L262.9 8.8 L261.1 8.8 L260.1 7.5 L259.2 7.5 L258.3 6.2 L255.5 6.2 L254.5 7.5 L252.7 7.5 L251.7 8.8 L249.9 6.2 L245.2 6.2 L244.3 7.5 L241.5 7.5 L240.6 8.8 L234.0 8.8 L233.1 10.0 L225.6 10.0 L223.8 7.5 L221.0 7.5 L220.0 6.2 L218.2 6.2 L217.2 5.0 L216.3 5.0 L215.4 6.2 L210.7 6.2 L209.8 7.5 L207.0 7.5 L206.1 8.8 L202.3 8.8 L201.4 7.5 L199.5 7.5 L198.6 6.2 L193.9 6.2 L193.0 7.5 L189.3 7.5 L188.3 6.2 L187.4 6.2 L185.5 3.8 L180.9 3.8 L179.0 6.2 L177.2 6.2 L176.2 7.5 L164.1 7.5 L163.2 6.2 L156.6 6.2 L155.7 7.5 L153.8 7.5 L152.9 8.8 L148.3 8.8 L147.3 7.5 L142.7 7.5 L141.7 6.2 L138.0 6.2 L137.1 5.0 L136.1 5.0 L135.2 3.8 L133.3 3.8 L132.4 5.0 L128.7 5.0 L127.7 6.2 L122.1 6.2 L121.2 7.5 L116.6 7.5 L115.6 8.8 L113.8 8.8 L112.8 10.0 L110.0 10.0 L109.1 8.8 L108.2 10.0 L105.4 10.0 L104.4 8.8 L102.6 8.8 L101.6 7.5 L100.7 8.8 L98.8 8.8 L97.9 7.5 L94.2 7.5 L93.2 6.2 L91.4 6.2 L90.4 5.0 L87.6 5.0 L86.7 3.8 L82.1 3.8 L81.1 5.0 L72.7 5.0 L71.8 6.2 L65.3 6.2 L64.3 5.0 L63.4 5.0 L61.5 7.5 L59.7 7.5 L58.7 6.2 L57.8 7.5 L51.3 7.5 L50.3 8.8 L40.1 8.8 L39.2 10.0 L38.2 10.0 L36.4 7.5 L35.4 7.5 L34.5 8.8 L33.6 7.5 L32.6 7.5 L31.7 6.2 L27.0 6.2 L26.1 7.5 L24.2 7.5 L23.3 8.8 L21.4 8.8 L20.5 7.5 L18.6 7.5 L17.7 8.8 L15.9 8.8 L14.9 10.0 L13.1 10.0 L12.1 8.8 L10.3 8.8 L9.3 7.5 L5.6 7.5 L4.7 6.2 L2.8 6.2 L0.9 3.8 L0.0 3.8 Z' fill='%23000'/></svg>");
+}
+
+/* The back head's window — none of a card's three edges repeats another. */
+.card-root.eiserne-zeit .ez-torn-backhead {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 10' preserveAspectRatio='none'><path d='M0 0 H400 L400.0 5.0 L399.1 5.0 L398.1 6.2 L391.6 6.2 L390.7 5.0 L389.7 5.0 L387.9 7.5 L386.0 7.5 L385.1 6.2 L384.1 7.5 L377.6 7.5 L376.7 8.8 L366.4 8.8 L365.5 10.0 L364.6 10.0 L362.7 7.5 L361.8 7.5 L360.8 8.8 L359.9 7.5 L359.0 7.5 L358.0 6.2 L353.4 6.2 L352.4 7.5 L350.6 7.5 L349.7 8.8 L347.8 8.8 L346.9 7.5 L345.0 7.5 L344.1 8.8 L342.2 8.8 L341.3 10.0 L339.4 10.0 L338.5 8.8 L336.6 8.8 L335.7 7.5 L331.9 7.5 L331.0 6.2 L329.1 6.2 L327.3 3.8 L325.4 3.8 L324.5 5.0 L322.6 5.0 L321.7 6.2 L318.9 6.2 L317.9 7.5 L315.2 7.5 L314.2 8.8 L311.4 8.8 L310.5 10.0 L307.7 10.0 L305.8 7.5 L304.9 7.5 L304.0 6.2 L296.5 6.2 L295.6 7.5 L294.6 7.5 L293.7 6.2 L283.4 6.2 L282.5 5.0 L280.7 5.0 L279.7 6.2 L272.3 6.2 L271.3 7.5 L269.5 7.5 L268.5 8.8 L264.8 8.8 L263.9 6.2 L258.3 6.2 L257.3 5.0 L256.4 6.2 L254.5 6.2 L253.6 5.0 L249.0 5.0 L248.0 6.2 L246.2 6.2 L245.2 7.5 L243.4 7.5 L242.4 8.8 L237.8 8.8 L236.8 7.5 L235.9 7.5 L234.0 5.0 L222.8 5.0 L221.9 3.8 L217.2 3.8 L216.3 6.2 L215.4 7.5 L214.5 7.5 L213.5 6.2 L211.7 6.2 L210.7 5.0 L207.9 5.0 L207.0 3.8 L202.3 3.8 L201.4 5.0 L200.5 5.0 L199.5 3.8 L198.6 3.8 L197.7 5.0 L196.7 3.8 L195.8 3.8 L194.9 5.0 L193.0 5.0 L192.1 6.2 L184.6 6.2 L183.7 5.0 L181.8 5.0 L180.9 3.8 L180.0 3.8 L179.0 2.5 L177.2 2.5 L175.3 5.0 L173.4 5.0 L172.5 3.8 L169.7 3.8 L168.8 5.0 L167.8 5.0 L166.9 6.2 L166.0 6.2 L165.0 5.0 L164.1 5.0 L163.2 6.2 L160.4 6.2 L158.5 3.8 L157.6 3.8 L156.6 2.5 L154.8 2.5 L153.8 3.8 L152.0 3.8 L151.0 5.0 L150.1 5.0 L149.2 3.8 L147.3 3.8 L146.4 5.0 L142.7 5.0 L141.7 6.2 L140.8 6.2 L139.9 5.0 L138.0 5.0 L137.1 6.2 L134.3 6.2 L132.4 3.8 L129.6 3.8 L128.7 5.0 L122.1 5.0 L121.2 6.2 L116.6 6.2 L115.6 7.5 L113.8 7.5 L112.8 6.2 L109.1 6.2 L108.2 7.5 L107.2 6.2 L106.3 6.2 L105.4 7.5 L104.4 7.5 L103.5 6.2 L102.6 6.2 L99.8 2.5 L96.0 2.5 L95.1 1.2 L93.2 1.2 L92.3 2.5 L88.6 2.5 L86.7 5.0 L85.8 5.0 L84.8 6.2 L83.9 6.2 L81.1 10.0 L75.5 10.0 L73.7 7.5 L72.7 8.8 L69.9 8.8 L69.0 7.5 L68.1 7.5 L67.1 6.2 L65.3 6.2 L64.3 5.0 L63.4 5.0 L62.5 3.8 L60.6 3.8 L58.7 6.2 L57.8 6.2 L55.9 8.8 L52.2 8.8 L51.3 7.5 L49.4 7.5 L48.5 6.2 L46.6 6.2 L45.7 5.0 L44.8 5.0 L43.8 3.8 L42.9 3.8 L42.0 2.5 L41.0 2.5 L40.1 3.8 L39.2 3.8 L38.2 2.5 L37.3 2.5 L36.4 3.8 L35.4 3.8 L34.5 5.0 L32.6 5.0 L31.7 3.8 L30.8 3.8 L29.8 2.5 L28.0 2.5 L27.0 3.8 L24.2 3.8 L23.3 5.0 L22.4 5.0 L20.5 7.5 L18.6 7.5 L17.7 8.8 L14.0 8.8 L13.1 10.0 L10.3 10.0 L9.3 8.8 L8.4 8.8 L7.5 7.5 L3.7 7.5 L1.9 10.0 L0.0 10.0 Z' fill='%23000'/></svg>");
+}
+
+/* ── The head band ────────────────────────────────────────────────────
+   A full-bleed black band across the card, the title white and centred in
+   Archivo Black. The torn edge is its own element directly below, so the
+   band's height is independent of the amplitude and the title cannot run
+   into the tear.                                                            */
+
+.card-root.eiserne-zeit .ez-head {
+  flex-shrink: 0;
+}
+
+.card-root.eiserne-zeit .ez-band {
+  min-height: calc(var(--card-height, 88mm) * var(--ez-band-height));
+  box-sizing: border-box;
+  background-color: var(--ez-black);
+  color: var(--ez-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The title sits not in the middle of the band's box but in the middle of
+     the BLACK AREA — which reaches past the box: the torn edge below is
+     solid black at the top and frays only towards the bottom. Optically the
+     band is --ez-torn-ink longer, so the title has to move down by half of
+     that.
+
+     Done by shifting the padding about its centre, the sum unchanged at
+     0.72em: the title then stands (top − bottom) / 2 below the band's
+     middle, whether the band's height comes from `min-height` or from its
+     content. The constant sum is a condition, not polish: on later faces
+     the band's height keys on `.cf-front-continued`, a marker the splitter
+     stamps only AFTER the split — a head growing there after the fact would
+     clip the text (see "The head on later faces"). */
+  padding: calc(0.36em + var(--ez-torn-ink) / 2) var(--ez-margin-x)
+           calc(0.36em - var(--ez-torn-ink) / 2);
+}
+
+.card-root.eiserne-zeit .card-title {
+  font-family: var(--ez-font-display);
+  font-weight: 400;
+  font-size: var(--ez-font-size-title);
+  line-height: 1.04;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--ez-paper);
+  text-align: center;
+  /* The title box must be allowed to shrink to the band's padding. It is a
+     flex child of `.ez-band`, and flex children have `min-width: auto` —
+     their minimum width is their MIN-CONTENT width. For a single long word
+     that is the full word width: the box grows past the side padding and
+     the title stands edge to edge.
+
+     And it stays that way: the font scaler measures against the parent
+     element, this box — which is as wide as the word by construction, so
+     the search finds "fits" at once and never shrinks. The band's padding
+     only holds while the title fits into it of its own accord.
+
+     `min-width: 0` frees the shrink: the box then lies on the band's
+     content edge, and the scaler measures against exactly the width the
+     title may have. A `max-width` would NOT do — `min-width` beats
+     `max-width` in CSS. */
+  min-width: 0;
+  /* A long title may wrap; from there the font scaler takes over. This
+     deliberately overrides the base stylesheet's `white-space: nowrap`. */
+  white-space: normal;
+  /* But ONLY at word boundaries. `hyphens: auto` stands on `.card-root`
+     (right for the body) and is taken back here: a caps line in Archivo
+     Black with a hyphen — "DER HUNDEFÜH-/RER" — reads as an error, and
+     greedy line breaking takes the hyphenation even when the clean break
+     at the space fits. `hyphens` needs a language; the engine stamps
+     `lang` on the root.
+
+     An over-long SINGLE word is still served: the scaler shrinks it, and
+     the inherited `overflow-wrap: break-word` breaks hard as a last
+     resort — both without a hyphen. */
+  hyphens: manual;
+  /* And just as deliberately its `overflow: hidden`. Archivo Black's Ü, Ä
+     and Ö reach 0.885 em above the baseline — ABOVE the font's own ascent
+     (0.878). At `line-height: 1.04` the baseline lies 0.854 em below the
+     box top, the umlaut dots 0.031 em above it, and `overflow: hidden`
+     shears them off — on every face, and most visibly on a continuation
+     face where the half-size title carries them as a hint only.
+
+     `visible` rather than a larger line-height because it is height-
+     neutral: line-height acts on the box, and with it on the band height
+     of later faces, which comes from their content. The dots reach into
+     the band's black top padding, at least 1.2 mm — many times the
+     0.03–0.15 mm they need.
+
+     Of no consequence to the scaler: it measures the `.text-scalable`
+     span, not `.card-title`, and the box's client size does not depend on
+     its overflow. */
+  overflow: visible;
+}
+
+/* The page counter ("2 / 3") — small and quiet behind the title. It is
+   shown by the base stylesheet alone, and only under `.cf-overflow-active`,
+   which a card that fits never carries; the base rule also keeps it on one
+   line and spaces it off the title. The look is the system's.
+
+   The counter must NEVER wrap onto a line of its own. If it does, the head
+   grows, face 1 loses text area, a tight block no longer fits — and since
+   more faces follow, the counter gets wider still ("1 / 10" for "1 / 2")
+   and wraps all the more. That feedback loop once drove a card to ten
+   faces, nine of them empty. Not wrapping WITHIN the counter is the base
+   rule's `white-space: nowrap`; not wrapping BEFORE it is the markup's
+   doing — the placeholder sits inside the title's `.text-scalable` span in
+   front.hbs, not beside it. */
+.card-root.eiserne-zeit .cf-overflow-counter {
+  font-family: var(--ez-font-body);
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+}
+
+/* ── The body ─────────────────────────────────────────────────────────
+   Single-column — 63 mm is too narrow for the book's two-column look. Side
+   margins as in the book's measure (7.4 %), the right one wider so the text
+   does not run into the source reference along that edge, and a bottom
+   padding of its own: with the reference on the edge there is no footer
+   bank left to set the margin.                                              */
+
+.card-root.eiserne-zeit .card-content-container {
+  padding: 0.55em var(--ez-body-inset-right) 0.7em var(--ez-margin-x);
+}
+
+.card-root.eiserne-zeit .ez-body {
+  text-align: left;
+}
+.card-root.eiserne-zeit .ez-body > :first-child { margin-top: 0; }
+.card-root.eiserne-zeit .ez-body > :last-child  { margin-bottom: 0; }
+.card-root.eiserne-zeit .ez-body p { margin: 0 0 0.45em; }
+
+/* Subheads in the card text (### / ####). The book sets them in Worker
+   Black as caps plus small caps; Archivo Black has no small caps, so caps
+   with letter spacing.
+
+   h1 and h2 are listed although they should not occur here: `##` opens a
+   section and never reaches the body, and a `#` would only repeat the card
+   title. Should someone write one into the note's text anyway, it should
+   look like a subhead rather than fill half the card at the browser's
+   default size. It is NOT hidden — invisible card content is worse than a
+   duplicated heading the author sees at once. */
+.card-root.eiserne-zeit .ez-body h1,
+.card-root.eiserne-zeit .ez-body h2,
+.card-root.eiserne-zeit .ez-body h3,
+.card-root.eiserne-zeit .ez-body h4,
+.card-root.eiserne-zeit .ez-body h5 {
+  font-family: var(--ez-font-display);
+  font-weight: 400;
+  font-size: 0.92em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ez-black);
+  margin: 0.6em 0 0.22em;
+}
+
+/* Lists: the bullet is the same cross fleury that forms the `---` divider —
+   the booklet's one typographic ornament, here in two sizes. The book has
+   no second one, and a mark borrowed from an unrelated face would be the
+   foreign body. The price, taken deliberately: the divider is no longer a
+   distinct sign, only the same sign set larger, and reads quieter for it.
+
+   Drawn as a vector, NOT typed — the same argument as for the divider: no
+   bundled face carries a cross fleury, and a fallback to a system font
+   lands in Skia as a Type 3 font and off macOS as a tofu box.
+
+   A little larger than an ordinary bullet (0.62 em), because the cross is
+   drawn finer than a dot and congeals into a blot at 1.4 mm otherwise.
+
+   Filled pure black here, not the divider's measured 20 % grey: a bullet
+   paler than its text reads weak. Written as a literal because a data-URI
+   SVG cannot read a custom property — retouch by hand on a palette change.
+
+   Swappable through --ez-bullet without touching the rule. */
+.card-root.eiserne-zeit .ez-body ul,
+.card-root.eiserne-zeit .ez-body ol {
+  margin: 0.25em 0 0.45em;
+  padding-left: 1.15em;
+}
+.card-root.eiserne-zeit .ez-body li { margin: 0.08em 0; }
+.card-root.eiserne-zeit .ez-body ul { list-style: none; padding-left: 1.05em; }
+.card-root.eiserne-zeit .ez-body ul > li { position: relative; }
+.card-root.eiserne-zeit .ez-body ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.02em;
+  top: 0.3em;
+  width: 0.62em;
+  height: 0.62em;
+  background-image: var(--ez-bullet, url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M99.99 50.00 L88.55 42.66 C88.55 42.66 80.06 46.06 77.61 47.14 C83.57 42.77 86.12 37.61 83.33 34.69 C81.20 32.47 76.50 32.08 71.16 33.33 C72.24 33.67 73.28 34.18 73.93 34.86 C75.57 36.57 75.64 40.45 73.07 42.20 C69.39 44.70 60.54 46.22 52.94 47.05 C53.78 39.46 55.29 30.61 57.80 26.93 C59.55 24.36 63.43 24.43 65.14 26.07 C65.82 26.72 66.33 27.76 66.67 28.84 C67.92 23.49 67.53 18.80 65.31 16.67 C62.39 13.88 57.22 16.42 52.86 22.39 C53.94 19.94 57.33 11.44 57.33 11.44 L49.99 0.00 L42.66 11.44 C42.66 11.44 46.06 19.94 47.14 22.39 C42.77 16.42 37.60 13.88 34.68 16.67 C32.46 18.80 32.08 23.49 33.33 28.84 C33.66 27.76 34.17 26.72 34.85 26.07 C36.56 24.43 40.45 24.36 42.19 26.93 C44.70 30.61 46.22 39.46 47.05 47.05 C39.46 46.22 30.61 44.70 26.92 42.20 C24.36 40.45 24.43 36.57 26.07 34.86 C26.72 34.18 27.75 33.67 28.83 33.33 C23.49 32.08 18.79 32.47 16.67 34.69 C13.88 37.61 16.42 42.77 22.38 47.14 C19.94 46.06 11.44 42.66 11.44 42.66 L0.00 50.00 L11.44 57.34 C11.44 57.34 19.94 53.94 22.38 52.86 C16.42 57.23 13.88 62.39 16.67 65.31 C18.79 67.53 23.49 67.92 28.83 66.67 C27.75 66.33 26.72 65.82 26.07 65.14 C24.43 63.43 24.36 59.55 26.92 57.80 C30.61 55.30 39.46 53.78 47.05 52.95 C46.22 60.54 44.70 69.39 42.19 73.07 C40.45 75.64 36.56 75.57 34.85 73.93 C34.17 73.28 33.67 72.24 33.33 71.16 C32.08 76.51 32.46 81.20 34.68 83.33 C37.60 86.12 42.77 83.58 47.14 77.61 C46.06 80.06 42.66 88.56 42.66 88.56 L49.99 100.00 L57.33 88.56 C57.33 88.56 53.94 80.06 52.86 77.61 C57.22 83.58 62.39 86.12 65.31 83.33 C67.53 81.20 67.92 76.51 66.67 71.16 C66.33 72.24 65.82 73.28 65.14 73.93 C63.43 75.57 59.55 75.64 57.80 73.07 C55.29 69.39 53.78 60.54 52.94 52.95 C60.54 53.78 69.39 55.30 73.07 57.80 C75.64 59.55 75.57 63.43 73.93 65.14 C73.28 65.82 72.24 66.33 71.16 66.67 C76.50 67.92 81.20 67.53 83.33 65.31 C86.12 62.39 83.57 57.23 77.61 52.86 C80.06 53.94 88.55 57.34 88.55 57.34 L99.99 50.00 Z' fill='%23000000'/></svg>"));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* When a face break cuts a list item in the middle, its continuation on the
+   next face carries NO second cross — it is not a new item but the second
+   half of the same one. The base stylesheet resets `::marker` for this,
+   which does not reach here because the cross is drawn as `::before` (a
+   picture, not a character — see above). The rule therefore lives in the
+   system, at a higher specificity than the bullet rule, or that rule's
+   `content: ""` wins.
+
+   Only the mid-item cut is meant: when the break falls BETWEEN two items
+   the splitter stamps nothing, and the next face's first item keeps its
+   cross. */
+.card-root.eiserne-zeit .ez-body ul > li.cf-split-continuation::before {
+  content: none;
+}
+
+/* The booklet's one typographic ornament: a cross fleury, centred, as the
+   divider. In the book it stands on the introduction page between the
+   running text and the closing summary. A `---` in the note's text renders
+   it.
+
+   The path is not redrawn but read out of the PDF: the vector graphic on
+   page 2, 19.24 × 19.24 pt, 56 segments, normalised to a 100 × 100 viewBox.
+   The fill is 20 % grey (#333333), exactly the measured value — the
+   material's own description says "black", but the PDF holds a lightened
+   grey, and at 3 mm on a card the difference shows.
+
+   An inline SVG rather than a text character: no bundled face carries a
+   cross fleury, and a fallback to a system font lands in Skia as a Type 3
+   font. */
+.card-root.eiserne-zeit .ez-body hr {
+  border: 0;
+  height: 1.15em;
+  margin: 0.55em auto 0.5em;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M99.99 50.00 L88.55 42.66 C88.55 42.66 80.06 46.06 77.61 47.14 C83.57 42.77 86.12 37.61 83.33 34.69 C81.20 32.47 76.50 32.08 71.16 33.33 C72.24 33.67 73.28 34.18 73.93 34.86 C75.57 36.57 75.64 40.45 73.07 42.20 C69.39 44.70 60.54 46.22 52.94 47.05 C53.78 39.46 55.29 30.61 57.80 26.93 C59.55 24.36 63.43 24.43 65.14 26.07 C65.82 26.72 66.33 27.76 66.67 28.84 C67.92 23.49 67.53 18.80 65.31 16.67 C62.39 13.88 57.22 16.42 52.86 22.39 C53.94 19.94 57.33 11.44 57.33 11.44 L49.99 0.00 L42.66 11.44 C42.66 11.44 46.06 19.94 47.14 22.39 C42.77 16.42 37.60 13.88 34.68 16.67 C32.46 18.80 32.08 23.49 33.33 28.84 C33.66 27.76 34.17 26.72 34.85 26.07 C36.56 24.43 40.45 24.36 42.19 26.93 C44.70 30.61 46.22 39.46 47.05 47.05 C39.46 46.22 30.61 44.70 26.92 42.20 C24.36 40.45 24.43 36.57 26.07 34.86 C26.72 34.18 27.75 33.67 28.83 33.33 C23.49 32.08 18.79 32.47 16.67 34.69 C13.88 37.61 16.42 42.77 22.38 47.14 C19.94 46.06 11.44 42.66 11.44 42.66 L0.00 50.00 L11.44 57.34 C11.44 57.34 19.94 53.94 22.38 52.86 C16.42 57.23 13.88 62.39 16.67 65.31 C18.79 67.53 23.49 67.92 28.83 66.67 C27.75 66.33 26.72 65.82 26.07 65.14 C24.43 63.43 24.36 59.55 26.92 57.80 C30.61 55.30 39.46 53.78 47.05 52.95 C46.22 60.54 44.70 69.39 42.19 73.07 C40.45 75.64 36.56 75.57 34.85 73.93 C34.17 73.28 33.67 72.24 33.33 71.16 C32.08 76.51 32.46 81.20 34.68 83.33 C37.60 86.12 42.77 83.58 47.14 77.61 C46.06 80.06 42.66 88.56 42.66 88.56 L49.99 100.00 L57.33 88.56 C57.33 88.56 53.94 80.06 52.86 77.61 C57.22 83.58 62.39 86.12 65.31 83.33 C67.53 81.20 67.92 76.51 66.67 71.16 C66.33 72.24 65.82 73.28 65.14 73.93 C63.43 75.57 59.55 75.64 57.80 73.07 C55.29 69.39 53.78 60.54 52.94 52.95 C60.54 53.78 69.39 55.30 73.07 57.80 C75.64 59.55 75.57 63.43 73.93 65.14 C73.28 65.82 72.24 66.33 71.16 66.67 C76.50 67.92 81.20 67.53 83.33 65.31 C86.12 62.39 83.57 57.23 77.61 52.86 C80.06 53.94 88.55 57.34 88.55 57.34 L99.99 50.00 Z' fill='%23333333'/></svg>");
+}
+
+/* ── Tables ───────────────────────────────────────────────────────────
+   The system's most designed element and its most recognisable structure:
+   a black head row with white text, zebra stripes, hairlines. Every
+   markdown table in the card text gets this automatically — no property
+   needed.
+
+   The hairline is 0.5 pt in the book; here 1 px, a true device line. That
+   is the one exception the scalable-sizes rule allows: below a device pixel
+   the line vanishes in print.                                               */
+.card-root.eiserne-zeit .ez-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.35em 0 0.5em;
+  font-size: 0.95em;
+  line-height: 1.22;
+  border: 1px solid var(--ez-hairline);
+}
+.card-root.eiserne-zeit .ez-body thead th {
+  background-color: var(--ez-black);
+  color: var(--ez-paper);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.18em 0.3em;
+}
+/* The head cell follows its column's alignment, or the roll column's
+   heading would stand centred over left-aligned content. */
+.card-root.eiserne-zeit .ez-body thead th:first-child {
+  text-align: center;
+}
+/* A deliberate deviation from the book, which centres a roll table's
+   content throughout. On A5 the result column has a good 60 mm and nearly
+   always stays on one line; at 63 mm it wraps regularly, and centred ragged
+   text over two lines reads restless. The narrow roll column stays centred,
+   the result columns run left-aligned. */
+.card-root.eiserne-zeit .ez-body tbody td {
+  text-align: left;
+  padding: 0.14em 0.3em;
+  border-top: 1px solid var(--ez-hairline);
+}
+/* The narrow roll column on the left, the wide result column on the right —
+   in the book a roll table's first column is markedly narrower. */
+.card-root.eiserne-zeit .ez-body tbody td:first-child {
+  width: 22%;
+  white-space: nowrap;
+  text-align: center;
+}
+.card-root.eiserne-zeit .ez-body tbody tr:nth-child(even) td {
+  background-color: var(--ez-zebra);
+}
+
+/* ── The source reference along the right edge ────────────────────────
+   The reference runs rotated along the right edge rather than as a footer
+   under the text. It is absolutely positioned — outside the flex flow, so
+   it cannot disturb the font scaler — and the body keeps clear of it
+   through --ez-body-inset-right.
+
+   Centred by `top: 50%` plus `translateY(-50%)` on a content-sized box —
+   NOT by `top: 0; bottom: 0` with centring inside. The box is an orthogonal
+   flow (`writing-mode: vertical-rl` in a horizontal card), and there its
+   INLINE axis is the physical height. Chromium sizes that axis shrink-to-fit
+   and ignores `bottom` when printing to PDF: every reference then sticks to
+   the top-right corner instead of the middle of the edge. `translateY` is a
+   physical transform, indifferent to the writing mode, and lands in the
+   same place on screen and in print. Do not "simplify" it.                  */
+.card-root.eiserne-zeit .ez-side-ref {
+  position: absolute;
+  top: 50%;
+  right: 2.4%;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%) rotate(180deg);
+  font-family: var(--ez-font-body);
+  font-size: 0.62em;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ez-caption);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── The picture ──────────────────────────────────────────────────────
+   Optional, directly under the torn edge across the full measure — or
+   wherever an `![[embed]]` stands in the text. The material contains not one
+   interior illustration, so there is no reference artwork; the style is
+   defined by the black-and-white constraint — a hard ink drawing or
+   woodcut, never a greyscale rendering.
+
+   The picture is flow content, not a flex slot: it takes its natural height
+   and is only capped, so it cannot take the card away from the text. The
+   cap is an absolute length, resolved from the card's height rather than a
+   percentage of the parent: the font scaler measures twice, and a
+   percentage jumps between the two passes. 34 mm on poker.                  */
+.card-root.eiserne-zeit .ez-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(var(--card-height, 88mm) * 0.386);
+  object-fit: contain;
+  margin: 0 0 0.45em;
+}
+
+/* ── The head on later faces ──────────────────────────────────────────
+   Every face carries a title head, so a fanned-out card shows its name
+   everywhere. On every face EXCEPT the first it runs at half size: there
+   the title is a reminder, not an announcement, and the room goes to the
+   text. That is the back — never face 1 — and every continuation front.
+
+   This is the one case where a post-measure marker may change the body's
+   height. `.cf-front-continued` is stamped AFTER the measure-split-scale
+   pass, so the splitter budgets for the LARGE head and the face gets more
+   room than planned afterwards. That direction is harmless (the face is at
+   most a little emptier); the other way round — growing the head after the
+   fact — would be clipping.                                                 */
+.card-root.eiserne-zeit.cf-front-continued .ez-band,
+.card-root.eiserne-zeit.card-back .ez-band {
+  min-height: calc(var(--card-height, 88mm) * var(--ez-band-height) * 0.5);
+  /* The same arithmetic as above with the smaller padding sum (0.52em):
+     middle ± --ez-torn-ink / 2. The torn edge is the same height on every
+     face, so the correction stays the same absolute amount — and on the
+     half-height band it weighs twice as much. */
+  padding-top:    calc(0.26em + var(--ez-torn-ink) / 2);
+  padding-bottom: calc(0.26em - var(--ez-torn-ink) / 2);
+}
+.card-root.eiserne-zeit.cf-front-continued .card-title,
+.card-root.eiserne-zeit.card-back .card-title {
+  font-size: calc(var(--ez-font-size-title) * 0.55);
+}
+
+/* ── The card-kind foot ───────────────────────────────────────────────
+   On EVERY face, front and back: a black band with a torn UPPER edge and
+   the card kind in white caps. Together with the head band it frames every
+   face with a tear top and bottom. Costs about 6.6 % of the card height.
+
+   Header → body → footer: a flex sibling of `.card-content-container`, not
+   a child of it and not absolutely positioned. Flex reserves its height by
+   itself, and the splitter clones it onto every continuation face.          */
+.card-root.eiserne-zeit .ez-foot {
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* The continuation arrow. Bottom right, black on the paper, directly ABOVE
+   the foot band: an arrow pointing right as the sign that the text goes on
+   on the next face. On EVERY face but the last.
+
+   `.cf-front-has-next` exists for exactly this — the splitter stamps it on
+   every front that another follows. That it is set only AFTER the
+   measure-split-scale pass is harmless here: the arrow is absolutely
+   positioned, changes no height and can clip nothing. That is what the
+   marker warns against otherwise, and the reason the logo does NOT hang on
+   it.
+
+   `bottom: 100%` puts it on the foot band's upper edge, in the gap between
+   the bottom of the text area and the torn edge. Horizontally it lies in
+   the lane between the measure (ends at 89 %) and the edge reference (from
+   94.8 %), crossing neither — and a shade further out than the reference
+   (`right: 1.2%` against its 2.4 %): it is a marginal sign, not a piece of
+   the setting, and may sit closer to the edge than the measure. Not right
+   on the edge, though: absolute positioning measures against the padding
+   box, and at `right: 0` it would stand in the bleed and be nibbled when
+   the card is cut.
+
+   Drawn, not typed. None of the bundled faces carries U+2192, U+27A1 or
+   U+25B6 — checked, not assumed. A text arrow would fall back to a system
+   font: Type 3 in the PDF and a tofu box off macOS, the same trap as the
+   bullet. Hard-edged, no curves: a straight shaft and a triangular head fit
+   the industrial tone and stay legible at 1.5 mm. */
+.card-root.eiserne-zeit .ez-cont-arrow {
+  display: none;
+  position: absolute;
+  right: 1.2%;
+  bottom: 100%;
+  margin-bottom: 0.16em;
+  width: 1.05em;
+  height: 0.59em;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 56'><path d='M0 20 H60 V2 L100 28 L60 54 V36 H0 Z' fill='%23000000'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.card-root.eiserne-zeit.cf-front-has-next .ez-cont-arrow {
+  display: block;
+}
+
+.card-root.eiserne-zeit .ez-foot-label {
+  background-color: var(--ez-black);
+  color: var(--ez-paper);
+  font-family: var(--ez-font-display);
+  font-weight: 400;
+  font-size: 0.86em;
+  line-height: 1.1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  /* Horizontally: the letter spacing hangs a space on the right — the
+     text-indent below balances it and keeps the text optically centred.
+
+     Vertically: the head band's case, mirrored. The torn edge above is
+     solid black at the BOTTOM (it is flipped) and frays upwards, so it
+     lengthens the foot band UPWARDS — the black area begins --ez-torn-ink
+     above the label's edge, and the text has to move up by half of that.
+     Hence the top padding is the smaller one here, the larger one in the
+     head band.
+
+     Shifted about the middle as there, the sum unchanged at 0.92em: the
+     foot's height is budgeted on every face, the splitter counts on it, and
+     a purely optical correction must not change it. */
+  padding: calc(0.46em - var(--ez-torn-ink) / 2) var(--ez-margin-x)
+           calc(0.46em + var(--ez-torn-ink) / 2);
+  text-indent: 0.16em;
+}
+
+/* ── The logo ─────────────────────────────────────────────────────────
+   ONE rule for the front and the back. Both templates build the same
+   nesting (.card-content-container > .card-body-scalable > .ez-logo-band),
+   so the back needs no logo logic of its own.
+
+   The logo is the LAST block in the card body, not a band below it. That
+   way it lands on the last face by itself — the splitter moves content from
+   the end forward, and what comes last can stand nowhere else by
+   construction. It is measured from the start, and earlier faces do not
+   carry it at all.
+
+   The obvious way would be wrong. A band below the body, shown on the last
+   face by CSS, would add height there after the measurement and clip the
+   text: `.cf-front-has-next` is stamped only AFTER the measure-split-scale
+   pass. Reserving it on every face and hiding it with `visibility` would be
+   correct but costs 17 % of the card height on EVERY face — measured, and
+   enough to push a dense card's command block off face 1 (its text area
+   ended at 72.3 % instead of 89.3 %). Do not reintroduce it.
+
+   Shown on a front only under `.cf-overflow-active` — that class the
+   splitter sets BEFORE it measures (it reserves the page counter's room in
+   the same step), so it may influence height. Without an overflow the
+   designed back is the last face and carries the logo; on the front it
+   would then have nothing to do.
+
+   Size: as large as possible, but not edge to edge. `flex: 1 1 0` takes all
+   the room left over — the whole body on an empty back, the rest under the
+   text on a half-full last face. `flex-grow` also restores the shrink the
+   base stylesheet switches off for body children (`flex-shrink: 0`), so a
+   full face pulls the logo down to --ez-logo-min instead of displacing
+   text. The floor is an absolute length, as the base stylesheet asks of
+   everything the scaler measures in its two passes.
+
+   Inside the band there is air all round: --ez-logo-inset. The logo fills
+   only `100 % − 2 × inset` of its band on both axes and the band centres
+   it, so the gap stands on all four sides. Deliberately a cap on the IMAGE
+   and NOT `padding` on the band: `box-sizing: border-box` counts padding
+   into the height, and vertical padding would raise the --ez-logo-min floor
+   and cost text lines on a full face. A cap on the image leaves every box
+   height untouched. --ez-logo-filter switches the steel to greyscale for
+   a purely achromatic back.                                                 */
+.card-root.eiserne-zeit .ez-logo-band {
+  display: none;
+}
+.card-root.eiserne-zeit.cf-overflow-active .ez-logo-band,
+.card-root.eiserne-zeit.card-back .ez-logo-band {
+  display: flex;
+  flex: 1 1 0;
+  min-height: var(--ez-logo-min);
+  align-items: center;
+  justify-content: center;
+  margin: 0.4em 0 0.1em;
+}
+
+.card-root.eiserne-zeit .ez-logo {
+  display: block;
+  max-width: calc(100% - 2 * var(--ez-logo-inset));
+  max-height: calc(100% - 2 * var(--ez-logo-inset));
+  object-fit: contain;
+  filter: var(--ez-logo-filter, none);
+}

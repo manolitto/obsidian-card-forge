@@ -1,0 +1,52 @@
+{{!--
+  Eiserne Zeit — the back of every card type.
+
+  Deliberately the same nesting as front.hbs:
+
+      .card-root > .ez-head > .ez-band > .card-title
+                 > .card-content-container > .card-body-scalable > .ez-logo-band
+                 > .ez-foot > .ez-torn + .ez-foot-label
+                 > .ez-side-ref
+
+  so that ONE rule in game-system.css serves the logo on both faces — there
+  is no second logo path for the back. If you find yourself writing one, the
+  two templates have drifted apart.
+
+  The file still cannot be the front character for character: it renders when
+  the card does NOT overflow, and would then print the title and the card
+  text a second time. Its body therefore carries only the logo — the only
+  coloured element of the whole system. When the card overflows, the engine
+  replaces this face with a copy of the front (`back-then-cards`), and the
+  logo stands there as the body's last block instead. Whenever this file IS
+  rendered it is the last face, so the logo needs no condition here.
+
+  The head band runs at half height on the back, as on every face after the
+  first: the title is a reminder there, not an announcement.
+--}}
+<div class="card-root card-back eiserne-zeit {{card-type}}-card">
+
+  <div class="ez-head">
+    <div class="ez-band">
+      <div class="card-title"><span class="text-scalable">{{slot "head-title" plain=true}}</span></div>
+    </div>
+    <div class="ez-torn ez-torn-backhead"></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+      <div class="ez-logo-band">
+        <img class="ez-logo" src="{{asset "assets/eiserne-zeit-logo.png"}}" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <div class="ez-foot">
+    <div class="ez-torn ez-torn-foot"></div>
+    <div class="ez-foot-label"><span class="text-scalable">{{slot "foot-label" plain=true fallback=(t "back-label")}}</span></div>
+  </div>
+
+  {{#if (slot "side-reference")}}
+  <div class="ez-side-ref">{{slot "side-reference" markdown=false}}</div>
+  {{/if}}
+
+</div>

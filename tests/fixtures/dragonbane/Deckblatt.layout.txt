@@ -1,0 +1,11 @@
+Deckblatt · 1 card · 2 faces · clipped: no
+1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 0.99
+   div.db-generic-body
+     h1 "Deckblatt"
+     p [img]
+     p "Zusammengestellt für die Kampagne am Fluss …"
+     table (3 rows) "Deck Karten Ausrüstung 42 Zauber 65"
+2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 0.99
+   div.db-generic-body
+     h3 "Lizenz"
+     p "Dragonbane ist ein Warenzeichen von Fria …"

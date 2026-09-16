@@ -4,7 +4,7 @@
     "module": "ESNext",
     "target": "ES2018",
     "lib": ["DOM", "ES2018", "ES2022.Error"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "isolatedModules": true,

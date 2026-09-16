@@ -7,3 +7,4 @@
 systems:
   - simple/game-system.yaml
   - dragonbane/game-system.yaml
+  - eiserne-zeit/game-system.yaml

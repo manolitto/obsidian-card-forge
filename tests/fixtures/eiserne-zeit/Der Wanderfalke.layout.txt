@@ -1,0 +1,14 @@
+Der Wanderfalke · 1 card · 2 faces · clipped: no
+1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 0.77
+   div.ez-body
+     p "Art: Wanderfalke, abgetragen"
+     p "Werte: KW 4; TP 1w4 (mindestens …"
+     h3 "Kommandos"
+     ul (3 items) "Steig: Der Falke kreist über der …"
+2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 0.77
+   div.ez-body
+     ul (2 items) "Warn: Der Falke schreit, sobald sich …"
+     h3 "Aufstieg"
+     table (4 rows) "Stufe Boni 1 Klassenbonus auf GES …"
+   div.ez-logo-band
+     img.ez-logo

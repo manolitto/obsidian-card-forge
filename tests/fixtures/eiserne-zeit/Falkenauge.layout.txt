@@ -1,0 +1,12 @@
+Falkenauge · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 0.77
+   img.ez-image
+   div.ez-body
+     p "Voraussetzung: Falknerin, Stufe 2"
+     p "Die Falknerin sieht, was ihr Vogel …"
+     ul (3 items) "Spähen: Proben auf Wahrnehmung im Freien …"
+   div.ez-logo-band
+     img.ez-logo
+2. back [cf-layout-default] scale 1.00
+   div.ez-logo-band
+     img.ez-logo

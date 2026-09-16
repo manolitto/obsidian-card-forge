@@ -1,0 +1,13 @@
+Fischfang.1 · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   span.db-fill-top
+   div.db-effect-block.db-effect-block-top
+     p.db-effect-text "Ein fetter Barsch mit milchigen Augen, …"
+     p.db-effect-text "Der Fang dauert einen Tagesabschnitt."
+   div.db-stats-box
+     div.db-stats-row.db-stats-row-wide
+       p.db-trait "Voraussetzungen Angel oder Netz"
+     div.db-stats-row.db-stats-row-wide
+       p.db-trait "Rationen W6"
+   span.db-fill-bottom
+2. back [cf-layout-default] scale —

@@ -1,0 +1,4 @@
+no-card-type-named · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.simple-body "Holds far more than its size …"
+2. back [cf-layout-default] scale —
