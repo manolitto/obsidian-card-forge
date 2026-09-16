@@ -74,6 +74,15 @@ export const deckGolden: BrowserCommand<[system: string, actual: string]> = (
   return existsSync(path) ? readFileSync(path, "utf-8") : undefined;
 };
 
+/** A fixture deck's export document, `_deck.html`, to look at; written under `UPDATE_GOLDENS=1` only. */
+export const writeDeckDocument: BrowserCommand<[system: string, html: string]> = (
+  _ctx,
+  system,
+  html
+): void => {
+  if (UPDATE) writeFileSync(join(FIXTURES_DIR, system, "_deck.html"), html);
+};
+
 /** The settled faces of a system's fixtures as a page to look at; written under `UPDATE_GOLDENS=1` only. */
 export const writeLayoutPreview: BrowserCommand<[system: string, html: string]> = (
   _ctx,

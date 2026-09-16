@@ -303,3 +303,25 @@
 .card-body-scalable .cf-split-head {
   margin-bottom: 0;
 }
+
+/* ── What the export stamps ─────────────────────────────────────── */
+
+/*
+ * A deck's faces go onto pages in an export document, and the document
+ * carries one hook a design may key on:
+ *
+ *   .cf-paper-plain    On every `.cf-page` of a deck whose `paper-background`
+ *                      is `plain`: the reader wants the cards on white paper,
+ *                      without the system's textures — the parchment photo,
+ *                      the vignette, the torn edge. A system that paints such
+ *                      a texture switches it off under this ancestor and
+ *                      leaves its furniture — plaques, rules, ornaments — in
+ *                      place, since those are the design and not the paper:
+ *
+ *                          .cf-paper-plain .card-root.my-system { background: #fff; }
+ *
+ *                      The in-note preview never stamps it: a card shown on
+ *                      screen shows its design.
+ *
+ * This file paints no texture and so has no rule under it.
+ */
