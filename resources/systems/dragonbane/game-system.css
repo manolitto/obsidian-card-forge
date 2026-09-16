@@ -253,13 +253,11 @@
   font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0471), var(--card-font-size-max));
 }
 
-/* Print-friendly variant: drop the parchment photo AND the vignette, leaving
-   cards on plain white paper — the most ink-saving choice for home printers.
-   The decorative plaques stay: they are structural cues, not paper texture.
-   `cf-paper-plain` is injected by the renderer from the resolved
-   `paper-background` print-setting; it lands on `<body>` for PDF/HTML export
-   and on `.cf-preview-container` inside the in-note shadow DOM, so the
-   selector deliberately has no `body.` anchor. */
+/* Plain paper: drop the parchment photo AND the vignette, leaving the cards
+   on white — the ink-saving choice for a home printer. The plaques stay:
+   they are the card's furniture, not its paper. The export stamps
+   `cf-paper-plain` on every page of a deck whose `paper-background` is
+   `plain` (see base-card.css, "What the export stamps"). */
 .cf-paper-plain .card-root.dragonbane {
   background: #ffffff;
 }

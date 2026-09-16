@@ -6,6 +6,7 @@ import {
   deckGolden,
   layoutGolden,
   orphanLayoutGoldens,
+  writeDeckDocument,
   writeLayoutPreview,
 } from "./tests/helpers/golden-commands.ts";
 
@@ -64,6 +65,7 @@ export default defineConfig({
               deckGolden,
               layoutGolden,
               orphanLayoutGoldens,
+              writeDeckDocument,
               writeLayoutPreview,
             },
           },

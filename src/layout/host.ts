@@ -84,8 +84,8 @@ const FONTS_ATTR = "data-cf-fonts";
  * however many cards and card types share them. Exported for the tests.
  */
 export function hoistFontFaces(doc: Document, systemId: string, css: string): string {
-  const rules = css.match(FONT_FACE_RULE);
-  if (!rules) return css;
+  const { fonts, rest } = splitFontFaces(css);
+  if (fonts.length === 0) return css;
 
   let style = doc.head.querySelector<HTMLStyleElement>(
     `style[${FONTS_ATTR}="${systemId}"]`
@@ -96,11 +96,23 @@ export function hoistFontFaces(doc: Document, systemId: string, css: string): st
     doc.head.appendChild(style);
   }
   const held = style.textContent ?? "";
-  const missing = rules.filter((rule) => !held.includes(rule));
+  const missing = fonts.filter((rule) => !held.includes(rule));
   if (missing.length > 0)
     style.textContent = [held, ...missing].filter(Boolean).join("\n");
 
-  return css.replace(FONT_FACE_RULE, "").replace(/\n{3,}/g, "\n\n");
+  return rest;
+}
+
+/**
+ * A stylesheet's `@font-face` rules, and the stylesheet without them. The
+ * export document uses the same split to carry a deck's fonts once however
+ * many card-type stylesheets declare them.
+ */
+export function splitFontFaces(css: string): { fonts: string[]; rest: string } {
+  return {
+    fonts: css.match(FONT_FACE_RULE) ?? [],
+    rest: css.replace(FONT_FACE_RULE, "").replace(/\n{3,}/g, "\n\n"),
+  };
 }
 
 /**
