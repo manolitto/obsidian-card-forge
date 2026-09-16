@@ -1,4 +1,5 @@
-import { Plugin, type TAbstractFile } from "obsidian";
+import { Platform, Plugin, type TAbstractFile } from "obsidian";
+import { DeckExporter, type ExportFormat } from "./export/exporter";
 import { CardForgeSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
 import { DEFAULT_SETTINGS, type CardForgeSettings } from "./settings/types";
@@ -7,6 +8,7 @@ import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
 export default class CardForgePlugin extends Plugin {
   override settings: CardForgeSettings = { ...DEFAULT_SETTINGS };
   systems!: SystemLibrary;
+  exporter!: DeckExporter;
 
   override async onload(): Promise<void> {
     await this.loadSettings();
@@ -28,7 +30,31 @@ export default class CardForgePlugin extends Plugin {
       })
     );
 
+    this.exporter = new DeckExporter(this.app, this.systems, this.manifest.dir ?? "");
+    this.addCommand({
+      id: "export-deck-pdf",
+      name: "Export deck as PDF",
+      checkCallback: (checking) => this.exportDeck("pdf", checking, Platform.isDesktop),
+    });
+    this.addCommand({
+      id: "export-deck-html",
+      name: "Export deck as HTML",
+      checkCallback: (checking) => this.exportDeck("html", checking, true),
+    });
+
     this.addSettingTab(new CardForgeSettingTab(this.app, this));
+  }
+
+  /** The active note is the deck; the command is offered when there is one and the platform can. */
+  private exportDeck(
+    format: ExportFormat,
+    checking: boolean,
+    available: boolean
+  ): boolean {
+    const file = this.app.workspace.getActiveFile();
+    if (!available || !file || file.extension !== "md") return false;
+    if (!checking) void this.exporter.run(file, format);
+    return true;
   }
 
   async loadSettings(): Promise<void> {
