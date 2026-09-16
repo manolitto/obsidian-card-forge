@@ -42,6 +42,15 @@
   --card-font-size-max: 8.5pt;
   --card-font-size-title-min: 9.5pt;
   --card-font-size-title-max: 17pt;
+
+  /*
+   * How far a picture's edge fade reaches, as a fraction of its width and
+   * height. The layout engine bakes the fade into the pixels of every
+   * `img.fade-edges` — a CSS mask would print as a grey box in some PDF
+   * readers — and reads this property off the image, so a system sets it
+   * on its own selector and a picture that must stay crisp says `0`.
+   */
+  --card-image-fade: 0.06;
 }
 
 /*

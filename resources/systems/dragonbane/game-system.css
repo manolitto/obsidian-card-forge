@@ -1386,8 +1386,8 @@
 }
 
 /* An `<img>` (not a background) so the box matches the visible image
-   bounds. Edge fading is applied at the pixel level via canvas — the
-   `.fade-edges` class marks images for that processing. */
+   bounds; `.fade-edges` on it has the layout engine dissolve its margins
+   into the parchment. */
 .card-root.dragonbane .db-back-image {
   max-width: 100%;
   /* Never taller than the wrap, and never taller than the cap — whichever
@@ -1398,16 +1398,14 @@
   display: block;
 }
 
-/* The logo, shown when the card has no picture of its own: tighter sizing
-   and no edge fade — a wordmark should stay crisp, not bleed into the paper.
-   A card type with a bundled back of its own hides it and paints the wrap
-   instead (gear). */
+/* The logo, shown when the card has no picture of its own: tighter sizing,
+   and no `.fade-edges` in the template — a wordmark should stay crisp, not
+   bleed into the paper. A card type with a bundled back of its own hides it
+   and paints the wrap instead (gear). */
 .card-root.dragonbane .db-back-image.db-back-logo-image {
   max-width: 84%;
   max-height: 62%;
   object-fit: contain;
-  -webkit-mask-image: none;
-  mask-image: none;
 }
 
 /* ── The three spacers of the shared front ──
