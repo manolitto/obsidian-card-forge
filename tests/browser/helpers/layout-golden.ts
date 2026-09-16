@@ -150,3 +150,34 @@ function parse(html: string): HTMLElement {
   if (!root) throw new Error("layoutGoldenText: a face without a .card-root");
   return root;
 }
+
+/**
+ * `actual` with every committed scale that lies within `tolerance` of the
+ * golden's on the same line replaced by the golden's value. Chromium lays
+ * the same font out a fraction of a pixel differently from one platform to
+ * the next — advances and line boxes round differently under FreeType and
+ * CoreText — and that fraction moves a committed scale by a hundredth,
+ * which is the digit the golden prints. The comparison therefore ignores a
+ * drift of that size and nothing else: a scale that moved further, or a
+ * block that moved to another face, still shows in the diff.
+ */
+export function withScalesAligned(
+  actual: string,
+  golden: string,
+  tolerance = 0.015
+): string {
+  const goldenLines = golden.split("\n");
+  const scaleOf = (line: string) => {
+    const m = /\bscale (\d+\.\d+)$/.exec(line);
+    return m ? { text: m[1]!, value: parseFloat(m[1]!) } : undefined;
+  };
+  return actual
+    .split("\n")
+    .map((line, i) => {
+      const a = scaleOf(line);
+      const g = goldenLines[i] === undefined ? undefined : scaleOf(goldenLines[i]!);
+      if (!a || !g || Math.abs(a.value - g.value) > tolerance) return line;
+      return line.slice(0, line.length - a.text.length) + g.text;
+    })
+    .join("\n");
+}
