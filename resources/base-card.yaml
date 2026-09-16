@@ -78,8 +78,8 @@ properties:
 
 # ── Card settings ────────────────────────────────────────────────────
 
-# Physical geometry. A preset name, or `63 x 88 mm`, or
-# `{ width: 63, height: 88, orientation: portrait }`.
+# Physical geometry. A preset name or `63 x 88 mm`, either followed by
+# `landscape` for the wide way round: `poker landscape` is 88 by 63.
 card-size: poker
 
 # What a card does when its content will not fit even at the smallest type
@@ -107,9 +107,9 @@ expand-by-roll: false
 
 # ── Deck settings ────────────────────────────────────────────────────
 
-# Paper the deck is imposed on. A preset name, or `210 x 297 mm`, or
-# `{ preset: A4, orientation: landscape }`. Without an orientation the deck
-# picks whichever fits more cards.
+# Paper the deck is imposed on. A preset name or `210 x 297 mm`; a preset may
+# be followed by `portrait` or `landscape`, and without the word the deck
+# picks whichever way holds more cards. Dimensions are as written.
 paper-size: A4
 
 # Blank space around the card grid, in millimetres, on all four sides.

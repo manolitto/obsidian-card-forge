@@ -46,10 +46,8 @@ export type DuplexFlip = "long-edge" | "short-edge";
 export type PaperBackground =
   /** Use the system's background images. */
   | "textured"
-  /** Drop them in export and the deck preview; the in-note preview stays textured. */
-  | "plain"
-  /** Drop them everywhere. */
-  | "plain-everywhere";
+  /** Drop them from everything printed or previewed as a deck; a card shown in its note keeps its design. */
+  | "plain";
 
 /** Every field optional, because the fold merges them: a deck states only what it changes. */
 export interface CutMarks {
@@ -81,7 +79,7 @@ const DECK_SETTINGS: SettingTable<DeckSettings> = {
   },
   paperBackground: {
     key: "paper-background",
-    parse: oneOf(["textured", "plain", "plain-everywhere"]),
+    parse: oneOf(["textured", "plain"]),
   },
   folderRecursive: { key: "folder-recursive", parse: booleanValue },
   cardCopies: { key: "card-copies", parse: parseCardCopies },
