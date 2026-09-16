@@ -165,3 +165,132 @@
 .cf-card-break {
   display: none;
 }
+
+/* ── What the layout engine stamps ─────────────────────────────── */
+
+/*
+ * Every class below is put on a `.card-root` (or a piece of its body) by the
+ * layout engine, never by a template. They fall into two kinds, and the
+ * difference decides what CSS may hang on them.
+ *
+ * Stamped BEFORE measurement — safe to show or hide body content:
+ *
+ *   .cf-layout-<name>   The committed layout candidate, one of the names a
+ *                       card type declares under `layouts:`. Every candidate
+ *                       is rendered from the same DOM, so a candidate's
+ *                       conditional elements exist in the template and are
+ *                       toggled here, never added or removed:
+ *
+ *                           .cf-layout-image-side   .my-bottom-image { display: none; }
+ *                           .cf-layout-image-bottom .my-side-image   { display: none; }
+ *
+ *                       Parity keys on the same hook: a card type whose
+ *                       candidates are `odd` and `even` styles
+ *                       `.cf-layout-even` when no real back is guaranteed.
+ *
+ * Stamped AFTER measurement — chrome only. Their values depend on the
+ * committed face count, so by the time they appear the splitter has already
+ * decided how much body each face holds; showing or hiding body content on
+ * them would change a body's height after it was measured, and the trailing
+ * block would clip. Headers, footers and absolutely positioned ornaments are
+ * what they are for.
+ *
+ *   .cf-overflow-active         On every root of a group that overflowed into
+ *                               more than one face. Absent on a card that fit.
+ *   .cf-overflow-back-as-front  Under `back-then-cards`, on the back that was
+ *                               replaced by a copy of the front so the text
+ *                               could continue there. No rule ships; a system
+ *                               dims or annotates the copy as it likes.
+ *   .cf-front-first             The first front face of the group.
+ *   .cf-front-continued         Every front face after the first — one that
+ *                               received text from an earlier face.
+ *   .cf-front-has-next          Every front face but the last — one whose
+ *                               text goes on. CSS cannot compare the two
+ *                               counters below, and `:not(:last-child)` fails
+ *                               because a continuation may sit on a back and
+ *                               the faces are not siblings, so a "continues
+ *                               on the next card" cue keys on this instead.
+ *   --cf-front-index            The face's number among the group's fronts,
+ *   --cf-front-total            and how many there are — inherited custom
+ *                               properties on the front root, so a counter
+ *                               nested anywhere below can read them. Set on
+ *                               fronts inside an overflowed group only.
+ *
+ * A card that fit is `.cf-front-first` with a count of 1 and nothing else.
+ */
+
+/*
+ * The page counter. A template that wants "2 / 3" beside its title renders
+ * an empty `<span class="cf-overflow-counter"></span>` where the counter
+ * should sit; the engine writes nothing into it and only publishes the two
+ * properties above. The text is composed here, and only inside an overflowed
+ * group — a card that fit never carries the class, so it never shows a
+ * "1 / 1". The counter stays on one line whatever the title does: wrapped
+ * across two lines it would grow the header after the body was measured.
+ * The look is a quiet default; a system restates it on its own selector.
+ */
+.cf-overflow-counter {
+  display: none;
+}
+
+.cf-overflow-active .cf-overflow-counter {
+  display: inline;
+  counter-reset: cf-idx var(--cf-front-index) cf-tot var(--cf-front-total);
+  font-size: 0.7em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
+
+.cf-overflow-active .cf-overflow-counter::after {
+  content: counter(cf-idx) " / " counter(cf-tot);
+}
+
+/*
+ * Where a body was cut. When the splitter paginates a body across faces it
+ * marks the pieces so CSS can undo styling that is only right at the start
+ * of a text.
+ *
+ * On the body: `.cf-body-continues` on the `.card-body-scalable` that gave
+ * up a tail, `.cf-body-continued` on the one that received it. A received
+ * tail must flow from the top edge, so a body that anchors its content to
+ * the bottom — `justify-content: flex-end`, a child with `margin-top: auto`
+ * — is re-anchored here; a system whose `cf-fill-*` spacer floats a tail
+ * down collapses that spacer under the same hook itself.
+ *
+ * On a block: when the cut falls inside a paragraph, list item or table, the
+ * head left behind is `.cf-split-head` and the cloned tail that opens the
+ * next face is `.cf-split-continuation`. The tail is not the start of a
+ * block, so what marks a start is reset on it — a first-line or hanging
+ * indent, a top margin, a drop cap, a list marker — and the head loses the
+ * bottom margin that would sit against the card edge. The rules are scoped
+ * under `.card-body-scalable` so they outweigh a one-class element rule
+ * without `!important`. A bullet drawn as `li::before` rather than a marker
+ * is out of this file's reach; the system that draws it suppresses it on
+ * `li.cf-split-continuation::before` beside the rule that draws it.
+ */
+.card-body-scalable.cf-body-continued {
+  justify-content: flex-start;
+}
+
+.card-body-scalable .cf-split-continuation {
+  text-indent: 0;
+  margin-top: 0;
+}
+
+.card-body-scalable .cf-split-continuation::first-letter {
+  initial-letter: normal;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  float: none;
+}
+
+.card-body-scalable .cf-split-continuation::marker {
+  content: none;
+}
+
+.card-body-scalable .cf-split-head {
+  margin-bottom: 0;
+}

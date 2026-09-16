@@ -84,9 +84,10 @@ export interface LayoutDecision {
 export interface LayoutMetric {
   metric: "printed-cards" | "element-size" | "whitespace";
   direction: "minimize" | "maximize";
-  /** For `element-size`: which measured element, along which dimension. */
+  /** For `element-size`: which measured element, along which dimension — its
+   * width, its height, or (absent, the default) the area of its box. */
   element?: string;
-  dimension?: "width" | "height";
+  dimension?: "width" | "height" | "area";
   /** For `element-size`: differences below this count as a tie. */
   epsilon?: number;
 }
@@ -207,7 +208,7 @@ function parseMetric(raw: unknown): LayoutMetric | undefined {
   const out: LayoutMetric = { metric, direction };
   const element = nonEmptyString(raw["element"]);
   if (element) out.element = element;
-  const dimension = oneOf(["width", "height"] as const)(raw["dimension"]);
+  const dimension = oneOf(["width", "height", "area"] as const)(raw["dimension"]);
   if (dimension) out.dimension = dimension;
   const epsilon = positiveNumber(raw["epsilon"]);
   if (epsilon !== undefined) out.epsilon = epsilon;
