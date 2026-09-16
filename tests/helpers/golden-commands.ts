@@ -56,6 +56,24 @@ export const orphanLayoutGoldens: BrowserCommand<[keep: string[]]> = (
   return out;
 };
 
+/**
+ * The text a fixture deck's composition is compared against —
+ * `tests/fixtures/<system>/_deck.compose.txt`; the same switch as
+ * `layoutGolden`. One per system, always produced, so no orphan check.
+ */
+export const deckGolden: BrowserCommand<[system: string, actual: string]> = (
+  _ctx,
+  system,
+  actual
+): string | undefined => {
+  const path = join(FIXTURES_DIR, system, "_deck.compose.txt");
+  if (UPDATE) {
+    writeFileSync(path, actual);
+    return actual;
+  }
+  return existsSync(path) ? readFileSync(path, "utf-8") : undefined;
+};
+
 /** The settled faces of a system's fixtures as a page to look at; written under `UPDATE_GOLDENS=1` only. */
 export const writeLayoutPreview: BrowserCommand<[system: string, html: string]> = (
   _ctx,

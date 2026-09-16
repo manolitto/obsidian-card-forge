@@ -1,0 +1,27 @@
+4 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 16 marks
+   front #1 at 10.5, 16.5 generic/Deckblatt
+   front #2 at 73.5, 16.5 generic/Hausregel
+   front #3 at 136.5, 16.5 gear/Fischspeer
+   front #4 at 10.5, 104.5 creature/Knochensammler
+   front #5 at 73.5, 104.5 creature/Knochensammler
+   front #6 at 136.5, 104.5 creature/Moorschleicher
+   front #7 at 10.5, 192.5 rule/Glutfunken
+   front #8 at 73.5, 192.5 rule/language-in-block
+   front #9 at 136.5, 192.5 roll-table/Fischfang
+2. back · 16 marks
+   back #1 at 136.5, 16.5 generic/Deckblatt
+   back #2 at 73.5, 16.5 generic/Hausregel
+   back #3 at 10.5, 16.5 gear/Fischspeer
+   back #4 at 136.5, 104.5 creature/Knochensammler
+   back #5 at 73.5, 104.5 creature/Knochensammler
+   back #6 at 10.5, 104.5 creature/Moorschleicher
+   back #7 at 136.5, 192.5 rule/Glutfunken
+   back #8 at 73.5, 192.5 rule/language-in-block
+   back #9 at 10.5, 192.5 roll-table/Fischfang
+3. front · 10 marks
+   front #10 at 10.5, 16.5 roll-table/Fischfang
+   front #11 at 73.5, 16.5 roll-table/Fischfang
+4. back · 10 marks
+   back #10 at 136.5, 16.5 roll-table/Fischfang
+   back #11 at 73.5, 16.5 roll-table/Fischfang
