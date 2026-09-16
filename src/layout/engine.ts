@@ -2,6 +2,7 @@ import type { CardSettings } from "../definitions/card-settings";
 import type { Diagnostics } from "../definitions/diagnostics";
 import type { RenderedCard } from "../render/renderer";
 import type { LoadedSystem } from "../systems/loader";
+import { fadeEdges } from "./effects";
 import type { LayoutConfig } from "./font-scaler";
 import { mountLayoutHost, waitForSettledLayout, type LayoutHost } from "./host";
 import { scaleAndSplitInDom } from "./overflow-splitter";
@@ -66,6 +67,9 @@ export async function layoutCard(
     const faces = [front, back].filter((face): face is string => face !== undefined);
     host = mountLayoutHost(doc, system.id, stylesheet, faces);
     await waitForSettledLayout(host.root);
+    // Pictures get their edge fade here, with the faces settled and before
+    // the splitter takes its snapshot, so a cloned face carries it too.
+    await fadeEdges(host.root);
 
     // A card with no front has nothing to paginate: the back is scaled and
     // that is all.
