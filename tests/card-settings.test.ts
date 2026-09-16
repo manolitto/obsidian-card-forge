@@ -145,6 +145,24 @@ describe("layout candidates", () => {
     );
     expect(diagnostics.matching("layout-decision")).toHaveLength(1);
   });
+
+  it("takes area as a dimension, and leaves the key absent when none is written", () => {
+    const settings = resolve([
+      `layout-decision:
+  order:
+    - { metric: element-size, direction: maximize, element: hero, dimension: area }
+    - { metric: element-size, direction: maximize, element: hero }`,
+    ]);
+    expect(settings.layoutDecision?.order).toEqual([
+      {
+        metric: "element-size",
+        direction: "maximize",
+        element: "hero",
+        dimension: "area",
+      },
+      { metric: "element-size", direction: "maximize", element: "hero" },
+    ]);
+  });
 });
 
 describe("the card-setting keys", () => {
