@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { DeckSelection } from "../src/deck/block";
-import { selectNotes, sortCards, type TaggedNote } from "../src/deck/select";
+import { selectNotes, sortCards } from "../src/deck/select";
+import type { TaggedNote } from "../src/deck/source";
 import { collectDiagnostics } from "../src/definitions/diagnostics";
 import { parseNote } from "../src/render/note";
 

@@ -41,13 +41,13 @@ export interface Fixture {
   path: string;
 }
 
-/** Every fixture note, in path order. */
+/** Every fixture note, in path order. A `_` name is the harness's — the deck note, a preview — not a card. */
 export function listFixtures(): Fixture[] {
   const out: Fixture[] = [];
   for (const system of readdirSync(FIXTURES_DIR).sort()) {
     const dir = join(FIXTURES_DIR, system);
     for (const file of readdirSync(dir).sort()) {
-      if (!file.endsWith(".md")) continue;
+      if (!file.endsWith(".md") || file.startsWith("_")) continue;
       out.push({ system, name: file.slice(0, -3), path: join(dir, file) });
     }
   }
