@@ -1,0 +1,6 @@
+Salzklippen · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   p.dino-atmosphere "Salzgeruch, Möwengeschrei und ein Wind, der …"
+   div.dino-contents "Was hier zu finden ist: Ein …"
+     ul.dino-contents-list (4 items) "Ein verlassener Beobachtungsposten Nistplätze in der …"
+2. back [cf-layout-default] scale —

@@ -1,0 +1,87 @@
+/* ── Flucht von Dino Island — the roll-table entry ──────────────────
+   The shared rules are in dino-island.css; the entry adds its header —
+   the yellow banner with the table's title flush right, the orange die
+   in the corner — and its large centred text. */
+
+.roll-table-card .dino-roll-header {
+  position: relative;
+  flex-shrink: 0;
+  padding: 0.35em 0.15em 0;
+  overflow: visible;
+}
+/* The banner: a yellow strip with a darker base edge in place of a
+   shadow, the title at its right end, the left end clear of the die. */
+.roll-table-card .dino-banner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 2em;
+  padding: 0.1em 0.5em 0.1em 3.3em;
+  background-image: linear-gradient(180deg, var(--dino-banner) 0%, var(--dino-banner-edge) 100%);
+  border-radius: 0.28em;
+  border-bottom: 0.14em solid var(--dino-banner-edge);
+}
+.roll-table-card .dino-title {
+  font-family: var(--dino-font-display);
+  font-size: var(--dino-font-size-title);
+  line-height: 1;
+  color: var(--dino-ink-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  white-space: nowrap;
+}
+.roll-table-card .dino-title .cf-overflow-counter {
+  font-family: var(--dino-font-body);
+  font-weight: 700;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  margin-left: 0.5em;
+  color: var(--dino-ink-soft);
+  text-transform: none;
+}
+
+/* The die: a gold-to-red disc in the top-left corner, inside the card,
+   its shadow a hard offset. */
+.roll-table-card .dino-roll-badge {
+  position: absolute;
+  top: 0.25em;
+  left: 0.25em;
+  box-sizing: border-box;
+  width: 2.7em;
+  height: 2.7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999em;
+  background-image: radial-gradient(circle at 38% 32%, var(--dino-gold) 0%, var(--dino-orange) 48%, var(--dino-red) 100%);
+  border: 0.16em solid var(--dino-ink-strong);
+  box-shadow: 0 0.08em 0 rgba(36, 23, 18, 0.38);
+  z-index: 2;
+}
+.roll-table-card .dino-roll-num {
+  font-family: var(--dino-font-display);
+  font-size: 1.55em;
+  line-height: 1;
+  color: var(--dino-ink-strong);
+  transform: translateY(0.02em);
+}
+
+/* The entry: large and centred like a quotation; only a long one is
+   brought down by the layout engine. */
+.roll-table-card .dino-entry {
+  font-size: 1.6em;
+  line-height: 1.3;
+  color: var(--dino-ink);
+  text-align: center;
+  padding: 0 0.3em;
+  text-wrap: pretty;
+}
+.roll-table-card .dino-entry p {
+  margin: 0.25em 0;
+}
+.roll-table-card .dino-entry p:first-child {
+  margin-top: 0;
+}
+.roll-table-card .dino-entry p:last-child {
+  margin-bottom: 0;
+}

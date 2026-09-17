@@ -1,0 +1,274 @@
+/* ── Flucht von Dino Island — the system stylesheet ─────────────────
+   Modelled on the German rulebook: its cover is a black field with a
+   gold-to-red gradient and distressed poster capitals, its interior warm
+   parchment with a yellow banner behind a heading and orange accents.
+   The cards keep the accents and print on white — a boxed deck costs
+   little ink. Nunito Sans for the text, Rubik Distressed for the
+   display. Sizes are `em` and `%` throughout; every shadow is a hard
+   offset and every gradient stays inside a box, since a soft mask prints
+   as a grey rectangle in some PDF readers. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* Nunito Sans, a variable face in both styles. OFL, fonts/nunito-sans-OFL.txt. */
+@font-face {
+  font-family: "Nunito Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/nunito-sans-upright.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Nunito Sans";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/nunito-sans-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Rubik Distressed — the eroded poster capitals of the headings and the
+   wordmark. OFL, fonts/rubik-distressed-OFL.txt. */
+@font-face {
+  font-family: "Rubik Distressed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/rubik-distressed.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.dino-island {
+  /* Sampled from the book: the cover's gold, orange and red; the
+     interior's browns. */
+  --dino-orange: #fa740c;
+  --dino-orange-deep: #e85a05;
+  --dino-red: #fc4d18;
+  --dino-gold: #fbcd22;
+  --dino-gold-soft: #f9a73a;
+  --dino-banner: #fbe28c;
+  --dino-banner-edge: #e7c766;
+  --dino-paper-edge: #e1d2a0;
+  --dino-ink: #3b2a1a;
+  --dino-ink-strong: #241712;
+  --dino-ink-soft: #6e5637;
+
+  --dino-font-body: "Nunito Sans", sans-serif;
+  --dino-font-display: "Rubik Distressed", sans-serif;
+
+  /* The type budget; the display face is wide, so the title factor stays
+     modest and the layout engine takes a long heading down. */
+  --card-font-size-min: 2.4mm;
+  --card-font-size-max: 3.1mm;
+  --card-font-size-title-min: 3.2mm;
+  --card-font-size-title-max: 5.2mm;
+  --dino-font-size-body: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.046), var(--card-font-size-max));
+  --dino-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.062), var(--card-font-size-title-max));
+
+  background-color: #ffffff;
+  color: var(--dino-ink);
+  font-family: var(--dino-font-body);
+  font-weight: 400;
+  font-size: var(--dino-font-size-body);
+  line-height: 1.28;
+  overflow-wrap: break-word;
+}
+.card-root.dino-island strong,
+.card-root.dino-island b {
+  font-weight: 700;
+}
+
+.card-root.dino-island .card-content-container {
+  padding: 0.5em 0.7em 0.3em;
+}
+
+/* ── A heading over the orange rule — the location and the taxonomy ── */
+
+.dino-entry-header {
+  flex-shrink: 0;
+  padding: 1.3em 0.55em 0.3em;
+  border-bottom: 0.14em solid var(--dino-orange);
+}
+.dino-eyebrow {
+  font-weight: 700;
+  font-size: 0.72em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dino-orange-deep);
+  margin-bottom: 0.15em;
+}
+.dino-entry-name {
+  display: flex;
+  align-items: baseline;
+}
+.dino-entry-title {
+  font-family: var(--dino-font-display);
+  font-size: var(--dino-font-size-title);
+  line-height: 1;
+  color: var(--dino-ink-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.dino-entry-name .cf-overflow-counter {
+  font-weight: 700;
+  font-size: 0.55em;
+  letter-spacing: 0;
+  margin-left: 0.5em;
+  color: var(--dino-ink-soft);
+}
+
+/* A bold caption in the text. */
+.dino-label {
+  font-weight: 700;
+  color: var(--dino-ink-strong);
+}
+
+/* ── The die-bulleted list of moves ────────────────────────────────── */
+
+.dino-moves {
+  margin: 0.18em 0;
+  line-height: 1.24;
+}
+.dino-move-list {
+  list-style: none;
+  margin: 0.1em 0 0;
+  padding: 0;
+}
+.dino-move-list li {
+  position: relative;
+  padding-left: 1.5em;
+  margin: 0.12em 0;
+  color: var(--dino-ink);
+}
+/* A small gold-to-red die before each move, its shadow a hard offset. */
+.dino-move-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.15em;
+  top: 0.16em;
+  width: 0.95em;
+  height: 0.95em;
+  border-radius: 0.22em;
+  background-image: radial-gradient(circle at 36% 30%, var(--dino-gold) 0%, var(--dino-orange) 52%, var(--dino-red) 100%);
+  border: 0.09em solid var(--dino-ink-strong);
+  box-shadow: 0 0.04em 0 rgba(36, 23, 18, 0.3);
+}
+/* A move cut by a face break carries no second die on its tail. */
+.dino-move-list li.cf-split-continuation::before {
+  content: none;
+}
+.dino-move-list li p {
+  display: inline;
+  margin: 0;
+}
+
+/* ── The footer ────────────────────────────────────────────────────── */
+
+.dino-footer {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  padding: 0.15em 0.5em calc(var(--card-height, 88mm) * 0.02);
+}
+.dino-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0.5em;
+  right: 0.5em;
+  border-top: 0.5pt solid var(--dino-ink-soft);
+  opacity: 0.5;
+}
+.dino-reference {
+  font-style: italic;
+  font-size: 0.78em;
+  color: var(--dino-ink-soft);
+  white-space: nowrap;
+}
+.dino-continues {
+  display: none;
+  margin-left: 0.4em;
+  font-weight: 700;
+  color: var(--dino-orange-deep);
+}
+.card-root.dino-island.cf-front-has-next .dino-continues {
+  display: inline;
+}
+
+/* ── The back ──────────────────────────────────────────────────────── */
+
+.card-root.dino-island.card-back {
+  background-color: #ffffff;
+}
+.dino-back-frame {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8% 6%;
+  overflow: hidden;
+}
+
+/* The caption at the top: large, in the same place on every card type,
+   bounded to the frame's width so a long one shrinks rather than
+   overflows; side room by margin, not padding, so the measured box is
+   the real one. Wraps at spaces, never inside a word. */
+.dino-back-label {
+  flex-shrink: 0;
+  align-self: stretch;
+  margin: 0 0.6em;
+  padding: 0;
+  font-family: var(--dino-font-display);
+  font-size: 2.6em;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  overflow: hidden;
+  color: var(--dino-ink-strong);
+}
+.dino-back-label .text-scalable {
+  display: block;
+  width: 100%;
+}
+
+/* The wordmark: two lines, gold over red, each a flat colour with a thin
+   dark contour — a gradient clipped to the letters would print as a stray
+   rectangle. Centred in whatever room the caption leaves. */
+.dino-wordmark {
+  flex-shrink: 0;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+.dino-wordmark-line-1,
+.dino-wordmark-line-2 {
+  font-family: var(--dino-font-display);
+  -webkit-text-stroke: 0.03em var(--dino-ink-strong);
+}
+.dino-wordmark-line-1 {
+  font-size: 1.7em;
+  letter-spacing: 0.01em;
+  color: var(--dino-gold-soft);
+}
+.dino-wordmark-line-2 {
+  font-size: 2.7em;
+  margin-top: 0.06em;
+  color: var(--dino-red);
+}

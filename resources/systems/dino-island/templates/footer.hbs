@@ -1,0 +1,11 @@
+{{!--
+  Flucht von Dino Island — the foot of every front: a hairline, the
+  source reference at the right, and the arrow that shows only on a front
+  another front follows.
+
+    front-footer   the source reference
+--}}
+<div class="card-footer dino-footer">
+  {{#if (slot "front-footer")}}<div class="dino-reference">{{slot "front-footer" plain=true}}</div>{{/if}}
+  <span class="dino-continues">→</span>
+</div>

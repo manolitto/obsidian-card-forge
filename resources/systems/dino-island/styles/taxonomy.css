@@ -1,0 +1,56 @@
+/* ── Flucht von Dino Island — the taxonomy ──────────────────────────
+   The shared rules are in dino-island.css. A family's fields are short,
+   so the body type runs a little larger; the back holds the illustration
+   between the caption and the wordmark. */
+
+.card-root.dino-island.taxonomy-card {
+  --card-font-size-min: 2.8mm;
+  --card-font-size-max: 3.7mm;
+  --dino-font-size-body: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.055), var(--card-font-size-max));
+}
+.taxonomy-card .dino-taxonomy-header {
+  padding-top: 1.5em;
+}
+.taxonomy-card .card-content-container {
+  padding: 0.5em 0.6em 0.25em;
+}
+.taxonomy-card .dino-tax-desc {
+  margin: 0 0 0.5em;
+  line-height: 1.28;
+  font-style: italic;
+}
+.taxonomy-card .dino-tax-field {
+  margin: 0.18em 0;
+  line-height: 1.24;
+}
+.taxonomy-card .dino-tax-genera {
+  margin-top: 0.35em;
+}
+
+/* The back: the caption, the picture as the hero, the wordmark small. */
+.taxonomy-back .dino-back-frame {
+  padding: 11% 6% 10%;
+}
+.taxonomy-back .dino-tax-image-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  margin: 0.6em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* A hairline frame and a hard offset shadow — a picture pasted on. */
+.taxonomy-back .dino-tax-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 0.5pt solid var(--dino-paper-edge);
+  border-radius: 0.3em;
+  box-shadow: 0.06em 0.1em 0 rgba(36, 23, 18, 0.2);
+}
+.taxonomy-back .dino-wordmark {
+  margin: 0;
+  font-size: 0.62em;
+}

@@ -1,0 +1,17 @@
+2 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 16 marks
+   front #1 at 10.5, 16.5 taxonomy/Panzerlaeufer
+   front #2 at 73.5, 16.5 location/Salzklippen
+   front #3 at 136.5, 16.5 roll-table/Wo-seid-ihr-3
+   front #4 at 10.5, 104.5 roll-table/Geruechte
+   front #5 at 73.5, 104.5 roll-table/Geruechte
+   front #6 at 136.5, 104.5 roll-table/Geruechte
+   front #7 at 10.5, 192.5 roll-table/Geruechte
+2. back · 16 marks
+   back #1 at 136.5, 16.5 taxonomy/Panzerlaeufer
+   back #2 at 73.5, 16.5 location/Salzklippen
+   back #3 at 10.5, 16.5 roll-table/Wo-seid-ihr-3
+   back #4 at 136.5, 104.5 roll-table/Geruechte
+   back #5 at 73.5, 104.5 roll-table/Geruechte
+   back #6 at 10.5, 104.5 roll-table/Geruechte
+   back #7 at 136.5, 192.5 roll-table/Geruechte

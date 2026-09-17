@@ -197,6 +197,7 @@ describe.each([
   "pf2e",
   "mini-d20",
   "dcc",
+  "dino-island",
 ])("the %s deck composes", (system) => {
   it("as its composition golden says", async () => {
     const { built } = await build(system);

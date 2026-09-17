@@ -65,6 +65,7 @@ describe.each([
   "pf2e",
   "mini-d20",
   "dcc",
+  "dino-island",
 ])("the %s deck's document", (system) => {
   it("measures as the composition says: paper, pages, every cell in place", async () => {
     const deck = await build(system);
