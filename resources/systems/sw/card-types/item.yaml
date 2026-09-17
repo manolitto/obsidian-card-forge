@@ -1,0 +1,113 @@
+# ── item ────────────────────────────────────────────────────────────
+# A magic item: the kind in small capitals under the title, the
+# flavour, the plate, the stats that apply as labelled rows, the effect
+# under the "Wirkung" banner, the notes as a bold-captioned line.
+
+front-template: templates/item-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/item.css
+
+translations:
+  de:
+    back-label: "Magischer Gegenstand"
+    front-table-roll-label: "Tabellenwurf:"
+    front-class-label: "Klasseneinschränkung:"
+    front-bonus-label: "Bonus:"
+    front-duration-label: "Wirkungsdauer:"
+    front-charges-label: "Ladungen:"
+    front-effect-label: "Wirkung"
+    front-notes-label: "Anmerkungen"
+  en:
+    back-label: "Magic Item"
+    front-table-roll-label: "Table roll:"
+    front-class-label: "Class:"
+    front-bonus-label: "Bonus:"
+    front-duration-label: "Duration:"
+    front-charges-label: "Charges:"
+    front-effect-label: "Effect"
+    front-notes-label: "Notes"
+
+properties:
+  name:
+    sample:
+      de: "Mondsichelklinge"
+      en: "Crescent Blade"
+
+  description:
+    sample:
+      de: "Eine schlanke Klinge, deren Stahl im Fackelschein kühl und bläulich schimmert."
+      en: "A slender blade whose steel gleams cool and bluish in torchlight."
+
+  item-type:
+    slot: front-subtype
+    aliases: [art, gegenstandstyp, type, kategorie]
+    description:
+      de: "Art des Gegenstands — Trank, Schriftrolle, Ring, Zauberstab, Zauberstecken, Waffe, Rüstung, Sonstiges — in kleinen Kapitälchen unter dem Titel."
+      en: "The kind of item — potion, scroll, ring, wand, staff, weapon, armour, miscellaneous — in small capitals under the title."
+    sample:
+      de: "Magische Nahkampfwaffe"
+      en: "Magic melee weapon"
+
+  table-roll:
+    slot: front-table-roll
+    aliases: [tabellenwurf, würfelwurf, wuerfelwurf, dice-roll, roll]
+    description:
+      de: "Wurf auf der passenden Schatztabelle, z. B. „76–00 auf Tab. 85“. Nur, wenn die Karte auf einer Würfeltabelle steht."
+      en: "Roll on the matching treasure table, e.g. \"76–00 on table 85\". Only when the card is an entry of a roll table."
+    sample:
+      de: "4 auf Tab. 89, dann 21–25 auf Tab. 93"
+      en: "4 on table 89, then 21–25 on table 93"
+
+  class-restriction:
+    slot: front-class
+    aliases: [klasseneinschränkung, klasseneinschraenkung, klassen, classes]
+    description:
+      de: "Welche Klassen den Gegenstand verwenden können — die Codes des Regelwerks (A = alle, K = kämpferisch, R = religiös, Z = zauberkundig, D = diebisch) oder ausgeschrieben."
+      en: "Which classes may use the item — the rulebook's codes (A = any, F = fighter-like, C = clerical, M = magic-user, T = thief-like) or spelled out."
+    sample:
+      de: "K Z (Schwerter führend)"
+      en: "F M (sword wielders)"
+
+  bonus:
+    slot: front-bonus
+    aliases: [verzauberung, magic-bonus]
+    description:
+      de: "Verzauberungsbonus einer magischen Waffe oder Rüstung, z. B. „+1“."
+      en: "The enchantment bonus of a magic weapon or armour, e.g. \"+1\"."
+    sample: "+1"
+
+  duration:
+    slot: front-duration
+    aliases: [wirkungsdauer]
+    description:
+      de: "Wirkungsdauer, z. B. „1W6 + 6 Phasen“ oder „permanent“."
+      en: "How long the effect lasts, e.g. \"1d6 + 6 turns\" or \"permanent\"."
+
+  charges:
+    slot: front-charges
+    aliases: [ladungen]
+    description:
+      de: "Ladungen — die verfügbaren Anwendungen eines Stabs oder Steckens."
+      en: "Charges — the uses a wand or staff holds."
+
+  effect:
+    slot: front-effect
+    aliases: [effekt, wirkung]
+    description:
+      de: "Die Spielwirkung — Markdown, gern mehrere Absätze oder eine Liste — unter dem Banner „Wirkung“."
+      en: "The mechanical effect — markdown, paragraphs or a list — under the \"Effect\" banner."
+    sample:
+      de: "**Angriffs- und Schadensbonus von +1.** Bei Mondlicht leuchtet die Klinge wie eine Fackel."
+      en: "**+1 to hit and damage.** Under moonlight the blade glows like a torch."
+
+  notes:
+    slot: front-notes
+    aliases: [notizen, anmerkungen]
+    description:
+      de: "Zusätzliche Anmerkungen oder Sondereigenschaften, hinter der fetten Beschriftung „Anmerkungen“."
+      en: "Further notes or special qualities, after the bold \"Notes\" caption."
+
+  reference:
+    sample:
+      de: "Gesamtregelwerk S. 206, Tabelle 93"
+      en: "Complete Rules p. 206, table 93"

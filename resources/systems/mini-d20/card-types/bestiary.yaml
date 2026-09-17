@@ -1,0 +1,117 @@
+# ── bestiary ────────────────────────────────────────────────────────
+# The rulebook's two-row stat block (pp. 19–23): six columns — TW TP RK
+# RW BW A — then the special abilities, one line each.
+
+front-template: templates/bestiary-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/bestiary.css
+
+# The right icon follows the creature's category.
+classifiers:
+  front-icon-right: &category-icons
+    match:
+      - { pattern: "humanoid", token: assets/icons/cowled.svg }
+      - { pattern: "\\btier\\b|animal|beast", token: assets/icons/paw-print.svg }
+      - { pattern: "untot|undead", token: assets/icons/death-skull.svg }
+      - { pattern: "monster", token: assets/icons/beast-eye.svg }
+  back-icon-bottom: *category-icons
+
+translations:
+  de:
+    card-type-label: "Bestiarium"
+    back-label: "Bestiarium"
+    front-stat-1-label: "TW"
+    front-stat-2-label: "TP"
+    front-stat-3-label: "RK"
+    front-stat-4-label: "RW"
+    front-stat-5-label: "BW"
+    front-stat-6-label: "A"
+    front-abilities-label: "Fähigkeiten"
+  en:
+    card-type-label: "Bestiary"
+    back-label: "Bestiary"
+    front-stat-1-label: "HD"
+    front-stat-2-label: "HP"
+    front-stat-3-label: "AC"
+    front-stat-4-label: "ST"
+    front-stat-5-label: "MV"
+    front-stat-6-label: "A"
+    front-abilities-label: "Abilities"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/claw-slashes.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset."
+
+  category:
+    slot: [front-subtype, front-icon-right, back-icon-bottom, back-subtype]
+    aliases: [kategorie, gattung]
+    description:
+      de: "Kategorie laut Bestiarium — Humanoid, Tier, Monster oder Untot. Steht unter dem rechten Symbol und wählt es."
+      en: "Bestiary category — Humanoid, Animal, Monster or Undead. Stands under the right icon and picks it."
+    sample:
+      de: "Humanoid"
+      en: "Humanoid"
+
+  hit-dice:
+    slot: front-stat-1
+    aliases: [tw, trefferwürfel, trefferwuerfel, hd]
+    description:
+      de: "Trefferwürfel (TW) — zugleich der Angriffsbonus."
+      en: "Hit Dice (HD) — the attack bonus as well."
+    sample: 1
+
+  hit-points:
+    slot: front-stat-2
+    aliases: [tp, trefferpunkte, hp]
+    description:
+      de: "Trefferpunkte (TP), ein fester Wert — MINI D20 würfelt sie nicht."
+      en: "Hit Points (HP), a fixed value — MINI D20 does not roll them."
+    sample: 5
+
+  armor-class:
+    slot: front-stat-3
+    aliases: [rk, rüstungsklasse, ruestungsklasse, ac]
+    description:
+      de: "Rüstungsklasse (RK) als eine Zahl."
+      en: "Armor Class (AC) as one number."
+    sample: 13
+
+  saving-throw:
+    slot: front-stat-4
+    aliases: [rw, rettungswurf, st, save]
+    description:
+      de: "Rettungswurf (RW) — der Zielwert auf dem W20."
+      en: "Saving Throw (ST) — the target on the d20."
+    sample: 18
+
+  movement:
+    slot: front-stat-5
+    aliases: [bw, bewegung, bewegungsrate, mv, move]
+    description:
+      de: "Bewegung (BW) — Felder je Runde; meist 1."
+      en: "Movement (MV) — zones per turn; usually 1."
+    sample: 1
+
+  actions:
+    slot: front-stat-6
+    aliases: [a, aktionen, attacks, angriffe]
+    description:
+      de: "Aktionen (A) — die Angriffe mit Schaden, z. B. „1 Waffe (4 Schaden)“ oder „2 Klauen (3 Schaden)“."
+      en: "Actions (A) — the attacks with their damage, e.g. \"1 Weapon (4 Damage)\" or \"2 Claws (3 Damage)\"."
+    sample:
+      de: "1 Waffe (4 Schaden)"
+      en: "1 Weapon (4 Damage)"
+
+  abilities:
+    slot: front-abilities
+    aliases: [fähigkeiten, faehigkeiten, sonderfähigkeiten]
+    description:
+      de: "Sonderfähigkeiten als Liste, eine Zeile je Eintrag (Markdown)."
+      en: "Special abilities as a list, one line per entry (markdown)."
+    sample:
+      de: ["Im Sonnenlicht Angriffswurf minus 1."]
+      en: ["In sunlight the attack roll is reduced by 1."]

@@ -1,0 +1,199 @@
+# ── gear: everything a character carries ───────────────────────────
+# Trade goods, tools, weapons, armour — one card type, because the field
+# sets barely overlap and a torch is a light source AND an improvised
+# weapon. What a card IS lives in `subcategory` („Nahkampfwaffe",
+# „Kleidung", „Rüstung"), which also captions the back. Every stat cell
+# is conditional; map another property onto a free place rather than
+# adding a card type per item class.
+#
+# Rows 1–2 run in the column order of the rulebook's weapon table (GRW
+# S. 74): Griff, Reichweite, Schaden, Haltbarkeit — with the Rüstungswert
+# riding row 2 as a third cell it never shares, since no note carries an
+# armour rating beside a damage or durability value. Then Preis /
+# Verfügbarkeit, Gewicht / Anwendungen, and the closing block: Merkmale,
+# Voraussetzung with the minimum STR trailing it in the same row, Effekt.
+
+front-template: templates/front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/gear.css
+card-size: poker
+
+# `Griff: 1H` is stored as the rulebook's abbreviation and printed in
+# full. Keyed on the PLACE, not on `grip`: it is the cell that renders
+# it, and a card type putting something else in row 1's left cell
+# brings its own table, or none.
+glyphs:
+  front-stat-1a:
+    1h: "einhändig"
+    2h: "zweihändig"
+
+translations:
+  de:
+    back-label: "Ausrüstung"
+    front-stat-1a-label: "Griff"
+    front-stat-1b-label: "Reichweite"
+    front-stat-2a-label: "Schaden"
+    front-stat-2b-label: "Haltbarkeit"
+    front-stat-2c-label: "Rüstungswert"
+    front-stat-3a-label: "Preis"
+    front-stat-3b-label: "Verfügbarkeit"
+    front-stat-4a-label: "Gewicht"
+    front-stat-4b-label: "Anwendungen"
+    front-stat-5-wide-label: "Merkmale"
+    front-stat-6-wide-label: "Voraussetzung"
+    # The minimum STR trails the skill in the same row („Voraussetzung:
+    # Äxte  STÄ: 7"). The label is deliberately the rulebook's bare
+    # abbreviation; the property name `min-strength` is what tells it
+    # apart from a `Reichweite: STÄ`.
+    front-stat-6-wide-tail-label: "STÄ"
+    front-stat-8-wide-label: "Effekt"
+
+properties:
+  name:
+    slot: front-header-title
+    description:
+      de: "Name des Gegenstands."
+      en: "Item's name."
+    sample:
+      de: "Bootshaken"
+      en: "Boat hook"
+
+  # This card shows its picture on the FRONT, and that answers the
+  # question — so `bild` and `image`, the spellings the notes use, are
+  # aliases here rather than a cascade.
+  front-image:
+    slot: front-image-top
+    aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+    description:
+      de: "Bild des Gegenstands als Wikilink. Erscheint auf der Vorderseite."
+      en: "Picture as a wikilink. Rendered on the card front."
+    sample: "[[Bootshaken.png]]"
+
+  # ── Weapons ──
+  grip:
+    slot: front-stat-1a
+    aliases: [griff]
+    description:
+      de: "Griff – \"1H\" für einhändig oder \"2H\" für zweihändig."
+      en: "Grip — \"1H\" for one-handed or \"2H\" for two-handed."
+    sample: "2H"
+
+  range:
+    slot: front-stat-1b
+    aliases: [reichweite]
+    description:
+      de: "Reichweite in Metern bei Fernkampfwaffen, oder kurzer Wert wie \"2\" / \"STÄ\" für Nahkampfwaffen."
+      en: "Range in metres for ranged weapons, or a short value like \"2\" / \"STR\" for melee weapons."
+    sample: "2"
+
+  damage:
+    slot: front-stat-2a
+    aliases: [schaden]
+    description:
+      de: "Schaden als Würfelnotation (deutsch \"W\", z. B. \"2W8\")."
+      en: "Damage as dice notation (lower-case \"d\" in English, e.g. \"2d8\")."
+    sample:
+      de: "W8"
+      en: "d8"
+
+  durability:
+    slot: front-stat-2b
+    aliases: [haltbarkeit]
+    description:
+      de: "Haltbarkeit – wie viel Schaden die Waffe beim Parieren abfängt, ohne beschädigt zu werden."
+      en: "Durability — how much damage the weapon can parry before it gets damaged."
+    sample: 8
+
+  # ── Armour ──
+  armor-rating:
+    slot: front-stat-2c
+    aliases: [rüstungswert]
+    description:
+      de: "Rüstungswert – wie viele Schadenspunkte die Rüstung von einem Angriff abzieht. Helme nutzen \"+1\" / \"+2\", da sie zusätzlich getragen werden."
+      en: "Armor Rating — how many damage points the armor subtracts from an attack. Helmets use \"+1\" / \"+2\" because they're worn in addition."
+    sample: 3
+
+  # ── Trade: a ware, and wares are the gear card ──
+  price:
+    slot: front-stat-3a
+    aliases: [preis]
+    description:
+      de: "Übliche Kosten der Ware in Gold-, Silber- oder Kupfermünzen."
+      en: "Typical cost of the item in gold, silver or copper coins."
+    sample:
+      de: "4 Silber"
+      en: "4 silver"
+
+  availability:
+    slot: front-stat-3b
+    aliases: [verfügbarkeit, verfuegbarkeit]
+    description:
+      de: "Verfügbarkeit der Ware: Gewöhnlich, Ungewöhnlich, Selten oder Einzigartig."
+      en: "Supply rating of the item: Common, Uncommon, Rare or Unique."
+    sample:
+      de: "Ungewöhnlich"
+      en: "Uncommon"
+
+  # ── Encumbrance and consumption ──
+  weight:
+    slot: front-stat-4a
+    aliases: [gewicht]
+    description:
+      de: "Traglast als Vielfaches der Standard-Einheit (1 = ein normaler Gegenstand). Verwende \"1/4\" für Kleinstgegenstände, \"–\" für vernachlässigbares Gewicht und \"Bündel\" für lose gebündelte Gegenstände."
+      en: "Encumbrance as a multiple of the standard unit (1 = one normal item). Use \"1/4\" for tiny items, \"–\" for negligible weight, and \"Bundle\" for loosely bundled items."
+    sample: 1
+
+  uses:
+    slot: front-stat-4b
+    aliases: [anwendungen, ladungen, charges]
+    description:
+      de: "Anzahl der Anwendungen, bis der Gegenstand verbraucht ist (z. B. 10 Verbände, 10 Portionen Duftwasser)."
+      en: "Number of uses before the item is consumed (e.g. 10 bandages, 10 doses of perfume)."
+    sample: 6
+
+  # A comma-separated STRING, not a list. `traits` on a creature is a
+  # list of {name, desc} pairs set as prose; on a piece of gear it is a
+  # handful of rulebook keywords in one wide row. Same word, two value
+  # shapes — which is why each card type declares it for itself.
+  traits:
+    slot: front-stat-5-wide
+    aliases: [merkmale]
+    description:
+      de: "Merkmale der Waffe als kommagetrennte Liste (Hieb, Stich, Wucht, Lang, Niederwerfend, Unauffällig)."
+      en: "Weapon features as a comma-separated list (Slashing, Piercing, Bludgeoning, Long, Toppling, Subtle)."
+    sample:
+      de: "Stich, Lang"
+      en: "Piercing, Long"
+
+  skill:
+    slot: front-stat-6-wide
+    aliases: [fertigkeit]
+    description:
+      de: "Fertigkeit, mit der die Waffe geführt wird (z. B. Schwerter, Äxte, Bögen). Freitext für Sonderfälle erlaubt (\"beliebige Nahkampffertigkeit (außer …)\"). Erscheint als breite Schlusszeile \"Voraussetzung\"; die Mindest-STÄ steht daneben."
+      en: "Skill used to wield the weapon (e.g. Swords, Axes, Bows). Free text is allowed for special cases. Rendered as the wide closing \"Requirement\" line, with the minimum STR beside it."
+    sample:
+      de: "Speere"
+      en: "Spears"
+
+  # Canonical is `min-strength`, not `strength`: on a weapon card "STÄ"
+  # names two things — the minimum the wielder needs, and (on six melee
+  # weapons) the attribute the weapon's REACH is measured against,
+  # written `Reichweite: STÄ`. The printed label stays the rulebook's
+  # bare "STÄ"; the data key carries the distinction.
+  min-strength:
+    slot: front-stat-6-wide-tail
+    aliases: [strength, stä, stärke, staerke, mindest-stä, mindeststärke]
+    description:
+      de: "Mindest-STÄ, um die Waffe wirksam ohne Nachteil zu führen. Steht als eigener Wert hinter der Fertigkeit, in der Spaltenreihenfolge der Waffentabelle des Regelbuchs (GRW S. 74)."
+      en: "Minimum STR required to wield the weapon effectively without a bane. Rendered as a value of its own after the skill, in the rulebook weapon table's column order (Rules p. 74)."
+    sample: 10
+
+  effect:
+    slot: front-stat-8-wide
+    aliases: [effekt]
+    description:
+      de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+      en: "Mechanical effect — what the card does when it triggers."
+    sample:
+      de: "Kann ein Boot in Reichweite heranziehen."
+      en: "Can pull a boat within reach closer."

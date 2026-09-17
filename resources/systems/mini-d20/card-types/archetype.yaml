@@ -1,0 +1,163 @@
+# ── archetype ───────────────────────────────────────────────────────
+# One card per archetype: the motto, the level-1 stat block, the skill
+# bonuses in two columns, the allowed gear, the starting abilities and
+# the level-up rule.
+
+front-template: templates/archetype-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/archetype.css
+
+# The right icon follows the archetype's own name. The same table as the
+# ability card's, which follows the archetype an ability belongs to; each
+# card type's document carries its own copy.
+classifiers:
+  front-icon-right: &archetype-icons
+    match:
+      - { pattern: "schurk|rogue|thief", token: assets/icons/hood.svg }
+      - { pattern: "kämpfer|kampfer|fighter|krieger|warrior", token: assets/icons/spartan-helmet.svg }
+      - { pattern: "kleriker|cleric|priest|priester", token: assets/icons/prayer.svg }
+      - { pattern: "magier|mage|zauber|wizard|hexe", token: assets/icons/pointy-hat.svg }
+  back-icon-bottom: *archetype-icons
+
+translations:
+  de:
+    card-type-label: "Archetyp"
+    back-label: "Archetyp"
+    front-stat-1-label: "TP"
+    front-stat-2-label: "RK"
+    front-stat-3-label: "RW"
+    front-skills-label: "Fertigkeitsboni"
+    front-armor-label: "Erlaubte Rüstungen"
+    front-weapons-label: "Erlaubte Waffen"
+    front-abilities-label: "Fähigkeiten"
+    front-level-up-label: "Stufenaufstieg"
+  en:
+    card-type-label: "Archetype"
+    back-label: "Archetype"
+    front-stat-1-label: "HP"
+    front-stat-2-label: "AC"
+    front-stat-3-label: "ST"
+    front-skills-label: "Skill bonuses"
+    front-armor-label: "Allowed armor"
+    front-weapons-label: "Allowed weapons"
+    front-abilities-label: "Abilities"
+    front-level-up-label: "Level-up"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/character.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset."
+
+  name:
+    slot: [front-title, front-icon-right, back-icon-bottom, back-subtype]
+    description:
+      de: "Name des Archetyps — Schurk:in, Kämpfer:in, Kleriker:in, Magier:in. Wählt zugleich das rechte Symbol."
+      en: "The archetype's name — Rogue, Fighter, Cleric, Mage. Picks the right icon as well."
+    sample:
+      de: "Schurk:in"
+      en: "Rogue"
+
+  tagline:
+    slot: front-tagline
+    aliases: [untertitel, motto, subtitle]
+    description:
+      de: "Kurze Charakterisierung — ein Satz oder Motto unter dem Namen."
+      en: "A short characterisation — one sentence or a motto under the name."
+    sample:
+      de: "Es gibt immer einen Weg"
+      en: "There is always a way"
+
+  hit-points:
+    slot: front-stat-1
+    aliases: [tp, trefferpunkte, hp]
+    description:
+      de: "Trefferpunkte (TP) auf Stufe 1."
+      en: "Hit Points (HP) at level 1."
+    sample: 12
+
+  armor-class:
+    slot: front-stat-2
+    aliases: [rk, rüstungsklasse, ruestungsklasse, ac]
+    description:
+      de: "Rüstungsklasse (RK) auf Stufe 1, ohne Rüstung."
+      en: "Armor Class (AC) at level 1, without armor."
+    sample: 10
+
+  saving-throw:
+    slot: front-stat-3
+    aliases: [rw, rettungswurf, st, save]
+    description:
+      de: "Rettungswurf (RW) — Zielwert auf Stufe 1."
+      en: "Saving Throw (ST) — the target at level 1."
+    sample: 11
+
+  skill-bonuses:
+    slot: front-skills
+    aliases: [fertigkeitsboni, fertigkeitsbonus, skills, fertigkeiten]
+    description:
+      de: "Anfängliche Fertigkeitsboni als Liste einzelner Paare (`{ Fertigkeit: Bonus }`), in zwei Spalten gesetzt."
+      en: "Starting skill bonuses as a list of single-key pairs (`{ Skill: bonus }`), set in two columns."
+    sample:
+      de:
+        - { Heimlichkeit: "+4" }
+        - { Fingerfertigkeit: "+4" }
+        - { Akrobatik: "+3" }
+        - { Wahrnehmung: "+3" }
+        - { Fernkampf: "+2" }
+        - { Nahkampf: "+2" }
+      en:
+        - { Stealth: "+4" }
+        - { Dexterity: "+4" }
+        - { Acrobatics: "+3" }
+        - { Perception: "+3" }
+        - { "Ranged Combat": "+2" }
+        - { Melee: "+2" }
+
+  allowed-armor:
+    slot: front-armor
+    aliases: [erlaubte-rüstungen, erlaubte-ruestungen]
+    description:
+      de: "Erlaubte Rüstungen (Leicht / Mittel / Schwer / Alle), eine Liste."
+      en: "Allowed armor (Light / Medium / Heavy / All), a list."
+    sample:
+      de: ["Mittel"]
+      en: ["Medium"]
+
+  allowed-weapons:
+    slot: front-weapons
+    aliases: [erlaubte-waffen]
+    description:
+      de: "Erlaubte Waffen (Leicht / Mittel / Schwer / Alle), eine Liste."
+      en: "Allowed weapons (Light / Medium / Heavy / All), a list."
+    sample:
+      de: ["Mittel"]
+      en: ["Medium"]
+
+  initial-abilities:
+    slot: front-abilities
+    aliases: [fähigkeiten, faehigkeiten, abilities, anfangsfähigkeiten]
+    description:
+      de: "Die Regel zu den Anfangsfähigkeiten als Liste einzelner Zeilen — wie viele zu Beginn, und was für diesen Archetyp gilt."
+      en: "The starting-abilities rule as a list of lines — how many at level 1, and what applies to this archetype."
+    sample:
+      de: ["Du startest mit zwei Fähigkeiten."]
+      en: ["You start with two abilities."]
+
+  level-up-rules:
+    slot: front-level-up
+    aliases: [stufenaufstieg, level-up, aufstieg, progression]
+    description:
+      de: "Der Stufenaufstieg als Liste einzelner Regeln — TP und RW je Stufe, Fertigkeitspunkte und Fähigkeiten."
+      en: "The level-up rule as a list of lines — HP and ST per level, skill points and abilities."
+    sample:
+      de:
+        - "+ 4 TP pro Stufe."
+        - "- 1 RW pro Stufe."
+        - "Bei jedem Stufenaufstieg bis Stufe 4 erhältst du 5 Fertigkeitspunkte und eine weitere Fähigkeit."
+      en:
+        - "+ 4 HP per level."
+        - "- 1 ST per level."
+        - "On each level-up through level 4 you gain 5 skill points and one more ability."

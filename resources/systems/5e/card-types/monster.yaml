@@ -1,0 +1,31 @@
+# ── monster ─────────────────────────────────────────────────────────
+# The full block, with the three sections a legendary creature adds.
+
+front-template: templates/monster-front.hbs
+back-template: templates/back.hbs
+
+translations:
+  en:
+    back-label: "Bestiary"
+
+properties:
+  name:
+    sample: "Cinder Hound"
+
+  legendary-actions:
+    slot: front-legendary-actions
+    aliases: [legendary_actions, legendaryactions, legendäre-aktionen, legendaere-aktionen]
+    description:
+      en: "The legendary actions — the same shape as `actions`; the preamble is a first entry with only a `desc`, a cost belongs in the name — `Wing Attack (Costs 2 Actions)`."
+
+  lair-actions:
+    slot: front-lair-actions
+    aliases: [lair_actions, lairactions, hort-aktionen, hort_aktionen]
+    description:
+      en: "The lair actions — the same shape as `legendary-actions`, the preamble first."
+
+  regional-effects:
+    slot: front-regional-effects
+    aliases: [regional_effects, regionaleffects, regionale-effekte, regionale_effekte]
+    description:
+      en: "The regional effects — the same shape as `legendary-actions`, the preamble first."

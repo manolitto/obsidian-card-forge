@@ -1,0 +1,122 @@
+# ── equipment ───────────────────────────────────────────────────────
+# The rulebook's equipment tables (pp. 16–18): the kind under the right
+# icon, a short label / value block, the effect of a general item or
+# artefact, a note.
+
+front-template: templates/equipment-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/equipment.css
+
+# The right icon follows the kind of equipment.
+classifiers:
+  front-icon-right: &equipment-icons
+    match:
+      - { pattern: "waffe|weapon", token: assets/icons/crossed-swords.svg }
+      - { pattern: "rüstung|rustung|armou?r", token: assets/icons/breastplate.svg }
+      - { pattern: "artefakt|artifact|magisch|magic", token: assets/icons/gem-pendant.svg }
+      - { pattern: "schatz|treasure|hort|loot", token: assets/icons/locked-chest.svg }
+      - { pattern: "allgemein|general", token: assets/icons/swap-bag.svg }
+  back-icon-bottom: *equipment-icons
+
+translations:
+  de:
+    card-type-label: "Ausrüstung"
+    back-label: "Ausrüstung"
+    front-style-label: "Art"
+    front-damage-label: "Grundschaden"
+    front-reach-label: "Reichweite"
+    front-ac-modifier-label: "RK-Modifikator"
+    front-price-label: "Preis"
+    front-effect-label: "Wirkung"
+    front-notes-label: "Anmerkungen"
+  en:
+    card-type-label: "Equipment"
+    back-label: "Equipment"
+    front-style-label: "Style"
+    front-damage-label: "Base damage"
+    front-reach-label: "Reach"
+    front-ac-modifier-label: "AC-Modification"
+    front-price-label: "Price"
+    front-effect-label: "Effect"
+    front-notes-label: "Notes"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/knapsack.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset."
+
+  equipment-type:
+    slot: [front-subtype, front-icon-right, back-icon-bottom, back-subtype]
+    aliases: [art, typ, gegenstandstyp, kategorie, type, category]
+    description:
+      de: "Art des Gegenstands — Waffe, Rüstung, Allgemein, Magisches Artefakt, Schatz. Steht unter dem rechten Symbol und wählt es."
+      en: "Kind of equipment — Weapon, Armor, General, Magical Artifact, Treasure. Stands under the right icon and picks it."
+    sample:
+      de: "Waffe"
+      en: "Weapon"
+
+  style:
+    slot: front-style
+    aliases: [stil]
+    description:
+      de: "Untertyp laut Tabelle — Leicht, Mittel, Schwer bei Rüstung; die Waffenart bei Waffen."
+      en: "Subtype per the table — Light, Medium, Heavy for armor; the weapon's style for weapons."
+    sample:
+      de: "Mittel"
+      en: "Medium"
+
+  damage:
+    slot: front-damage
+    aliases: [grundschaden, schaden, dmg]
+    description:
+      de: "Grundschaden der Waffe als Zahl — MINI D20 würfelt keinen Schaden."
+      en: "The weapon's base damage as a number — MINI D20 does not roll damage."
+    sample: 4
+
+  reach:
+    slot: front-reach
+    aliases: [reichweite, range]
+    description:
+      de: "Reichweite — Nah, Mittel, Fern, oder „Nah+Mittel“."
+      en: "Reach — Close, Medium, Far, or \"Close+Medium\"."
+    sample:
+      de: "Nah"
+      en: "Close"
+
+  ac-modifier:
+    slot: front-ac-modifier
+    aliases: [rk-modifikator, rk-mod, ac-mod]
+    description:
+      de: "RK-Modifikator — der Bonus auf die Rüstungsklasse durch diese Rüstung."
+      en: "AC modification — the bonus to Armor Class from this armor."
+    sample: "+ 4"
+
+  price:
+    slot: front-price
+    aliases: [preis, kosten, cost]
+    description:
+      de: "Preis in Goldmünzen, z. B. „15 GM“; „—“ wenn kostenlos."
+      en: "Price in gold pieces, e.g. \"15 GP\"; \"—\" if free."
+    sample:
+      de: "15 GM"
+      en: "15 GP"
+
+  effect:
+    slot: front-effect
+    aliases: [effekt, wirkung]
+    description:
+      de: "Spielwirkung — bei allgemeiner Ausrüstung und magischen Artefakten (Markdown)."
+      en: "The mechanical effect — for general gear and magical artefacts (markdown)."
+    sample:
+      de: "Heilt 10 TP."
+      en: "Heals 10 HP."
+
+  notes:
+    slot: front-notes
+    aliases: [notizen, anmerkungen]
+    description:
+      de: "Zusätzliche Hinweise oder Bedingungen."
+      en: "Additional notes or conditions."

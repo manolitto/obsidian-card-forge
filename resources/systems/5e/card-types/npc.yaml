@@ -1,0 +1,73 @@
+# ── npc ─────────────────────────────────────────────────────────────
+# The same block without the legendary sections.
+
+front-template: templates/npc-front.hbs
+back-template: templates/back.hbs
+
+translations:
+  en:
+    back-label: "NPC"
+
+properties:
+  name:
+    sample: "Toll Warden"
+
+  size:
+    sample: "Medium"
+
+  type:
+    sample: "humanoid (any race)"
+
+  alignment:
+    sample: "lawful neutral"
+
+  ac:
+    sample: "16 (chain shirt, shield)"
+
+  hp:
+    sample: "11 (2d8 + 2)"
+
+  speed:
+    sample: "30 ft."
+
+  str:
+    sample: "13 (+1)"
+  dex:
+    sample: "12 (+1)"
+  con:
+    sample: "12 (+1)"
+  int:
+    sample: "10 (+0)"
+  wis:
+    sample: "11 (+0)"
+  cha:
+    sample: "10 (+0)"
+
+  skills:
+    sample: "Insight +2, Perception +2"
+
+  immunities:
+    sample: ~
+
+  senses:
+    sample: "passive Perception 12"
+
+  languages:
+    sample: "Common"
+
+  cr:
+    sample: "1/8"
+
+  xp:
+    sample: 25
+
+  traits:
+    sample: ~
+
+  actions:
+    sample:
+      - name: "Spear"
+        desc: "*Melee or Ranged Weapon Attack:* +3 to hit, reach 5 ft. or range 20/60 ft., one target. *Hit:* 4 (1d6 + 1) piercing damage."
+
+  image:
+    sample: "[[Toll-Warden.png]]"

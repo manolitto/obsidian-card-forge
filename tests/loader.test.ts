@@ -266,6 +266,100 @@ describe("the root document", () => {
   });
 });
 
+describe("a card type in a document of its own", () => {
+  /** The complete system with `gear` moved out into `card-types/gear.yaml`. */
+  function gearInItsOwnDocument(): Files {
+    const files = completeSystem();
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString().replace(
+      / {2}gear:\n(?: {4}.*\n)+/,
+      "  gear: card-types/gear.yaml\n"
+    );
+    files["card-types/gear.yaml"] = `
+front-template: gear/front.hbs
+back-template: back.hbs
+stylesheet: gear/card-type.css
+properties:
+  grip: { aliases: [griff], slot: stat-1a }
+  badge-image: { default: assets/logo.png }
+`;
+    return files;
+  }
+
+  it("loads as if the mapping stood in the root document, in the root's order", async () => {
+    const { system, diagnostics } = await load(gearInItsOwnDocument());
+    expect(diagnostics.messages).toEqual([]);
+    expect(Object.keys(system!.cardTypes)).toEqual(["gear", "spell"]);
+    const gear = system!.cardTypes["gear"]!;
+    expect(gear.declaration.frontTemplate).toBe("gear/front.hbs");
+    expect(gear.properties["grip"]?.slot).toEqual(["stat-1a"]);
+    expect(gear.properties["category"]?.slot).toEqual(["header-title"]); // the system's layer still folds under it
+    expect(await system!.stylesheet("gear")).toContain(".gear-frame");
+  });
+
+  it("counts the document as used and reads the assets it names", async () => {
+    const { system } = await load(gearInItsOwnDocument());
+    expect(system!.unusedFiles).not.toContain("card-types/gear.yaml");
+    expect(system!.documentAssets).toContain("assets/logo.png");
+  });
+
+  it("words a problem inside the card type the same as for an inline one", async () => {
+    const files = gearInItsOwnDocument();
+    files["card-types/gear.yaml"] = files["card-types/gear.yaml"]!.toString().replace(
+      "slot: stat-1a",
+      "slot: stat-1z"
+    );
+    const { diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      'demo: card-types.gear binds "grip" to slot "stat-1z", which no template of the card type reads',
+    ]);
+  });
+
+  it("reports a document that does not exist, naming the card type, and keeps the others", async () => {
+    const files = gearInItsOwnDocument();
+    delete files["card-types/gear.yaml"];
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      'memory: card-types.gear names "card-types/gear.yaml", which does not exist',
+    ]);
+    expect(Object.keys(system!.cardTypes)).toEqual(["spell"]);
+  });
+
+  it("reports a document that is not YAML, naming the file", async () => {
+    const files = gearInItsOwnDocument();
+    files["card-types/gear.yaml"] = "front-template: [unclosed";
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toHaveLength(1);
+    expect(diagnostics.messages[0]).toMatch(
+      /^memory: card-types\.gear: card-types\/gear\.yaml: /
+    );
+    expect(Object.keys(system!.cardTypes)).toEqual(["spell"]);
+  });
+
+  it("reports a document that is not a mapping", async () => {
+    const files = gearInItsOwnDocument();
+    files["card-types/gear.yaml"] = "- front-template: gear/front.hbs";
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      "memory: card-types.gear: card-types/gear.yaml must hold the card type as a mapping; ignoring it",
+    ]);
+    expect(Object.keys(system!.cardTypes)).toEqual(["spell"]);
+  });
+
+  it("refuses a path that leaves the folder, like any declared path", async () => {
+    const files = gearInItsOwnDocument();
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString().replace(
+      "card-types/gear.yaml",
+      "../elsewhere/gear.yaml"
+    );
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([
+      'memory: card-types.gear: "../elsewhere/gear.yaml" leaves the system folder, which a system may not do',
+    ]);
+    expect(Object.keys(system!.cardTypes)).toEqual(["spell"]);
+    expect(system!.unusedFiles).toContain("card-types/gear.yaml");
+  });
+});
+
 describe("what the loader refuses outright", () => {
   it("a folder without the root document", async () => {
     const { system, diagnostics } = await load({ "front.hbs": "x" });

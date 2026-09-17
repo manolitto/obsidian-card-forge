@@ -1,0 +1,145 @@
+# ── gear ────────────────────────────────────────────────────────────
+# A weapon, an armour or a shield: the key numbers in diamonds, then
+# the captioned lines, the picture, the source. The kind in the header
+# follows from the stats — a parry modifier makes a shield, a
+# protection value an armour, anything else a weapon.
+
+front-template: templates/gear-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/gear.css
+
+translations:
+  de:
+    back-label: "Ausrüstung"
+    type-shield: "Schild"
+    type-armour: "Rüstung"
+    type-weapon: "Waffe"
+    front-damage-label: "Schaden"
+    front-protection-label: "Schutz"
+    front-parry-modifier-label: "Paradebonus"
+    front-injury-label: "Verletzung"
+    front-injury-1h-label: "Verletzung (1-händig)"
+    front-injury-2h-label: "Verletzung (2-händig)"
+    front-load-label: "Belastung"
+    front-proficiency-label: "Kampffähigkeit:"
+    front-type-label: "Art:"
+    front-standard-label: "Mindest-Lebensstandard:"
+    front-notes-label: "Anmerkungen:"
+  en:
+    back-label: "Gear"
+    type-shield: "Shield"
+    type-armour: "Armour"
+    type-weapon: "Weapon"
+    front-damage-label: "Damage"
+    front-protection-label: "Protection"
+    front-parry-modifier-label: "Parry modifier"
+    front-injury-label: "Injury"
+    front-injury-1h-label: "Injury (1-handed)"
+    front-injury-2h-label: "Injury (2-handed)"
+    front-load-label: "Load"
+    front-proficiency-label: "Combat proficiency:"
+    front-type-label: "Type:"
+    front-standard-label: "Minimum standard of living:"
+    front-notes-label: "Notes:"
+
+properties:
+  name:
+    sample:
+      de: "Jagdspeer"
+      en: "Hunting spear"
+
+  description:
+    slot: ~
+
+  image:
+    slot: front-image
+
+  damage:
+    slot: front-damage
+    aliases: [schaden]
+    description:
+      de: "Schaden der Waffe — der Wert, der bei einem Treffer zu Ausdauerverlust wird."
+      en: "The weapon's damage — the value a hit takes off Endurance."
+    sample: 4
+
+  injury:
+    slot: front-injury
+    aliases: [verletzung]
+    description:
+      de: "Verletzung — ab diesem Wert auf dem Heldenwürfel wird ein Treffer zum Durchbohrenden Treffer."
+      en: "Injury — a Feat Die at this or more makes a hit a Piercing Blow."
+
+  injury-1h:
+    slot: front-injury-1h
+    aliases: [verletzung-1h]
+    description:
+      de: "Verletzung bei einhändiger Führung, für eine Waffe, die beides kann."
+      en: "Injury when wielded one-handed, for a weapon that can be either."
+    sample: 14
+
+  injury-2h:
+    slot: front-injury-2h
+    aliases: [verletzung-2h]
+    description:
+      de: "Verletzung bei beidhändiger Führung."
+      en: "Injury when wielded two-handed."
+    sample: 16
+
+  load:
+    slot: front-load
+    aliases: [belastung]
+    description:
+      de: "Belastung — zählt zur Gesamtbelastung und damit zur Erschöpfung."
+      en: "Load — counts toward the total Load and so toward Fatigue."
+    sample: 2
+
+  protection:
+    slot: front-protection
+    aliases: [schutz]
+    description:
+      de: "Schutz einer Rüstung in Schutzwürfeln — „2W“."
+      en: "An armour's protection in protection dice — \"2d\"."
+
+  parry-modifier:
+    slot: front-parry-modifier
+    aliases: [parade-modifikator, paradebonus]
+    description:
+      de: "Paradebonus eines Schildes — +1 Faustschild, +2 Schild, +3 Großer Schild."
+      en: "A shield's parry modifier — +1 buckler, +2 shield, +3 great shield."
+
+  combat-proficiency:
+    slot: front-proficiency
+    aliases: [kampffähigkeit, kampffaehigkeit]
+    description:
+      de: "Die Kampffähigkeit, mit der die Waffe geführt wird — Äxte, Bögen, Speere, Schwerter; gern als Wikilink."
+      en: "The combat proficiency the weapon is wielded with — Axes, Bows, Spears, Swords; a wikilink if you like."
+    sample:
+      de: "[[Speere]]"
+      en: "[[Spears]]"
+
+  type:
+    slot: front-type
+    aliases: [typ, art]
+    description:
+      de: "Art der Ausrüstung als Zeile im Text — Waffe, Rüstung, Schild; gern als Wikilink."
+      en: "The kind of gear as a line in the text — weapon, armour, shield; a wikilink if you like."
+
+  minimum-standard-of-living:
+    slot: front-standard
+    aliases: [mindest-lebensstandard, lebensstandard]
+    description:
+      de: "Mindest-Lebensstandard, um den Gegenstand ohne Weiteres zu besitzen — Ärmlich, Bescheiden, Gewöhnlich, Wohlhabend, Reich."
+      en: "The minimum standard of living to own the item without further ado — Poor, Frugal, Common, Prosperous, Rich."
+    sample:
+      de: "Bescheiden"
+      en: "Frugal"
+
+  notes:
+    slot: front-notes
+    aliases: [notizen, anmerkungen]
+    description:
+      de: "Anmerkungen oder besondere Eigenschaften (Markdown)."
+      en: "Notes or special qualities (markdown)."
+    sample:
+      de: "Kann ein- oder beidhändig geführt und geworfen werden."
+      en: "May be wielded one- or two-handed, and thrown."

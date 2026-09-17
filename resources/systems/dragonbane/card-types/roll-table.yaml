@@ -1,0 +1,112 @@
+# ── roll-table: one entry of any dice table in the Regelbuch ───────
+# Dämonenwurf im Nah- und Fernkampf, Furcht, Schwere Verletzungen,
+# Magischer Fehlschlag, Jagdbeute, Schwächen, Mementos, Erscheinungsbild —
+# one card type covers every table, the table's name being `category`.
+# A note per row, or a table note: the block's `table:` maps the columns
+# (`roll: Würfelwurf`, `stats: [Voraussetzungen, Rationen]`) and every row
+# is a card. The die result lives in the baseline's `roll` / `roll-min` /
+# `roll-max` and renders as the badge on the title plaque.
+
+front-template: templates/front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/roll-table.css
+# A row is short — a poker card holds it comfortably, four to an A4 sheet.
+card-size: poker
+expand-by-roll: true
+
+translations:
+  de:
+    back-label: "Würfeltabelle"
+
+properties:
+  # The row's own name first, the table's name behind it — the order of
+  # the bindings is the priority: a card shows its row's name and falls
+  # back to its table's only when the row has none (Furcht). Swap the
+  # two and every card in the deck is titled after its table.
+  name:
+    slot: front-header-title
+    description:
+      de: "Titel der Tabellenzeile (z. B. „Ruderbruch“, „Nebelbarsch“). Fehlt er, rückt `category` als Titel nach – für Tabellen, deren Zeilen keine eigenen Namen tragen."
+      en: "Title of the table row (e.g. \"Oar snapped\", \"Mist perch\"). When absent, `category` takes its place — for tables whose rows carry no names."
+    sample:
+      de: "Ruderbruch"
+      en: "Oar snapped"
+
+  # The table's name on the FRONT. Its own property with `category` as
+  # an alias, not `category` re-bound: `slot:` replaces across layers,
+  # and re-binding `category` here would take the back's title binding
+  # away from it. Through the alias the front reads the same value
+  # without touching the back.
+  table-name:
+    slot: [front-header-title, front-header-subtitle]
+    aliases: [category]
+    description:
+      de: "Name der Tabelle, zu der diese Zeile gehört – erscheint als kleine Pergament-Fahne an der Titelplakette und, wenn die Zeile keinen eigenen Namen trägt, als Titel. Liest denselben Wert wie `category`."
+      en: "Name of the table this row belongs to — rendered as the small parchment tag on the title plaque, and as the title when the row carries no name of its own. Reads the same value as `category`."
+    sample:
+      de: "Fischfang"
+      en: "Fishing"
+
+  roll:
+    slot: front-header-die
+    aliases: [wuerfelwurf]
+
+  front-image:
+    slot: front-image-top
+    aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+    description:
+      de: "Bild zu dieser Tabellenzeile als Wikilink. Erscheint auf der Vorderseite."
+      en: "Picture as a wikilink. Rendered on the card front."
+    sample: "[[Nebelbarsch.png]]"
+
+  description:
+    slot: front-text-top
+    aliases: [beschreibung]
+    description:
+      de: "Der erzählerische Teil des Tabelleneintrags – was passiert."
+      en: "The narrative half of the table entry — what happens."
+    sample:
+      de: "Das Ruder bricht mitten im Schlag, und das Boot dreht sich quer zur Strömung."
+      en: "The oar snaps mid-stroke and the boat swings across the current."
+
+  effect:
+    slot: front-effect-top
+    aliases: [effekt]
+    description:
+      de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+      en: "Mechanical effect — what the card does when it triggers."
+    sample:
+      de: "Bis zum Ende des Tagesabschnitts Nachteil auf SEEFAHRT."
+      en: "Bane on SEAMANSHIP until the end of the shift."
+
+  note:
+    slot: front-note-top
+    aliases: [anmerkung]
+    description:
+      de: "Freier Anmerkungstext, der unauffällig auf der Karte erscheint."
+      en: "Free-form note rendered unobtrusively on the card."
+    sample:
+      de: "Optional: nur bei Nebel würfeln."
+      en: "Optional: roll only in mist."
+
+  # Table-specific values (Rationen, Voraussetzungen, Heilungsdauer, …)
+  # as labelled rows in the stat box: a list of {name, desc} pairs, which
+  # is what a table note's `stats: [Voraussetzungen, Rationen]` column
+  # map produces from the row's cells.
+  stats:
+    slot: front-stat-list
+    aliases: [werte, angaben]
+    description:
+      de: "Freie Beschriftung/Wert-Paare für tabellenspezifische Angaben – „Rationen: 2W6“, „Voraussetzungen: Waffe oder Falle“, „Heilungsdauer: W6 Tage Ruhe“."
+      en: "Free label/value pairs for table-specific values — \"Rations: 2d6\", \"Requirements: weapon or trap\", \"Healing time: d6 days of rest\"."
+    sample:
+      de:
+        - name: "Voraussetzungen"
+          desc: "Angel oder Netz"
+        - name: "Rationen"
+          desc: "W6"
+      en:
+        - name: "Requirements"
+          desc: "Rod or net"
+        - name: "Rations"
+          desc: "d6"

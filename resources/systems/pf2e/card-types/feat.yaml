@@ -1,0 +1,106 @@
+# ── feat ────────────────────────────────────────────────────────────
+# The most numerous card: name, action cost and level in the header, the
+# trait pills, the prerequisites and the other labelled lines, then the
+# rules text, then the "Speziell" note.
+
+front-template: templates/feat-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/feat.css
+
+translations:
+  de:
+    back-label: "Talent"
+    front-prerequisites-label: "Voraussetzungen"
+    front-frequency-label: "Häufigkeit"
+    front-trigger-label: "Auslöser"
+    front-requirements-label: "Anforderungen"
+    front-special-label: "Speziell"
+
+properties:
+  level:
+    slot: front-badge
+    aliases: [stufe, talentstufe]
+    description:
+      de: "Stufe des Talents als Freitext, üblicherweise `Talent N` (z. B. `Talent 1`). Erscheint als Abzeichen rechts in der Kopfzeile."
+      en: "Feat level as free text, conventionally `Feat N` (e.g. `Feat 1`). Shown as the badge at the right of the header."
+    sample:
+      de: "Talent 1"
+      en: "Feat 1"
+
+  action-cost:
+    slot: front-title-glyph
+    aliases: [actions, aktionen, aktion, kosten]
+    description:
+      de: "Aktionskosten des Talents, neben dem Namen als Symbol gedruckt: `1`, `2`, `3`, `r` (Reaktion), `f` (frei) oder das Symbol selbst. Passive Talente lassen das Feld weg."
+      en: "The feat's action cost, printed as a glyph beside the name: `1`, `2`, `3`, `r` (reaction), `f` (free) or the glyph itself. Passive feats omit it."
+    sample: "1"
+
+  traits:
+    slot: front-traits
+    aliases: [merkmale, kategorien]
+    description:
+      de: "Liste der Merkmale — Seltenheit, Talentkategorie (`Allgemein`, `Fertigkeit`, Klasse, Abstammung) und mechanische Merkmale (`Konzentration`, `Manipulation`, `Heilung`). Jeder Eintrag wird eine Pille; die Seltenheiten erhalten die Seltenheitsfarbe."
+      en: "List of traits — rarity, feat category (`Allgemein`, `Fertigkeit`, class, ancestry) and mechanical traits (`Konzentration`, `Manipulation`, `Heilung`). Each entry becomes a pill; the rarities take the rarity colour."
+    sample:
+      de: ["Allgemein", "Fertigkeit"]
+      en: ["General", "Skill"]
+
+  prerequisites:
+    slot: front-prerequisites
+    aliases: [voraussetzungen]
+    description:
+      de: "Voraussetzungen für die Wahl des Talents — Fertigkeitsgrade, Attributswerte, andere Talente."
+      en: "Prerequisites for taking the feat — proficiency ranks, ability scores, other feats."
+    sample:
+      de: "Geübt in Heilkunde"
+      en: "trained in Medicine"
+
+  frequency:
+    slot: front-frequency
+    aliases: [häufigkeit, haeufigkeit]
+    description:
+      de: "Wie oft das Talent genutzt werden kann (z. B. `einmal pro Runde`, `einmal pro Tag`)."
+      en: "How often the feat may be used (e.g. `once per round`, `once per day`)."
+    sample:
+      de: "einmal pro Stunde"
+      en: "once per hour"
+
+  trigger:
+    slot: front-trigger
+    aliases: [auslöser, ausloeser]
+    description:
+      de: "Auslöser bei Reaktionen und manchen freien Aktionen."
+      en: "Trigger of reactions and some free actions."
+    sample:
+      de: "Du hast deinen Schild gehoben und würdest durch einen physischen Angriff Schaden erleiden."
+      en: "While you have your shield raised, you would take damage from a physical attack."
+
+  requirements:
+    slot: front-requirements
+    aliases: [anforderungen]
+    description:
+      de: "Anforderungen beim Einsatz — der Zustand oder Gegenstand, der im Moment des Einsatzes vorliegen muss (im Unterschied zu den Voraussetzungen für die Wahl)."
+      en: "Requirements at the time of use — the state or item that must apply then (as opposed to the prerequisites for taking the feat)."
+    sample:
+      de: "Du hast Heilerwerkzeuge in Händen oder griffbereit."
+      en: "You're holding or wearing healer's tools."
+
+  description:
+    slot: front-text
+    aliases: [beschreibung, text, effekt, wirkung]
+    description:
+      de: "Die Regel des Talents als Markdown — der Hauptteil der Karte. Erfolgsstufen können als Fettdruck im Text stehen (`**Erfolg** Du erkennst …`)."
+      en: "The feat's rule as markdown — the main body of the card. Degrees of success may stand bold inside the text (`**Success** You notice …`)."
+    sample:
+      de: "Du kannst die Aktivität Herstellen nutzen, um alchemistische Gegenstände herzustellen. Wenn du dieses Talent wählst, trägst du sofort vier gewöhnliche Formeln des 1. Grades in dein Formelbuch ein."
+      en: "You can use the Craft activity to create alchemical items. When you select this feat, you immediately add four common 1st-level formulas to your formula book."
+
+  special:
+    slot: front-special
+    aliases: [speziell, besonderes]
+    description:
+      de: "Hinweis am Ende des Talents, meist die Mehrfachwahl-Klausel (`Du kannst dieses Talent mehrfach wählen.`)."
+      en: "Trailing note, usually the multiple-selection clause (`You can select this feat more than once.`)."
+    sample:
+      de: "Du kannst dieses Talent mehrfach wählen. Wähle jedes Mal eine andere Fertigkeit."
+      en: "You can select this feat more than once. Each time, choose a different skill."

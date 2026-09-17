@@ -1,0 +1,80 @@
+# ── ability ─────────────────────────────────────────────────────────
+# One card per archetype ability (rulebook pp. 10–13): the archetype it
+# belongs to under the right icon, the tags as pills, the rule under
+# "Wirkung", and notes on what a tag means for this archetype.
+
+front-template: templates/ability-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/ability.css
+
+# The right icon and the back's lower icon follow the archetype.
+classifiers:
+  front-icon-right: &archetype-icons
+    match:
+      - { pattern: "schurk|rogue|thief", token: assets/icons/hood.svg }
+      - { pattern: "kämpfer|kampfer|fighter|krieger|warrior", token: assets/icons/spartan-helmet.svg }
+      - { pattern: "kleriker|cleric|priest|priester", token: assets/icons/prayer.svg }
+      - { pattern: "magier|mage|zauber|wizard|hexe", token: assets/icons/pointy-hat.svg }
+  back-icon-bottom: *archetype-icons
+
+translations:
+  de:
+    card-type-label: "Fähigkeit"
+    back-label: "Fähigkeit"
+    front-effect-label: "Wirkung"
+  en:
+    card-type-label: "Ability"
+    back-label: "Ability"
+    front-effect-label: "Effect"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/skills.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt; nur setzen, wenn ein anderes gebündeltes Symbol gemeint ist."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset; set it only for another bundled icon."
+
+  archetype:
+    slot: [front-subtype, front-icon-right, back-icon-bottom, back-subtype]
+    aliases: [klasse, class, archetyp]
+    description:
+      de: "Archetyp, zu dem die Fähigkeit gehört — Schurk:in, Kämpfer:in, Kleriker:in oder Magier:in, gern als Wikilink. Steht unter dem rechten Symbol und wählt es."
+      en: "Archetype the ability belongs to — Rogue, Fighter, Cleric or Mage, a wikilink if you like. Stands under the right icon and picks it."
+    sample:
+      de: "[[Schurk:in]]"
+      en: "[[Rogue]]"
+
+  tags:
+    slot: front-tags
+    aliases: [merkmale, schlagworte]
+    description:
+      de: "Schlagworte als Pillen — „Aktiv“, „Passiv“, „Nahkampf“, „Fernkampf“, „Zauber“, „Geschoss“. Ein bis drei sind üblich."
+      en: "Tags as pills — \"Active\", \"Passive\", \"Melee\", \"Ranged Combat\", \"Spell\", \"Projectile\". One to three are usual."
+    sample:
+      de: ["Aktiv", "Fernkampf"]
+      en: ["Active", "Ranged Combat"]
+
+  effect:
+    slot: front-effect
+    aliases: [wirkung, effekt, regel, rule, text]
+    description:
+      de: "Regeltext der Fähigkeit — was sie tut (Markdown)."
+      en: "The ability's rule — what it does (markdown)."
+    sample:
+      de: "Du kannst mit einer Fernkampfwaffe bis zu drei Ziele mit einer Aktion angreifen."
+      en: "With a ranged weapon you can attack up to three targets with one action."
+
+  tag-description:
+    slot: front-notes
+    aliases: [tag-descriptions, tag-erklärung, tag-erklaerung, tag-notizen]
+    description:
+      de: "Erklärungen einzelner Schlagworte als Liste einzelner Paare (`{ Aktiv: … }`) — etwa wie oft „Aktiv“ bei einem Kleriker wirkt. Steht klein unter der Wirkung."
+      en: "Explanations of single tags as a list of single-key pairs (`{ Active: … }`) — how often \"Active\" triggers for a cleric, say. Set small under the effect."
+    sample:
+      de:
+        - { Aktiv: "Zweimal täglich je Charakterstufe." }
+        - { Zauber: "Bei allen Zaubern zählt die Fertigkeit Arkanes als Bonus." }
+      en:
+        - { Active: "Twice per day per character level." }
+        - { Spell: "For every spell, add your Arcana skill as a bonus." }
