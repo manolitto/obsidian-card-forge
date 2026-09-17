@@ -47,3 +47,28 @@ export function findDuplicateActiveIds(entries: readonly SystemEntry[]): string[
   }
   return [...duplicated];
 }
+
+/**
+ * The registry after a copy: a vault entry for the folder, active. With
+ * the original's id kept, the bundled entry goes inactive — the invariant
+ * is about enabled systems, and switching back is one click. With a new
+ * id both stay active; nothing is duplicated.
+ */
+export function entriesAfterCopy(
+  entries: readonly SystemEntry[],
+  bundledId: string,
+  copyId: string,
+  path: string
+): SystemEntry[] {
+  const kept = entries.map((entry) =>
+    entry.type === "bundled" && entry.id === bundledId && copyId === bundledId
+      ? { ...entry, active: false }
+      : entry
+  );
+  return [...kept, { type: "vault", id: copyId, path, active: true }];
+}
+
+/** What a system id may be: lowercase letters, digits and hyphens, as every bundled one is. */
+export function isSystemId(id: string): boolean {
+  return /^[a-z0-9][a-z0-9-]*$/.test(id);
+}

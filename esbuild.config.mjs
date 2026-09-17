@@ -31,6 +31,9 @@ const context = await esbuild.context({
   logLevel: "info",
   sourcemap: prod ? false : "inline",
   treeShaking: true,
+  // The production bundle is minified: the bundled systems' fonts and
+  // images are base64 and do not shrink, but the code around them does.
+  minify: prod,
   outfile: "main.js",
 });
 

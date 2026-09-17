@@ -4,3 +4,189 @@
  * Card CSS does NOT belong here: it lives in resources/base-card.css and
  * resources/systems/<system>/, and is loaded by the renderer.
  */
+
+/* ── The in-note preview ─────────────────────────────────────────── */
+
+.cf-card-block {
+  margin: var(--size-4-2) 0;
+}
+
+.cf-card-placeholder,
+.cf-card-empty {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  padding: var(--size-4-2) 0;
+}
+
+.cf-card-stepping {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-2);
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+
+.cf-card-stepping button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.cf-card-diagnostics {
+  margin: var(--size-4-2) 0 0;
+  padding-left: var(--size-4-4);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+}
+
+/* ── The property reference ──────────────────────────────────────── */
+
+.cf-reference-modal {
+  width: min(96vw, 1100px);
+  max-width: none;
+}
+
+.cf-reference-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-ui-small);
+}
+
+.cf-reference-table th,
+.cf-reference-table td {
+  padding: var(--size-4-1) var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.cf-reference-table th {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.cf-reference-key,
+.cf-reference-slot,
+.cf-reference-aliases {
+  white-space: nowrap;
+}
+
+.cf-reference-aliases,
+.cf-reference-slot {
+  color: var(--text-muted);
+}
+
+.cf-reference-sample code {
+  white-space: pre-wrap;
+}
+
+.cf-reference-keys {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--size-4-1) var(--size-4-3);
+  font-size: var(--font-ui-small);
+  margin: 0;
+}
+
+.cf-reference-keys dd {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.cf-reference-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-4);
+}
+
+/* ── The deck block ──────────────────────────────────────────────── */
+
+.cf-deck-block {
+  margin: var(--size-4-2) 0;
+  padding: var(--size-4-3) var(--size-4-4);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.cf-deck-summary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--size-2-1) var(--size-4-4);
+  margin: 0;
+  font-size: var(--font-ui-small);
+}
+
+.cf-deck-summary dt {
+  color: var(--text-muted);
+}
+
+.cf-deck-summary dd {
+  margin: 0;
+}
+
+.cf-deck-diagnostics {
+  margin: var(--size-4-2) 0 0;
+  padding-left: var(--size-4-4);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+}
+
+.cf-deck-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}
+
+/* ── The deck preview view ───────────────────────────────────────── */
+
+.cf-deck-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}
+
+.cf-deck-view-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+  padding: var(--size-4-2) var(--size-4-3);
+  border-bottom: 1px solid var(--background-modifier-border);
+  font-size: var(--font-ui-small);
+}
+
+.cf-deck-view-status {
+  flex: 1;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cf-deck-view-sheet {
+  flex: 1;
+  overflow: auto;
+  padding: var(--size-4-2);
+  background: var(--background-secondary);
+}
+
+.cf-deck-view-frame {
+  display: block;
+  border: 0;
+}
+
+/* ── The settings page ───────────────────────────────────────────── */
+
+.cf-system-messages {
+  margin: 0 0 var(--size-4-2);
+  padding-left: var(--size-4-4);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+}
+
+.cf-system-messages:empty {
+  display: none;
+}

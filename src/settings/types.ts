@@ -1,3 +1,5 @@
+import type { PaperBackground } from "../definitions/deck-settings";
+
 /** Plugin UI language. `"auto"` follows Obsidian's own setting. */
 export type UiLanguage = "auto" | "en" | "de";
 
@@ -46,9 +48,22 @@ export interface CardForgeSettings {
    */
   systems: SystemEntry[];
   language: UiLanguage;
+  /**
+   * Height of a card in the in-note preview, in pixels — the layer under a
+   * note's own `display-height`.
+   */
+  previewHeight: number;
+  /**
+   * Whether a deck prints the system's textures — the layer under a deck's
+   * own `paper-background`. A reader's preference, not a system's: a system
+   * ships the textures, but whether they are printed is not its call.
+   */
+  paperBackground: PaperBackground;
 }
 
 export const DEFAULT_SETTINGS: CardForgeSettings = {
   systems: [],
   language: "auto",
+  previewHeight: 350,
+  paperBackground: "textured",
 };
