@@ -1,0 +1,24 @@
+{{!--
+  5E — the monster front: the block, then the sections a legendary
+  creature adds.
+
+    front-legendary-actions, front-lair-actions,
+    front-regional-effects                       sections under their
+                                                 heads, each opened by
+                                                 its preamble
+--}}
+<div class="card-root card-front dd monster-card">
+  <div class="dd-bar"></div>
+  <div class="card-header dd-header">
+    <div class="card-title dd-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+  </div>
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{> statblock}}
+    {{> entries for="front-legendary-actions" head=true}}
+    {{> entries for="front-lair-actions" head=true}}
+    {{> entries for="front-regional-effects" head=true}}
+    </div>
+  </div>
+  <div class="dd-bar"></div>
+</div>

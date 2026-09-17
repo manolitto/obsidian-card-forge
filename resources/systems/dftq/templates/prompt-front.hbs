@@ -1,0 +1,23 @@
+{{!--
+  Descended from the Queen — the prompt front.
+
+    front-heading   the heading, large at the top, over a short rule
+    front-text      the prompt, lifted a little above the centre — the
+                    heading sits above the body, so an even split would
+                    read as low
+--}}
+<div class="card-root card-front dftq prompt-card">
+  <div class="card-header dftq-header">
+    {{#if (slot "front-heading")}}
+    <div class="card-title dftq-heading"><span class="text-scalable">{{slot "front-heading" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+    <div class="dftq-rule"></div>
+    {{/if}}
+  </div>
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    <span class="cf-fill-2"></span>
+    <div class="dftq-prompt">{{slot "front-text" markdown="block"}}</div>
+    <span class="cf-fill-4"></span>
+    </div>
+  </div>
+</div>

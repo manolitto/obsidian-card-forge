@@ -1,0 +1,7 @@
+Question-17 · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   span.cf-fill-2
+   div.dftq-prompt
+     p "The Queen has asked you to …"
+   span.cf-fill-4
+2. back [cf-layout-default] scale —

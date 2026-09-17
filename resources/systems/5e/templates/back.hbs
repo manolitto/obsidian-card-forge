@@ -1,0 +1,24 @@
+{{!--
+  5E — the back of both card types.
+
+    back-image   the picture, fitted whole between the orange bars, the
+                 card type's label above it and the name below
+    back-title   the name
+
+  Without a picture: a d20 in the heading red, the wordmark, the name.
+--}}
+{{#if (slot "back-image")}}
+<div class="card-root card-back dd {{card-type}}-card {{card-type}}-back">
+  <div class="dd-bar"></div>
+  <div class="dd-back-label">{{t "back-label"}}</div>
+  <div class="dd-back-picture"><img src="{{slot "back-image" image=true}}" alt="" /></div>
+  <div class="dd-back-name"><span class="text-scalable">{{slot "back-title" plain=true}}</span></div>
+  <div class="dd-bar"></div>
+</div>
+{{else}}
+<div class="card-root card-back dd dd-plain-back {{card-type}}-card {{card-type}}-back">
+  <div class="dd-d20">{{asset "assets/d20-mark.svg" inline=true}}</div>
+  <div class="dd-wordmark">{{t "back-label"}}</div>
+  <div class="dd-back-name"><span class="text-scalable">{{slot "back-title" plain=true}}</span></div>
+</div>
+{{/if}}

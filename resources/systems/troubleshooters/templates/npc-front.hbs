@@ -1,0 +1,70 @@
+{{!--
+  The Troubleshooters — the character front, in the blue frame.
+
+    front-title                        the name on the strip, the card
+                                       type's label at its right
+    front-initiative, front-vitality,
+    front-defense                      three numbers on one line, each
+                                       after its blue caption
+    front-traits                       one line after its caption
+    front-attacks, front-skills        lists of { name, desc } under
+                                       their captions, orange bullets
+    front-languages                    one line after its caption
+    front-text                         the description
+    front-footer                       the reference, at the foot's right
+--}}
+<div class="card-root card-front troubleshooters npc-card">
+  <div class="card-header ts-strip">
+    <div class="card-title ts-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+    <div class="ts-strip-label">{{t "card-type-label"}}</div>
+  </div>
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (or (slot "front-initiative") (slot "front-vitality") (slot "front-defense"))}}
+    <div class="ts-line ts-numbers">
+      {{#if (slot "front-initiative")}}<span class="ts-number"><span class="ts-caption">{{slot-label "front-initiative"}}</span>{{slot "front-initiative" markdown=false}}</span>{{/if}}
+      {{#if (slot "front-vitality")}}<span class="ts-number"><span class="ts-caption">{{slot-label "front-vitality"}}</span>{{slot "front-vitality" markdown=false}}</span>{{/if}}
+      {{#if (slot "front-defense")}}<span class="ts-number"><span class="ts-caption">{{slot-label "front-defense"}}</span>{{slot "front-defense" markdown=false}}</span>{{/if}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-traits")}}
+    <div class="ts-line"><span class="ts-caption">{{slot-label "front-traits"}}</span>{{slot "front-traits"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-attacks" list=true)}}
+    <div class="ts-line cf-keep-with-next"><span class="ts-caption">{{slot-label "front-attacks"}}</span></div>
+    <ul class="ts-list">
+      {{#each (slot "front-attacks" list=true)}}
+      <li>{{#if name}}{{name}} {{/if}}{{desc}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if (slot "front-skills" list=true)}}
+    <div class="ts-line cf-keep-with-next"><span class="ts-caption">{{slot-label "front-skills"}}</span></div>
+    <ul class="ts-list">
+      {{#each (slot "front-skills" list=true)}}
+      <li>{{#if name}}{{name}} {{/if}}{{desc}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if (slot "front-languages")}}
+    <div class="ts-line"><span class="ts-caption">{{slot-label "front-languages"}}</span>{{slot "front-languages"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-text")}}
+    <div class="ts-prose ts-description">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    <span class="cf-fill-1"></span>
+
+    {{#if (slot "front-footer")}}
+    <div class="ts-reference ts-reference-right">{{slot "front-footer" plain=true}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+</div>

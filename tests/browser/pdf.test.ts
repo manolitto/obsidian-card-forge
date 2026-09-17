@@ -32,6 +32,10 @@ describe.each([
   "dcc",
   "dino-island",
   "tor2e",
+  "sw",
+  "troubleshooters",
+  "5e",
+  "dftq",
 ])("the %s deck prints", (system) => {
   it("to as many pages as it composed, on the paper it said", async () => {
     const deck = await deckNote(system);

@@ -1,0 +1,12 @@
+{{!--
+  Swords & Wizardry — the foot.
+
+    front-footer   the source reference, in italics past the curl of a
+                   long flourish, as the rulebook sets its page numbers
+--}}
+{{#if (slot "front-footer")}}
+<div class="card-footer sw-footer">
+  <div class="sw-footer-wave"></div>
+  <div class="sw-reference">{{slot "front-footer" plain=true}}</div>
+</div>
+{{/if}}

@@ -1,0 +1,41 @@
+{{!--
+  The Troubleshooters — the mechanic front, in the orange frame.
+
+    front-title      the name on the strip, in white small capitals
+    front-requires   what the rule requires, after its blue caption
+    front-text       the rule's prose
+    front-points     a list of { name, desc }, orange bullets
+    front-footer     the reference, small at the foot's left
+--}}
+<div class="card-root card-front troubleshooters mechanic-card">
+  <div class="card-header ts-strip">
+    <div class="card-title ts-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+  </div>
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-requires")}}
+    <div class="ts-requires"><span class="ts-caption">{{slot-label "front-requires"}}</span> {{slot "front-requires"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-text")}}
+    <div class="ts-prose">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-points" list=true)}}
+    <ul class="ts-list">
+      {{#each (slot "front-points" list=true)}}
+      <li>{{#if name}}{{name}} {{/if}}{{desc}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+
+    <span class="cf-fill-1"></span>
+
+    {{#if (slot "front-footer")}}
+    <div class="ts-reference">({{slot "front-footer" plain=true}})</div>
+    {{/if}}
+
+    </div>
+  </div>
+</div>

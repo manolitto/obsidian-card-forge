@@ -1,0 +1,8 @@
+Kletterset · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.card-title.ts-gear-title "Kletterset"
+   p.ts-gear-content "30 m Seil, Karabiner, Klettergurt, Kreide"
+   ul.ts-gear-traits (2 items) "Klettern: +3 Pips Abseilen: eine Bewegungsaktion …"
+   div.ts-gear-story-points "Story-Punkte 2"
+   span.cf-fill-1
+2. back [cf-layout-default] scale —

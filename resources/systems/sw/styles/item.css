@@ -1,0 +1,17 @@
+/* ── Swords & Wizardry — the magic item card ────────────────────────
+   The shared rules are in sw.css; the item adds the effect's prose. */
+
+.sw-effect {
+  margin: 0.1em 0 0.25em;
+}
+.sw-effect p {
+  margin: 0.15em 0;
+}
+.sw-effect ul,
+.sw-effect ol {
+  margin: 0.1em 0 0.1em 1em;
+  padding: 0;
+}
+.sw-effect li {
+  margin: 0.05em 0;
+}

@@ -1,0 +1,48 @@
+{{!--
+  Swords & Wizardry — the magic item front.
+
+    front-text                        the flavour, in italics
+    front-image                       the plate under it
+    front-table-roll … front-charges  the stats that apply, as caption /
+                                      value rows in the rulebook's order
+    front-effect                      the effect under its banner
+    front-notes                       the notes after a bold caption
+--}}
+<div class="card-root card-front sw item-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-text")}}
+    <p class="sw-flavour">{{slot "front-text"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-image")}}
+    <div class="sw-plate"><img class="sw-plate-image" src="{{slot "front-image" image=true}}" alt="" /></div>
+    {{/if}}
+
+    {{#if (or (slot "front-table-roll") (slot "front-class") (slot "front-bonus") (slot "front-duration") (slot "front-charges"))}}
+    <div class="sw-stats">
+      {{#if (slot "front-table-roll")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-table-roll"}}</span> {{slot "front-table-roll" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-class")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-class"}}</span> {{slot "front-class" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-bonus")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-bonus"}}</span> {{slot "front-bonus" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-duration")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-duration"}}</span> {{slot "front-duration" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-charges")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-charges"}}</span> {{slot "front-charges" markdown=false}}</p>{{/if}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-effect")}}
+    {{> banner for="front-effect"}}
+    <div class="sw-effect">{{slot "front-effect" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-notes")}}
+    <div class="sw-entry"><span class="sw-entry-name">{{slot-label "front-notes"}}</span>{{slot "front-notes"}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

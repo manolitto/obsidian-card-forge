@@ -1,0 +1,13 @@
+Nachtportier · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.ts-line.ts-numbers "Initiative 3 Vitalität 3"
+   div.ts-line "Eigenschaften Handlanger"
+   div.ts-line.cf-keep-with-next "Angriffe"
+   ul.ts-list (1 items) "Faust: 35 %, 2 WX, Nicht …"
+   div.ts-line.cf-keep-with-next "Kompetenzen"
+   ul.ts-list (2 items) "Basis: 35 % Gäste wiedererkennen: 65 …"
+   div.ts-prose.ts-description
+     p "Sitzt hinter dem Tresen, weiß, wer …"
+   span.cf-fill-1
+   div.ts-reference.ts-reference-right "Regelbuch S. 229"
+2. back [cf-layout-default] scale —

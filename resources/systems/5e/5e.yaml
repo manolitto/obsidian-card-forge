@@ -1,0 +1,389 @@
+id: 5e
+name: "5E"
+
+# The stat block of the fifth-edition SRD as it is printed: parchment,
+# dark-red headings, tapered red rules between the sections, an orange
+# bar at the top and the foot, six ability scores in a row. Bookinsanity
+# for the text, Mr Eaves Small Caps for the section heads, Scaly Sans for
+# the scores, Nodesto Caps Condensed for the title. English only. The
+# system is named "5E" and carries no publisher's mark or wordmark; the
+# sample values are invented.
+#
+# Two card types with the same face, a monster and a non-player
+# character: the monster adds the legendary and lair actions and the
+# regional effects. Both print on a large card; a dense block shrinks
+# far before it spills. The back is the picture between the orange bars,
+# or a d20 with the wordmark where there is none.
+languages: [en]
+
+stylesheet: styles/5e.css
+
+partial-templates:
+  statblock: templates/statblock.hbs
+  entries: templates/entries.hbs
+  rule: templates/rule.hbs
+
+card-size: large
+
+# ── Shared vocabulary ─────────────────────────────────────────────────
+properties:
+  name:
+    slot: [front-title, back-title]
+    description:
+      en: "The creature's name. Falls back to the file name."
+
+  size:
+    slot: front-size
+    aliases: [größe, groesse]
+    description:
+      en: "The size category — Tiny, Small, Medium, Large, Huge, Gargantuan — first in the italic line under the name."
+    sample: "Medium"
+
+  type:
+    slot: front-type
+    aliases: [art, kreaturentyp]
+    description:
+      en: "The creature type, with its tags in parentheses — `humanoid (goblinoid)`, `beast`, `undead`."
+    sample: "beast"
+
+  alignment:
+    slot: front-alignment
+    aliases: [gesinnung]
+    description:
+      en: "The alignment — `neutral evil`, `chaotic good`, `unaligned` — after the type, comma-separated."
+    sample: "unaligned"
+
+  ac:
+    slot: front-ac
+    aliases: [armor-class, armor_class, armorclass, rüstungsklasse, ruestungsklasse, rk]
+    description:
+      en: "Armor Class, usually a number with its source in parentheses — `15 (leather armor, shield)`."
+    sample: "13 (natural armor)"
+
+  hp:
+    slot: front-hp
+    aliases: [hit-points, hit_points, hitpoints, trefferpunkte, tp]
+    description:
+      en: "Hit Points, usually the average with the hit-die formula in parentheses — `7 (2d6)`."
+    sample: "22 (4d8 + 4)"
+
+  speed:
+    slot: front-speed
+    aliases: [bewegungsrate, bewegung]
+    description:
+      en: "The speeds, comma-separated where there are several — `40 ft., climb 40 ft., fly 80 ft.`."
+    sample: "40 ft."
+
+  habitat:
+    slot: front-habitat
+    aliases: [environment, lebensraum]
+    description:
+      en: "The habitat, as the 2024 rules print it under the speed — `Forest, Grassland`. The line prints when it is set."
+
+  treasure:
+    slot: front-treasure
+    aliases: [hoard, schatz]
+    description:
+      en: "The treasure category of the 2024 rules — `Individual`, `Hoard`, `None`. The line prints when it is set."
+
+  gear:
+    slot: front-gear
+    aliases: [equipment, ausrüstung, ausruestung]
+    description:
+      en: "The gear carried, as the 2024 rules list it — comma-separated. The line prints when it is set."
+
+  # The six scores, each as the rulebook writes it: the score and the
+  # modifier in parentheses. A plain number prints as it is.
+  str:
+    slot: front-str
+    aliases: [strength, stärke, staerke]
+    description:
+      en: "Strength — `score (modifier)`, e.g. `8 (-1)`."
+    sample: "15 (+2)"
+
+  dex:
+    slot: front-dex
+    aliases: [dexterity, geschicklichkeit, ges]
+    description:
+      en: "Dexterity — `score (modifier)`."
+    sample: "14 (+2)"
+
+  con:
+    slot: front-con
+    aliases: [constitution, konstitution, kon]
+    description:
+      en: "Constitution — `score (modifier)`."
+    sample: "13 (+1)"
+
+  int:
+    slot: front-int
+    aliases: [intelligence, intelligenz]
+    description:
+      en: "Intelligence — `score (modifier)`."
+    sample: "3 (-4)"
+
+  wis:
+    slot: front-wis
+    aliases: [wisdom, weisheit, wei]
+    description:
+      en: "Wisdom — `score (modifier)`."
+    sample: "12 (+1)"
+
+  cha:
+    slot: front-cha
+    aliases: [charisma]
+    description:
+      en: "Charisma — `score (modifier)`."
+    sample: "6 (-2)"
+
+  saves:
+    slot: front-saves
+    aliases: [saving-throws, saving_throws, savingthrows, rettungswürfe, rettungswuerfe]
+    description:
+      en: "Saving-throw bonuses, comma-separated — `Dex +6, Con +13`. The line prints when it is set."
+
+  skills:
+    slot: front-skills
+    aliases: [fertigkeiten]
+    description:
+      en: "Skill bonuses, comma-separated — `Perception +3, Stealth +4`. The line prints when it is set."
+    sample: "Perception +3, Stealth +4"
+
+  vulnerabilities:
+    slot: front-vulnerabilities
+    aliases: [damage-vulnerabilities, damage_vulnerabilities, schadensanfälligkeiten, schadensanfaelligkeiten]
+    description:
+      en: "Damage vulnerabilities, comma-separated. The line prints when it is set."
+
+  resistances:
+    slot: front-resistances
+    aliases: [damage-resistances, damage_resistances, schadensresistenzen]
+    description:
+      en: "Damage resistances, comma-separated. The line prints when it is set."
+
+  immunities:
+    slot: front-immunities
+    aliases: [damage-immunities, damage_immunities, schadensimmunitäten, schadensimmunitaeten]
+    description:
+      en: "Damage immunities, comma-separated. The line prints when it is set."
+    sample: "fire"
+
+  condition-immunities:
+    slot: front-condition-immunities
+    aliases: [condition_immunities, conditionimmunities, zustandsimmunitäten, zustandsimmunitaeten]
+    description:
+      en: "Condition immunities, comma-separated — `charmed, frightened`. The line prints when it is set."
+
+  senses:
+    slot: front-senses
+    aliases: [sinne]
+    description:
+      en: "The senses — `darkvision 60 ft., passive Perception 13`."
+    sample: "darkvision 60 ft., passive Perception 13"
+
+  languages:
+    slot: front-languages
+    aliases: [sprachen]
+    description:
+      en: "The languages, or `—` for a creature that has none."
+    sample: "—"
+
+  cr:
+    slot: front-cr
+    aliases: [challenge, challenge-rating, challenge_rating, challengerating, herausforderungsgrad, hg]
+    description:
+      en: "The challenge rating — a number, a fraction (`1/8`, `1/2`) — with the experience points from `xp` in parentheses after it."
+    sample: "1"
+
+  xp:
+    slot: front-xp
+    aliases: [experience, exp, ep, erfahrungspunkte]
+    description:
+      en: "The experience points for the creature, printed after the challenge rating — `1 (200 XP)`."
+    sample: 200
+
+  proficiency-bonus:
+    slot: front-proficiency-bonus
+    aliases: [proficiency_bonus, pb, prof, prof-bonus, prof_bonus, übungsbonus, uebungsbonus]
+    description:
+      en: "The proficiency bonus, as the 2024 rules print it on the challenge line — `+2`. Prints when it is set."
+
+  # The feature sections: each a list of `name` and `desc`, printed as
+  # paragraphs led by the name in bold italics. An entry with only a
+  # `desc` is a plain paragraph — how a section's preamble is written.
+  traits:
+    slot: front-traits
+    aliases: [merkmale, eigenschaften]
+    description:
+      en: "The traits above the actions — a list of `name` and `desc`; the description takes markdown and wikilinks."
+    sample:
+      - name: "Keen Smell"
+        desc: "The hound has advantage on Wisdom (Perception) checks that rely on smell."
+
+  actions:
+    slot: front-actions
+    aliases: [aktionen]
+    description:
+      en: "The actions, under their head — a list of `name` and `desc`; `*Melee Weapon Attack:*` and the like as markdown."
+    sample:
+      - name: "Bite"
+        desc: "*Melee Weapon Attack:* +4 to hit, reach 5 ft., one target. *Hit:* 7 (2d4 + 2) piercing damage plus 3 (1d6) fire damage."
+
+  bonus-actions:
+    slot: front-bonus-actions
+    aliases: [bonus_actions, bonusactions, bonusaktionen]
+    description:
+      en: "The bonus actions, under their own head — the same shape as `actions`."
+
+  reactions:
+    slot: front-reactions
+    aliases: [reaktionen]
+    description:
+      en: "The reactions, under their own head — the same shape as `actions`; each states its trigger in the description."
+
+  image:
+    slot: back-image
+    aliases: [bild]
+    description:
+      en: "The creature's picture — a wikilink to a picture in the vault — large on the back between the orange bars. Without one the back shows a d20 and the wordmark."
+    sample: "[[Cinder-Hound.png]]"
+
+translations:
+  en:
+    back-label: "5E"
+    front-ac-label: "Armor Class"
+    front-hp-label: "Hit Points"
+    front-speed-label: "Speed"
+    front-habitat-label: "Habitat"
+    front-treasure-label: "Treasure"
+    front-gear-label: "Gear"
+    front-str-label: "STR"
+    front-dex-label: "DEX"
+    front-con-label: "CON"
+    front-int-label: "INT"
+    front-wis-label: "WIS"
+    front-cha-label: "CHA"
+    front-saves-label: "Saving Throws"
+    front-skills-label: "Skills"
+    front-vulnerabilities-label: "Damage Vulnerabilities"
+    front-resistances-label: "Damage Resistances"
+    front-immunities-label: "Damage Immunities"
+    front-condition-immunities-label: "Condition Immunities"
+    front-senses-label: "Senses"
+    front-languages-label: "Languages"
+    front-cr-label: "Challenge"
+    front-xp-label: "XP"
+    front-proficiency-bonus-label: "Proficiency Bonus"
+    front-actions-label: "Actions"
+    front-bonus-actions-label: "Bonus Actions"
+    front-reactions-label: "Reactions"
+    front-legendary-actions-label: "Legendary Actions"
+    front-lair-actions-label: "Lair Actions"
+    front-regional-effects-label: "Regional Effects"
+
+card-types:
+  # ── monster ─────────────────────────────────────────────────────────
+  # The full block, with the three sections a legendary creature adds.
+  monster:
+    front-template: templates/monster-front.hbs
+    back-template: templates/back.hbs
+
+    translations:
+      en:
+        back-label: "Bestiary"
+
+    properties:
+      name:
+        sample: "Cinder Hound"
+
+      legendary-actions:
+        slot: front-legendary-actions
+        aliases: [legendary_actions, legendaryactions, legendäre-aktionen, legendaere-aktionen]
+        description:
+          en: "The legendary actions — the same shape as `actions`; the preamble is a first entry with only a `desc`, a cost belongs in the name — `Wing Attack (Costs 2 Actions)`."
+
+      lair-actions:
+        slot: front-lair-actions
+        aliases: [lair_actions, lairactions, hort-aktionen, hort_aktionen]
+        description:
+          en: "The lair actions — the same shape as `legendary-actions`, the preamble first."
+
+      regional-effects:
+        slot: front-regional-effects
+        aliases: [regional_effects, regionaleffects, regionale-effekte, regionale_effekte]
+        description:
+          en: "The regional effects — the same shape as `legendary-actions`, the preamble first."
+
+  # ── npc ─────────────────────────────────────────────────────────────
+  # The same block without the legendary sections.
+  npc:
+    front-template: templates/npc-front.hbs
+    back-template: templates/back.hbs
+
+    translations:
+      en:
+        back-label: "NPC"
+
+    properties:
+      name:
+        sample: "Toll Warden"
+
+      size:
+        sample: "Medium"
+
+      type:
+        sample: "humanoid (any race)"
+
+      alignment:
+        sample: "lawful neutral"
+
+      ac:
+        sample: "16 (chain shirt, shield)"
+
+      hp:
+        sample: "11 (2d8 + 2)"
+
+      speed:
+        sample: "30 ft."
+
+      str:
+        sample: "13 (+1)"
+      dex:
+        sample: "12 (+1)"
+      con:
+        sample: "12 (+1)"
+      int:
+        sample: "10 (+0)"
+      wis:
+        sample: "11 (+0)"
+      cha:
+        sample: "10 (+0)"
+
+      skills:
+        sample: "Insight +2, Perception +2"
+
+      immunities:
+        sample: ~
+
+      senses:
+        sample: "passive Perception 12"
+
+      languages:
+        sample: "Common"
+
+      cr:
+        sample: "1/8"
+
+      xp:
+        sample: 25
+
+      traits:
+        sample: ~
+
+      actions:
+        sample:
+          - name: "Spear"
+            desc: "*Melee or Ranged Weapon Attack:* +3 to hit, reach 5 ft. or range 20/60 ft., one target. *Hit:* 4 (1d6 + 1) piercing damage."
+
+      image:
+        sample: "[[Toll-Warden.png]]"

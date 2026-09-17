@@ -1,0 +1,13 @@
+{{!--
+  The Troubleshooters — the character back: the picture, fitted whole,
+  where the note has one; else the logo box with the name under it.
+
+    back-image   the picture
+--}}
+{{#if (slot "back-image")}}
+<div class="card-root card-back troubleshooters npc-card npc-back npc-picture-back">
+  <div class="ts-picture"><img src="{{slot "back-image" image=true}}" alt="" /></div>
+</div>
+{{else}}
+{{> back}}
+{{/if}}
