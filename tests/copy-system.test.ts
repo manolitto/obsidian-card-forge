@@ -130,7 +130,8 @@ describe("entriesAfterCopy", () => {
       [other, bundled],
       "dragonbane",
       "dragonbane",
-      "card-forge/dragonbane/dragonbane.yaml"
+      "card-forge/dragonbane/dragonbane.yaml",
+      "Copy of Dragonbane"
     );
     expect(out).toEqual([
       other,
@@ -138,6 +139,7 @@ describe("entriesAfterCopy", () => {
       {
         type: "vault",
         id: "dragonbane",
+        name: "Copy of Dragonbane",
         path: "card-forge/dragonbane/dragonbane.yaml",
         active: true,
       },
@@ -150,13 +152,15 @@ describe("entriesAfterCopy", () => {
       [bundled],
       "dragonbane",
       "dragonbane-mine",
-      "card-forge/mine/dragonbane.yaml"
+      "card-forge/mine/dragonbane.yaml",
+      "Mine"
     );
     expect(out).toEqual([
       bundled,
       {
         type: "vault",
         id: "dragonbane-mine",
+        name: "Mine",
         path: "card-forge/mine/dragonbane.yaml",
         active: true,
       },
@@ -166,7 +170,7 @@ describe("entriesAfterCopy", () => {
 
   it("does not mutate the entries it was given", () => {
     const entries = [{ ...bundled }];
-    entriesAfterCopy(entries, "dragonbane", "dragonbane", "x");
+    entriesAfterCopy(entries, "dragonbane", "dragonbane", "x", "X");
     expect(entries[0]!.active).toBe(true);
   });
 });
@@ -195,6 +199,7 @@ describe("the library after a registry change", () => {
     const copy: SystemEntry = {
       type: "vault",
       id: "simple",
+      name: "Simple",
       path: "Systems/simple/game-system.yaml",
       active: true,
     };

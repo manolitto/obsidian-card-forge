@@ -9,7 +9,8 @@ import type { SystemEntry, UiLanguage } from "./types";
 /*
  * The settings page: the system registry, then three preferences.
  *
- * Every registered system is one row — its name, where it comes from, its
+ * Every registered system is one row — its name (known without a load, so
+ * a switched-off row is called what it is), where it comes from, its
  * switch, and under it every message loading it produced, in the library's
  * own words, so a duplicate id shows its error on both rows and a broken
  * vault system says what is wrong with it. A bundled row offers *Copy into
@@ -41,7 +42,9 @@ export class CardForgeSettingTab extends PluginSettingTab {
   }
 
   private systemRow(parent: HTMLElement, entry: SystemEntry): void {
-    const row = new Setting(parent).setName(entry.id).setClass("cf-system-row");
+    const row = new Setting(parent)
+      .setName(this.plugin.systems.nameOf(entry))
+      .setClass("cf-system-row");
     row.setDesc(
       entry.type === "bundled"
         ? t("settings.system.bundled")
@@ -77,6 +80,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
     const messages = parent.createEl("ul", { cls: "cf-system-messages" });
     if (!entry.active) return;
     void this.plugin.systems.load(entry.id).then((result) => {
+      // The document may have been renamed since the entry was registered.
       if (result.system) row.setName(result.system.declaration.name);
       for (const message of result.messages) messages.createEl("li", { text: message });
     });
@@ -141,6 +145,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
           this.plugin.settings.systems.push({
             type: "vault",
             id: verdict.id,
+            name: verdict.name ?? verdict.id,
             path,
             active: true,
           });

@@ -58,14 +58,15 @@ export function entriesAfterCopy(
   entries: readonly SystemEntry[],
   bundledId: string,
   copyId: string,
-  path: string
+  path: string,
+  name: string
 ): SystemEntry[] {
   const kept = entries.map((entry) =>
     entry.type === "bundled" && entry.id === bundledId && copyId === bundledId
       ? { ...entry, active: false }
       : entry
   );
-  return [...kept, { type: "vault", id: copyId, path, active: true }];
+  return [...kept, { type: "vault", id: copyId, name, path, active: true }];
 }
 
 /** What a system id may be: lowercase letters, digits and hyphens, as every bundled one is. */
