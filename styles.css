@@ -38,3 +38,64 @@
   font-size: var(--font-ui-small);
   color: var(--text-warning);
 }
+
+/* ── The property reference ──────────────────────────────────────── */
+
+.cf-reference-modal {
+  width: min(96vw, 1100px);
+  max-width: none;
+}
+
+.cf-reference-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-ui-small);
+}
+
+.cf-reference-table th,
+.cf-reference-table td {
+  padding: var(--size-4-1) var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.cf-reference-table th {
+  color: var(--text-muted);
+  font-weight: var(--font-semibold);
+}
+
+.cf-reference-key,
+.cf-reference-slot,
+.cf-reference-aliases {
+  white-space: nowrap;
+}
+
+.cf-reference-aliases,
+.cf-reference-slot {
+  color: var(--text-muted);
+}
+
+.cf-reference-sample code {
+  white-space: pre-wrap;
+}
+
+.cf-reference-keys {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--size-4-1) var(--size-4-3);
+  font-size: var(--font-ui-small);
+  margin: 0;
+}
+
+.cf-reference-keys dd {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.cf-reference-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-4);
+}

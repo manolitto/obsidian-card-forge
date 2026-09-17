@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { CARD_SETTING_KEYS } from "../src/definitions/card-settings";
 import {
   resolveUiLanguage,
   setUiLanguage,
@@ -23,6 +24,12 @@ describe("the strings table", () => {
   it("names the same placeholders in both languages", () => {
     for (const key of Object.keys(STRINGS.en) as (keyof typeof STRINGS.en)[]) {
       expect(placeholders(STRINGS.de[key]), key).toEqual(placeholders(STRINGS.en[key]));
+    }
+  });
+
+  it("documents every card setting for the reference", () => {
+    for (const key of ["system", "card-type", ...CARD_SETTING_KEYS]) {
+      expect(STRINGS.en, key).toHaveProperty(`card-key.${key}`);
     }
   });
 

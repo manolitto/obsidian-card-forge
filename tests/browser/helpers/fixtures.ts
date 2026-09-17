@@ -60,7 +60,10 @@ export const fixtureDeckSource: DeckSource = {
     const out: TaggedNote[] = [];
     for (const path of Object.keys(notes).sort()) {
       if (!path.startsWith(`${folder}/`)) continue;
-      if (!recursive && path.slice(folder.length + 1).includes("/")) continue;
+      const rest = path.slice(folder.length + 1);
+      if (!recursive && rest.includes("/")) continue;
+      // A `_` name is the harness's — the deck note, an insert golden — not a card.
+      if (rest.startsWith("_")) continue;
       const load = notes[path];
       if (!load) continue;
       const note = parseNote(await load(), path, diagnostics);

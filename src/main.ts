@@ -1,4 +1,11 @@
-import { getLanguage, Platform, Plugin, type TAbstractFile } from "obsidian";
+import {
+  getLanguage,
+  MarkdownView,
+  Platform,
+  Plugin,
+  type Editor,
+  type TAbstractFile,
+} from "obsidian";
 import { DeckExporter, type ExportFormat } from "./export/exporter";
 import { CardForgeSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
@@ -8,7 +15,10 @@ import { VaultImageSource } from "./render/vault-images";
 import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
 import { TemplateEngine } from "./templates/engine";
 import { cardBlockProcessor } from "./ui/card-block";
-import { resolveUiLanguage, setUiLanguage, t } from "./ui/strings";
+import { buildCardBlock, insertAtCursor, type InsertMode } from "./ui/insert-card";
+import { pickSystemAndCardType } from "./ui/pickers";
+import { PropertyReferenceModal } from "./ui/property-reference";
+import { resolveUiLanguage, setUiLanguage, t, uiLanguage } from "./ui/strings";
 
 export default class CardForgePlugin extends Plugin {
   override settings: CardForgeSettings = { ...DEFAULT_SETTINGS };
@@ -63,7 +73,54 @@ export default class CardForgePlugin extends Plugin {
       checkCallback: (checking) => this.exportDeck("html", checking, true),
     });
 
+    this.addCommand({
+      id: "insert-empty-card",
+      name: t("command.insert-empty"),
+      editorCallback: (editor) => void this.insertCard(editor, "empty"),
+    });
+    this.addCommand({
+      id: "insert-sample-card",
+      name: t("command.insert-sample"),
+      editorCallback: (editor) => void this.insertCard(editor, "sample"),
+    });
+    this.addCommand({
+      id: "property-reference",
+      name: t("command.property-reference"),
+      callback: () => void this.showReference(),
+    });
+
     this.addSettingTab(new CardForgeSettingTab(this.app, this));
+  }
+
+  private async insertCard(editor: Editor, mode: InsertMode): Promise<void> {
+    const picked = await pickSystemAndCardType(
+      this.app,
+      this.systems,
+      this.settings.systems
+    );
+    if (!picked) return;
+    insertAtCursor(
+      editor,
+      buildCardBlock(picked.system, picked.cardType, uiLanguage(), mode)
+    );
+  }
+
+  private async showReference(): Promise<void> {
+    // Captured before the pickers open: they take the focus with them.
+    const target = this.app.workspace.getActiveViewOfType(MarkdownView);
+    const picked = await pickSystemAndCardType(
+      this.app,
+      this.systems,
+      this.settings.systems
+    );
+    if (!picked) return;
+    new PropertyReferenceModal(
+      this.app,
+      picked.system,
+      picked.cardType,
+      uiLanguage(),
+      target
+    ).open();
   }
 
   /** The active note is the deck; the command is offered when there is one and the platform can. */
