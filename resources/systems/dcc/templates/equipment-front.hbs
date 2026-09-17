@@ -1,0 +1,48 @@
+{{!--
+  Dungeon Crawl Classics — the equipment front.
+
+    front-text                          the flavour, in italics
+    front-damage … front-cost           the stats that apply, as caption /
+                                        value rows in the rulebook's order;
+                                        the AC bonus and the check penalty
+                                        get their sign
+    front-notes                         the rulebook's footnotes, an italic
+                                        list at the foot
+--}}
+<div class="card-root card-front dcc equipment-card">
+  {{> header}}
+
+  <div class="dcc-frame">
+    <div class="card-content-container">
+      <div class="card-body-scalable">
+
+      {{#if (slot "front-text")}}
+      <p class="dcc-flavor">{{slot "front-text"}}</p>
+      {{/if}}
+
+      {{#if (or (slot "front-damage") (slot "front-range") (slot "front-ac-bonus") (slot "front-check-penalty") (slot "front-speed-penalty") (slot "front-fumble-die") (slot "front-quantity") (slot "front-weight") (slot "front-cost"))}}
+      <dl class="dcc-stats">
+        {{#if (slot "front-damage")}}<dt>{{slot-label "front-damage"}}</dt><dd>{{slot "front-damage" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-range")}}<dt>{{slot-label "front-range"}}</dt><dd>{{slot "front-range" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-ac-bonus")}}<dt>{{slot-label "front-ac-bonus"}}</dt><dd>{{slot "front-ac-bonus" markdown=false signed=true}}</dd>{{/if}}
+        {{#if (slot "front-check-penalty")}}<dt>{{slot-label "front-check-penalty"}}</dt><dd>{{slot "front-check-penalty" markdown=false signed=true}}</dd>{{/if}}
+        {{#if (slot "front-speed-penalty")}}<dt>{{slot-label "front-speed-penalty"}}</dt><dd>{{slot "front-speed-penalty" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-fumble-die")}}<dt>{{slot-label "front-fumble-die"}}</dt><dd>{{slot "front-fumble-die" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-quantity")}}<dt>{{slot-label "front-quantity"}}</dt><dd>{{slot "front-quantity" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-weight")}}<dt>{{slot-label "front-weight"}}</dt><dd>{{slot "front-weight" markdown=false}}</dd>{{/if}}
+        {{#if (slot "front-cost")}}<dt>{{slot-label "front-cost"}}</dt><dd>{{slot "front-cost" markdown=false}}</dd>{{/if}}
+      </dl>
+      {{/if}}
+
+      {{#if (slot "front-notes" list=true)}}
+      <ul class="dcc-notes">
+        {{#each (slot "front-notes" list=true)}}<li>{{this}}</li>{{/each}}
+      </ul>
+      {{/if}}
+
+      </div>
+    </div>
+
+    {{> footer}}
+  </div>
+</div>

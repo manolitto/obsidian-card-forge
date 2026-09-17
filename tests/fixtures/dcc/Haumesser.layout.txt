@@ -1,0 +1,5 @@
+Haumesser · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   dl.dcc-stats "Damage 1d6 Range 10/20/30 Cost 4 …"
+   ul.dcc-notes (1 items) "May be thrown; on a fumble …"
+2. back [cf-layout-default] scale —

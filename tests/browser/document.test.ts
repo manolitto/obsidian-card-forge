@@ -58,55 +58,59 @@ async function mounted(html: string): Promise<Document> {
   return doc;
 }
 
-describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e", "mini-d20"])(
-  "the %s deck's document",
-  (system) => {
-    it("measures as the composition says: paper, pages, every cell in place", async () => {
-      const deck = await build(system);
-      const { pages, grid } = composeDeck(deck);
-      const out = deckDocument(deck, `${system} deck`);
-      await commands.writeDeckDocument(system, out.html);
-      expect(out.pageCount).toBe(pages.length);
-      expect(out.paper).toEqual(grid.paper);
+describe.each([
+  "simple",
+  "dragonbane",
+  "eiserne-zeit",
+  "pf2e",
+  "mini-d20",
+  "dcc",
+])("the %s deck's document", (system) => {
+  it("measures as the composition says: paper, pages, every cell in place", async () => {
+    const deck = await build(system);
+    const { pages, grid } = composeDeck(deck);
+    const out = deckDocument(deck, `${system} deck`);
+    await commands.writeDeckDocument(system, out.html);
+    expect(out.pageCount).toBe(pages.length);
+    expect(out.paper).toEqual(grid.paper);
 
-      const doc = await mounted(out.html);
-      const pageEls = Array.from(doc.querySelectorAll<HTMLElement>(".cf-page"));
-      expect(pageEls).toHaveLength(pages.length);
+    const doc = await mounted(out.html);
+    const pageEls = Array.from(doc.querySelectorAll<HTMLElement>(".cf-page"));
+    expect(pageEls).toHaveLength(pages.length);
 
-      pageEls.forEach((pageEl, p) => {
-        const page = pages[p]!;
-        expect(pageEl.dataset["cfSide"]).toBe(page.side);
-        const box = pageEl.getBoundingClientRect();
-        expect(box.width).toBeCloseTo(grid.paper.width * PX_PER_MM, 0);
-        expect(box.height).toBeCloseTo(grid.paper.height * PX_PER_MM, 0);
+    pageEls.forEach((pageEl, p) => {
+      const page = pages[p]!;
+      expect(pageEl.dataset["cfSide"]).toBe(page.side);
+      const box = pageEl.getBoundingClientRect();
+      expect(box.width).toBeCloseTo(grid.paper.width * PX_PER_MM, 0);
+      expect(box.height).toBeCloseTo(grid.paper.height * PX_PER_MM, 0);
 
-        const cells = Array.from(pageEl.querySelectorAll<HTMLElement>(".cf-cell"));
-        const placed = page.cells.filter((c) => c.html !== undefined);
-        expect(cells).toHaveLength(placed.length);
-        cells.forEach((cellEl, i) => {
-          const cell = placed[i]!;
-          const rect = cellEl.getBoundingClientRect();
-          expect(rect.left - box.left).toBeCloseTo(cell.x * PX_PER_MM, 0);
-          expect(rect.top - box.top).toBeCloseTo(cell.y * PX_PER_MM, 0);
-          expect(rect.width).toBeCloseTo(grid.card.width * PX_PER_MM, 0);
-          expect(rect.height).toBeCloseTo(grid.card.height * PX_PER_MM, 0);
-          // The face fills its cell: the card rendered at the deck's size.
-          const root = cellEl.querySelector<HTMLElement>(".card-root")!;
-          expect(root.getBoundingClientRect().width).toBeCloseTo(rect.width, 0);
-        });
+      const cells = Array.from(pageEl.querySelectorAll<HTMLElement>(".cf-cell"));
+      const placed = page.cells.filter((c) => c.html !== undefined);
+      expect(cells).toHaveLength(placed.length);
+      cells.forEach((cellEl, i) => {
+        const cell = placed[i]!;
+        const rect = cellEl.getBoundingClientRect();
+        expect(rect.left - box.left).toBeCloseTo(cell.x * PX_PER_MM, 0);
+        expect(rect.top - box.top).toBeCloseTo(cell.y * PX_PER_MM, 0);
+        expect(rect.width).toBeCloseTo(grid.card.width * PX_PER_MM, 0);
+        expect(rect.height).toBeCloseTo(grid.card.height * PX_PER_MM, 0);
+        // The face fills its cell: the card rendered at the deck's size.
+        const root = cellEl.querySelector<HTMLElement>(".card-root")!;
+        expect(root.getBoundingClientRect().width).toBeCloseTo(rect.width, 0);
       });
     });
+  });
 
-    it("carries every font once, and no script", async () => {
-      const deck = await build(system);
-      const { html } = deckDocument(deck, system);
-      const rules = html.match(/@font-face\s*\{[^}]*\}/g) ?? [];
-      expect(new Set(rules).size).toBe(rules.length);
-      expect(rules.length).toBeGreaterThan(0);
-      expect(html).not.toContain("<script");
-    });
-  }
-);
+  it("carries every font once, and no script", async () => {
+    const deck = await build(system);
+    const { html } = deckDocument(deck, system);
+    const rules = html.match(/@font-face\s*\{[^}]*\}/g) ?? [];
+    expect(new Set(rules).size).toBe(rules.length);
+    expect(rules.length).toBeGreaterThan(0);
+    expect(html).not.toContain("<script");
+  });
+});
 
 describe("plain paper", () => {
   it("stamps the pages, and a design that paints a texture drops it", async () => {

@@ -1,0 +1,13 @@
+{{!--
+  Dungeon Crawl Classics — the foot inside the frame.
+
+    front-footer-left    the English original, after its "engl." caption;
+                         the stylesheet hides it on an English card
+    front-footer-right   the source reference, in parentheses
+--}}
+{{#if (or (slot "front-footer-left") (slot "front-footer-right"))}}
+<div class="card-footer dcc-footer">
+  {{#if (slot "front-footer-left")}}<div class="dcc-original-name"><span class="dcc-original-name-label">{{slot-label "front-footer-left"}}</span> {{slot "front-footer-left" plain=true}}</div>{{/if}}
+  {{#if (slot "front-footer-right")}}<div class="dcc-reference">({{slot "front-footer-right" plain=true}})</div>{{/if}}
+</div>
+{{/if}}

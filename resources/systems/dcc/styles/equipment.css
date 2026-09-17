@@ -1,0 +1,42 @@
+/* ── Dungeon Crawl Classics — the equipment card ────────────────────
+   The shared rules are in dcc.css; the equipment adds the caption /
+   value rows and the footnotes. */
+
+/* Caption and value in two columns, the caption column as wide as its
+   widest caption. */
+.dcc-stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.6em;
+  row-gap: 0.1em;
+  margin: 0 0 0.4em;
+}
+.dcc-stats dt {
+  font-family: var(--dcc-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  color: var(--dcc-ink);
+  opacity: 0.75;
+  line-height: 1.25;
+}
+.dcc-stats dd {
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* The footnotes: italic, small, dimmed, no bullets. */
+.dcc-notes {
+  list-style: none;
+  margin: 0.3em 0 0;
+  padding: 0;
+  font-style: italic;
+  font-size: 0.85em;
+  line-height: 1.25;
+  color: var(--dcc-ink);
+  opacity: 0.7;
+}
+.dcc-notes li + li {
+  margin-top: 0.2em;
+}

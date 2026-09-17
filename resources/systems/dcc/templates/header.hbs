@@ -1,0 +1,14 @@
+{{!--
+  Dungeon Crawl Classics — the title block above the frame.
+
+    front-roll      the roll a table entry is listed under, an outlined
+                    badge at the left of the row
+    front-title     the name, in heavy Roman capitals, wrapping where it
+                    must and shrinking only for a word that cannot
+    front-subtype   a small-caps line under the title — the kind of gear
+--}}
+<div class="card-header dcc-title-block">
+  {{#if (slot "front-roll")}}<div class="dcc-roll-badge">{{slot "front-roll" plain=true}}</div>{{/if}}
+  <div class="card-title dcc-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+  {{#if (slot "front-subtype")}}<div class="dcc-subtype">{{slot "front-subtype" plain=true}}</div>{{/if}}
+</div>

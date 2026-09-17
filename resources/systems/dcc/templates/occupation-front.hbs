@@ -1,0 +1,42 @@
+{{!--
+  Dungeon Crawl Classics — the occupation front.
+
+    front-race     the people, where the occupation has one
+    front-text     the flavour, in italics
+    front-weapon   the trained weapon
+    front-goods    the trade goods
+
+  Each value stands under its caption from the translations.
+--}}
+<div class="card-root card-front dcc occupation-card">
+  {{> header}}
+
+  <div class="dcc-frame">
+    <div class="card-content-container">
+      <div class="card-body-scalable">
+
+      {{#if (slot "front-race")}}
+      <div class="dcc-section">{{slot-label "front-race"}}</div>
+      <p class="dcc-value">{{slot "front-race"}}</p>
+      {{/if}}
+
+      {{#if (slot "front-text")}}
+      <p class="dcc-flavor">{{slot "front-text"}}</p>
+      {{/if}}
+
+      {{#if (slot "front-weapon")}}
+      <div class="dcc-section">{{slot-label "front-weapon"}}</div>
+      <p class="dcc-value">{{slot "front-weapon"}}</p>
+      {{/if}}
+
+      {{#if (slot "front-goods")}}
+      <div class="dcc-section">{{slot-label "front-goods"}}</div>
+      <p class="dcc-value">{{slot "front-goods"}}</p>
+      {{/if}}
+
+      </div>
+    </div>
+
+    {{> footer}}
+  </div>
+</div>
