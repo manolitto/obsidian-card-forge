@@ -123,6 +123,9 @@ const en = {
   "copy.title": "Copy {name} into the vault",
   "copy.intro":
     "Every file of the system is written into the folder, so the copy is yours to edit. It stops receiving the plugin's updates.",
+  "copy.name": "Name",
+  "copy.name.desc": "What the pickers and the settings call the copy.",
+  "copy.name.default": "My {name}",
   "copy.folder": "Folder",
   "copy.id": "System id",
   "copy.id.desc":
@@ -284,6 +287,9 @@ const de: Strings = {
   "copy.title": "{name} in den Vault kopieren",
   "copy.intro":
     "Jede Datei des Systems wird in den Ordner geschrieben; die Kopie gehört dir. Sie bekommt keine Aktualisierungen des Plugins mehr.",
+  "copy.name": "Name",
+  "copy.name.desc": "So heißt die Kopie in den Auswahllisten und den Einstellungen.",
+  "copy.name.default": "Mein {name}",
   "copy.folder": "Ordner",
   "copy.id": "System-Id",
   "copy.id.desc":
