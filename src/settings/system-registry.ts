@@ -4,11 +4,15 @@ import type { SystemEntry } from "./types";
  * Bring the saved registry in line with the systems this build ships.
  *
  * The saved list is the authority on *state* (order, active flags), never on
- * which bundled systems exist — that is decided at build time. So:
+ * which bundled systems exist — that is decided at build time — and never on
+ * an entry's shape. So:
  *
  *   - a bundled system the user has never seen is appended, active
  *   - a bundled entry for a system no longer shipped is dropped
- *   - vault entries pass through untouched, in place
+ *   - vault entries stay, in place
+ *   - every entry is rebuilt from its known keys, so a key the saved file
+ *     carries beyond them — written by another version of the plugin, or by
+ *     hand — is gone after the next save rather than kept forever
  *
  * Without this, a system added by a plugin update would simply be absent from
  * every picker, with nothing to point at.
@@ -18,7 +22,11 @@ export function reconcileSystemEntries(
   bundledIds: readonly string[]
 ): SystemEntry[] {
   const shipped = new Set(bundledIds);
-  const kept = saved.filter((e) => e.type !== "bundled" || shipped.has(e.id));
+  const kept = saved.flatMap((e): SystemEntry[] => {
+    if (e.type === "vault")
+      return [{ type: "vault", id: e.id, path: e.path, active: e.active }];
+    return shipped.has(e.id) ? [{ type: "bundled", id: e.id, active: e.active }] : [];
+  });
   const known = new Set(kept.filter((e) => e.type === "bundled").map((e) => e.id));
 
   const added: SystemEntry[] = bundledIds
@@ -58,15 +66,14 @@ export function entriesAfterCopy(
   entries: readonly SystemEntry[],
   bundledId: string,
   copyId: string,
-  path: string,
-  name: string
+  path: string
 ): SystemEntry[] {
   const kept = entries.map((entry) =>
     entry.type === "bundled" && entry.id === bundledId && copyId === bundledId
       ? { ...entry, active: false }
       : entry
   );
-  return [...kept, { type: "vault", id: copyId, name, path, active: true }];
+  return [...kept, { type: "vault", id: copyId, path, active: true }];
 }
 
 /** What a system id may be: lowercase letters, digits and hyphens, as every bundled one is. */

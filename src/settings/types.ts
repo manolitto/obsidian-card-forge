@@ -24,12 +24,6 @@ export interface VaultSystemEntry {
    */
   id: string;
   /**
-   * Name read from the root document when the system was registered, for
-   * the same reason: the settings show it without loading the system, so a
-   * switched-off entry is still called what it is.
-   */
-  name: string;
-  /**
    * Vault-relative path of the root document. The folder holding it is the
    * system; the file's name is whatever the user gave it.
    */

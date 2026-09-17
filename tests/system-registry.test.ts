@@ -13,7 +13,6 @@ const bundled = (id: string, active = true): SystemEntry => ({
 const vault = (id: string, path: string, active = true): SystemEntry => ({
   type: "vault",
   id,
-  name: id,
   path,
   active,
 });
@@ -37,10 +36,20 @@ describe("reconcileSystemEntries", () => {
     expect(result).toEqual([bundled("simple")]);
   });
 
-  it("leaves vault entries untouched and in place", () => {
+  it("keeps vault entries in place", () => {
     const mine = vault("mine", "card-forge/mine", false);
     const result = reconcileSystemEntries([mine, bundled("simple")], ["simple"]);
     expect(result).toEqual([mine, bundled("simple")]);
+  });
+
+  it("rebuilds every entry from its known keys, so nothing else in the saved file survives", () => {
+    const saved = [
+      { ...vault("mine", "card-forge/mine"), name: "Mine", note: "x" },
+      { ...bundled("simple"), name: "Simple" },
+    ] as unknown as SystemEntry[];
+    const result = reconcileSystemEntries(saved, ["simple"]);
+    expect(result).toEqual([vault("mine", "card-forge/mine"), bundled("simple")]);
+    expect(Object.keys(result[0]!)).toEqual(["type", "id", "path", "active"]);
   });
 
   it("populates an empty registry from the shipped systems", () => {

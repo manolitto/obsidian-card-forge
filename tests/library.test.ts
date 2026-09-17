@@ -6,7 +6,6 @@ import { completeSystem, MemoryVault } from "./helpers/systems";
 const VAULT_ENTRY: SystemEntry = {
   type: "vault",
   id: "demo",
-  name: "Demo",
   path: "Systems/demo/game-system.yaml",
   active: true,
 };
@@ -90,7 +89,6 @@ describe("the one-enabled-per-id invariant", () => {
         {
           type: "vault",
           id: "simple",
-          name: "Simple",
           path: "Systems/simple/game-system.yaml",
           active: true,
         },
@@ -116,7 +114,6 @@ describe("the one-enabled-per-id invariant", () => {
         {
           type: "vault",
           id: "simple",
-          name: "Simple",
           path: "Systems/simple/game-system.yaml",
           active: true,
         },
@@ -168,13 +165,31 @@ describe("a bundled system", () => {
   });
 });
 
-describe("what an entry is called without loading it", () => {
-  it("is the manifest's name for a bundled entry and the entry's own for a vault one", () => {
+describe("what an entry is called", () => {
+  it("is the manifest's name for a bundled entry, switched on or off", async () => {
     const library = libraryWith([]);
-    expect(library.nameOf({ type: "bundled", id: "simple", active: false })).toBe(
+    expect(await library.nameOf({ type: "bundled", id: "simple", active: false })).toBe(
       "Simple"
     );
-    expect(library.nameOf(VAULT_ENTRY)).toBe("Demo");
+  });
+
+  it("is what a vault entry's document says now, whatever the switch says", async () => {
+    const vault = new MemoryVault();
+    vault.addFolder("Systems/demo", completeSystem());
+    const library = libraryWith([VAULT_ENTRY], vault);
+    await library.get("demo"); // loaded and cached under the old name
+    expect(await library.nameOf(VAULT_ENTRY)).toBe("Demo");
+
+    vault.files["Systems/demo/game-system.yaml"] = (
+      vault.files["Systems/demo/game-system.yaml"] as string
+    ).replace("name: Demo", "name: Renamed");
+    expect(await library.nameOf(VAULT_ENTRY)).toBe("Renamed");
+    expect(await library.nameOf({ ...VAULT_ENTRY, active: false })).toBe("Renamed");
+  });
+
+  it("is the id when the document cannot be read", async () => {
+    const library = libraryWith([VAULT_ENTRY]);
+    expect(await library.nameOf(VAULT_ENTRY)).toBe("demo");
   });
 });
 
@@ -185,7 +200,6 @@ describe("inspecting a root document before registering it", () => {
     const library = libraryWith([], vault);
     expect(await library.inspectVaultDocument("Systems/demo/game-system.yaml")).toEqual({
       id: "demo",
-      name: "Demo",
       messages: [],
     });
   });
@@ -199,7 +213,6 @@ describe("inspecting a root document before registering it", () => {
     const library = libraryWith([], vault);
     expect(await library.inspectVaultDocument("Systems/demo/demo.yml")).toEqual({
       id: "demo",
-      name: "Demo",
       messages: [],
     });
   });

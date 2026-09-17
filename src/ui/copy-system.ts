@@ -27,9 +27,7 @@ export interface CopyContext {
   entries(): SystemEntry[];
   save(entries: SystemEntry[]): Promise<void>;
   /** The verdict on a root document in the vault, by its path. */
-  inspect(
-    documentPath: string
-  ): Promise<{ id?: string; name?: string; messages: readonly string[] }>;
+  inspect(documentPath: string): Promise<{ id?: string; messages: readonly string[] }>;
 }
 
 // ── The action ─────────────────────────────────────────────────────
@@ -136,9 +134,7 @@ async function runCopy(
       `${folder}: ${verdict.messages.join("; ") || "the copy did not load as a system"}`
     );
   }
-  await context.save(
-    entriesAfterCopy(context.entries(), system.id, id, document, verdict.name ?? name)
-  );
+  await context.save(entriesAfterCopy(context.entries(), system.id, id, document));
   notice(t("copy.done", { path: folder }), 8000);
   for (const message of verdict.messages) console.warn(`[Card Forge] ${message}`);
 

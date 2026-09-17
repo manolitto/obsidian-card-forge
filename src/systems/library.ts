@@ -114,22 +114,30 @@ export class SystemLibrary {
     return dropped;
   }
 
-  /** What an entry is called, without loading it — the manifest's or the entry's own word. */
-  nameOf(entry: SystemEntry): string {
-    // `||`: a saved entry may predate the stored name; the id is still a name.
-    if (entry.type === "vault") return entry.name || entry.id;
-    return BUNDLED_SYSTEMS.find((system) => system.id === entry.id)?.name ?? entry.id;
+  /**
+   * What an entry is called, whatever its switch says: the manifest's word
+   * for a bundled system, and for a vault system whatever its document says
+   * *now* — read afresh each time, never kept, so a renamed document is
+   * called by its new name the moment the settings are opened, switched on
+   * or off. The id when the document cannot be read.
+   */
+  async nameOf(entry: SystemEntry): Promise<string> {
+    if (entry.type === "bundled") {
+      return BUNDLED_SYSTEMS.find((system) => system.id === entry.id)?.name ?? entry.id;
+    }
+    const doc = await this.readDocument(entry.path);
+    return String(doc?.["name"] ?? "").trim() || entry.id;
   }
 
   /**
    * Read and check a vault system by its root document without registering
    * it, so a settings dialog can show the verdict before an entry exists.
-   * The id and name are the ones to store on the entry; both are absent
-   * when the file is no usable system.
+   * The id is the one to store on the entry; it is absent when the file is
+   * no usable system.
    */
   async inspectVaultDocument(
     path: string
-  ): Promise<{ id?: string; name?: string; messages: readonly string[] }> {
+  ): Promise<{ id?: string; messages: readonly string[] }> {
     const diagnostics = collectDiagnostics();
     if (!/\.ya?ml$/i.test(path)) {
       diagnostics.warn(`${path}: a system's root document is a .yaml or .yml file`);
@@ -148,26 +156,29 @@ export class SystemLibrary {
       );
       return { messages: diagnostics.messages };
     }
-    const source = new VaultSystemSource(path, this.files);
-    let id: string | undefined;
+    const doc = await this.readDocument(path);
+    const id = String(doc?.["id"] ?? "")
+      .trim()
+      .toLowerCase();
+    const system = await loadSystem(
+      new VaultSystemSource(path, this.files),
+      id,
+      diagnostics
+    );
+    return { id: system?.id, messages: diagnostics.messages };
+  }
+
+  /** A vault root document as a mapping, or nothing — the loader reports what is wrong with it. */
+  private async readDocument(path: string): Promise<Record<string, unknown> | undefined> {
     try {
-      const doc = load(await source.readText(source.document)) as Record<
-        string,
-        unknown
-      > | null;
-      id =
-        String(doc?.["id"] ?? "")
-          .trim()
-          .toLowerCase() || undefined;
+      const source = new VaultSystemSource(path, this.files);
+      const doc: unknown = load(await source.readText(source.document));
+      return doc && typeof doc === "object"
+        ? (doc as Record<string, unknown>)
+        : undefined;
     } catch {
-      /* loadSystem reports it */
+      return undefined;
     }
-    const system = await loadSystem(source, id ?? "", diagnostics);
-    return {
-      id: system?.id,
-      name: system?.declaration.name,
-      messages: diagnostics.messages,
-    };
   }
 
   private async loadFresh(id: string): Promise<LoadResult> {
