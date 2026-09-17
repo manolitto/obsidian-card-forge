@@ -1,0 +1,19 @@
+{{!--
+  Pathfinder 2e — the row of trait pills under the header.
+
+    front-alignment   a creature's alignment code, first, in slate blue
+    front-size        a creature's size, second, in green
+    front-traits      every other trait, one pill each: maroon, or the
+                      rarity colour when the classifier says so
+
+  The pills stand edge to edge so their cream-gold frames join into one
+  band. The first two are places of their own with a fixed colour; only
+  the list is classified, per entry, on the text the pill shows.
+--}}
+{{#if (or (slot "front-alignment") (slot "front-size") (slot "front-traits" list=true))}}
+<div class="pf2e-trait-row">
+  {{#if (slot "front-alignment")}}<span class="pf2e-trait-pill pf2e-trait-alignment">{{slot "front-alignment" plain=true}}</span>{{/if}}
+  {{#if (slot "front-size")}}<span class="pf2e-trait-pill pf2e-trait-size">{{slot "front-size" plain=true}}</span>{{/if}}
+  {{#each (slot "front-traits" list=true plain=true)}}<span class="pf2e-trait-pill pf2e-trait-{{slot-class "front-traits" value=this}}">{{this}}</span>{{/each}}
+</div>
+{{/if}}

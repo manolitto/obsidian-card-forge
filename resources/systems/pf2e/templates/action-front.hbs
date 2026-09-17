@@ -1,0 +1,54 @@
+{{!--
+  Pathfinder 2e — the action front: basic actions and skill actions.
+
+    front-frequency, front-trigger,
+    front-requirements                  the labelled lines
+    front-text                          the effect
+    front-critical-success … 
+    front-critical-failure              the four degrees of success, each a
+                                        labelled line
+    front-callout                       a tinted box at the end — examples,
+                                        or a named sub-rule — written as a
+                                        mapping of `title` and `body`; the
+                                        list form lifts it to one item
+
+  The badge is the skill with its required rank under it; the stylesheet
+  stacks the two.
+--}}
+<div class="card-root card-front pf2e action-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> trait-row}}
+
+    {{> stat-line for="front-frequency"}}
+    {{> stat-line for="front-trigger"}}
+    {{> stat-line for="front-requirements"}}
+
+    {{#if (slot "front-text")}}
+    <div class="pf2e-flavor pf2e-action-text">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (or (slot "front-critical-success") (slot "front-success") (slot "front-failure") (slot "front-critical-failure"))}}
+    <div class="pf2e-action-outcomes">
+      {{> stat-line for="front-critical-success"}}
+      {{> stat-line for="front-success"}}
+      {{> stat-line for="front-failure"}}
+      {{> stat-line for="front-critical-failure"}}
+    </div>
+    {{/if}}
+
+    {{#each (slot "front-callout" list=true)}}
+    <div class="pf2e-action-callout">
+      {{#if title}}<div class="pf2e-action-callout-title">{{title}}</div>{{/if}}
+      <div class="pf2e-action-callout-body">{{body}}</div>
+    </div>
+    {{/each}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

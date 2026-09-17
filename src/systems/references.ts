@@ -92,9 +92,20 @@ export function isExternalUrl(target: string): boolean {
 
 const TEMPLATE_ASSET = /\{\{\s*asset\s+(['"])([^'"]+)\1/g;
 const TEMPLATE_PARTIAL = /\{\{#?>\s*([A-Za-z0-9_-]+)/g;
+const TEMPLATE_COMMENT = /\{\{!--[\s\S]*?--\}\}|\{\{![^}]*\}\}/g;
+
+/**
+ * A template without its comments, the lines kept so a match still
+ * reports the line it is on. A comment explains a template and quotes
+ * calls as examples; none of them is a reference.
+ */
+function withoutComments(hbs: string): string {
+  return hbs.replace(TEMPLATE_COMMENT, (comment) => comment.replace(/[^\n]/g, ""));
+}
 
 /** Every `{{asset "…"}}` literal in a template, with its line. */
-export function templateAssetReferences(hbs: string): Reference[] {
+export function templateAssetReferences(source: string): Reference[] {
+  const hbs = withoutComments(source);
   const out: Reference[] = [];
   for (const match of hbs.matchAll(TEMPLATE_ASSET)) {
     out.push({ path: match[2] ?? "", where: `line ${lineOf(hbs, match.index ?? 0)}` });
@@ -103,7 +114,8 @@ export function templateAssetReferences(hbs: string): Reference[] {
 }
 
 /** The names a template calls as partials — `{{> name}}` and `{{#> name}}`. */
-export function templatePartialCalls(hbs: string): Reference[] {
+export function templatePartialCalls(source: string): Reference[] {
+  const hbs = withoutComments(source);
   const out: Reference[] = [];
   for (const match of hbs.matchAll(TEMPLATE_PARTIAL)) {
     out.push({
@@ -124,7 +136,8 @@ const STRING_LITERAL = /(['"])([^'"]*)\1/g;
  * one directly, and a partial called with `for="front-stat-1a"` reads it
  * through a path, the literal being at the call site.
  */
-export function templateStringLiterals(hbs: string): Set<string> {
+export function templateStringLiterals(source: string): Set<string> {
+  const hbs = withoutComments(source);
   const out = new Set<string>();
   for (const mustache of hbs.matchAll(TEMPLATE_MUSTACHE)) {
     for (const match of mustache[0].matchAll(STRING_LITERAL)) {

@@ -1,0 +1,12 @@
+/* ── Pathfinder 2e — the hazard card ────────────────────────────────
+   The shared stat-block rules are in pf2e.css; the hazard adds only its
+   italic lead and the spacing of the reset line. */
+
+.pf2e-trap-lead {
+  margin: 0.25em 0 0.35em;
+  font-style: italic;
+}
+
+.pf2e-trap-reset {
+  margin-top: 0.35em;
+}

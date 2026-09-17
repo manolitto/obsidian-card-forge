@@ -1,0 +1,34 @@
+pathfinder-2e-actions.woff2
+============================
+
+Icon font containing only the Pathfinder 2nd Edition action symbols,
+keyed to the Unicode points used by the Obsidian "pf2-action-icons"
+plugin and the Fantasy Statblocks layout:
+
+  U+2B32 ⬲  Reaction
+  U+2B3A ⬺  Two actions
+  U+2B3B ⬻  One action
+  U+2B3D ⬽  Three actions
+  U+2B53 ⭓  Free action
+
+Source
+------
+Extracted from the base64-embedded TTF in
+https://github.com/thiagocoutinhor/pf2-action-icons (MIT for the
+plugin code) and converted to WOFF2 with `fontTools`. The font itself
+was originally produced by IcoMoon as "Pathfinder 2e Action Glyphs"
+under the Paizo Community Use Policy.
+
+License
+-------
+Pathfinder 2nd Edition iconography (including the action symbols
+encoded in this font) is used in accordance with Paizo Inc.'s
+Community Use Policy:
+
+    https://paizo.com/community/communityuse
+
+This file is distributed under that policy as Paizo Community Use
+Material. Pathfinder, the Pathfinder logo, and Paizo are trademarks
+of Paizo Inc., used here under the Community Use Policy. This card-
+forge project is not authorized, endorsed, sponsored, or affiliated
+with Paizo Inc.

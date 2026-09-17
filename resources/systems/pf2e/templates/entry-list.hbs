@@ -1,0 +1,19 @@
+{{!--
+  Pathfinder 2e — the attacks of a creature, the effects of a hazard.
+
+    front-entries   a list of { name, bonus, damage, desc, effect }
+
+  Every field is optional and prints only when set, each in its own span
+  with a literal space between, so the line can break between any two of
+  them. The name carries its own emphasis and its action glyph as markdown
+  — `__Nahkampfangriff__ ⬻ Biss` — which is how the kind of an attack is
+  set bold without a field for it. The bonus gets its sign; the damage and
+  the effect are led by their bold captions.
+--}}
+{{#if (slot "front-entries" list=true)}}
+<div class="pf2e-entry-list">
+  {{#each (slot "front-entries" list=true signed=true)}}
+  <div class="pf2e-entry">{{#if name}}<span class="pf2e-entry-name">{{name}}</span>{{/if}}{{#if bonus}} <span class="pf2e-entry-bonus">{{bonus}}</span>{{/if}}{{#if desc}} <span class="pf2e-entry-desc">{{desc}}</span>{{/if}}{{#if damage}}, <span class="pf2e-entry-label">{{t "entry-damage-label"}}</span> {{damage}}{{/if}}{{#if effect}}, <span class="pf2e-entry-label">{{t "entry-effect-label"}}</span> {{effect}}{{/if}}</div>
+  {{/each}}
+</div>
+{{/if}}

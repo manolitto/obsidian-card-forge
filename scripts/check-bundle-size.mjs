@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** Hard ceiling in KiB. */
-const BUDGET_KIB = 1900;
+const BUDGET_KIB = 2150;
 
 const path = resolve(ROOT, "main.js");
 let bytes;

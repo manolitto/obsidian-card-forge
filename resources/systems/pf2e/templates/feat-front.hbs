@@ -1,0 +1,34 @@
+{{!--
+  Pathfinder 2e — the feat front.
+
+    front-prerequisites, front-frequency,
+    front-trigger, front-requirements     the labelled lines, in this order
+    front-text                            the rules text
+    front-special                         the trailing "Speziell" line
+--}}
+<div class="card-root card-front pf2e feat-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> trait-row}}
+
+    {{> stat-line for="front-prerequisites"}}
+    {{> stat-line for="front-frequency"}}
+    {{> stat-line for="front-trigger"}}
+    {{> stat-line for="front-requirements"}}
+
+    {{#if (slot "front-text")}}
+    <div class="pf2e-flavor pf2e-feat-text">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-special")}}
+    <div class="pf2e-stat-line pf2e-feat-special"><span class="pf2e-stat-label">{{slot-label "front-special"}}</span>{{slot "front-special"}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

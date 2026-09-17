@@ -76,6 +76,14 @@ export function slotLabelHelper(...args: unknown[]): string {
  * through the card type's classifier for that slot. Buckets the display
  * text — a link as its text, a glyph applied when asked — never the raw
  * source and never HTML. A slot no classifier serves is reported.
+ *
+ * `value=` classifies that value through the slot's classifier instead of
+ * what the slot holds — the per-item form, for a pill per entry of a
+ * list-valued place:
+ *
+ *   {{#each (slot "front-traits" list=true plain=true)}}
+ *     <span class="pill pill-{{slot-class "front-traits" value=this}}">{{this}}</span>
+ *   {{/each}}
  */
 export function slotClassHelper(...args: unknown[]): string {
   const { argument: name, options } = helperArgs(args);
@@ -88,16 +96,23 @@ export function slotClassHelper(...args: unknown[]): string {
     );
     return "";
   }
-  const { spec } = parseRenderSpec(
-    options.hash,
-    `{{slot-class "${slot}"}}`,
-    state.diagnostics
-  );
+  const { value, ...hash } = options.hash ?? {};
+  const { spec } = parseRenderSpec(hash, `{{slot-class "${slot}"}}`, state.diagnostics);
   const env = environmentFor(state, slot);
   const step = scalarStep(spec, env);
-  let text = scalarText(readSlot(state, slot), step, spec.join);
-  if (text === "" && spec.fallback !== undefined) {
-    text = scalarText(spec.fallback, step, spec.join);
+  let text: string;
+  if (value !== undefined) {
+    // A rendered item of the list form arrives as a `SafeString`; its text
+    // is what the card shows for it.
+    text =
+      value instanceof Handlebars.SafeString
+        ? value.toString()
+        : scalarText(value, step, spec.join);
+  } else {
+    text = scalarText(readSlot(state, slot), step, spec.join);
+    if (text === "" && spec.fallback !== undefined) {
+      text = scalarText(spec.fallback, step, spec.join);
+    }
   }
   return classify(state.classifiers, slot, wikilinkDisplayText(text));
 }
@@ -156,6 +171,10 @@ function environmentFor(state: RenderState, slot: string): RenderEnvironment {
  * One call's switches serve every field, so `signed=true` on a list of
  * `{ name, bonus }` meets the name too: the sign goes on the numeric
  * fields and a word is left as it is, without a report for each.
+ *
+ * An item's fields keep the keys the note wrote — `{{#each this}}` over a
+ * `{ REF: 8 }` item prints `REF` as its `@key` — and a lookup reaches them
+ * whatever its case, so `{{name}}` finds a `Name:` field.
  */
 function renderList(value: unknown, spec: RenderSpec, env: RenderEnvironment): unknown[] {
   if (value === null || value === undefined || value === "") return [];
@@ -171,14 +190,44 @@ function renderList(value: unknown, spec: RenderSpec, env: RenderEnvironment): u
     }
     const rendered: Record<string, unknown> = {};
     for (const [key, field] of Object.entries(item as Record<string, unknown>)) {
-      rendered[key.toLowerCase()] =
+      rendered[key] =
         typeof field === "object" && field !== null
           ? field
           : new Handlebars.SafeString(renderValue(field, spec, quiet));
     }
-    out.push(rendered);
+    out.push(caseInsensitiveFields(rendered));
   }
   return out;
+}
+
+/**
+ * The item's own keys for iteration, any spelling of them for a lookup.
+ * Handlebars gates a lookup behind `hasOwnProperty`, so the descriptor trap
+ * answers for a key that matches case-insensitively; `ownKeys` stays the
+ * target's, so `{{#each this}}` shows the keys as written.
+ */
+function caseInsensitiveFields(fields: Record<string, unknown>): Record<string, unknown> {
+  const written = new Map<string, string>();
+  for (const key of Object.keys(fields)) {
+    if (!written.has(key.toLowerCase())) written.set(key.toLowerCase(), key);
+  }
+  const resolve = (prop: string | symbol): string | undefined =>
+    typeof prop === "string" ? written.get(prop.toLowerCase()) : undefined;
+  return new Proxy(fields, {
+    get(t, prop, receiver) {
+      const key = resolve(prop);
+      return key === undefined ? Reflect.get(t, prop, receiver) : t[key];
+    },
+    has(t, prop) {
+      return resolve(prop) !== undefined || Reflect.has(t, prop);
+    },
+    getOwnPropertyDescriptor(t, prop) {
+      const key = resolve(prop);
+      return key === undefined
+        ? Reflect.getOwnPropertyDescriptor(t, prop)
+        : { value: t[key], writable: true, enumerable: true, configurable: true };
+    },
+  });
 }
 
 /**

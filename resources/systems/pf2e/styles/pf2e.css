@@ -1,0 +1,400 @@
+/* ── Pathfinder 2e — the system stylesheet ──────────────────────────
+   Modelled on the official German "Monsterkarten": a clean sans-serif
+   stat block on warm cream, the name and level over a red rule, a row
+   of coloured trait pills, bold labels leading each line, one unified
+   picture-first back.
+
+   Every rule here serves all five card types; what one card type adds
+   lives in its own stylesheet under a `pf2e-<type>-` prefix. Sizes are
+   `em` and `%` throughout, so the design holds at every card size. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* The five action glyphs, on the code points the notes already write
+   (⬻ ⬺ ⬽ ⬲ ⭓). The face leads every stack below and is scoped to those
+   five points by its unicode-range, so a glyph resolves here wherever
+   it appears and every other character falls through to the text face.
+   Paizo Community Use Policy — see fonts/pathfinder-2e-actions-LICENSE.txt. */
+@font-face {
+  font-family: "Pathfinder2eActions";
+  src: url("fonts/pathfinder-2e-actions.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+2B32, U+2B3A, U+2B3B, U+2B3D, U+2B53;
+}
+
+/* Source Sans 3 for the text — a variable face, so one file serves the
+   regular and the bold labels. OFL, fonts/source-sans-3-OFL.txt. */
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/source-sans-3-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/source-sans-3-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/source-sans-3-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("fonts/source-sans-3-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Barlow Condensed bold for the name, the badge and the pills — the
+   dense condensed caps the printed cards set their headings in. Bold
+   only: nothing here sets condensed text at another weight. OFL,
+   fonts/barlow-OFL.txt. */
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/barlow-condensed-bold-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/barlow-condensed-bold-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Cinzel Black for the back's banner — engraved Roman caps in the spirit
+   of the section banners of the books. The black weight only: a banner
+   wants presence. OFL, fonts/cinzel-OFL.txt. */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/cinzel-black-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/cinzel-black-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.pf2e {
+  --pf2e-cream: #f5f2e8;
+  --pf2e-text: #1b1b1b;
+  --pf2e-rule: #5a1f1a;
+  --pf2e-accent-red: #862633;
+  --pf2e-muted: #6b5e4f;
+
+  /* The pill colours, sampled from the Monsterhandbuch's legend: maroon
+     for every trait, green for a size, slate blue for an alignment,
+     terracotta for a rarity; cream-gold for the band that frames them. */
+  --pf2e-pill-generic: #5e0000;
+  --pf2e-pill-size: #3b7b59;
+  --pf2e-pill-alignment: #576293;
+  --pf2e-pill-rarity: #98513d;
+  --pf2e-pill-band: #d9c484;
+
+  /* The glyph face leads every stack, scoped to its five code points. */
+  --pf2e-font-body: "Pathfinder2eActions", "Source Sans 3", sans-serif;
+  --pf2e-font-condensed: "Pathfinder2eActions", "Barlow Condensed", sans-serif;
+  --pf2e-font-display: "Cinzel", serif;
+
+  background: var(--pf2e-cream);
+  color: var(--pf2e-text);
+  font-family: var(--pf2e-font-body);
+  border: 0;
+  border-radius: 0.4em;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* The body type follows the card's width: 8 pt on a poker card. */
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0448), var(--card-font-size-max));
+  /* A long German compound beside a wide badge ("KOMPLEXE GEFAHR 2") has
+     to come a long way down before the row fits; the base floor was set
+     for short single-word titles. */
+  --card-font-size-title-min: 1.5mm;
+}
+
+/* On plain paper the cream goes; the rule, the pills and the banner are
+   the design and stay. */
+.cf-paper-plain .card-root.pf2e {
+  background: #ffffff;
+}
+
+.card-root.pf2e .card-content-container {
+  padding: 0.2em 0.7em;
+  line-height: 1.28;
+}
+
+/* ── The header ────────────────────────────────────────────────────── */
+
+.pf2e-header {
+  border-bottom: 0.18em solid var(--pf2e-rule);
+  /* The side padding matches the content's, so the name aligns with the
+     stat labels below it while the rule runs the card's full width. */
+  padding: 0.4em 0.7em 0.02em;
+}
+
+/* The scalable wrapper IS the flex row: the name at the left, the badge
+   at the right, everything inside sized in `em` of the one font size the
+   layout engine searches. The title type follows the card's width, up to
+   the base ceiling — the printed cards set it at twice the body. */
+.pf2e-header .text-scalable.pf2e-header-row {
+  display: flex;
+  width: 100%;
+  /* Bottom-aligned, so a two-line name keeps the badge at its last line. */
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.4em;
+  font-family: var(--pf2e-font-condensed);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--pf2e-text);
+  font-size: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.075), var(--card-font-size-title-max));
+  line-height: 1.05;
+}
+
+/* The name grows into what the badge leaves — basis 0, not auto, so its
+   longest word does not claim the row up front. `min-width: min-content`
+   is what lets the layout engine see an overflow: flex would otherwise
+   shrink the box under its longest word, the word would spill into the
+   badge, and the row's scrollWidth would still read as fitting. A name
+   breaks at a word boundary or a soft hyphen the author wrote, never
+   inside a word. */
+.pf2e-header-left {
+  flex: 1 1 0;
+  min-width: min-content;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+/* The action cost beside the name, in the glyph face at the name's size. */
+.pf2e-title-glyph {
+  margin-left: 0.25em;
+  vertical-align: 0.02em;
+}
+
+/* The badge, always a step smaller than the name — 0.875 em, the ratio
+   of the printed cards' header tags to their titles. */
+.pf2e-header-right {
+  flex: 0 0 auto;
+  font-size: 0.875em;
+  white-space: nowrap;
+}
+
+/* ── The trait pills ───────────────────────────────────────────────── */
+
+.pf2e-trait-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* No column gap: the pills' cream-gold frames join into one band. */
+  gap: 0.18em 0;
+  margin: 0 0 0.35em;
+}
+
+.pf2e-trait-pill {
+  display: inline-block;
+  font-family: var(--pf2e-font-condensed);
+  font-size: 0.875em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: var(--pf2e-pill-generic);
+  border: 0.15em solid var(--pf2e-pill-band);
+  /* Caps have no descenders, so more room above than below centres them. */
+  padding: 0.32em 0.45em 0.13em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pf2e-trait-generic { background: var(--pf2e-pill-generic); }
+.pf2e-trait-size { background: var(--pf2e-pill-size); }
+.pf2e-trait-alignment { background: var(--pf2e-pill-alignment); }
+.pf2e-trait-rarity { background: var(--pf2e-pill-rarity); }
+
+/* ── The stat lines ────────────────────────────────────────────────── */
+
+/* A hanging indent: a wrapped line aligns under the first word after the
+   bold label, as the printed stat blocks do. */
+.pf2e-stat-line {
+  margin: 0.1em 0;
+  line-height: 1.28;
+  text-indent: -1em;
+  padding-left: 1em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.pf2e-stat-label {
+  font-weight: 700;
+  margin-right: 0.3em;
+}
+
+/* The bold key of a labelled pair — ZÄH, ST, Athletik. */
+.pf2e-pair-key {
+  font-weight: 700;
+}
+
+/* The hairline between the blocks of a stat block. */
+.pf2e-divider {
+  border: 0;
+  border-top: 0.08em solid var(--pf2e-rule);
+  opacity: 0.5;
+  margin: 0.25em 0 0.2em;
+}
+
+/* ── The entries: attacks and effects ──────────────────────────────── */
+
+.pf2e-entry-list {
+  margin: 0.1em 0;
+}
+
+.pf2e-entry {
+  margin: 0.18em 0;
+  line-height: 1.28;
+  text-indent: -1em;
+  padding-left: 1em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* The gaps between an entry's spans are literal spaces in the template,
+   which the line breaker may break at; a margin would be invisible to it
+   and a long damage string would then run past the edge. */
+.pf2e-entry-label {
+  font-weight: 700;
+}
+
+/* ── Running text ──────────────────────────────────────────────────── */
+
+.pf2e-flavor {
+  line-height: 1.3;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.pf2e-flavor p {
+  margin: 0 0 0.3em;
+}
+
+.pf2e-flavor p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── The footer ────────────────────────────────────────────────────── */
+
+/* A flex sibling below the content, so its height is reserved and it
+   returns on every continuation face without being measured. */
+.pf2e-footer {
+  position: relative;
+  padding: 0.3em 0.7em 0.4em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.pf2e-footer-left,
+.pf2e-footer-right {
+  font-size: 0.704em;
+  color: var(--pf2e-muted);
+}
+
+.pf2e-footer-right {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* The English original is a help for reading a German card beside the
+   English book; an English card has nothing to add. */
+.card-root[lang|="en"] .pf2e-footer-left {
+  display: none;
+}
+
+/* The "continues" arrow: out of the flex flow so the source keeps its
+   place, shown only on a front another front follows. */
+.pf2e-continues {
+  display: none;
+  position: absolute;
+  bottom: calc(100% - 0.5em);
+  right: 0.7em;
+  font-size: 1em;
+  color: var(--pf2e-accent-red);
+}
+
+.cf-front-has-next .pf2e-continues {
+  display: block;
+}
+
+/* ── The back ──────────────────────────────────────────────────────── */
+
+.card-root.pf2e.card-back {
+  padding: 0.5em 0.5em 0.3em;
+}
+
+/* The banner: a solid red bar with the card type's label in engraved caps. */
+.pf2e-back-banner {
+  flex: 0 0 auto;
+  background: var(--pf2e-accent-red);
+  color: var(--pf2e-cream);
+  font-family: var(--pf2e-font-display);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.1em;
+  padding: 0.18em 0.4em;
+  border-radius: 0.15em;
+  margin-bottom: 0.4em;
+}
+
+.pf2e-back-image-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.1em;
+}
+
+.pf2e-back-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* The "P" mark when the card has no picture: crisp, and no larger than
+   about a third of the face. */
+.pf2e-back-image.pf2e-back-mark {
+  max-width: 60%;
+  max-height: 60%;
+  --card-image-fade: 0;
+}

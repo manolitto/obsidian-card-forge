@@ -1,0 +1,84 @@
+{{!--
+  Pathfinder 2e — the creature front, the Monsterkarte.
+
+  The stat block in the Monsterhandbuch's order, each line a place:
+
+    front-perception + front-senses     "Wahrnehmung +11; Dunkelsicht"
+    front-skills                        the skills as labelled pairs
+    front-attributes                    the six attribute modifiers
+    front-items                         carried gear
+    ─ rule ─
+    front-armor-class + front-saves     "RK 22; ZÄH +14, REF +8, WIL +11"
+    front-hit-points + front-immunities
+      + front-resistances + front-weaknesses
+    ─ rule ─
+    front-stride | front-speed          one movement line: the simple one
+                                        with the ⬻ glyph, else the full one
+    front-entries                       attacks and abilities
+    front-text                          the description, in italics
+    front-image                         the portrait, when the `image-bottom`
+                                        candidate finds it 10 mm of room
+
+  The portrait is in the markup on every render and shown by the
+  stylesheet under `.cf-layout-image-bottom` only; `data-cf-measure="hero"`
+  is what the candidate's guard and the decision measure.
+--}}
+<div class="card-root card-front pf2e creature-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> trait-row}}
+
+    {{#if (or (slot "front-perception") (slot "front-senses"))}}
+    <div class="pf2e-stat-line"><span class="pf2e-stat-label">{{slot-label "front-perception"}}</span>{{slot "front-perception" signed=true markdown=false}}{{#if (slot "front-senses")}}; {{slot "front-senses"}}{{/if}}</div>
+    {{/if}}
+
+    {{#if (slot "front-skills" list=true)}}
+    <div class="pf2e-stat-line pf2e-creature-skills"><span class="pf2e-stat-label">{{slot-label "front-skills"}}</span>{{> pairs for="front-skills"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-attributes" list=true)}}
+    <div class="pf2e-creature-attributes">{{> pairs for="front-attributes"}}</div>
+    {{/if}}
+
+    {{> stat-line for="front-items"}}
+
+    <hr class="pf2e-divider" />
+
+    {{#if (or (slot "front-armor-class") (slot "front-saves" list=true))}}
+    <div class="pf2e-stat-line">{{#if (slot "front-armor-class")}}<span class="pf2e-stat-label">{{slot-label "front-armor-class"}}</span>{{slot "front-armor-class" markdown=false}}{{#if (slot "front-saves" list=true)}}; {{/if}}{{/if}}{{#if (slot "front-saves" list=true)}}{{> pairs for="front-saves"}}{{/if}}</div>
+    {{/if}}
+
+    {{#if (slot "front-hit-points")}}
+    <div class="pf2e-stat-line"><span class="pf2e-stat-label">{{slot-label "front-hit-points"}}</span>{{slot "front-hit-points" markdown=false}}{{#if (slot "front-immunities")}}; <span class="pf2e-stat-label">{{slot-label "front-immunities"}}</span>{{slot "front-immunities"}}{{/if}}{{#if (slot "front-resistances")}}; <span class="pf2e-stat-label">{{slot-label "front-resistances"}}</span>{{slot "front-resistances"}}{{/if}}{{#if (slot "front-weaknesses")}}; <span class="pf2e-stat-label">{{slot-label "front-weaknesses"}}</span>{{slot "front-weaknesses"}}{{/if}}</div>
+    {{/if}}
+
+    {{#if (or (slot "front-stride") (slot "front-speed") (slot "front-entries" list=true))}}
+    <hr class="pf2e-divider" />
+    {{/if}}
+
+    {{#if (slot "front-stride")}}
+    <div class="pf2e-stat-line"><span class="pf2e-stat-label">{{slot-label "front-stride"}}</span>⬻ {{slot "front-stride"}}</div>
+    {{else}}
+    {{> stat-line for="front-speed"}}
+    {{/if}}
+
+    {{> entry-list}}
+
+    {{#if (slot "front-text")}}
+    <div class="pf2e-flavor pf2e-creature-flavor">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-image")}}
+    <div class="pf2e-creature-image-wrap">
+      <img class="pf2e-creature-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+    </div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

@@ -1,0 +1,19 @@
+{{!--
+  Pathfinder 2e — the back of every card type.
+
+    back-image   the card's picture, large, with its edges faded
+
+  A red banner with the card type's label at the top, the picture in the
+  middle, and — for a card without one — the Pathfinder "P" mark, kept
+  crisp and small. The mark ships under Paizo's Community Use Policy.
+--}}
+<div class="card-root card-back pf2e {{card-type}}-card {{card-type}}-back">
+  <div class="pf2e-back-banner">{{t "back-label"}}</div>
+  <div class="pf2e-back-image-wrap">
+    {{#if (slot "back-image")}}
+    <img class="pf2e-back-image fade-edges" src="{{slot "back-image" image=true}}" />
+    {{else}}
+    <img class="pf2e-back-image pf2e-back-mark" src="{{asset "assets/p-mark.webp"}}" />
+    {{/if}}
+  </div>
+</div>

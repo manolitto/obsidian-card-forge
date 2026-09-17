@@ -1,0 +1,90 @@
+{{!--
+  Pathfinder 2e — the item front: weapons, armour, shields, magic items.
+
+    front-price … front-usage    fourteen optional stat lines in the
+                                 rulebook's order; a sword fills damage and
+                                 bulk, a breastplate its AC bonus and
+                                 penalties, a wand its price and usage
+    front-image                  beside the stat lines (`image-side`) or
+                                 below the text (`image-bottom`) — whichever
+                                 gives the picture more height, and neither
+                                 when both leave it under 10 mm
+    ─ rule ─
+    front-text                   the description
+    front-trait-notes            explanations of the traits, each led by `*`
+    front-activations            activated abilities, each a labelled entry
+
+  Both picture seats are in the markup on every render; the stylesheet
+  shows one under the committed `.cf-layout-*` class and both share the
+  `hero` marker, of which the largest visible box is measured.
+--}}
+<div class="card-root card-front pf2e item-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> trait-row}}
+
+    <div class="pf2e-item-stats-row">
+      <div class="pf2e-item-stats-col">
+        {{> stat-line for="front-price"}}
+        {{> stat-line for="front-damage"}}
+        {{> stat-line for="front-range"}}
+        {{> stat-line for="front-reload"}}
+        {{> stat-line for="front-ac-bonus"}}
+        {{> stat-line for="front-dex-cap"}}
+        {{> stat-line for="front-check-penalty"}}
+        {{> stat-line for="front-speed-penalty"}}
+        {{> stat-line for="front-strength"}}
+        {{> stat-line for="front-bulk"}}
+        {{> stat-line for="front-hardness"}}
+        {{> stat-line for="front-hit-points"}}
+        {{> stat-line for="front-broken-threshold"}}
+        {{> stat-line for="front-usage"}}
+      </div>
+      {{#if (slot "front-image")}}
+      <div class="pf2e-item-image-wrap pf2e-item-image-wrap-side">
+        <img class="pf2e-item-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+      </div>
+      {{/if}}
+    </div>
+
+    {{#if (or (slot "front-text") (slot "front-trait-notes" list=true) (slot "front-activations" list=true))}}
+    <hr class="pf2e-divider" />
+    {{/if}}
+
+    {{#if (slot "front-text")}}
+    <div class="pf2e-flavor pf2e-item-flavor">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-trait-notes" list=true)}}
+    <div class="pf2e-item-trait-notes">
+      {{#each (slot "front-trait-notes" list=true)}}
+      <div class="pf2e-item-trait-note"><span class="pf2e-item-trait-note-name">{{name}}</span>{{#if desc}} {{desc}}{{/if}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-activations" list=true)}}
+    {{#if (or (slot "front-text") (slot "front-trait-notes" list=true))}}
+    <hr class="pf2e-divider" />
+    {{/if}}
+    <div class="pf2e-item-activations">
+      {{#each (slot "front-activations" list=true glyph=true)}}
+      <div class="pf2e-item-activation">{{#if name}}<span class="pf2e-item-activation-name">{{name}}</span>{{/if}}{{#if actions}}<span class="pf2e-item-activation-actions">{{actions}}</span>{{/if}}{{#if components}}<span class="pf2e-item-activation-components">({{components}})</span>{{/if}}{{#if frequency}} <span class="pf2e-item-activation-label">{{t "activation-frequency-label"}}</span>{{frequency}}{{/if}}{{#if trigger}} <span class="pf2e-item-activation-label">{{t "activation-trigger-label"}}</span>{{trigger}}{{/if}}{{#if requirements}} <span class="pf2e-item-activation-label">{{t "activation-requirements-label"}}</span>{{requirements}}{{/if}}{{#if effect}} <span class="pf2e-item-activation-label">{{t "activation-effect-label"}}</span>{{effect}}{{/if}}{{#if desc}} {{desc}}{{/if}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-image")}}
+    <div class="pf2e-item-image-wrap pf2e-item-image-wrap-bottom">
+      <img class="pf2e-item-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+    </div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

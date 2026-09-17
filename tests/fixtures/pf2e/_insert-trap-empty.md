@@ -1,0 +1,57 @@
+```card-forge
+card:
+  system: pf2e
+  card-type: trap
+data:
+  # The card's name — creature, item, feat, action or hazard. Falls back to the note's file name.
+  name:
+
+  # Introductory text — trigger, surroundings, how it works — in italics before the stats.
+  description:
+
+  # The card's picture as a wikilink (`[[Basilisk.png]]`), embed (`![[Basilisk.png]]`) or file name. Shown large on the card back; creatures and items also show it on the front when there is room.
+  image:
+
+  # Source reference — book title and page number, optionally a wikilink (`[[…]]`). Set small at the bottom right of the card.
+  source:
+
+  # English original name. Set small at the bottom left of the card, prefixed "engl."; hidden on English cards.
+  original-name:
+
+  # Hit points as free text (e.g. `15` or `15 (per corner mechanism)`).
+  hit-points:
+
+  # Armor Class (AC). The short forms `ac` and `rk` are accepted as aliases.
+  armor-class:
+
+  # Saves as a list of single-key pairs, in the Monsterhandbuch's order: `ZÄH` (Fortitude), `REF` (Reflex), `WIL` (Will). The sign is added when printed.
+  saves:
+
+  # Immunities as free text — comma-separated damage types and conditions, e.g. `unconscious, poison, mental`.
+  immunities:
+
+  # Hardness as free text, e.g. `8` or `8 (per corner mechanism)`. Damage taken is reduced by it.
+  hardness:
+
+  # Hazard level (e.g. `Hazard 1`, `Complex Hazard 3`). Shown as the badge at the right of the header.
+  level:
+
+  # List of traits (`Mechanisch`, `Magisch`, `Komplex`, rarity). Each entry becomes a pill; the rarities take the rarity colour.
+  traits:
+
+  # Condition for noticing the hazard (e.g. `Perception DC 20`).
+  notice:
+
+  # Initiative of complex hazards that act in combat (e.g. `Stealth +10`). Omit for simple traps.
+  initiative:
+
+  # Condition for disabling (e.g. `Thievery DC 20`).
+  disarm:
+
+  # The hazard's actions, attacks and effects as a list — the same shape as a creature's `attacks`: `name` (with markdown bold and the action glyph), `bonus`, `damage`, `desc`, `effect`.
+  # 
+  effects:
+
+  # Reset condition as free text (e.g. `Resets after 1 minute.`), as the last line.
+  reset:
+```

@@ -58,7 +58,7 @@ async function mounted(html: string): Promise<Document> {
   return doc;
 }
 
-describe.each(["simple", "dragonbane", "eiserne-zeit"])(
+describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e"])(
   "the %s deck's document",
   (system) => {
     it("measures as the composition says: paper, pages, every cell in place", async () => {
