@@ -33,15 +33,31 @@ export class SystemLibrary {
   private entries: readonly SystemEntry[] = [];
   private duplicates: ReadonlySet<string> = new Set();
   private readonly loaded = new Map<string, Promise<LoadResult>>();
+  /** The ids whose cached load read the bundled source — the only loads a settings change keeps. */
+  private readonly bundledLoads = new Set<string>();
 
   constructor(private readonly files: VaultFiles) {}
 
-  /** Replace the registry. Vault systems reload on next use; bundled ones are immutable and stay. */
+  /**
+   * Replace the registry. Vault systems reload on next use; bundled ones
+   * are immutable and stay — unless the id's standing changed, since a
+   * bundled system that is now claimed twice, or no longer is, must answer
+   * as the invariant says rather than as it last loaded.
+   */
   setEntries(entries: readonly SystemEntry[]): void {
+    const before = this.duplicates;
     this.entries = entries;
     this.duplicates = new Set(findDuplicateActiveIds(entries));
     for (const id of [...this.loaded.keys()]) {
-      if (this.enabledEntry(id)?.type !== "bundled") this.loaded.delete(id);
+      const keep =
+        this.bundledLoads.has(id) &&
+        this.enabledEntry(id)?.type === "bundled" &&
+        !this.duplicates.has(id) &&
+        !before.has(id);
+      if (!keep) {
+        this.loaded.delete(id);
+        this.bundledLoads.delete(id);
+      }
     }
   }
 
@@ -63,6 +79,23 @@ export class SystemLibrary {
       this.loaded.set(key, pending);
     }
     return pending;
+  }
+
+  /**
+   * A bundled system by id, whatever its entry says — switched off or
+   * shadowed by a copy — for copying it out of the plugin. Not cached:
+   * it is read once per copy.
+   */
+  async loadBundled(id: string): Promise<LoadResult> {
+    const bundled = BUNDLED_SYSTEMS.find((system) => system.id === id);
+    if (!bundled) {
+      return {
+        messages: [`System "${id}" is not bundled with this version of the plugin`],
+      };
+    }
+    const diagnostics = collectDiagnostics();
+    const system = await loadSystem(new BundledSystemSource(bundled), id, diagnostics);
+    return { system, messages: diagnostics.messages };
   }
 
   /**
@@ -145,6 +178,7 @@ export class SystemLibrary {
       diagnostics.warn(`System "${id}" is not bundled with this version of the plugin`);
       return { messages: diagnostics.messages };
     }
+    if (source.kind === "bundled") this.bundledLoads.add(id);
     const system = await loadSystem(source, id, diagnostics);
     return { system, messages: diagnostics.messages };
   }

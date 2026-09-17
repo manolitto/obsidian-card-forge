@@ -86,6 +86,7 @@ const en = {
   "view.rebuild": "Rebuild",
   "view.summary": "{cards} cards on {pages} pages",
   "view.no-file": "The deck note is gone.",
+  "view.waiting": "Press Rebuild to build the deck.",
   "progress.reading": "Reading the deck…",
   "progress.rendering": "Rendering {done} / {total}…",
   "progress.layout": "Laying out {done} / {total}…",
@@ -117,6 +118,27 @@ const en = {
   "deck-key.folder-recursive": "Include the folder's subfolders.",
   "deck-key.card-copies":
     "Copies per card by note name, winning over a card's own `copies`: `[{ name: Wolf, copies: 3 }]`.",
+
+  // ── Copying a bundled system into the vault ─────────────────────
+  "copy.title": "Copy {name} into the vault",
+  "copy.intro":
+    "Every file of the system is written into the folder, so the copy is yours to edit. It stops receiving the plugin's updates.",
+  "copy.folder": "Folder",
+  "copy.id": "System id",
+  "copy.id.desc":
+    "Keep the id, and the bundled original is switched off; no note changes. Choose a new one, and the notes naming the old id can be rewritten.",
+  "copy.confirm": "Copy",
+  "copy.cancel": "Cancel",
+  "copy.no-folder": "Name a folder for the copy",
+  "copy.invalid-id": "An id is lowercase letters, digits and hyphens",
+  "copy.exists": "{path} already exists",
+  "copy.done": "Copied into {path} and switched on",
+  "copy.rewrite.title": "Rewrite the notes?",
+  "copy.rewrite.body":
+    "{count} notes name system: {from} in their card-forge or card-forge-deck block. Rewrite them to {to}?",
+  "copy.rewrite.confirm": "Rewrite {count} notes",
+  "copy.rewrite.skip": "Leave them",
+  "copy.rewrite.done": "{count} notes rewritten",
 
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systems",
@@ -225,6 +247,7 @@ const de: Strings = {
   "view.rebuild": "Neu aufbauen",
   "view.summary": "{cards} Karten auf {pages} Seiten",
   "view.no-file": "Die Deck-Notiz ist verschwunden.",
+  "view.waiting": "Neu aufbauen drücken, um das Deck zu bauen.",
   "progress.reading": "Deck wird gelesen…",
   "progress.rendering": "Rendern {done} / {total}…",
   "progress.layout": "Setzen {done} / {total}…",
@@ -256,6 +279,27 @@ const de: Strings = {
   "deck-key.folder-recursive": "Die Unterordner des Ordners einschließen.",
   "deck-key.card-copies":
     "Kopien je Karte nach Notizname, vor dem eigenen `copies` der Karte: `[{ name: Wolf, copies: 3 }]`.",
+
+  // ── Copying a bundled system into the vault ─────────────────────
+  "copy.title": "{name} in den Vault kopieren",
+  "copy.intro":
+    "Jede Datei des Systems wird in den Ordner geschrieben; die Kopie gehört dir. Sie bekommt keine Aktualisierungen des Plugins mehr.",
+  "copy.folder": "Ordner",
+  "copy.id": "System-Id",
+  "copy.id.desc":
+    "Bleibt die Id, wird das mitgelieferte Original ausgeschaltet; keine Notiz ändert sich. Bei einer neuen Id können die Notizen mit der alten umgeschrieben werden.",
+  "copy.confirm": "Kopieren",
+  "copy.cancel": "Abbrechen",
+  "copy.no-folder": "Einen Ordner für die Kopie angeben",
+  "copy.invalid-id": "Eine Id besteht aus Kleinbuchstaben, Ziffern und Bindestrichen",
+  "copy.exists": "{path} existiert bereits",
+  "copy.done": "Nach {path} kopiert und eingeschaltet",
+  "copy.rewrite.title": "Notizen umschreiben?",
+  "copy.rewrite.body":
+    "{count} Notizen nennen system: {from} in ihrem card-forge- oder card-forge-deck-Block. Auf {to} umschreiben?",
+  "copy.rewrite.confirm": "{count} Notizen umschreiben",
+  "copy.rewrite.skip": "So lassen",
+  "copy.rewrite.done": "{count} Notizen umgeschrieben",
 
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systeme",

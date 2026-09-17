@@ -10,10 +10,10 @@ import { t } from "./strings";
  * document is the one the PDF is printed from and the HTML export saves,
  * self-contained and static, so showing it whole is showing what prints.
  *
- * The view builds when it opens and when *Rebuild* is pressed, never on
- * its own: a keystroke in a 200-card deck is not a reason to lay out 200
- * cards. Its state is the deck note's path, so it comes back after a
- * restart with a *Rebuild* waiting.
+ * The view builds when it is opened for a note and when *Rebuild* is
+ * pressed, never on its own: a keystroke in a 200-card deck is not a
+ * reason to lay out 200 cards, and neither is a restart. Its state is the
+ * deck note's path, so it comes back after one with a *Rebuild* waiting.
  */
 
 export const DECK_VIEW_TYPE = "card-forge-deck-preview";
@@ -24,6 +24,8 @@ const GUTTER = 16;
 
 interface DeckViewState {
   path?: string;
+  /** Set by `openDeckView` and never saved: build now, rather than wait for *Rebuild*. */
+  build?: boolean;
 }
 
 export class DeckView extends ItemView {
@@ -33,6 +35,7 @@ export class DeckView extends ItemView {
   private frame?: HTMLIFrameElement;
   private paperWidth = 0;
   private building = false;
+  private pendingBuild = false;
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -67,8 +70,7 @@ export class DeckView extends ItemView {
     const observer = new ResizeObserver(() => this.fit());
     observer.observe(this.sheet);
     this.register(() => observer.disconnect());
-    // The state may have arrived before the view opened.
-    if (this.path) void this.build();
+    this.settle();
   }
 
   override getState(): Record<string, unknown> {
@@ -76,12 +78,22 @@ export class DeckView extends ItemView {
   }
 
   override async setState(state: unknown, result: { history: boolean }): Promise<void> {
-    const path = (state as DeckViewState | null)?.path;
-    if (path && path !== this.path) {
-      this.path = path;
-      void this.build();
-    }
+    const next = state as DeckViewState | null;
+    if (next?.path) this.path = next.path;
+    if (next?.build) this.pendingBuild = true;
+    // The state may arrive before the view has opened; `onOpen` settles it then.
+    if (this.status) this.settle();
     await super.setState(state, result);
+  }
+
+  /** Build if asked to; otherwise say what the view is waiting for. */
+  private settle(): void {
+    if (this.pendingBuild) {
+      this.pendingBuild = false;
+      void this.build();
+    } else if (!this.frame) {
+      this.status.setText(this.path ? t("view.waiting") : t("view.no-file"));
+    }
   }
 
   /** Build the deck and show its document; one build at a time. */
@@ -167,7 +179,7 @@ export async function openDeckView(app: App, file: TFile): Promise<void> {
   const leaf = app.workspace.getLeaf("split");
   await leaf.setViewState({
     type: DECK_VIEW_TYPE,
-    state: { path: file.path },
+    state: { path: file.path, build: true } satisfies DeckViewState,
     active: true,
   });
   await app.workspace.revealLeaf(leaf);
