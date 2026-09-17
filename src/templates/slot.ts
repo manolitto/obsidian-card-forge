@@ -8,6 +8,7 @@ import {
   DEFAULT_SPEC,
   RENDER_SWITCHES,
   renderValue,
+  scalarStep,
   scalarText,
   type RenderEnvironment,
   type RenderSpec,
@@ -93,8 +94,11 @@ export function slotClassHelper(...args: unknown[]): string {
     state.diagnostics
   );
   const env = environmentFor(state, slot);
-  let text = scalarText(readSlot(state, slot), spec.glyph ? env.glyph : undefined);
-  if (text === "" && spec.fallback !== undefined) text = scalarText(spec.fallback);
+  const step = scalarStep(spec, env);
+  let text = scalarText(readSlot(state, slot), step, spec.join);
+  if (text === "" && spec.fallback !== undefined) {
+    text = scalarText(spec.fallback, step, spec.join);
+  }
   return classify(state.classifiers, slot, wikilinkDisplayText(text));
 }
 
@@ -137,6 +141,9 @@ function environmentFor(state: RenderState, slot: string): RenderEnvironment {
       return uri;
     },
     block: state.block,
+    report: (message) => {
+      state.diagnostics.warn(`{{slot "${slot}"}} in ${state.where}: ${message}`);
+    },
   };
 }
 
@@ -145,10 +152,15 @@ function environmentFor(state: RenderState, slot: string): RenderEnvironment {
  * every item rendered with the call's switches. A scalar is lifted to one
  * item, so a note that writes one trait where the card shows a list still
  * renders. An empty value is `[]`, which `{{#if}}` sees as absent.
+ *
+ * One call's switches serve every field, so `signed=true` on a list of
+ * `{ name, bonus }` meets the name too: the sign goes on the numeric
+ * fields and a word is left as it is, without a report for each.
  */
 function renderList(value: unknown, spec: RenderSpec, env: RenderEnvironment): unknown[] {
   if (value === null || value === undefined || value === "") return [];
   const items = Array.isArray(value) ? value : [value];
+  const quiet: RenderEnvironment = { ...env, report: () => undefined };
   const out: unknown[] = [];
   for (const item of items) {
     if (item === null || item === undefined) continue;
@@ -162,7 +174,7 @@ function renderList(value: unknown, spec: RenderSpec, env: RenderEnvironment): u
       rendered[key.toLowerCase()] =
         typeof field === "object" && field !== null
           ? field
-          : new Handlebars.SafeString(renderValue(field, spec, env));
+          : new Handlebars.SafeString(renderValue(field, spec, quiet));
     }
     out.push(rendered);
   }
@@ -172,11 +184,11 @@ function renderList(value: unknown, spec: RenderSpec, env: RenderEnvironment): u
 /**
  * Hash arguments → the switches. Each is `true`, `false`, or the same as a
  * string — an author writes `linebreaks=true`, and a partial forwarding a
- * hash it received may hand the string on; `markdown` also takes `"block"`.
- * `fallback=` is a value, not a switch, and `list=` is the shape of the
- * answer. Anything else, and any key that is not one of these, is
- * reported: that is what catches `linebreaks=ture`, which Handlebars reads
- * as a path to nothing.
+ * hash it received may hand the string on; `markdown` also takes `"block"`,
+ * and `join=` takes the separator itself. `fallback=` is a value, not a
+ * switch, and `list=` is the shape of the answer. Anything else, and any
+ * key that is not one of these, is reported: that is what catches
+ * `linebreaks=ture`, which Handlebars reads as a path to nothing.
  */
 export function parseRenderSpec(
   hash: Record<string, unknown> | undefined,
@@ -188,6 +200,11 @@ export function parseRenderSpec(
   for (const [key, raw] of Object.entries(hash ?? {})) {
     if (key === "fallback") {
       spec.fallback = raw;
+      continue;
+    }
+    if (key === "join") {
+      if (typeof raw === "string") spec.join = raw;
+      else reportSwitch(call, key, raw, diagnostics);
       continue;
     }
     const value = key === "markdown" && raw === "block" ? "block" : parseSwitch(raw);
@@ -218,6 +235,10 @@ function reportSwitch(
   diagnostics: Diagnostics
 ): void {
   const shown = raw === undefined ? "(nothing)" : String(raw);
+  if (key === "join") {
+    diagnostics.warn(`${call}: join=${shown} is not a string; using the default`);
+    return;
+  }
   const accepted = key === "markdown" ? 'true, false nor "block"' : "true nor false";
   diagnostics.warn(`${call}: ${key}=${shown} is neither ${accepted}; using the default`);
 }

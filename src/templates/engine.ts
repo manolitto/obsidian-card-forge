@@ -3,7 +3,7 @@ import { IGNORE_DIAGNOSTICS, type Diagnostics } from "../definitions/diagnostics
 import { parseSystemPath, type SystemPath } from "../definitions/game-system";
 import { resolveTranslations } from "../definitions/translations";
 import type { CardSize } from "../model/card-size";
-import { readAssetUri } from "../systems/assets";
+import { readAsset, type Asset } from "../systems/assets";
 import type { LoadedSystem } from "../systems/loader";
 import { templateAssetReferences } from "../systems/references";
 import { MissingFileError } from "../systems/source";
@@ -135,7 +135,7 @@ class SystemTemplates {
   private readonly faces = new Map<string, Promise<Compiled>>();
   private declaredPartials?: Promise<Record<string, Compiled>>;
   private readonly assetReads = new Map<string, Promise<void>>();
-  readonly assets = new Map<string, string>();
+  readonly assets = new Map<string, Asset>();
 
   constructor(
     private readonly hb: typeof Handlebars,
@@ -188,9 +188,9 @@ class SystemTemplates {
     for (const ref of templateAssetReferences(hbs)) {
       const path = parseSystemPath(ref.path, ref.where, IGNORE_DIAGNOSTICS);
       if (!path || this.assetReads.has(path)) continue;
-      const read = readAssetUri(this.system.source, path).then(
-        (uri) => {
-          this.assets.set(path, uri);
+      const read = readAsset(this.system.source, path).then(
+        (asset) => {
+          this.assets.set(path, asset);
         },
         (error: unknown) => {
           if (!(error instanceof MissingFileError)) throw error;

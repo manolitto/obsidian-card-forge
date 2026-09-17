@@ -176,7 +176,7 @@ describe("{{slot}}", () => {
       });
       expect(html).toBe("<em>a</em>");
       expect(diagnostics.messages).toEqual([
-        '{{slot "front-body"}}: "render" is not a switch (markdown, linebreaks, glyph, image, plain, list, fallback are); ignoring it',
+        '{{slot "front-body"}}: "render" is not a switch (markdown, linebreaks, glyph, signed, join, image, plain, list, fallback are); ignoring it',
       ]);
     });
   });
@@ -280,6 +280,59 @@ describe("{{slot}} with the newer switches", () => {
     expect(diagnostics.messages).toEqual([
       '{{slot "front-body"}}: markdown=blok is neither true, false nor "block"; using the default',
     ]);
+  });
+
+  it("signed=true puts the sign back on a modifier, and says so for a word", () => {
+    expect(
+      render(`{{slot "front-stat-1a" signed=true}}`, { data: { grip: 2 } }).html
+    ).toBe("+2");
+    expect(
+      render(`{{slot "front-stat-1a" signed=true}}`, { data: { grip: "-1" } }).html
+    ).toBe("-1");
+    const { html, diagnostics } = render(`{{slot "front-stat-1a" signed=true}}`, {
+      data: { grip: "two" },
+    });
+    expect(html).toBe("two");
+    expect(diagnostics.messages).toEqual([
+      '{{slot "front-stat-1a"}} in demo/gear: signed=true on "two", which is not a number; leaving it as it is',
+    ]);
+  });
+
+  it("join= is the separator of a list, and takes a string only", () => {
+    const data = { content: ["Athletics", "Acrobatics"] };
+    expect(render(`{{slot "front-body" join=" / "}}`, { data }).html).toBe(
+      "Athletics / Acrobatics"
+    );
+    expect(render(`{{slot "front-body"}}`, { data }).html).toBe("Athletics, Acrobatics");
+    const { html, diagnostics } = render(`{{slot "front-body" join=true}}`, { data });
+    expect(html).toBe("Athletics, Acrobatics");
+    expect(diagnostics.messages).toEqual([
+      '{{slot "front-body"}}: join=true is not a string; using the default',
+    ]);
+  });
+
+  it("signed=true on the list form signs the numeric fields and leaves the words alone, quietly", () => {
+    const { html, diagnostics } = render(
+      `{{#each (slot "front-body" list=true signed=true)}}[{{name}} {{bonus}}]{{/each}}`,
+      {
+        data: {
+          content: [
+            { name: "Athletics", bonus: 7 },
+            { name: "Stealth", bonus: -1 },
+          ],
+        },
+      }
+    );
+    expect(html).toBe("[Athletics +7][Stealth -1]");
+    expect(diagnostics.messages).toEqual([]);
+  });
+
+  it("list=true is the shape of the answer, whatever join= says", () => {
+    expect(
+      render(`{{#each (slot "front-body" list=true join=" / ")}}[{{this}}]{{/each}}`, {
+        data: { content: ["a", "b"] },
+      }).html
+    ).toBe("[a][b]");
   });
 });
 

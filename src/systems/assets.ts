@@ -27,6 +27,27 @@ export async function readAssetUri(
 }
 
 /**
+ * One asset as a template may use it: its `data:` URI always, and for an
+ * SVG its text as well — an icon written into the markup takes the text
+ * colour and the size the stylesheet gives it, which a `data:` URI in an
+ * `<img>` cannot.
+ */
+export interface Asset {
+  uri: string;
+  /** The file's text, for an SVG; a bitmap or a font has none. */
+  text?: string;
+}
+
+/** Read one asset from the source in both forms it can take. Throws when it is not there. */
+export async function readAsset(source: SystemSource, path: SystemPath): Promise<Asset> {
+  const bytes = await source.readBinary(path);
+  const asset: Asset = { uri: dataUri(bytes, path) };
+  if (assetMimeType(path) === "image/svg+xml")
+    asset.text = new TextDecoder().decode(bytes);
+  return asset;
+}
+
+/**
  * Rewrite every `url()` in a stylesheet that names a file of the system into
  * a `data:` URI read from the source. Paths are relative to the system folder,
  * wherever the stylesheet itself sits — the same rule every other reference

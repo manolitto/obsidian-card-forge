@@ -202,6 +202,43 @@ describe("{{asset}}", () => {
     ]);
   });
 
+  it("inline=true writes an SVG's markup itself, and nothing for a bitmap", async () => {
+    const files = rootedSystem();
+    const ICON = `<svg viewBox="0 0 8 8"><path fill="currentColor" d="M0 0h8v8z"/></svg>`;
+    files["assets/claw.svg"] = ICON;
+    files["spell/front.hbs"] =
+      `<div class="card-root">{{asset "assets/claw.svg" inline=true}}|{{asset "assets/claw.svg"}}|{{asset "assets/logo.png" inline="true"}}</div>`;
+    const { system } = await load(files);
+    const diagnostics = collectDiagnostics();
+    const html = await new TemplateEngine().renderFace(
+      request(system, "spell", "front"),
+      diagnostics
+    );
+    expect(html).toContain(
+      `>${ICON}|${dataUri(new TextEncoder().encode(ICON), "assets/claw.svg")}|</div>`
+    );
+    expect(diagnostics.messages).toEqual([
+      '{{asset "assets/logo.png"}} in demo/spell: inline=true, but only an SVG can be written into the markup; rendering nothing',
+    ]);
+  });
+
+  it("reports a hash key that is not inline, and an inline= that is neither true nor false", async () => {
+    const files = rootedSystem();
+    files["spell/front.hbs"] =
+      `<div class="card-root">{{asset "assets/logo.png" inline=ture}}{{asset "assets/logo.png" size=2}}</div>`;
+    const { system } = await load(files);
+    const diagnostics = collectDiagnostics();
+    const html = await new TemplateEngine().renderFace(
+      request(system, "spell", "front"),
+      diagnostics
+    );
+    expect(html).toContain(`${LOGO}${LOGO}`);
+    expect(diagnostics.messages).toEqual([
+      '{{asset "assets/logo.png"}}: inline=(nothing) is neither true nor false; using the default',
+      '{{asset "assets/logo.png"}}: "size" is not a switch (inline is); ignoring it',
+    ]);
+  });
+
   it("leaves out a file that is gone, and says so at the call", async () => {
     const files = rootedSystem();
     const { system } = await load(files);
