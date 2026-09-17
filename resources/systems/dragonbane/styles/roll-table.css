@@ -1,6 +1,6 @@
 /* ── Dragonbane — roll-table card type ───────────────────────────────
    Everything structural — parchment, title plaque, ornament strips, the stat
-   block, body, vertical reference — comes from `game-system.css`. The only
+   block, body, vertical reference — comes from `dragonbane.css`. The only
    thing local to this card-type is the roll die on the title plaque.
 
    Sizes are relative: em throughout, so
@@ -23,7 +23,7 @@
    Erscheinungsbild 3) — near-misses that tight read as a collision in print.
 
    The selector carries the full `.card-root.dragonbane` prefix on purpose:
-   `game-system.css` sets the plaque's padding through the `padding:` SHORTHAND
+   `dragonbane.css` sets the plaque's padding through the `padding:` SHORTHAND
    on `.card-root.dragonbane .db-title-plaque` (0-3-0), so a bare
    `.roll-table-card .db-title-plaque` (0-2-0) loses the cascade despite coming
    later, and the override is silently dead. */

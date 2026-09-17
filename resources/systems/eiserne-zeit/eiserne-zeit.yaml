@@ -13,13 +13,13 @@ name: Eiserne Zeit
 # comes from the translation table.
 languages: [de, en]
 
-stylesheet: game-system.css
+stylesheet: styles/eiserne-zeit.css
 
 # The one illustration partial. The front renders its picture through it,
 # and every `![[picture]]` in a note's text goes through the same partial, so
 # a picture in the text and a picture in the slot cannot drift apart.
 partial-templates:
-  card-image: card-image.hbs
+  card-image: templates/card-image.hbs
 markdown-image-partial: card-image
 
 # One note is ONE physical card. When the front's text overflows, the rest
@@ -104,8 +104,8 @@ card-types:
   # edge and the title, the running card-kind foot, the source along the
   # edge; the back's body is the steel logo, the front's is the note's text.
   generic:
-    front-template: front.hbs
-    back-template: back.hbs
+    front-template: templates/front.hbs
+    back-template: templates/back.hbs
     # What the foot band says when the note sets no `card-type-label`.
     # "Karte" is deliberately neutral — the generic card can be anything;
     # a concrete rubric is the card's own to set.

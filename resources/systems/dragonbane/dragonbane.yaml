@@ -10,7 +10,7 @@ name: Dragonbane
 # spell of any published book.
 languages: [de]
 
-stylesheet: game-system.css
+stylesheet: styles/dragonbane.css
 
 # One front for four of the five card types. It renders PLACES named after
 # where they sit — `front-stat-1a`, `front-text-top` — and each card type says
@@ -18,9 +18,9 @@ stylesheet: game-system.css
 # See front.hbs for the vocabulary and stat-cell.hbs / stat-wide.hbs for the
 # two repeated pieces of the stat box.
 partial-templates:
-  stat-cell: stat-cell.hbs
-  stat-wide: stat-wide.hbs
-  card-image: card-image.hbs
+  stat-cell: templates/stat-cell.hbs
+  stat-wide: templates/stat-wide.hbs
+  card-image: templates/card-image.hbs
 
 # Every `![[picture]]` in a note's body renders through the same partial the
 # front uses for its own illustration, so a body picture gets the design's
@@ -153,9 +153,9 @@ card-types:
   # Verfügbarkeit, Gewicht / Anwendungen, and the closing block: Merkmale,
   # Voraussetzung with the minimum STR trailing it in the same row, Effekt.
   gear:
-    front-template: front.hbs
-    back-template: back.hbs
-    stylesheet: gear/card-type.css
+    front-template: templates/front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/gear.css
     card-size: poker
 
     # `Griff: 1H` is stored as the rulebook's abbreviation and printed in
@@ -361,9 +361,9 @@ card-types:
   #   picture artwork                    always on the back, on the front when
   #                                      there is room
   creature:
-    front-template: front.hbs
-    back-template: back.hbs
-    stylesheet: creature/card-type.css
+    front-template: templates/front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/creature.css
     card-size: large
 
     # The picture sits on the back; the `front-image` candidate shows it on
@@ -613,9 +613,9 @@ card-types:
   # („Grundfertigkeit", „Heroisches Talent", „Elementarismus"). Do not add a
   # card type per family; add a conditional row here.
   rule:
-    front-template: front.hbs
-    back-template: back.hbs
-    stylesheet: rule/card-type.css
+    front-template: templates/front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/rule.css
     card-size: poker
 
     translations:
@@ -780,9 +780,9 @@ card-types:
   # is a card. The die result lives in the baseline's `roll` / `roll-min` /
   # `roll-max` and renders as the badge on the title plaque.
   roll-table:
-    front-template: front.hbs
-    back-template: back.hbs
-    stylesheet: roll-table/card-type.css
+    front-template: templates/front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/roll-table.css
     # A row is short — a poker card holds it comfortably, four to an A4 sheet.
     card-size: poker
     expand-by-roll: true
@@ -890,9 +890,9 @@ card-types:
   # The card knows only two values: the title on the plaque and the source
   # reference along the edge. A deck cover, a licence page, a house rule.
   generic:
-    front-template: generic/front.hbs
-    back-template: back.hbs
-    stylesheet: generic/card-type.css
+    front-template: templates/generic-front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/generic.css
     card-size: poker
     # One note, one physical card: a long text fills the back first and only
     # then spawns further cards. A generic card has no designed back to keep,

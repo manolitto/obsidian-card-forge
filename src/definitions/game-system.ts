@@ -411,7 +411,7 @@ function parseStringList(
   return out;
 }
 
-/** A single entry is a list of one — `css: game-system.css` is what one expects to work. */
+/** A single entry is a list of one — `stylesheet: styles/simple.css` is what one expects to work. */
 function asList(raw: unknown, context: string, diagnostics: Diagnostics): unknown[] {
   if (raw === null || raw === undefined) return [];
   if (Array.isArray(raw)) return raw;
