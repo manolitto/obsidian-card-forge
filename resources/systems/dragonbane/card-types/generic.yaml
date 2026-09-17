@@ -1,0 +1,54 @@
+# ── generic: the free card ─────────────────────────────────────────
+# Open a note, write the text, done. The body is the note's markdown —
+# paragraphs, sub-headings, lists, tables and embedded pictures included.
+# The card knows only two values: the title on the plaque and the source
+# reference along the edge. A deck cover, a licence page, a house rule.
+
+front-template: templates/generic-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/generic.css
+card-size: poker
+# One note, one physical card: a long text fills the back first and only
+# then spawns further cards. A generic card has no designed back to keep,
+# so the system's odd face count does not apply.
+overflow-mode: back-then-cards
+layouts:
+  - { name: default, front-face-count: any, fallback: true }
+
+properties:
+  name:
+    slot: front-header-title
+    description:
+      de: "Titel auf der Pergament-Plakette am Kopf der Karte. Ohne Angabe der Dateiname der Notiz."
+      en: "Title on the parchment plaque at the head of the card. Falls back to the note's file name."
+    sample:
+      de: "Lizenzen & Danksagungen"
+      en: "Licences & Credits"
+
+  # The body, from three sources in this order — the first the note
+  # actually sets wins: `content` in the block, a `## Vorderseite`
+  # section, the note's own text before its first heading. That text is
+  # the baseline's `body`, which is an alias here and not a binding of
+  # its own: a bound `body` would sit first among the place's
+  # properties, being inherited, and win over the other two.
+  content:
+    slot: front-body
+    aliases: [text, inhalt, kartentext, body]
+    description:
+      de: "Kartentext als Markdown, direkt im card-forge-Block. Hat Vorrang vor dem Notiztext. Für Tabellen und eingebettete Bilder den Notiztext benutzen."
+      en: "Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures."
+    sample:
+      de: "Zusammenstellung und Gestaltung: **dein Name hier**."
+      en: "Compiled and designed by **your name here**."
+
+  vorderseite:
+    slot: front-body
+    aliases: [front-side]
+    description:
+      de: "Der Abschnitt unter einer `## Vorderseite`-Überschrift in der Notiz füllt die Karte, wenn der Block keinen `content` setzt. Voll gerendert – Tabellen, Überschriften, Listen und eingebettete Bilder inklusive."
+      en: "The section under a `## Vorderseite` heading in the note fills the card when the block sets no `content`. Fully rendered — tables, headings, lists and embedded pictures included."
+
+  # The generic front has no left edge label — the card knows a title
+  # and a source, nothing else — so the system-wide binding is undone.
+  english-original:
+    slot: ~

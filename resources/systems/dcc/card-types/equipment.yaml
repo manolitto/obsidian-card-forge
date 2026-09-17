@@ -1,0 +1,126 @@
+# ── equipment ───────────────────────────────────────────────────────
+# A weapon, a piece of armour, ammunition, gear or a mount from the
+# equipment chapter: the kind under the title, the stats that apply as
+# labelled rows, the rulebook's footnotes as an italic list.
+
+front-template: templates/equipment-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/equipment.css
+
+translations:
+  de:
+    back-label: "Ausrüstung"
+    front-damage-label: "Schaden"
+    front-range-label: "Reichweite"
+    front-ac-bonus-label: "RK-Bonus"
+    front-check-penalty-label: "Malus"
+    front-speed-penalty-label: "Bewegungsrate"
+    front-fumble-die-label: "Patzerwürfel"
+    front-quantity-label: "Menge"
+    front-weight-label: "Gewicht"
+    front-cost-label: "Preis"
+  en:
+    back-label: "Equipment"
+    front-damage-label: "Damage"
+    front-range-label: "Range"
+    front-ac-bonus-label: "AC bonus"
+    front-check-penalty-label: "Check penalty"
+    front-speed-penalty-label: "Speed"
+    front-fumble-die-label: "Fumble die"
+    front-quantity-label: "Quantity"
+    front-weight-label: "Weight"
+    front-cost-label: "Cost"
+
+properties:
+  name:
+    sample:
+      de: "Wurfhaken"
+      en: "Grappling hook"
+
+  type:
+    slot: front-subtype
+    aliases: [unterart, kategorie, subtype, category]
+    description:
+      de: "Art des Gegenstands, so wie sie unter dem Titel stehen soll — „Waffe“, „Rüstung“, „Munition“, „Ausrüstung“, „Reittier“."
+      en: "The kind of equipment, as it is to stand under the title — \"Weapon\", \"Armor\", \"Ammunition\", \"Gear\", \"Mount\"."
+    sample:
+      de: "Ausrüstung"
+      en: "Gear"
+
+  cost:
+    slot: front-cost
+    aliases: [preis, kosten, price]
+    description:
+      de: "Preis in der Währung des Regelwerks — Goldmünzen (GM), Silbermünzen (SM), Kupfermünzen (KM)."
+      en: "Price in the rulebook's coin — gold pieces (gp), silver pieces (sp), copper pieces (cp)."
+    sample:
+      de: "1 GM"
+      en: "1 gp"
+
+  damage:
+    slot: front-damage
+    aliases: [schaden, dmg]
+    description:
+      de: "Schadenswürfel einer Waffe, z. B. „1W8“."
+      en: "A weapon's damage die, e.g. \"1d8\"."
+
+  range:
+    slot: front-range
+    aliases: [reichweite, distance]
+    description:
+      de: "Reichweite einer Fernkampfwaffe — nah/mittel/weit, z. B. „21/42/63“."
+      en: "A ranged weapon's range — short/medium/long, e.g. \"70/140/210\"."
+
+  ac-bonus:
+    slot: front-ac-bonus
+    aliases: [rk-bonus, armor-bonus]
+    description:
+      de: "Bonus einer Rüstung auf die Rüstungsklasse; das Vorzeichen wird ergänzt (`5` druckt „+5“)."
+      en: "An armour's bonus to Armor Class; the sign is added (`5` prints \"+5\")."
+
+  check-penalty:
+    slot: front-check-penalty
+    aliases: [probenabzug, malus]
+    description:
+      de: "Malus einer Rüstung auf Proben; das Vorzeichen wird ergänzt."
+      en: "An armour's penalty on checks; the sign is added."
+
+  speed-penalty:
+    slot: front-speed-penalty
+    aliases: [bewegungsabzug, movement-penalty]
+    description:
+      de: "Malus einer Rüstung auf die Bewegungsrate, z. B. „-1,5 m“."
+      en: "An armour's penalty to speed, e.g. \"-5'\"."
+
+  fumble-die:
+    slot: front-fumble-die
+    aliases: [patzerwürfel, patzerwuerfel, fumble]
+    description:
+      de: "Der Patzerwürfel in dieser Rüstung, z. B. „W12“."
+      en: "The fumble die while wearing this armour, e.g. \"d12\"."
+
+  quantity:
+    slot: front-quantity
+    aliases: [anzahl, menge, count, amount]
+    description:
+      de: "Stückzahl je Einheit — Pfeile im Köcher."
+      en: "Items per unit — arrows to a quiver."
+
+  weight:
+    slot: front-weight
+    aliases: [gewicht]
+    description:
+      de: "Gewicht, wo die Tabelle eines nennt."
+      en: "Weight, where the table gives one."
+
+  notes:
+    slot: front-notes
+    aliases: [anmerkungen, anmerkung, fußnoten, fussnoten, note, footnotes]
+    description:
+      de: "Die Fußnoten des Regelwerks, die für diesen Gegenstand gelten — eine Liste, jeder Eintrag ein kursiver Satz am Fuß."
+      en: "The rulebook's footnotes that apply to this item — a list, each entry an italic line at the foot."
+    sample:
+      de:
+        - "Hält an Holz und Stein; an glattem Fels bei einer 1 nicht."
+      en:
+        - "Holds on wood and stone; on smooth rock, not on a 1."

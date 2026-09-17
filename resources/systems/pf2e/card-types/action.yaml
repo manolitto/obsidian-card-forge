@@ -1,0 +1,159 @@
+# ── action ──────────────────────────────────────────────────────────
+# A basic or skill action: the action cost beside the name, the skill
+# and its required rank as a two-line badge, the category pills, the
+# labelled lines, the effect, the four degrees of success, and an
+# optional tinted box for examples or a named sub-rule.
+
+front-template: templates/action-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/action.css
+
+translations:
+  de:
+    back-label: "Aktion"
+    front-frequency-label: "Häufigkeit"
+    front-trigger-label: "Auslöser"
+    front-requirements-label: "Anforderungen"
+    front-critical-success-label: "Kritischer Erfolg"
+    front-success-label: "Erfolg"
+    front-failure-label: "Fehlschlag"
+    front-critical-failure-label: "Kritischer Fehlschlag"
+
+properties:
+  actions:
+    slot: front-title-glyph
+    aliases: [aktionen, kosten, action-cost]
+    description:
+      de: "Aktionskosten, neben dem Namen als Symbol gedruckt: `1`, `2`, `3`, `r` (Reaktion), `f` (frei) oder das Symbol selbst."
+      en: "Action cost, printed as a glyph beside the name: `1`, `2`, `3`, `r` (reaction), `f` (free) or the glyph itself."
+    sample: "1"
+
+  skill:
+    slot: front-badge
+    aliases: [fertigkeit, fertigkeiten]
+    description:
+      de: "Fertigkeit, zu der die Aktion gehört (z. B. `Akrobatik`, `Athletik`). Erscheint als Abzeichen rechts in der Kopfzeile; bei mehreren Fertigkeiten eine Liste, mit „/“ verbunden. Einfache Aktionen lassen das Feld weg."
+      en: "Skill the action belongs to (e.g. `Akrobatik`, `Athletik`). Shown as the badge at the right of the header; a list for several skills, joined with \"/\". Basic actions omit it."
+    sample:
+      de: "Akrobatik"
+      en: "Acrobatics"
+
+  training:
+    slot: front-badge-note
+    aliases: [kompetenz, kompetenzgrad]
+    description:
+      de: "Erforderlicher Kompetenzgrad in der Fertigkeit (`ungeübt`, `geübt`, `Experte`, `Meister`, `Legende`), unter der Fertigkeit im Abzeichen."
+      en: "Required proficiency rank in the skill (`ungeübt`, `geübt`, `Experte`, `Meister`, `Legende`), under the skill in the badge."
+    sample:
+      de: "geübt"
+      en: "trained"
+
+  categories:
+    slot: front-traits
+    aliases: [kategorien, merkmale]
+    description:
+      de: "Liste der Merkmale der Aktion (`Bewegung`, `Offensiv`, `Handhaben`, `Konzentration`, `Verdeckt`, `Erkundung`, …). Jeder Eintrag wird eine dunkelrote Pille unter dem Titel."
+      en: "List of the action's traits (`Bewegung`, `Offensiv`, `Handhaben`, `Konzentration`, `Verdeckt`, `Erkundung`, …). Each entry becomes a dark-red pill under the title."
+    sample:
+      de: ["Offensiv"]
+      en: ["Attack"]
+
+  frequency:
+    slot: front-frequency
+    aliases: [häufigkeit, haeufigkeit]
+    description:
+      de: "Häufigkeit (z. B. `1/Tag`, `einmal pro Stunde`)."
+      en: "Frequency (e.g. `1/day`, `once per hour`)."
+    sample: ""
+
+  trigger:
+    slot: front-trigger
+    aliases: [auslöser, ausloeser]
+    description:
+      de: "Auslöser der Aktion, bei Reaktionen und freien Aktionen."
+      en: "Trigger of the action, for reactions and free actions."
+    sample:
+      de: "Du stürzt von einer Kante oder einem Haltegriff ab oder daran vorbei."
+      en: "You fall from or past an edge or handhold."
+
+  requirements:
+    slot: front-requirements
+    aliases: [anforderungen, voraussetzungen]
+    description:
+      de: "Anforderungen für die Ausführung der Aktion."
+      en: "Requirements for performing the action."
+    sample:
+      de: "Deine Hände sind nicht gefesselt."
+      en: "Your hands are not tied."
+
+  description:
+    slot: front-text
+    aliases: [beschreibung, effekt, wirkung, text]
+    description:
+      de: "Wirkung der Aktion als Markdown — der Hauptteil der Karte."
+      en: "The action's effect as markdown — the main body of the card."
+    sample:
+      de: "Wenn du von einer Kante abstürzt, kannst du versuchen, sie zu ergreifen. Dazu muss dir ein Reflexwurf gelingen, üblicherweise gegen den Klettern-SG."
+      en: "When you fall off an edge, you can try to grab it. You must succeed at a Reflex save, usually at the Climb DC."
+
+  critical-success:
+    slot: front-critical-success
+    aliases: [kritischer-erfolg, krit-erfolg]
+    description:
+      de: "Ergebnis bei kritischem Erfolg."
+      en: "Outcome on a critical success."
+    sample:
+      de: "Du ergreifst den Halt, ob du eine Hand frei hast oder nicht, und behandelst den Sturz als 9 m kürzer."
+      en: "You grab the edge whether or not you have a hand free, and treat the fall as 30 feet shorter."
+
+  success:
+    slot: front-success
+    aliases: [erfolg]
+    description:
+      de: "Ergebnis bei Erfolg."
+      en: "Outcome on a success."
+    sample:
+      de: "Mit mindestens einer freien Hand ergreifst du den Halt und behandelst den Sturz als 6 m kürzer."
+      en: "With at least one hand free you grab the edge and treat the fall as 20 feet shorter."
+
+  failure:
+    slot: front-failure
+    aliases: [fehlschlag, misserfolg]
+    description:
+      de: "Ergebnis bei Fehlschlag."
+      en: "Outcome on a failure."
+    sample: ""
+
+  critical-failure:
+    slot: front-critical-failure
+    aliases: [kritischer-fehlschlag, krit-fehlschlag]
+    description:
+      de: "Ergebnis bei kritischem Fehlschlag."
+      en: "Outcome on a critical failure."
+    sample:
+      de: "Du fällst weiter und nimmst zusätzlich 10 Wuchtschaden je 6 m, die du bereits gestürzt bist."
+      en: "You continue to fall and take an additional 10 bludgeoning damage for every 20 feet already fallen."
+
+  callout:
+    slot: front-callout
+    aliases: [beispiele, kasten, infokasten]
+    description:
+      de: |
+        Kasten am Ende der Karte — eine Beispielliste oder eine benannte Nebenregel. Ein Objekt mit `title` (optional) und `body` (Markdown); ohne `title` steht der Text allein im getönten Kasten.
+
+        ```yaml
+        callout:
+          title: "Beispiele"
+          body: |
+            - **Ungeübt** Leiter, steiler Hang
+            - **Geübt** Takelage, Seil
+        ```
+      en: |
+        Box at the end of the card — an example list or a named sub-rule. An object with `title` (optional) and `body` (markdown); without `title` the text stands alone in the tinted box.
+    sample:
+      de:
+        title: "Erzwungene Bewegung"
+        body: "Wird eine Kreatur durch einen Effekt bewegt, bestimmt der Effekt die Entfernung, nicht ihre Bewegungsrate; die Bewegung löst keine Reaktionen aus."
+      en:
+        title: "Forced Movement"
+        body: "When an effect moves a creature, the effect sets the distance, not its Speed; the movement triggers no reactions."

@@ -1,0 +1,88 @@
+# ── heritage ────────────────────────────────────────────────────────
+# The rulebook's peoples (p. 14): the tags as pills, the one passive
+# trait, a table of example names. The right icon follows the people's
+# own name.
+
+front-template: templates/heritage-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/heritage.css
+
+classifiers:
+  front-icon-right: &heritage-icons
+    match:
+      - { pattern: "zwerg|dwarf", token: assets/icons/dwarf-face.svg }
+      - { pattern: "elf", token: assets/icons/elf-ear.svg }
+      - { pattern: "halbling|halfling", token: assets/icons/barefoot.svg }
+      - { pattern: "gnom|gnome", token: assets/icons/wizard-face.svg }
+      - { pattern: "ork|orc", token: assets/icons/orc-head.svg }
+      - { pattern: "mensch|human", token: assets/icons/person.svg }
+  back-icon-bottom: *heritage-icons
+
+translations:
+  de:
+    card-type-label: "Volk"
+    back-label: "Volk"
+    front-effect-label: "Eigenschaft"
+    front-names-label: "Namen"
+    front-names-male-label: "Männlich"
+    front-names-female-label: "Weiblich"
+    front-names-lastname-label: "Nachname"
+  en:
+    card-type-label: "Heritage"
+    back-label: "Heritage"
+    front-effect-label: "Trait"
+    front-names-label: "Names"
+    front-names-male-label: "Male"
+    front-names-female-label: "Female"
+    front-names-lastname-label: "Last name"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/family-tree.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset."
+
+  name:
+    slot: [front-title, front-icon-right, back-icon-bottom]
+    description:
+      de: "Name des Volkes — Zwerg:in, Elf:e, Halbling:in, Gnom:in, Ork:in, Mensch. Wählt zugleich das rechte Symbol."
+      en: "The people's name — Dwarf, Elf, Halfling, Gnome, Orc, Human. Picks the right icon as well."
+    sample:
+      de: "Zwerg:in"
+      en: "Dwarf"
+
+  tags:
+    slot: front-tags
+    aliases: [merkmale, schlagworte]
+    description:
+      de: "Schlagworte als Pillen — meist „Passiv“."
+      en: "Tags as pills — usually \"Passive\"."
+    sample:
+      de: ["Passiv"]
+      en: ["Passive"]
+
+  effect:
+    slot: front-effect
+    aliases: [wirkung, effekt, eigenschaft, trait, regel, rule, text]
+    description:
+      de: "Die Eigenschaft, die dieses Volk mitbringt (Markdown)."
+      en: "The trait this people brings (markdown)."
+    sample:
+      de: "+ 1 Grundschaden im Nahkampf."
+      en: "+ 1 base damage in melee."
+
+  names:
+    slot: front-names
+    aliases: [namen, namensbeispiele]
+    description:
+      de: "Namensbeispiele als Liste von Zeilen mit `male`, `female` und `lastname`."
+      en: "Example names as a list of rows with `male`, `female` and `lastname`."
+    sample:
+      de:
+        - { male: "Artex", female: "Branca", lastname: "Donnerhammer" }
+        - { male: "Grimthor", female: "Opal", lastname: "Kupferauge" }
+      en:
+        - { male: "Artex", female: "Branca", lastname: "Thunderhammer" }
+        - { male: "Grimthor", female: "Opal", lastname: "Coppereye" }

@@ -1,0 +1,141 @@
+# ── npc ─────────────────────────────────────────────────────────────
+# An adversary on the large card: the distinctive features, the five
+# small diamonds, the attribute level in the large one, the combat
+# proficiencies, the fell abilities, the description; the picture with
+# the name over it on the back.
+
+front-template: templates/npc-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/npc.css
+card-size: large
+
+translations:
+  de:
+    back-label: "Widersacher"
+    front-endurance-label: "Ausdauer"
+    front-might-label: "Stärke"
+    front-hate-label: "Hass"
+    front-resolve-label: "Entschlossen"
+    front-parry-label: "Parade"
+    front-armour-label: "Rüstung"
+    front-attribute-label: "Attributs­stufe"
+    front-proficiencies-label: "Kampffähigkeiten"
+    front-abilities-label: "Grausame Fähigkeiten"
+  en:
+    back-label: "Adversary"
+    front-endurance-label: "Endurance"
+    front-might-label: "Might"
+    front-hate-label: "Hate"
+    front-resolve-label: "Resolve"
+    front-parry-label: "Parry"
+    front-armour-label: "Armour"
+    front-attribute-label: "Attribute level"
+    front-proficiencies-label: "Combat proficiencies"
+    front-abilities-label: "Fell abilities"
+
+properties:
+  name:
+    slot: [front-title, back-title]
+    sample:
+      de: "Moorschlurfer"
+      en: "Bog shambler"
+
+  # A stat block has no room for a source line; the note keeps it.
+  reference:
+    slot: ~
+
+  description:
+    sample:
+      de: "Was im Moor versinkt, kommt nicht immer als das wieder herauf, was es war."
+      en: "What sinks in the bog does not always come back up as what it was."
+
+  features:
+    slot: front-features
+    aliases: [merkmale]
+    description:
+      de: "Markante Merkmale — eine kurze Liste im Text, etwa „Rachsüchtig, Widerspenstig“."
+      en: "Distinctive features — a short list in the text, \"Vengeful, Unruly\" say."
+    sample:
+      de: "Zäh, Geduldig"
+      en: "Tough, Patient"
+
+  endurance:
+    slot: front-endurance
+    aliases: [ausdauer]
+    description:
+      de: "Ausdauer — die Lebenskraft; bei 0 ist der Widersacher besiegt."
+      en: "Endurance — the life force; at 0 the adversary is defeated."
+    sample: 20
+
+  might:
+    slot: front-might
+    aliases: [stärke, staerke]
+    description:
+      de: "Stärke — wie leicht Treffer zu Schweren Treffern werden."
+      en: "Might — how readily hits become Heavy Blows."
+    sample: 2
+
+  hate:
+    slot: front-hate
+    aliases: [hass]
+    description:
+      de: "Hass — das dunkle Gegenstück zur Hoffnung, treibt Grausame Fähigkeiten an. Widersacher ohne Hass haben Entschlossenheit."
+      en: "Hate — the dark counterpart of Hope, fuelling Fell Abilities. An adversary without Hate has Resolve."
+    sample: 4
+
+  resolve:
+    slot: front-resolve
+    aliases: [entschlossenheit]
+    description:
+      de: "Entschlossenheit — der Vorrat für Moralproben, bei Tieren und freien Völkern statt Hass."
+      en: "Resolve — the pool for morale checks, on beasts and free peoples in place of Hate."
+
+  parry:
+    slot: front-parry
+    aliases: [parade]
+    description:
+      de: "Parade — Modifikator auf den Schwierigkeitsgrad im Nahkampf, z. B. „+1“; „–“ ohne."
+      en: "Parry — modifier to the target number in melee, e.g. \"+1\"; \"–\" for none."
+    sample: "+1"
+
+  armor:
+    slot: front-armour
+    aliases: [armour, rüstung, ruestung]
+    description:
+      de: "Rüstung — die Schutzwürfel gegen Durchbohrende Treffer."
+      en: "Armour — the protection dice against Piercing Blows."
+    sample: 2
+
+  attribute-level:
+    slot: front-attribute
+    aliases: [attributsstufe, attributwert]
+    description:
+      de: "Attributsstufe — der eine Wert für die Proben des Widersachers, im großen Diamanten."
+      en: "Attribute level — the one value for the adversary's rolls, in the large diamond."
+    sample: 3
+
+  combat-proficiencies:
+    slot: front-proficiencies
+    aliases: [kampffähigkeiten, kampffaehigkeiten]
+    description:
+      de: "Kampffähigkeiten als Liste — je Eintrag die Waffe, der Wert in Erfolgswürfeln und in Klammern Schaden/Verletzung, ggf. ein Sondereffekt."
+      en: "Combat proficiencies as a list — each entry the weapon, its value in Success Dice and in brackets damage/injury, a special effect if any."
+    sample:
+      de:
+        - "Klauen 2 (4/14)"
+        - "Umklammern 3 (2/12, Festhalten)"
+      en:
+        - "Claws 2 (4/14)"
+        - "Grasp 3 (2/12, Seize)"
+
+  fell-abilities:
+    slot: front-abilities
+    aliases: [grausame-fähigkeiten, grausame-faehigkeiten]
+    description:
+      de: "Grausame Fähigkeiten als Liste — je Eintrag der Name kursiv, dann die Wirkung (Markdown; ein Zeilenumbruch bleibt einer)."
+      en: "Fell abilities as a list — each entry its name in italics, then the effect (markdown; a line break stays one)."
+    sample:
+      de:
+        - "_Zäh._ Ein Schwerer Treffer kostet den Moorschlurfer nur die Hälfte."
+      en:
+        - "_Tough._ A Heavy Blow costs the bog shambler only half."

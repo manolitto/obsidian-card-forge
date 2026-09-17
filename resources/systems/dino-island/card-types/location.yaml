@@ -1,0 +1,81 @@
+# ── location ────────────────────────────────────────────────────────
+# A place on the island: the category as an eyebrow over the name, the
+# atmosphere line, what is to be found there as a list; the back carries
+# the same heading and the location's moves.
+
+front-template: templates/location-front.hbs
+back-template: templates/location-back.hbs
+stylesheet: styles/location.css
+
+translations:
+  de:
+    back-label: "Ort"
+    front-contents-label: "Was hier zu finden ist:"
+    back-moves-label: "Ortsspielzüge:"
+
+properties:
+  name:
+    slot: [front-title, back-title]
+    aliases: [ort]
+    sample:
+      de: "Die Salzklippen"
+      en: "The Salt Cliffs"
+
+  # A location has an atmosphere line and a list, no running text.
+  description:
+    slot: ~
+
+  category:
+    slot: [front-category, back-category]
+    aliases: [kategorie, gruppe, ortstyp]
+    description:
+      de: "Kategorie des Ortes — „Natürliche Orte“, „Erbaute Orte“, „Im Komplex“, „Seltsame Orte“ — als kleine Zeile über dem Namen."
+      en: "The location's category — a small line above the name."
+    sample:
+      de: "Natürliche Orte"
+      en: "Natural places"
+
+  atmosphere:
+    slot: front-atmosphere
+    aliases: [stimmung, atmosphäre, atmosphaere, sinneseindruck]
+    description:
+      de: "Ein Satz für die Stimmung des Ortes, kursiv (Markdown)."
+      en: "A sentence for the place's atmosphere, in italics (markdown)."
+    sample:
+      de: "Salzgeruch, Möwengeschrei und ein Wind, der die Worte verschluckt."
+      en: "The smell of salt, gulls' cries and a wind that swallows words."
+
+  contents:
+    slot: front-contents
+    aliases: [funde, inhalt, was-hier-zu-finden-ist, zu-finden]
+    description:
+      de: "„Was hier zu finden ist“ — eine Liste, als Aufzählung gedruckt (Markdown)."
+      en: "\"What is here\" — a list, printed as bullets (markdown)."
+    sample:
+      de:
+        - "Ein verlassener Beobachtungsposten"
+        - "Nistplätze in der Klippe"
+        - "ein Boot, das nicht mehr schwimmt"
+      en:
+        - "An abandoned lookout"
+        - "nests in the cliff"
+        - "a boat that no longer floats"
+
+  moves:
+    slot: back-moves
+    aliases: [spielzüge, spielzuege, ortsspielzüge, ortsspielzuege, züge, zuege]
+    description:
+      de: "„Ortsspielzüge“ — die Spielzüge, die dieser Ort der Spielleitung gibt; eine Liste, auf der Rückseite."
+      en: "\"Location moves\" — the moves this place gives the game master; a list, on the back."
+    sample:
+      de:
+        - "Lass den Boden unter jemandem bröckeln."
+        - "Ein Schwarm geht in die Luft und verrät die Gruppe."
+      en:
+        - "Let the ground crumble under someone."
+        - "A flock takes to the air and gives the group away."
+
+  reference:
+    sample:
+      de: "Regelwerk S. 38"
+      en: "Rulebook p. 38"

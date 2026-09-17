@@ -1,0 +1,155 @@
+# ── generic ─────────────────────────────────────────────────────────
+# A free card: a title, a subtitle and a footer on either face when the
+# note gives them, any of the bundled icons in the corners, and a body
+# of markdown — written in the block or as a `## Vorderseite` /
+# `## Rückseite` section of the note. A back with nothing set is the
+# wordmark back.
+
+front-template: templates/generic-front.hbs
+back-template: templates/generic-back.hbs
+stylesheet: styles/generic.css
+overflow-mode: extra-cards
+
+translations:
+  de:
+    back-label: ""
+  en:
+    back-label: ""
+
+properties:
+  name:
+    slot: ~
+  image:
+    slot: ~
+  reference:
+    slot: ~
+  description:
+    slot: ~
+
+  title:
+    slot: front-title
+    aliases: [front-title, titel, überschrift, heading]
+    description:
+      de: "Titel der Vorderseite."
+      en: "The front's title."
+    sample:
+      de: "Hausregel"
+      en: "House Rule"
+
+  subtitle:
+    slot: front-tagline
+    aliases: [front-subtitle, untertitel]
+    description:
+      de: "Kursiver Untertitel der Vorderseite."
+      en: "The front's italic subtitle."
+    sample:
+      de: "Optionale Regel"
+      en: "Optional rule"
+
+  content:
+    slot: front-text
+    aliases: [front-content, front-text, vordertext, vorderseite, front]
+    description:
+      de: "Text der Vorderseite (Markdown) — im Block, oder als Abschnitt `## Vorderseite` der Notiz."
+      en: "The front's text (markdown) — in the block, or as a `## Front` section of the note."
+    sample:
+      de: "Beschreibe hier die Regel …"
+      en: "Describe the rule here …"
+
+  footer:
+    slot: front-footer
+    aliases: [front-footer, front-reference, vorder-fußzeile]
+    description:
+      de: "Fußzeile der Vorderseite, unter der roten Linie."
+      en: "The front's footer, under the red line."
+    sample:
+      de: "Regelwerk S. 12"
+      en: "Rules p. 12"
+
+  icon-left:
+    slot: front-icon-left
+    aliases: [front-icon-left, front-icon, vorder-symbol-links]
+    description:
+      de: "Symbol links oben — ein Pfad unter dem System, z. B. `assets/icons/skills.svg`."
+      en: "The top-left icon — a path under the system, e.g. `assets/icons/skills.svg`."
+    sample: "assets/icons/skills.svg"
+
+  label-left:
+    slot: front-type-label
+    aliases: [front-icon-left-label, front-label-left, vorder-label-links]
+    description:
+      de: "Kleine Kapitälchen über dem linken Symbol — etwa ein Kartentyp."
+      en: "Small caps above the left icon — a card type, say."
+    sample:
+      de: "Fähigkeit"
+      en: "Ability"
+
+  icon-right:
+    slot: front-icon-right
+    aliases: [front-icon-right, vorder-symbol-rechts]
+    description:
+      de: "Symbol rechts oben — ein Pfad unter dem System, z. B. `assets/icons/hood.svg`."
+      en: "The top-right icon — a path under the system, e.g. `assets/icons/hood.svg`."
+
+  label-right:
+    slot: front-subtype
+    aliases: [front-icon-right-label, front-label-right, vorder-label-rechts]
+    description:
+      de: "Kleine Kapitälchen über dem rechten Symbol — etwa ein Untertyp."
+      en: "Small caps above the right icon — a sub-type, say."
+
+  back-heading:
+    slot: back-title
+    aliases: [back-title, rücktitel]
+    description:
+      de: "Titel der Rückseite. Mit Titel, Untertitel, Text oder Fußzeile wird die Rückseite eine zweite Textseite statt der Schriftzug-Rückseite."
+      en: "The back's title. With a title, subtitle, text or footer the back becomes a second text face instead of the wordmark back."
+
+  back-subtitle:
+    slot: back-tagline
+    aliases: [rückuntertitel, back-subheading]
+    description:
+      de: "Kursiver Untertitel der Rückseite."
+      en: "The back's italic subtitle."
+
+  back-content:
+    slot: back-text
+    aliases: [back-text, rücktext, rückseite, back]
+    description:
+      de: "Text der Rückseite (Markdown) — im Block, oder als Abschnitt `## Rückseite` der Notiz."
+      en: "The back's text (markdown) — in the block, or as a `## Back` section of the note."
+
+  back-colophon:
+    slot: back-footer
+    aliases: [back-footer, back-reference, rück-fußzeile]
+    description:
+      de: "Fußzeile der Rückseite, unter der roten Linie."
+      en: "The back's footer, under the red line."
+
+  icon-upper:
+    slot: back-icon-top
+    aliases: [back-icon-top, rück-symbol-oben]
+    description:
+      de: "Symbol über dem Schriftzug der Rückseite — ein Pfad unter dem System."
+      en: "The icon above the back's wordmark — a path under the system."
+
+  label-upper:
+    slot: back-type-label
+    aliases: [back-icon-top-label, back-label-top, rück-label-oben]
+    description:
+      de: "Kapitälchen unter dem oberen Symbol der Rückseite."
+      en: "Small caps under the back's top icon."
+
+  icon-lower:
+    slot: back-icon-bottom
+    aliases: [back-icon-bottom, rück-symbol-unten]
+    description:
+      de: "Symbol unter dem Schriftzug der Rückseite — ein Pfad unter dem System."
+      en: "The icon below the back's wordmark — a path under the system."
+
+  label-lower:
+    slot: back-subtype
+    aliases: [back-icon-bottom-label, back-label-bottom, rück-label-unten]
+    description:
+      de: "Kapitälchen unter dem unteren Symbol der Rückseite."
+      en: "Small caps under the back's bottom icon."

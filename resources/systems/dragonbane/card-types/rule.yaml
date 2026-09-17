@@ -1,0 +1,175 @@
+# ── rule: Fertigkeiten, Talente, Zauber ────────────────────────────
+# One card type for the three rule-element families, because the rulebook
+# already sets them as one shape: a name, a short list of labelled values,
+# then prose. Only WHICH labels appear differs, and the three label sets
+# barely overlap — `Voraussetzung` is the single shared key. So the front
+# renders the union in one fixed order and every row is conditional:
+#
+#   1  attribute + rank + wp-cost      (attribute and rank never co-occur)
+#   2  prerequisite                    wide — free text, must wrap
+#   4  casting-requirement             wide — "Wort, Geste, Fokus (…)"
+#   5  casting-time + range + duration one wrapping row, no rules between
+#
+# Read down a Zauber and you get Rang, Voraussetzung, Vorgabe, Zauberdauer,
+# Reichweite, Wirkungsdauer — the printed order. What the card IS lives in
+# `category` („Fertigkeit", „Talent", „Zauber") and `subcategory`
+# („Grundfertigkeit", „Heroisches Talent", „Elementarismus"). Do not add a
+# card type per family; add a conditional row here.
+
+front-template: templates/front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/rule.css
+card-size: poker
+
+translations:
+  de:
+    back-label: "Regel"
+    # „WP" as the short form: on a Zauber the row already carries the
+    # Rang, and the full word with „2 je Kraftstufe" would wrap to three
+    # lines.
+    front-stat-1a-label: "Attribut"
+    front-stat-1b-label: "Rang"
+    front-stat-1c-label: "WP"
+    front-stat-2-wide-label: "Voraussetzung"
+    front-stat-4-wide-label: "Vorgabe"
+    front-stat-5a-label: "Zauberdauer"
+    front-stat-5b-label: "Reichweite"
+    front-stat-5c-label: "Wirkungsdauer"
+
+# German note keys drive the aliases, because that is what the vault
+# writes. The two "requirement" keys the English rules keep apart and
+# German does not: EN "Prerequisite" (what you must already have) is DE
+# „Voraussetzung" → `prerequisite`; EN "Requirement" (what casting costs
+# you in word and gesture) is DE „Vorgabe" → `casting-requirement`.
+properties:
+  name:
+    slot: front-header-title
+    description:
+      de: "Name der Fertigkeit, des Talents oder des Zaubers."
+      en: "Name of the skill, ability or spell."
+    sample:
+      de: "Glutgriff"
+      en: "Ember Grip"
+
+  front-image:
+    slot: front-image-top
+    aliases: [bild, image, vorderbild, vorderseitenbild, bild-vorderseite]
+    description:
+      de: "Bild zur Regel, zum Talent oder zum Zauber als Wikilink. Erscheint auf der Vorderseite."
+      en: "Picture as a wikilink. Rendered on the card front."
+    sample: "[[Glutgriff.png]]"
+
+  # ── 1 · Fertigkeiten ──
+  attribute:
+    slot: front-stat-1a
+    aliases: [attribut, eigenschaft, grundeigenschaft]
+    description:
+      de: "Grundeigenschaft, auf die eine Fertigkeit probt: STÄ, KON, GEW, INT, WIL oder CHA."
+      en: "Attribute a skill is rolled against: STR, CON, AGL, INT, WIL or CHA."
+    sample:
+      de: "GEW"
+      en: "AGL"
+
+  # ── 2 · Zauber ──
+  rank:
+    slot: front-stat-1b
+    aliases: [rang, grad, zauberrang]
+    description:
+      de: "Rang des Zaubers (1–5) oder „Zaubertrick“. Als Zeichenkette angeben, damit „Zaubertrick“ neben den Zahlen möglich bleibt."
+      en: "Rank of the spell (1–5) or \"Magic trick\". Quote it so \"Magic trick\" can stand alongside the numbers."
+    sample: "1"
+
+  # ── 3 · Talente und Zauber ──
+  prerequisite:
+    slot: front-stat-2-wide
+    aliases: [voraussetzung, vorbedingung]
+    description:
+      de: "Was der Charakter mitbringen muss: bei Talenten eine Fertigkeit auf 12 („Ausweichen 12“) oder ein Beruf, bei Zaubern die Magieschule bzw. der vorausgesetzte Zauber. „–“ für keine."
+      en: "What the character must already have: for abilities a skill at 12 (\"Evade 12\") or a profession, for spells the school of magic or the prerequisite spell. \"–\" for none."
+    sample:
+      de: "[[Aschenatem]]"
+      en: "[[Ash Breath]]"
+
+  # For a Zauber the value follows the Regelbuch's KRAFTSTUFE rule
+  # (S. 58), and it is DATA, not a formula: „1" for a Zaubertrick, „2 je
+  # Kraftstufe" for a scaling spell, „2" for the four that do not scale
+  # — and that a spell scales at all is stated only in its prose.
+  wp-cost:
+    slot: front-stat-1c
+    aliases: [willenskraftpunkte, wp, willenskraft, willpower-points, willpower]
+    description:
+      de: "Willenskraftpunkte für den Einsatz. Talente: fester Wert, „–“ für dauerhafte, „variabel“ bei abhängigen Kosten. Zauber: „1“ für Zaubertricks, „2 je Kraftstufe“ für skalierende, „2“ für Zauber ohne Kraftstufen (Regelbuch S. 58)."
+      en: "Willpower Points to use it. Abilities: a fixed number, \"–\" for permanent ones, \"variable\" when the cost depends on the use. Spells: \"1\" for magic tricks, \"2 per power level\" for scaling ones, \"2\" for spells without power levels (Rules p. 58)."
+    sample: "3"
+
+  # ── 5 · Zauber ──
+  casting-requirement:
+    slot: front-stat-4-wide
+    aliases: [vorgabe, requirement, komponenten, components]
+    description:
+      de: "Vorgabe – was das Wirken verlangt: Wort, Geste, Fokus (…) oder Zutat (…). Im englischen Regelwerk „Requirement“."
+      en: "Requirement — what casting demands: word, gesture, focus (…) or ingredient (…)."
+    sample:
+      de: "Wort, Geste"
+      en: "Word, gesture"
+
+  casting-time:
+    slot: front-stat-5a
+    aliases: [zauberdauer, wirkdauer, zeitaufwand]
+    description:
+      de: "Zauberdauer – Aktion, Reaktion, Viertel oder Tagesabschnitt."
+      en: "Casting time — action, reaction, stretch or shift."
+    sample:
+      de: "Aktion"
+      en: "Action"
+
+  range:
+    slot: front-stat-5b
+    aliases: [reichweite]
+    description:
+      de: "Reichweite des Zaubers in Metern, oder „Berührung“ bzw. „Selbst“."
+      en: "Range of the spell in metres, or \"Touch\" / \"Self\"."
+    sample:
+      de: "10 Meter"
+      en: "10 meters"
+
+  duration:
+    slot: front-stat-5c
+    aliases: [wirkungsdauer, dauer]
+    description:
+      de: "Wirkungsdauer – Sofort, Viertel, Tagesabschnitt oder Dauerhaft."
+      en: "Duration — instant, stretch, shift or permanent."
+    sample:
+      de: "Sofort"
+      en: "Instant"
+
+  # The prose, BELOW the stat box — the rulebook paragraph.
+  description:
+    slot: front-text-bottom
+    aliases: [beschreibung]
+    description:
+      de: "Beschreibung oder Regeltext der Karte – der Absatz unter dem Werteblock."
+      en: "Description or rule text of the card — the paragraph below the stat block."
+    sample:
+      de: "Deine Hand glüht wie ein Stück Kohle aus dem Herd. Was du berührst, beginnt zu schwelen."
+      en: "Your hand glows like a coal from the hearth. Whatever you touch begins to smoulder."
+
+  effect:
+    slot: front-effect-bottom
+    aliases: [effekt]
+    description:
+      de: "Spielmechanischer Effekt – was die Karte bewirkt, wenn sie zum Tragen kommt."
+      en: "Mechanical effect — what the card does when it triggers."
+    sample:
+      de: "Berührungsangriff: W6 Feuerschaden, je Kraftstufe +W6."
+      en: "Touch attack: d6 fire damage, +d6 per power level."
+
+  note:
+    slot: front-note-bottom
+    aliases: [anmerkung]
+    description:
+      de: "Freier Anmerkungstext, der unauffällig auf der Karte erscheint."
+      en: "Free-form note rendered unobtrusively on the card."
+    sample:
+      de: "Optional: nur bei Tageslicht."
+      en: "Optional: only in daylight."

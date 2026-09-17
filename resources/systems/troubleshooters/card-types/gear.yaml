@@ -1,0 +1,59 @@
+# ── gear ────────────────────────────────────────────────────────────
+# A gear kit, borderless on white: the name in red small capitals, the
+# picture, what the kit holds, its traits with their names in blue, the
+# story points; the reference at the foot's right. The back is the logo
+# in red, rotated, with the kind at the top right.
+
+front-template: templates/gear-front.hbs
+back-template: templates/gear-back.hbs
+stylesheet: styles/gear.css
+
+translations:
+  de:
+    back-label: "Ausrüstung"
+    front-story-points-label: "Story-Punkte"
+  en:
+    back-label: "Gear"
+    front-story-points-label: "Story points"
+
+properties:
+  name:
+    sample:
+      de: "Feldstecher"
+      en: "Field glasses"
+
+  image:
+    slot: front-image
+    sample: "[[Feldstecher.png]]"
+
+  content:
+    slot: front-text
+    aliases: [inhalt]
+    description:
+      de: "Was das Kit enthält — ein Satz oder eine Aufzählung mit Kommas."
+      en: "What the kit holds — a sentence or a comma-separated list."
+    sample:
+      de: "Fernglas 8×30 im Lederetui, Trageriemen, Putztuch"
+      en: "8×30 binoculars in a leather case, strap, cleaning cloth"
+
+  traits:
+    slot: front-traits
+    aliases: [eigenschaften]
+    description:
+      de: "Die Eigenschaften des Kits — eine Liste von `name` und `desc`, der Name blau und fett, die Beschreibung dahinter."
+      en: "The kit's traits — a list of `name` and `desc`, the name blue and bold, the description after it."
+    sample:
+      de:
+        - name: "Beobachten"
+          desc: "+2 Pips auf weite Entfernung"
+      en:
+        - name: "Observation"
+          desc: "+2 pips at long range"
+
+  story-points:
+    slot: front-story-points
+    aliases: [story-punkte, "story punkte"]
+    description:
+      de: "Was das Kit in Story-Punkten kostet — meist 1 oder 2."
+      en: "What the kit costs in story points — usually 1 or 2."
+    sample: 1

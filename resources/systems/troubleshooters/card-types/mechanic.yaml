@@ -1,0 +1,60 @@
+# ── mechanic ────────────────────────────────────────────────────────
+# A rule in an orange frame: what it requires after a blue caption, the
+# prose, the points as an orange-bulleted list; the reference at the
+# foot's left. The back is the logo in its white box on an orange field.
+
+front-template: templates/mechanic-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/mechanic.css
+
+translations:
+  de:
+    back-label: "Mechanik"
+    front-requires-label: "Erfordert"
+  en:
+    back-label: "Mechanic"
+    front-requires-label: "Requires"
+
+properties:
+  name:
+    sample:
+      de: "Deckung suchen"
+      en: "Taking cover"
+
+  requires:
+    slot: front-requires
+    aliases: [erfordert]
+    description:
+      de: "Voraussetzung oder Auslöser der Mechanik — eine Aktionsart, eine Mindestinitiative, eine gelungene Probe."
+      en: "What the mechanic requires or what triggers it — an action type, a minimum initiative, a successful check."
+    sample:
+      de: "Bewegungsaktion"
+      en: "Move action"
+
+  content:
+    slot: front-text
+    aliases: [inhalt, beschreibung, description]
+    description:
+      de: "Der Regeltext — Markdown, gern mehrere Absätze."
+      en: "The rule's text — markdown, paragraphs welcome."
+    sample:
+      de: "Wer sich hinter etwas Festes duckt, ist für Fernkampfangriffe schwerer zu treffen, solange die Deckung hält."
+      en: "Whoever ducks behind something solid is harder to hit at range for as long as the cover holds."
+
+  points:
+    slot: front-points
+    aliases: [punkte]
+    description:
+      de: "Die Aufzählungspunkte der Mechanik — eine Liste von `name` und `desc`, orange Punkte davor."
+      en: "The mechanic's bullet points — a list of `name` and `desc`, orange bullets before them."
+    sample:
+      de:
+        - name: "Leichte Deckung:"
+          desc: "Angriffe auf dich sind um −1 Pip erschwert."
+        - name: "Schwere Deckung:"
+          desc: "Angriffe auf dich sind um −2 Pips erschwert; ein Patzer trifft die Deckung."
+      en:
+        - name: "Light cover:"
+          desc: "Attacks against you are at −1 pip."
+        - name: "Heavy cover:"
+          desc: "Attacks against you are at −2 pips; a fumble hits the cover instead."

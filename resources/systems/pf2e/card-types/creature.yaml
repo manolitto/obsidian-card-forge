@@ -1,0 +1,243 @@
+# ── creature ────────────────────────────────────────────────────────
+# The Monsterkarte: name and level, the trait row with alignment and
+# size in their own colours, perception and skills, the six attributes,
+# the defences, the speed, then the attacks and abilities. Printed on
+# the `large` card — a stat block wants the room — and the portrait
+# below the block when it clears 10 mm, else not at all.
+
+front-template: templates/creature-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/creature.css
+card-size: large
+
+layouts:
+  - { name: image-bottom, front-face-count: any, eligible-if: { element: hero, min-height: 10mm } }
+  - { name: image-none, front-face-count: any, fallback: true }
+layout-decision:
+  order:
+    - { metric: element-size, element: hero, dimension: height, direction: maximize }
+  tie-break: declaration-order
+
+translations:
+  de:
+    back-label: "Kreatur"
+    front-perception-label: "Wahrnehmung"
+    front-skills-label: "Fertigkeiten"
+    front-items-label: "Gegenstände"
+    front-armor-class-label: "RK"
+    front-hit-points-label: "TP"
+    front-immunities-label: "Immunitäten"
+    front-resistances-label: "Resistenzen"
+    front-weaknesses-label: "Schwächen"
+    front-stride-label: "Laufen"
+    front-speed-label: "Bewegungsrate"
+
+properties:
+  image:
+    slot: [front-image, back-image]
+  hit-points:
+    slot: front-hit-points
+  armor-class:
+    slot: front-armor-class
+  saves:
+    slot: front-saves
+  immunities:
+    slot: front-immunities
+
+  level:
+    slot: front-badge
+    aliases: [stufe]
+    description:
+      de: "Stufe der Kreatur, üblicherweise als `Kreatur N` (z. B. `Kreatur 5`). Erscheint als Abzeichen rechts in der Kopfzeile."
+      en: "Creature level, conventionally `Creature N` (e.g. `Creature 5`). Shown as the badge at the right of the header."
+    sample:
+      de: "Kreatur 5"
+      en: "Creature 5"
+
+  alignment:
+    slot: front-alignment
+    aliases: [gesinnung]
+    description:
+      de: "Gesinnung als Kürzel (`N`, `NB`, `CB`, `RG` …). Die erste Pille der Merkmalszeile, in Schieferblau."
+      en: "Alignment code (`N`, `NB`, `CB`, `RG`, …). The first pill of the trait row, in slate blue."
+    sample: "N"
+
+  size:
+    slot: front-size
+    aliases: [größe, groesse]
+    description:
+      de: "Größe der Kreatur (`winzig`, `klein`, `mittelgroß`, `groß`, `riesig`, `gigantisch`). Die zweite Pille der Merkmalszeile, in Grün."
+      en: "Creature size (`winzig`, `klein`, `mittelgroß`, `groß`, `riesig`, `gigantisch`). The second pill of the trait row, in green."
+    sample:
+      de: "mittelgroß"
+      en: "medium"
+
+  traits:
+    slot: front-traits
+    aliases: [merkmale]
+    description:
+      de: "Liste der Merkmale — Kreaturentyp, Themen, Seltenheit. Jeder Eintrag wird eine Pille; die Seltenheiten `ungewöhnlich`, `selten` und `einzigartig` erhalten die Seltenheitsfarbe."
+      en: "List of traits — creature type, themes, rarity. Each entry becomes a pill; the rarities `ungewöhnlich`, `selten` and `einzigartig` take the rarity colour."
+    sample:
+      de: ["Bestie", "Sumpf"]
+      en: ["Beast", "Swamp"]
+
+  perception:
+    slot: front-perception
+    aliases: [wahrnehmung, modifier]
+    description:
+      de: "Wahrnehmungs-Modifikator als ganze Zahl; das Vorzeichen wird beim Drucken ergänzt."
+      en: "Perception modifier as a plain integer; the sign is added when printed."
+    sample: 11
+
+  senses:
+    slot: front-senses
+    aliases: [sinne]
+    description:
+      de: "Besondere Sinne als Freitext (z. B. `Dunkelsicht`, `Dämmersicht`, `Lebensspüren 18 m`), hinter dem Wahrnehmungs-Modifikator."
+      en: "Special senses as free text (e.g. `darkvision`, `low-light vision`, `lifesense 60 ft.`), after the perception modifier."
+    sample:
+      de: "Dunkelsicht"
+      en: "darkvision"
+
+  skills:
+    slot: front-skills
+    aliases: [fertigkeiten]
+    description:
+      de: "Fertigkeiten als Liste einzelner Schlüssel-Wert-Paare (`{ Fertigkeit: Modifikator }`); das Vorzeichen wird beim Drucken ergänzt."
+      en: "Skills as a list of single-key pairs (`{ Skill: modifier }`); the sign is added when printed."
+    sample:
+      de:
+        - { Athletik: 13 }
+        - { Heimlichkeit: 8 }
+      en:
+        - { Athletics: 13 }
+        - { Stealth: 8 }
+
+  attributes:
+    slot: front-attributes
+    aliases: [attribute, attributswerte]
+    description:
+      de: "Attributswerte als Liste einzelner Schlüssel-Wert-Paare (`{ Kürzel: Modifikator }`), in der Reihenfolge ST, GE, KO, IN, WE, CH. Das Vorzeichen wird beim Drucken ergänzt."
+      en: "Attribute modifiers as a list of single-key pairs (`{ Abbr: modifier }`), in the order ST, GE, KO, IN, WE, CH. The sign is added when printed."
+    sample:
+      de:
+        - { ST: 4 }
+        - { GE: -1 }
+        - { KO: 5 }
+        - { IN: -3 }
+        - { WE: 2 }
+        - { CH: 1 }
+      en:
+        - { Str: 4 }
+        - { Dex: -1 }
+        - { Con: 5 }
+        - { Int: -3 }
+        - { Wis: 2 }
+        - { Cha: 1 }
+
+  items:
+    slot: front-items
+    aliases: [ausrüstung, ausruestung, gegenstände, gegenstaende]
+    description:
+      de: "Mitgeführte Ausrüstung als Freitext, kommagetrennt. Tiere und geistlose Wesen haben meist keine — dann das Feld weglassen."
+      en: "Carried equipment as free text, comma-separated. Beasts and mindless creatures usually have none — omit the field then."
+    sample:
+      de: "Speer, Lederrüstung"
+      en: "spear, leather armor"
+
+  resistances:
+    slot: front-resistances
+    aliases: [resistenzen]
+    description:
+      de: "Resistenzen als Freitext in der Form `Schadensart Wert`, kommagetrennt (z. B. `Feuer 5, Kälte 5`)."
+      en: "Resistances as free text in the form `damage-type value`, comma-separated (e.g. `fire 5, cold 5`)."
+    sample:
+      de: "Feuer 5, Kälte 5"
+      en: "fire 5, cold 5"
+
+  weaknesses:
+    slot: front-weaknesses
+    aliases: [schwächen, schwaechen]
+    description:
+      de: "Schwächen als Freitext in der Form `Schadensart Wert`, kommagetrennt (z. B. `Heilig 5`)."
+      en: "Weaknesses as free text in the form `damage-type value`, comma-separated (e.g. `holy 5`)."
+    sample:
+      de: "Heilig 5"
+      en: "holy 5"
+
+  stride:
+    slot: front-stride
+    aliases: [laufen]
+    description:
+      de: "Einfache Bewegung als Freitext (z. B. `6 m`, `7,5 m`). Die Karte stellt das Aktionssymbol ⬻ voran — das Symbol daher nicht mitschreiben. Bei mehreren Bewegungsarten stattdessen `speed` verwenden."
+      en: "Simple movement as free text (e.g. `20 feet`, `25 ft.`). The card puts the ⬻ action glyph in front — do not write it into the value. For several movement modes use `speed` instead."
+    sample:
+      de: "7,5 m"
+      en: "25 feet"
+
+  speed:
+    slot: front-speed
+    aliases: [bewegungsrate]
+    description:
+      de: "Vollständige Bewegungszeile als Freitext, wenn die Kreatur mehrere Bewegungsarten hat (z. B. `9 m, Klettern 6 m, Fliegen 12 m`). Ohne Aktionssymbol; nur nutzen, wenn `stride` nicht gesetzt ist."
+      en: "Full movement line as free text when the creature has several movement modes (e.g. `30 ft., climb 20 ft., fly 40 ft.`). No action glyph; use only when `stride` is not set."
+    sample:
+      de: "9 m, Klettern 6 m"
+      en: "30 ft., climb 20 ft."
+
+  attacks:
+    slot: front-entries
+    aliases: [angriffe, fähigkeiten, faehigkeiten]
+    description:
+      de: |
+        Angriffe, Aktionen und Fähigkeiten der Kreatur als Liste. Jeder Eintrag ist ein Objekt aus optionalen Feldern; die Karte druckt nur, was gesetzt ist:
+
+        | Feld     | Bedeutung                                                                                   |
+        | -------- | ------------------------------------------------------------------------------------------- |
+        | `name`   | Art und Name, mit Markdown-Fett für die Art und dem Aktionssymbol: `__Nahkampfangriff__ ⬻ Biss` |
+        | `bonus`  | Angriffsmodifikator (`+7` oder `7`; das Vorzeichen wird ergänzt)                            |
+        | `damage` | Schadensausdruck mit Schadensart, z. B. `1W6+1 Stich plus Niederwerfen`                    |
+        | `desc`   | Freitext für Fähigkeiten, Auslöser und Zauberlisten                                         |
+        | `effect` | Zusatzeffekt, z. B. anhaltender Schaden                                                    |
+
+        Aktionssymbole: ⬻ (1 Aktion), ⬺ (2 Aktionen), ⬽ (3 Aktionen), ⬲ (Reaktion), ⭓ (freie Aktion).
+      en: |
+        The creature's attacks, actions and abilities as a list. Each entry is an object of optional fields; the card prints what is set:
+
+        | Field    | Meaning                                                                                       |
+        | -------- | --------------------------------------------------------------------------------------------- |
+        | `name`   | Kind and name, with markdown bold for the kind and the action glyph: `__Melee__ ⬻ jaws`      |
+        | `bonus`  | Attack modifier (`+7` or `7`; the sign is added)                                              |
+        | `damage` | Damage expression with its type, e.g. `1d6+1 piercing plus Knockdown`                         |
+        | `desc`   | Free text for abilities, triggers and spell lists                                             |
+        | `effect` | Additional effect, e.g. persistent damage                                                     |
+
+        Action glyphs: ⬻ (one action), ⬺ (two actions), ⬽ (three actions), ⬲ (reaction), ⭓ (free action).
+    sample:
+      de:
+        - name: "__Nahkampfangriff__ ⬻ Biss"
+          bonus: 7
+          damage: "1W6+1 Stich plus Niederwerfen"
+        - name: "__Sumpftarnung__"
+          desc: "Im Schilf oder unter Wasser erhält der Sumpfschleicher +2 auf Heimlichkeit."
+        - name: "__Wildheit__ ⬲"
+          desc: "Wird der Sumpfschleicher auf 0 TP reduziert, bleibt er bei 1 TP; er erhält Verwundet 1."
+      en:
+        - name: "__Melee__ ⬻ jaws"
+          bonus: 7
+          damage: "1d6+1 piercing plus Knockdown"
+        - name: "__Marsh Camouflage__"
+          desc: "In reeds or under water the marsh lurker gains +2 to Stealth."
+        - name: "__Ferocity__ ⬲"
+          desc: "When reduced to 0 HP the marsh lurker stays at 1 HP; its wounded value increases by 1."
+
+  description:
+    slot: front-text
+    aliases: [beschreibung]
+    description:
+      de: "Beschreibung oder Hintergrund als Markdown, kursiv unter den Angriffen."
+      en: "Description or lore as markdown, in italics below the attacks."
+    sample:
+      de: "Ein flacher, schlammfarbener Leib mit zu vielen Augen, der erst auffällt, wenn das Wasser sich bewegt."
+      en: "A flat, mud-coloured body with too many eyes, noticed only when the water moves."

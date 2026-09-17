@@ -1,0 +1,39 @@
+# ── quirk ───────────────────────────────────────────────────────────
+# One card per entry of the rulebook's rolled quirks table: the roll as
+# a badge where the right icon would be, the quirk's text as the body.
+
+front-template: templates/quirk-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/quirk.css
+
+translations:
+  de:
+    card-type-label: "Eigenheit"
+    back-label: "Eigenheit"
+  en:
+    card-type-label: "Quirk"
+    back-label: "Quirk"
+
+properties:
+  icon:
+    slot: [front-icon-left, back-icon-top]
+    default: assets/icons/portrait.svg
+    description:
+      de: "Das Symbol des Kartentyps, links oben und groß auf der Rückseite — ein Pfad unter dem System. Voreingestellt."
+      en: "The card type's icon, top left and large on the back — a path under the system. Preset."
+
+  roll:
+    slot: front-roll
+    description:
+      de: "Der Wurf, unter dem die Eigenheit in der Tabelle steht — als Abzeichen rechts oben."
+      en: "The roll the quirk is listed under — a badge at the top right."
+    sample: "7"
+
+  description:
+    aliases: [beschreibung, text, eigenheit]
+    description:
+      de: "Die Eigenheit — der Text der Karte (Markdown)."
+      en: "The quirk — the card's text (markdown)."
+    sample:
+      de: "Du sprichst von dir stets in der dritten Person und vergisst nie einen Namen."
+      en: "You always speak of yourself in the third person and never forget a name."

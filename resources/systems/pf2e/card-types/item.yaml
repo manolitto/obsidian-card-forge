@@ -1,0 +1,256 @@
+# ── item ────────────────────────────────────────────────────────────
+# Magic items, weapons, armour and shields on one card type: the stat
+# lines are all optional and print in the rulebook's order, so a sword
+# shows damage and bulk, a breastplate its AC bonus and penalties. The
+# picture sits beside the stat lines when it clears 10 mm there, else
+# below the text, else not at all.
+
+front-template: templates/item-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/item.css
+
+layouts:
+  - { name: image-side, front-face-count: any, eligible-if: { element: hero, min-height: 10mm } }
+  - { name: image-bottom, front-face-count: any, eligible-if: { element: hero, min-height: 10mm } }
+  - { name: image-none, front-face-count: any, fallback: true }
+layout-decision:
+  order:
+    - { metric: element-size, element: hero, dimension: height, direction: maximize }
+  tie-break: declaration-order
+
+translations:
+  de:
+    back-label: "Gegenstand"
+    front-price-label: "Preis"
+    front-damage-label: "Schaden"
+    front-range-label: "Reichweite"
+    front-reload-label: "Nachladen"
+    front-ac-bonus-label: "RK-Bonus"
+    front-dex-cap-label: "GE-Limit"
+    front-check-penalty-label: "Rüstungsmalus"
+    front-speed-penalty-label: "Bewegungsmalus"
+    front-strength-label: "Stärke"
+    front-bulk-label: "Last"
+    front-hardness-label: "Härte"
+    front-hit-points-label: "Trefferpunkte"
+    front-broken-threshold-label: "Beschädigtwert"
+    front-usage-label: "Nutzung"
+    # Inline labels inside an activation entry.
+    activation-frequency-label: "Frequenz"
+    activation-trigger-label: "Auslöser"
+    activation-requirements-label: "Voraussetzungen"
+    activation-effect-label: "Wirkung"
+
+properties:
+  image:
+    slot: [front-image, back-image]
+
+  level:
+    slot: front-badge
+    aliases: [stufe]
+    description:
+      de: "Stufe oder Kategorie als Freitext: bei magischen Gegenständen `Gegenstand N`, bei Waffen, Rüstungen und Schilden ohne Stufe das Wort (`Waffe`, `Rüstung`, `Schild`). Erscheint als Abzeichen rechts in der Kopfzeile."
+      en: "Level or category as free text: `Item N` for magic items, the word for mundane gear without a level (`Weapon`, `Armor`, `Shield`). Shown as the badge at the right of the header."
+    sample:
+      de: "Gegenstand 5"
+      en: "Item 5"
+
+  traits:
+    slot: front-traits
+    aliases: [merkmale, eigenschaften]
+    description:
+      de: "Liste der Merkmale — Magieschule, Tradition, Kategorie, Schadensart, Seltenheit. Jeder Eintrag wird eine Pille; die Seltenheiten `ungewöhnlich`, `selten` und `einzigartig` erhalten die Seltenheitsfarbe."
+      en: "List of traits — school, tradition, category, damage type, rarity. Each entry becomes a pill; the rarities `ungewöhnlich`, `selten` and `einzigartig` take the rarity colour."
+    sample:
+      de: ["Bannmagie", "Magisch"]
+      en: ["Abjuration", "Magical"]
+
+  price:
+    slot: front-price
+    aliases: [preis, kosten]
+    description:
+      de: "Preis als Freitext, üblicherweise in Goldmünzen (`160 GM`)."
+      en: "Price as free text, conventionally in gold pieces (`160 gp`)."
+    sample:
+      de: "160 GM"
+      en: "160 gp"
+
+  damage:
+    slot: front-damage
+    aliases: [schaden]
+    description:
+      de: "Waffenschaden als Würfelausdruck mit Schadensart: `1W8 S` (Stich), `1W6 W` (Wucht), `1W6 H` (Hieb)."
+      en: "Weapon damage as a dice expression with its type: `1d8 P` (piercing), `1d6 B` (bludgeoning), `1d6 S` (slashing)."
+    sample:
+      de: "1W8 S"
+      en: "1d8 P"
+
+  range:
+    slot: front-range
+    aliases: [reichweite]
+    description:
+      de: "Reichweite einer Fernkampfwaffe als Freitext (z. B. `36 m`)."
+      en: "Range of a ranged weapon as free text (e.g. `120 ft.`)."
+    sample:
+      de: "36 m"
+      en: "120 ft."
+
+  reload:
+    slot: front-reload
+    aliases: [nachladen]
+    description:
+      de: "Nachladewert einer Fernkampfwaffe (`0`, `1`, `2`, `1+`, `—`)."
+      en: "Reload value of a ranged weapon (`0`, `1`, `2`, `1+`, `—`)."
+    sample: "1"
+
+  ac-bonus:
+    slot: front-ac-bonus
+    aliases: [rk-bonus]
+    description:
+      de: "RK-Bonus einer Rüstung als Freitext (`+0`, `+1`, `+2`, …)."
+      en: "Armor's AC bonus as free text (`+0`, `+1`, `+2`, …)."
+    sample: "+2"
+
+  dex-cap:
+    slot: front-dex-cap
+    aliases: [ge-limit]
+    description:
+      de: "GE-Limit der Rüstung als Freitext (`+5`, `+3`, `+0`, `—`)."
+      en: "Armor's Dex cap as free text (`+5`, `+3`, `+0`, `—`)."
+    sample: "+3"
+
+  check-penalty:
+    slot: front-check-penalty
+    aliases: [rüstungsmalus, ruestungsmalus]
+    description:
+      de: "Rüstungsmalus auf Fertigkeitswürfe als Freitext (`—`, `–1`, `–2`, `–3`)."
+      en: "Armor's check penalty as free text (`—`, `–1`, `–2`, `–3`)."
+    sample: "–1"
+
+  speed-penalty:
+    slot: front-speed-penalty
+    aliases: [bewegungsmalus]
+    description:
+      de: "Bewegungsmalus der Rüstung als Freitext (`—`, `–1,5 m`, `–3 m`)."
+      en: "Armor's speed penalty as free text (`—`, `–5 ft.`, `–10 ft.`)."
+    sample:
+      de: "–1,5 m"
+      en: "–5 ft."
+
+  strength:
+    slot: front-strength
+    aliases: [stärke, staerke]
+    description:
+      de: "Stärkeschwelle der Rüstung (`10`, `12`, `14`, `16`, `18`, `—`). Ab diesem Wert entfällt der Rüstungsmalus."
+      en: "Armor's strength threshold (`10`, `12`, `14`, `16`, `18`, `—`). At or above it the check penalty no longer applies."
+    sample: "12"
+
+  bulk:
+    slot: front-bulk
+    aliases: [last]
+    description:
+      de: "Last als Freitext (`L` für leicht, `1`, `2`, `—`)."
+      en: "Bulk as free text (`L` for light, `1`, `2`, `—`)."
+    sample: "L"
+
+  hardness:
+    slot: front-hardness
+    description:
+      de: "Härte eines Schildes oder Gegenstands (`3`, `5`, …). Schaden am Gegenstand wird um diesen Wert verringert."
+      en: "Hardness of a shield or item (`3`, `5`, …). Damage the item takes is reduced by it."
+    sample: "5"
+
+  hit-points:
+    slot: front-hit-points
+    description:
+      de: "Trefferpunkte eines Schildes oder Gegenstands als Zahl (`20`)."
+      en: "Hit points of a shield or item as a number (`20`)."
+    sample: "20"
+
+  broken-threshold:
+    slot: front-broken-threshold
+    aliases: [bw, beschädigtwert, beschaedigtwert]
+    description:
+      de: "Beschädigtwert eines Schildes oder Gegenstands als Zahl (`10`). Bei diesem TP-Wert gilt er als beschädigt."
+      en: "Broken threshold of a shield or item as a number (`10`). At this HP value it counts as broken."
+    sample: "10"
+
+  usage:
+    slot: front-usage
+    aliases: [nutzung, verwendung]
+    description:
+      de: "Nutzung (`In 1 Hand gehalten`, `In 2 Händen gehalten`, `Getragen`, `Getragen (Gürtel)`)."
+      en: "Usage (`Held in 1 hand`, `Held in 2 hands`, `Worn`, `Worn (belt)`)."
+    sample:
+      de: "In 1 Hand gehalten"
+      en: "Held in 1 hand"
+
+  description:
+    slot: front-text
+    aliases: [beschreibung]
+    description:
+      de: "Beschreibung des Gegenstands als Markdown — der Hauptteil der Karte."
+      en: "Item description as markdown — the main body of the card."
+    sample:
+      de: "Runen auf der Innenseite dieser Rüstung wärmen ihren Träger und halten Nebel und Nieselregen fern. Der Gegenstandsbonus auf die RK ist um 1 höher."
+      en: "Runes on the inside of this armor keep the wearer warm and shed mist and drizzle. Its item bonus to AC is 1 higher."
+
+  trait-descriptions:
+    slot: front-trait-notes
+    aliases: [merkmalsbeschreibungen, merkmals-beschreibungen]
+    description:
+      de: |
+        Erläuterungen zu den Merkmalen als Liste von Objekten mit `name` (fett gesetzt) und `desc` (Markdown). Steht nach der Beschreibung als eigene Liste, jeder Eintrag mit `*` davor.
+      en: |
+        Explanations of the traits as a list of objects with `name` (set bold) and `desc` (markdown). Printed after the description as its own list, each entry led by `*`.
+    sample:
+      de:
+        - name: "Bollwerk"
+          desc: "Auf Reflexwürfe gegen Schadenseffekte addierst du +3 statt deines Geschicklichkeitsmodifikators."
+      en:
+        - name: "Bulwark"
+          desc: "On Reflex saves against damaging effects you add +3 instead of your Dexterity modifier."
+
+  activations:
+    slot: front-activations
+    aliases: [aktivierungen, sonderaktionen]
+    description:
+      de: |
+        Aktivierbare Fähigkeiten des Gegenstands als Liste. Jeder Eintrag ist ein Objekt aus optionalen Feldern; die Karte druckt nur, was gesetzt ist:
+
+        | Feld           | Bedeutung                                                              |
+        | -------------- | ---------------------------------------------------------------------- |
+        | `name`         | Name der Fähigkeit oder das Wort `Aktivieren` (fett gesetzt)           |
+        | `actions`      | Aktionskosten — `1`, `2`, `3`, `r` (Reaktion), `f` (frei) oder das Symbol |
+        | `components`   | Aktivierungskomponenten ohne Klammern, z. B. `Konzentration`          |
+        | `frequency`    | Häufigkeit, z. B. `1/Tag`                                              |
+        | `trigger`      | Auslöser bei Reaktionen                                                |
+        | `requirements` | Voraussetzungen der Aktivierung                                        |
+        | `effect`       | Wirkung                                                                |
+        | `desc`         | Freitext im Anschluss                                                  |
+      en: |
+        Activated abilities of the item as a list. Each entry is an object of optional fields; the card prints what is set:
+
+        | Field          | Meaning                                                                  |
+        | -------------- | ------------------------------------------------------------------------ |
+        | `name`         | Ability name or the word `Activate` (set bold)                           |
+        | `actions`      | Action cost — `1`, `2`, `3`, `r` (reaction), `f` (free) or the glyph     |
+        | `components`   | Activation components without parentheses, e.g. `concentrate`           |
+        | `frequency`    | Frequency, e.g. `1/day`                                                  |
+        | `trigger`      | Trigger of a reaction                                                    |
+        | `requirements` | Requirements of the activation                                           |
+        | `effect`       | Effect                                                                   |
+        | `desc`         | Trailing free text                                                       |
+    sample:
+      de:
+        - name: "Aktivieren"
+          actions: "1"
+          components: "Konzentration"
+          frequency: "einmal pro Stunde"
+          effect: "Bis zum Ende deines Zuges verursacht die Rüstung 1W6 Kälteschaden an jedem, der dich trifft."
+      en:
+        - name: "Activate"
+          actions: "1"
+          components: "concentrate"
+          frequency: "once per hour"
+          effect: "Until the end of your turn the armor deals 1d6 cold damage to anyone who hits you."

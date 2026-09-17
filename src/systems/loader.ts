@@ -125,6 +125,7 @@ export async function loadSystem(
     return undefined;
   }
 
+  const cardTypeDocuments = await spliceCardTypeDocuments(doc, source, diagnostics);
   const declaration = parseSystemDeclaration(doc, diagnostics);
   if (!declaration) return undefined;
 
@@ -136,7 +137,7 @@ export async function loadSystem(
   }
 
   const files = new Set<string>(await source.listFiles());
-  const used = new Set<string>([source.document]);
+  const used = new Set<string>([source.document, ...cardTypeDocuments]);
   const report = (message: string): void =>
     diagnostics.warn(`${declaration.id}: ${message}`);
 
@@ -266,6 +267,79 @@ export async function loadSystem(
     unusedPartials,
     documentAssets,
   };
+}
+
+/**
+ * A card type may be declared in a document of its own — `card-types.gear:
+ * card-types/gear.yaml` — holding the card-type mapping, dedented, every
+ * path in it still relative to the system folder. This reads each such
+ * document and puts its mapping where the path stood, so the definition
+ * layer sees one shape and a diagnostic inside the card type is worded the
+ * same either way. A document that is missing, does not parse or is not a
+ * mapping is reported naming it, and the card type is dropped.
+ *
+ * Only a card type may be declared this way: it is the one block a system
+ * has several of, each the size of a small system on its own. A card-type
+ * document has no key that could point further, so there is nothing to
+ * guard against.
+ *
+ * Returns the paths so the loader can count them as used.
+ */
+async function spliceCardTypeDocuments(
+  doc: unknown,
+  source: SystemSource,
+  diagnostics: Diagnostics
+): Promise<SystemPath[]> {
+  if (!isMapping(doc) || !isMapping(doc["card-types"])) return [];
+  const cardTypes = doc["card-types"];
+  const paths: SystemPath[] = [];
+  for (const [id, entry] of Object.entries(cardTypes)) {
+    if (typeof entry !== "string") continue;
+    const context = `${source.root}: card-types.${id}`;
+    const path = parseSystemPath(entry, context, diagnostics);
+    if (path) paths.push(path);
+    const mapping =
+      path && (await readCardTypeDocument(path, context, source, diagnostics));
+    // Assigning in place keeps the card type's position in the declaration
+    // order; deleting drops it without a second report about it declaring
+    // nothing.
+    if (mapping) cardTypes[id] = mapping;
+    else delete cardTypes[id];
+  }
+  return paths;
+}
+
+async function readCardTypeDocument(
+  path: SystemPath,
+  context: string,
+  source: SystemSource,
+  diagnostics: Diagnostics
+): Promise<Record<string, unknown> | undefined> {
+  let text: string;
+  try {
+    text = await source.readText(path);
+  } catch {
+    diagnostics.warn(`${context} names "${path}", which does not exist`);
+    return undefined;
+  }
+  let mapping: unknown;
+  try {
+    mapping = load(text);
+  } catch (error) {
+    diagnostics.warn(`${context}: ${path}: ${describe(error)}`);
+    return undefined;
+  }
+  if (!isMapping(mapping)) {
+    diagnostics.warn(
+      `${context}: ${path} must hold the card type as a mapping; ignoring it`
+    );
+    return undefined;
+  }
+  return mapping;
+}
+
+function isMapping(raw: unknown): raw is Record<string, unknown> {
+  return typeof raw === "object" && raw !== null && !Array.isArray(raw);
 }
 
 async function assembleStylesheet(

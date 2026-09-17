@@ -1,0 +1,256 @@
+# ── creature: Monster AND NSC ──────────────────────────────────────
+# One card type for everything the GM fields: the beasts of the wild and
+# the named people of a town. They agree in
+# everything a card type decides — size, layouts, the shared front, the
+# picture on both faces — and differ only in which stat rows they fill,
+# with no field in common across the vault's notes. What a card IS lives
+# in `category` („Monster" / „NSC"), and the gain is the mixed form: a
+# named opponent with an attack table AND skills.
+#
+# The stat box, top to bottom (every cell conditional, empty rows collapse):
+#
+#   row 1   TP | WP | Schadensbonus     three cells — measured to fit one
+#                                       line, because all three are short
+#   row 2   Grimmigkeit | Größe         (monster only)
+#   row 3   Bewegung | Rüstung
+#   row 4   Fertigkeiten ······· wide   (NSC only)
+#   row 5   Waffen ············· wide   (NSC only)
+#   block   traits / talents ··· ONE block without rules
+#   table   monster-attacks            (monster only)
+#   detail  gm-notes                   (detailed display mode only)
+#   picture artwork                    always on the back, on the front when
+#                                      there is room
+
+front-template: templates/front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/creature.css
+card-size: large
+
+# The picture sits on the back; the `front-image` candidate shows it on
+# the front as well when that prints fewer cards.
+layouts:
+  - { name: with-back, front-face-count: odd, fallback: true }
+  - { name: front-image, front-face-count: even }
+layout-decision:
+  order:
+    - { metric: printed-cards, direction: minimize }
+    - { metric: whitespace, direction: minimize }
+  tie-break: declaration-order
+
+translations:
+  de:
+    # The green back title when a note carries no `Kategorie:` — the
+    # generic term rather than a guess between Monster and NSC.
+    back-label: "Kreatur"
+    front-stat-1a-label: "TP"
+    front-stat-1b-label: "WP"
+    front-stat-1c-label: "Schadensbonus"
+    front-stat-2a-label: "Grimmigkeit"
+    front-stat-2b-label: "Größe"
+    front-stat-3a-label: "Bewegung"
+    front-stat-3b-label: "Rüstung"
+    front-stat-4-wide-label: "Fertigkeiten"
+    front-stat-5-wide-label: "Waffen"
+    front-table-label: "MONSTERANGRIFFE"
+    front-table-col-1-label: "W6"
+    front-table-col-2-label: "ANGRIFF"
+    front-detail-text-label: "SL-Notiz"
+
+properties:
+  # A card type may set a system property's DEFAULT: that does not
+  # change what the property means, it answers what this card is when
+  # the note says nothing. `Kategorie: Monster` in the note overrides it.
+  category:
+    default: "Kreatur"
+
+  name:
+    slot: front-header-title
+    description:
+      de: "Name der Kreatur – des Monsters oder des NSCs."
+      en: "Name of the creature — monster or NPC."
+    sample:
+      de: "Nebelkrähe"
+      en: "Mist Crow"
+
+  description:
+    slot: front-lead-text
+    aliases: [beschreibung]
+    description:
+      de: "Kurze Beschreibung / Flavortext, über dem Werteblock."
+      en: "Short flavour description, above the stat block."
+    sample:
+      de: "Ein Vogel aus Nebel und Federn, der Reisenden am Seeufer die Wegzeichen stiehlt."
+      en: "A bird of mist and feathers that steals waymarks from travellers on the lake shore."
+
+  # ONE picture, TWO places — named after what it shows, not where it
+  # sits. Always on the back; on the front only when the `front-image`
+  # layout candidate wins. `back-image` is bound to the same back place
+  # at system level, i.e. earlier, so an explicit back picture wins over
+  # the artwork. Not `portrait`: that is an alias of the baseline's
+  # `image`, and a name that is another property's alias is a collision.
+  artwork:
+    slot: [front-image-bottom, back-image-primary]
+    aliases: [image, bild, vorderbild, vorderseitenbild, bild-vorderseite]
+    description:
+      de: "Bild der Kreatur als Wikilink. Erscheint auf der Rückseite und – wenn der Platz reicht – auch unten auf der Vorderseite."
+      en: "Picture of the creature as a wikilink. Rendered on the back, and at the foot of the front when there is room for it."
+    sample: "[[Nebelkrähe.png]]"
+
+  hit-points:
+    slot: front-stat-1a
+    aliases: [tp, lp, lebenspunkte]
+    description:
+      de: "Trefferpunkte (TP) – bei 0 ist die Kreatur ausgeschaltet."
+      en: "Hit Points (HP) — the creature is taken out at 0."
+    sample: 9
+
+  willpower-points:
+    slot: front-stat-1b
+    aliases: [wp, willenskraftpunkte]
+    description:
+      de: "Willenskraftpunkte (WP) – werden für heroische Talente und Magie ausgegeben."
+      en: "Willpower Points (WP) — spent on heroic abilities and magic."
+    sample: 6
+
+  damage-bonus:
+    slot: front-stat-1c
+    aliases: [schadensbonus]
+    description:
+      de: "Schadensbonus aus STÄ – als Würfelbonus auf Nahkampfschaden (z. B. \"+W4\") oder \"–\" wenn keiner."
+      en: "Damage Bonus from STR — added as a die to melee damage (e.g. \"+d4\") or \"–\" if none."
+    sample:
+      de: "–"
+      en: "–"
+
+  ferocity:
+    slot: front-stat-2a
+    aliases: [grimmigkeit]
+    description:
+      de: "Grimmigkeit – Anzahl der Angriffe pro Runde."
+      en: "Ferocity — number of attacks per round."
+    sample: 1
+
+  size:
+    slot: front-stat-2b
+    aliases: [größe, groesse]
+    description:
+      de: "Größe (winzig, klein, normal, groß, riesig, schwergewichtig)."
+      en: "Size (tiny, small, normal, large, huge, swarm)."
+    sample:
+      de: "klein"
+      en: "small"
+
+  movement:
+    slot: front-stat-3a
+    aliases: [bewegung]
+    description:
+      de: "Bewegungsweite in Metern (z. B. \"10 m\" oder \"6 m, schwimmend 12 m\")."
+      en: "Movement rate in metres (e.g. \"10 m\" or \"6 m, swim 12 m\")."
+    sample: "4 m, fliegend 16 m"
+
+  armor:
+    slot: front-stat-3b
+    aliases: [rüstung]
+    description:
+      de: "Rüstung – bei Monstern die natürliche Panzerung als Würfelnotation oder Beschreibung, bei NSCs die getragene Rüstung mit ihrem Wert."
+      en: "Armor — a monster's natural armor as dice notation or a description, an NPC's worn armor with its rating."
+    sample:
+      de: "Nebelgefieder (W4)"
+      en: "Mist plumage (d4)"
+
+  skills:
+    slot: front-stat-4-wide
+    aliases: [fertigkeiten]
+    description:
+      de: "Fertigkeiten und Werte als kommagetrennte Liste (Großbuchstaben für Kompetenzen, gefolgt von der Stufe)."
+      en: "Skills and ratings as a comma-separated list (uppercase skill names followed by their level)."
+    sample:
+      de: "AUFMERKSAMKEIT 12, SPEERE 10, SCHWIMMEN 14"
+      en: "AWARENESS 12, SPEARS 10, SWIMMING 14"
+
+  weapons:
+    slot: front-stat-5-wide
+    aliases: [waffen]
+    description:
+      de: "Bewaffnung des NSCs als kurze Liste mit Namen und wichtigen Werten in Klammern (Schaden, Merkmale)."
+      en: "NPC's armament as a short list of names with key stats in parentheses (damage, features)."
+    sample:
+      de: "Bootshaken (W8, Stich/Lang), Fischmesser (W6, Stich)"
+      en: "Boat hook (d8, piercing/long), Fish knife (d6, piercing)"
+
+  # As ONE block without rules, not as a row per item: the entries are
+  # whole sentences („Nebelflug: Im Nebel ist die Krähe unsichtbar, bis
+  # …") that a rule between each two would chop up.
+  traits:
+    slot: front-trait-list
+    aliases: [merkmale]
+    description:
+      de: "Liste besonderer Eigenschaften, jede mit Namen und Beschreibung."
+      en: "List of special traits, each with a name and a description."
+    sample:
+      de:
+        - name: "Nebelflug"
+          desc: "Im Nebel ist die Krähe unsichtbar, bis sie angreift."
+        - name: "Schwarmruf"
+          desc: "Ruft je Runde eine weitere Krähe herbei, solange sie kreischt."
+      en:
+        - name: "Mist flight"
+          desc: "Invisible in mist until it attacks."
+        - name: "Flock call"
+          desc: "Summons one more crow per round while it shrieks."
+
+  talents:
+    slot: front-trait-list
+    aliases: [talente]
+    description:
+      de: "Liste heroischer Talente, jedes mit Namen und Kurzbeschreibung."
+      en: "List of heroic abilities, each with a name and a short description."
+    sample:
+      de:
+        - name: "Aalglatt"
+          desc: "Vorteil auf AUSWEICHEN, wenn der Boden nass ist."
+        - name: "Standfest im Boot"
+          desc: "Kein Nachteil für Proben auf schwankendem Untergrund."
+      en:
+        - name: "Slippery"
+          desc: "Boon on EVADE when the ground is wet."
+        - name: "Sea legs"
+          desc: "No bane on rolls made on a rocking deck."
+
+  monster-attacks:
+    slot: front-table
+    aliases: [monsterangriffe]
+    description:
+      de: "Tabelle der Monsterangriffe (W6-Tabelle: roll, name, desc je Eintrag)."
+      en: "Monster attack table (d6: roll, name, desc per entry)."
+    sample:
+      de:
+        - roll: "1-2"
+          name: "Hackschnabel"
+          desc: "Schaden W6. Das Ziel lässt fallen, was es in der Hand hält."
+        - roll: "3-4"
+          name: "Krallen"
+          desc: "Zwei Angriffe je W4 Hiebschaden."
+        - roll: "5-6"
+          name: "Kreischen"
+          desc: "Alle in 10 m müssen einen Wurf auf WIL bestehen oder sind bis zum Ende der Runde benommen."
+      en:
+        - roll: "1-2"
+          name: "Pecking beak"
+          desc: "Damage d6. The target drops what it holds."
+        - roll: "3-4"
+          name: "Talons"
+          desc: "Two attacks dealing d4 slashing damage each."
+        - roll: "5-6"
+          name: "Shriek"
+          desc: "Everyone within 10 m must pass a WIL roll or is dazed until the end of the round."
+
+  gm-notes:
+    slot: front-detail-text
+    aliases: [sl-notiz, sl-notizen, gm-note]
+    description:
+      de: "Geheime Notizen für den Spielleiter (Taktik, Schwächen, Hintergrund). Nur im Detail-Modus sichtbar."
+      en: "Secret GM notes (tactics, weaknesses, lore). Only shown in detailed display mode."
+    sample:
+      de: "Greift an, wer die Laterne trägt. Flieht bei unter 3 TP in den Nebel."
+      en: "Attacks whoever carries the lantern. Flees into the mist below 3 HP."

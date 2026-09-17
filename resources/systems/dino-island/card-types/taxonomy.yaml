@@ -1,0 +1,90 @@
+# ── taxonomy ────────────────────────────────────────────────────────
+# A family of the island's animals: the name under the orange rule, the
+# description, then the four captioned fields — occurrence, instinct,
+# the moves as a die-bulleted list, the genera; the illustration on the
+# back.
+
+front-template: templates/taxonomy-front.hbs
+back-template: templates/taxonomy-back.hbs
+stylesheet: styles/taxonomy.css
+
+translations:
+  de:
+    back-label: "Taxonomie"
+    front-occurrence-label: "Auftreten (Anzahl):"
+    front-instinct-label: "Instinkt:"
+    front-moves-label: "Spielzüge:"
+    front-genera-label: "Gattungen:"
+
+properties:
+  name:
+    sample:
+      de: "Panzerläufer"
+      en: "Armoured walkers"
+
+  description:
+    description:
+      de: "Einleitender Satz zur Tierfamilie, kursiv (Markdown)."
+      en: "An introductory sentence on the family, in italics (markdown)."
+    sample:
+      de: "Gepanzerte Pflanzenfresser, die sich lieber eingraben als weglaufen."
+      en: "Armoured herbivores that would rather dig in than run."
+
+  occurrence:
+    slot: front-occurrence
+    aliases: [auftreten, anzahl, vorkommen]
+    description:
+      de: "„Auftreten (Anzahl)“ — wie und in welcher Zahl die Tiere auftreten."
+      en: "\"Occurrence (number)\" — how and in what numbers the animals appear."
+    sample:
+      de: "Paarweise, die Jungen dazwischen"
+      en: "In pairs, the young between them"
+
+  instinct:
+    slot: front-instinct
+    aliases: [instinkt, trieb]
+    description:
+      de: "„Instinkt“ — das Grundverhalten der Familie."
+      en: "\"Instinct\" — the family's basic behaviour."
+    sample:
+      de: "Sich eingraben und abwarten"
+      en: "Dig in and wait"
+
+  moves:
+    slot: front-moves
+    aliases: [spielzüge, spielzuege, spielzug, züge, zuege]
+    description:
+      de: "„Spielzüge“ — die Spielzüge, die diese Familie der Spielleitung gibt; eine Liste."
+      en: "\"Moves\" — the moves this family gives the game master; a list."
+    sample:
+      de:
+        - "Schwanzhieb"
+        - "Steck den Kopf in den Sand"
+        - "Lass dich nicht vom Fleck bewegen"
+      en:
+        - "Tail swipe"
+        - "Bury the head in the sand"
+        - "Refuse to be moved"
+
+  genera:
+    slot: front-genera
+    aliases: [gattungen, beispiele, arten, gattung]
+    description:
+      de: "„Gattungen“ — Beispielgattungen der Familie."
+      en: "\"Genera\" — example genera of the family."
+    sample:
+      de: "Saichania, Pinacosaurus"
+      en: "Saichania, Pinacosaurus"
+
+  image:
+    slot: back-image
+    aliases: [bild, abbildung, illustration]
+    description:
+      de: "Die Illustration der Familie auf der Rückseite — ein Wikilink auf ein Bild im Vault."
+      en: "The family's illustration on the back — a wikilink to a picture in the vault."
+    sample: "[[Panzerlaeufer.png]]"
+
+  reference:
+    sample:
+      de: "Regelwerk S. 46"
+      en: "Rulebook p. 46"

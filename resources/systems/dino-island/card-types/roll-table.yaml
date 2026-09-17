@@ -1,0 +1,42 @@
+# ── roll-table ──────────────────────────────────────────────────────
+# One entry of any of the book's roll tables: the roll as an orange die
+# in the top-left corner, the table's title in the yellow banner, the
+# entry as the body. A table note prints a card per row, and its
+# frontmatter carries the title and the source for all of them.
+
+front-template: templates/roll-table-front.hbs
+back-template: templates/back.hbs
+stylesheet: styles/roll-table.css
+expand-by-roll: true
+
+translations:
+  de:
+    card-type-label: "Tabelle"
+    back-label: "Tabelle"
+
+properties:
+  heading:
+    slot: [front-heading, back-heading]
+    aliases: [tabelle, überschrift, ueberschrift, tabellentitel]
+    description:
+      de: "Titel der Tabelle — im Banner der Vorderseite und als Beschriftung der Rückseite („Gerücht“, „Wo seid ihr?“). In einer Tabellennotiz einmal im Frontmatter für alle Zeilen."
+      en: "The table's title — in the front's banner and as the back's caption (\"Rumour\", \"Where are you?\"). In a table note, once in the frontmatter for every row."
+    sample:
+      de: "Gerücht"
+      en: "Rumour"
+
+  # An entry has no name of its own; the table's title is the heading.
+  name:
+    slot: ~
+
+  roll:
+    slot: front-roll
+    description:
+      de: "Der Wurf des Eintrags — die orange Würfelmarke oben links."
+      en: "The entry's roll — the orange die at the top left."
+    sample: "7"
+
+  description:
+    description:
+      de: "Der Text des Eintrags — der Kartentext (Markdown)."
+      en: "The entry's text — the card's text (markdown)."

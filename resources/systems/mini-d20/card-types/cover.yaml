@@ -1,0 +1,64 @@
+# ── cover ───────────────────────────────────────────────────────────
+# A deck's title page, its back the licences and acknowledgements: the
+# note's own text, under a heading. A long list runs onto further cards
+# rather than over the cover's front.
+
+front-template: templates/cover-front.hbs
+back-template: templates/cover-back.hbs
+stylesheet: styles/cover.css
+overflow-mode: extra-cards
+
+translations:
+  de:
+    back-label: "Deckblatt"
+    back-heading: "Lizenzen & Danksagungen"
+  en:
+    back-label: "Cover"
+    back-heading: "Licences & Acknowledgements"
+
+properties:
+  name:
+    description:
+      de: "Titel des Decks, groß auf der Vorderseite."
+      en: "The deck's title, large on the front."
+    sample:
+      de: "Drachenhort-Kampagne"
+      en: "Dragonhoard Campaign"
+
+  subtitle:
+    slot: front-tagline
+    aliases: [untertitel, motto, tagline]
+    description:
+      de: "Kleiner kursiver Untertitel unter dem Titel."
+      en: "A small italic subtitle under the title."
+    sample:
+      de: "Ein Kartendeck für MINI D20"
+      en: "A card deck for MINI D20"
+
+  footer:
+    slot: front-footer
+    aliases: [version, edition, datum, date]
+    description:
+      de: "Dezente Fußzeile der Vorderseite — Ausgabe, Datum, Version."
+      en: "A discreet footer on the front — edition, date, version."
+    sample:
+      de: "Ausgabe 1 · 2026"
+      en: "Edition 1 · 2026"
+
+  image:
+    description:
+      de: "Titelbild als Wikilink; ohne Angabe steht dort der MiNI-D20-Schriftzug."
+      en: "Cover art as a wikilink; without it the MiNI D20 wordmark stands there."
+    sample: "[[Deckblatt.png]]"
+
+  reference:
+    slot: ~
+
+  description:
+    slot: ~
+
+  body:
+    slot: back-text
+    description:
+      de: "Der Text der Notiz vor der ersten `##`-Überschrift — die Lizenzen und Danksagungen der Rückseite. `###`-Überschriften gliedern ihn."
+      en: "The note's text before its first `##` heading — the back's licences and acknowledgements. `###` headings structure it."
