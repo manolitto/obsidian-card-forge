@@ -1,0 +1,52 @@
+{{!--
+  Swords & Wizardry — the monster front.
+
+    front-text                          the flavour, in italics
+    front-image                         the plate under it
+    front-hit-dice … front-alignment    the stat block, caption / value
+                                        rows in the rulebook's order
+    front-challenge, front-xp           one row, the level and the
+                                        experience points joined by a slash
+    front-abilities                     a list of { name, desc }, each a
+                                        paragraph led by its bold name,
+                                        under the banner
+--}}
+<div class="card-root card-front sw monster-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-text")}}
+    <p class="sw-flavour">{{slot "front-text"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-image")}}
+    <div class="sw-plate"><img class="sw-plate-image" src="{{slot "front-image" image=true}}" alt="" /></div>
+    {{/if}}
+
+    <div class="sw-stats">
+      {{#if (slot "front-hit-dice")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-hit-dice"}}</span> {{slot "front-hit-dice" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-armor-class")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-armor-class"}}</span> {{slot "front-armor-class" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-attacks")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-attacks"}}</span> {{slot "front-attacks" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-saving-throw")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-saving-throw"}}</span> {{slot "front-saving-throw" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-specials")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-specials"}}</span> {{slot "front-specials" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-movement")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-movement"}}</span> {{slot "front-movement" markdown=false}}</p>{{/if}}
+      {{#if (slot "front-alignment")}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-alignment"}}</span> {{slot "front-alignment" markdown=false}}</p>{{/if}}
+      {{#if (or (slot "front-challenge") (slot "front-xp"))}}<p class="sw-stat"><span class="sw-stat-label">{{slot-label "front-challenge"}}</span> {{#if (slot "front-challenge")}}{{slot "front-challenge" markdown=false}}{{#if (slot "front-xp")}}/{{slot "front-xp" markdown=false}}{{/if}}{{else}}{{slot "front-xp" markdown=false}}{{/if}}</p>{{/if}}
+    </div>
+
+    {{#if (slot "front-abilities" list=true)}}
+    {{> banner for="front-abilities"}}
+    <div class="sw-abilities">
+      {{#each (slot "front-abilities" list=true)}}
+      <div class="sw-entry">{{#if name}}<span class="sw-entry-name">{{name}}</span>{{/if}}{{desc}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

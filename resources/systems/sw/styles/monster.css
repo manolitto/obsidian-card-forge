@@ -1,0 +1,14 @@
+/* ── Swords & Wizardry — the monster card ───────────────────────────
+   The shared rules are in sw.css; the monster tightens the stat block,
+   whose seven rows are the card. */
+
+.monster-card .sw-stats {
+  margin: 0.15em 0 0.2em;
+}
+.monster-card .sw-stat {
+  margin: 0.04em 0;
+  line-height: 1.18;
+}
+.sw-abilities {
+  margin-top: 0.1em;
+}

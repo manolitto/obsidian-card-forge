@@ -1,0 +1,330 @@
+/* ── Swords & Wizardry — the system stylesheet ───────────────────────
+   Modelled on the rulebook's interior: cream paper, warm near-black
+   text, deep ink-blue for every title, ornament and rule. The heads sit
+   between a pair of mirrored scrollwork flourishes; a single curl climbs
+   over the page number at the foot. EB Garamond for the text, Cinzel for
+   the display capitals. The flourishes are inline SVG in this file, so
+   they scale with the card and take the ink-blue with it. Sizes are `em`
+   and `%` throughout. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* EB Garamond, variable 400–700, upright and italic, split by range.
+   OFL, fonts/eb-garamond-OFL.txt. */
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/eb-garamond-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/eb-garamond-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/eb-garamond-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/eb-garamond-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Cinzel, regular for the small-caps lines, bold for the title and the
+   wordmark. OFL, fonts/cinzel-OFL.txt. */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/cinzel-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/cinzel-bold.woff2") format("woff2");
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.sw {
+  --sw-blue: #0a4870;
+  --sw-blue-soft: #376d8e;
+  --sw-paper: #fbf6ec;
+  --sw-ink: #2a1f18;
+  --sw-ink-soft: #574234;
+
+  --sw-font-body: "EB Garamond", serif;
+  --sw-font-display: "Cinzel", serif;
+
+  /* The body ceiling is a hair above the usual: EB Garamond runs small
+     for its size. */
+  --card-font-size-min: 2.6mm;
+  --card-font-size-max: 3.2mm;
+  --card-font-size-title-min: 3.6mm;
+  --card-font-size-title-max: 6.5mm;
+  --sw-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.0825), var(--card-font-size-title-max));
+
+  font-family: var(--sw-font-body);
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0452), var(--card-font-size-max));
+  line-height: 1.22;
+  color: var(--sw-ink);
+  background: var(--sw-paper);
+  overflow: hidden;
+}
+
+/* On plain paper the cream goes; the ink stays. */
+.cf-paper-plain .card-root.sw {
+  --sw-paper: #ffffff;
+}
+
+/* ── The flourishes ────────────────────────────────────────────────── */
+
+/* One motif, drawn as its right half: a lead-in line that undulates and
+   ends in a tight spiral. The left half is the same picture mirrored.
+   Each place that uses it sets the height. */
+.sw-flourish {
+  height: 0.85em;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 22' fill='none' stroke='%230a4870' stroke-width='1.4' stroke-linecap='round'><path d='M0 12 L48 12 Q60 12 64 7 Q68 2 78 4 Q90 7 102 10 Q116 13 124 9 Q132 4 140 7 Q146 9 144 14 Q142 17 137 16 Q133 15 134 11'/><circle cx='1' cy='12' r='0.7' fill='%230a4870'/></svg>");
+}
+.sw-flourish-left {
+  transform: scaleX(-1);
+}
+
+/* ── The title strip ───────────────────────────────────────────────── */
+
+.sw-header {
+  padding: 0.35em 0.55em 0;
+}
+
+/* The title between the two flourishes, which take what it leaves. */
+.sw-title-strip {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.2em 0 0.1em;
+}
+.sw-title-strip .sw-title {
+  font-family: var(--sw-font-display);
+  font-weight: 700;
+  font-size: var(--sw-font-size-title);
+  color: var(--sw-blue);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+}
+.sw-title .cf-overflow-counter {
+  font-family: var(--sw-font-body);
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--sw-blue-soft);
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+/* The sub-type: small capitals in the soft blue under the title. */
+.sw-subtype {
+  font-family: var(--sw-font-display);
+  font-weight: 400;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.2em;
+  text-align: center;
+  color: var(--sw-blue-soft);
+  font-size: 0.8em;
+  margin: -0.05em 0 0.1em;
+}
+
+/* ── The body ──────────────────────────────────────────────────────── */
+
+.card-root.sw .card-content-container {
+  padding: 0.3em 0.7em 0.2em;
+}
+
+/* The flavour: italic, centred, in the softer ink. */
+.sw-flavour {
+  font-style: italic;
+  color: var(--sw-ink-soft);
+  text-align: center;
+  margin: 0.15em 0 0.35em;
+}
+
+/* The plate: the picture in a hairline of the blue, a bit over a
+   quarter of the body's height, so the stat block keeps the front. */
+.sw-plate {
+  height: 28%;
+  margin: 0.25em 0 0.35em;
+  display: flex;
+  justify-content: center;
+}
+.sw-plate-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 0.06em solid var(--sw-blue);
+}
+
+/* The stat rows: a bold caption, the value running on after it. */
+.sw-stats {
+  margin: 0.1em 0;
+}
+.sw-stat {
+  margin: 0.06em 0;
+}
+.sw-stat-label {
+  font-weight: 700;
+}
+
+/* A section banner: the caption in small capitals between two smaller
+   flourishes. */
+.sw-banner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0.45em 0 0.2em;
+}
+.sw-banner .sw-flourish {
+  height: 0.65em;
+}
+.sw-banner-label {
+  font-family: var(--sw-font-display);
+  font-weight: 400;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.18em;
+  color: var(--sw-blue);
+  font-size: 0.85em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* An entry: its bold name, a colon, the text running on; the second
+   line and after hang under the first. */
+.sw-entry {
+  margin: 0.18em 0;
+  text-indent: -0.6em;
+  padding-left: 0.6em;
+}
+.sw-entry-name {
+  font-weight: 700;
+}
+.sw-entry-name::after {
+  content: ": ";
+}
+
+/* ── The foot ──────────────────────────────────────────────────────── */
+
+/* A long flourish running to the curl, the reference in italics past
+   it; the sides match the body's inset so the line spans the width. */
+.sw-footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.15em 0.7em 0.4em;
+}
+.sw-footer-wave {
+  height: 0.95em;
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 22' fill='none' stroke='%230a4870' stroke-width='1.4' stroke-linecap='round'><path d='M0 12 L120 12 Q132 12 136 7 Q140 2 150 4 Q162 7 174 10 Q188 13 196 9 Q204 4 212 7 Q218 9 216 14 Q214 17 209 16 Q205 15 206 11'/><circle cx='1' cy='12' r='0.7' fill='%230a4870'/></svg>");
+}
+.sw-reference {
+  font-style: italic;
+  font-size: 0.78em;
+  color: var(--sw-ink-soft);
+  white-space: nowrap;
+}
+
+/* ── The back ──────────────────────────────────────────────────────── */
+
+.card-root.sw.card-back {
+  border: 0.06em solid var(--sw-blue);
+}
+.sw-back {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  padding: 0 7%;
+}
+
+/* The mirrored pair as one picture, above the wordmark and, turned
+   over, below the tagline. */
+.sw-back-flourish {
+  height: 1.4em;
+  width: 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-160 0 320 28' fill='none' stroke='%230a4870' stroke-width='1.4' stroke-linecap='round'><path d='M0 16 L48 16 Q60 16 64 11 Q68 6 78 8 Q90 11 102 14 Q116 17 124 13 Q132 8 140 11 Q146 13 144 18 Q142 21 137 20 Q133 19 134 15'/><g transform='scale(-1 1)'><path d='M0 16 L48 16 Q60 16 64 11 Q68 6 78 8 Q90 11 102 14 Q116 17 124 13 Q132 8 140 11 Q146 13 144 18 Q142 21 137 20 Q133 19 134 15'/></g></svg>");
+}
+.sw-back-flourish-bottom {
+  transform: rotate(180deg);
+}
+.sw-back-wordmark {
+  font-family: var(--sw-font-display);
+  font-weight: 700;
+  color: var(--sw-blue);
+  font-size: 1.55em;
+  letter-spacing: 0.18em;
+  text-align: center;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.sw-back-ampersand {
+  display: block;
+  font-family: var(--sw-font-body);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.6em;
+  letter-spacing: 0;
+  line-height: 0.9;
+  margin: 0.05em 0;
+}
+.sw-back-label {
+  font-family: var(--sw-font-display);
+  font-weight: 400;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  color: var(--sw-blue-soft);
+  font-size: 0.95em;
+  letter-spacing: 0.22em;
+  text-align: center;
+  max-width: 100%;
+}
+.sw-back-tagline {
+  font-family: var(--sw-font-display);
+  font-weight: 400;
+  color: var(--sw-blue);
+  font-size: 0.7em;
+  letter-spacing: 0.25em;
+  text-align: center;
+}

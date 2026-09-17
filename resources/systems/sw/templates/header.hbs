@@ -1,0 +1,15 @@
+{{!--
+  Swords & Wizardry — the title strip above the body.
+
+    front-title     the name in ink-blue Roman capitals between a pair of
+                    mirrored scrollwork flourishes, shrinking to fit
+    front-subtype   a small-caps line under the title — the kind of item
+--}}
+<div class="card-header sw-header">
+  <div class="sw-title-strip">
+    <div class="sw-flourish sw-flourish-left"></div>
+    <div class="card-title sw-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+    <div class="sw-flourish sw-flourish-right"></div>
+  </div>
+  {{#if (slot "front-subtype")}}<div class="sw-subtype">{{slot "front-subtype" plain=true}}</div>{{/if}}
+</div>

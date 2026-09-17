@@ -1,0 +1,336 @@
+id: sw
+name: "Swords & Wizardry"
+
+# Modelled on the German rulebook's interior: cream paper, warm near-black
+# text, deep ink-blue for every title, ornament and rule, the section
+# heads flanked by a pair of mirrored scrollwork flourishes, a single
+# curl climbing over the page number at the foot. EB Garamond for the
+# text, Cinzel for the display capitals. Bilingual, German first; the
+# notes are German and the captions come in both.
+#
+# Two card types: a magic item from the treasure chapter and a monster
+# with its stat block, the seven lines of the rulebook's entry followed
+# by the abilities spelled out. The sample values are invented. The
+# terminology follows the game; OGL.txt beside this document says what
+# that means.
+languages: [de, en]
+
+stylesheet: styles/sw.css
+
+partial-templates:
+  header: templates/header.hbs
+  banner: templates/banner.hbs
+  footer: templates/footer.hbs
+
+# A monster with many abilities fills the front, then the back — the
+# back is a wordmark, not a designed face — then a further card.
+overflow-mode: back-then-cards
+
+# ── Shared vocabulary ─────────────────────────────────────────────────
+properties:
+  name:
+    slot: front-title
+    aliases: [bezeichnung, anzeigename, display-name]
+    description:
+      de: "Name der Karte. Fehlt er, gilt der Dateiname."
+      en: "The card's name. Falls back to the file name."
+
+  description:
+    slot: front-text
+    aliases: [beschreibung, flavour, flavor, flavortext]
+    description:
+      de: "Stimmungstext oder Kurzbeschreibung — eine einleitende Zeile in Kursiv."
+      en: "Flavour or a short description — an italic introductory line."
+
+  image:
+    slot: front-image
+    aliases: [bild, picture, portrait]
+    description:
+      de: "Bild der Karte — ein Wikilink auf ein Bild im Vault, als Tafel unter dem Stimmungstext."
+      en: "The card's picture — a wikilink to a picture in the vault, a plate under the flavour."
+    sample: "[[Mondsichelklinge.png]]"
+
+  reference:
+    slot: front-footer
+    aliases: [referenz, quelle, buch]
+    description:
+      de: "Quellenangabe — Regelwerkseite oder Wikilink, kursiv neben der Schlussranke."
+      en: "Source reference — rulebook page or wikilink, in italics beside the foot's curl."
+    sample:
+      de: "Gesamtregelwerk S. 200"
+      en: "Complete Rules p. 200"
+
+translations:
+  de:
+    back-label: "Karte"
+    back-wordmark-line-1: "SWORDS"
+    back-wordmark-ampersand: "&"
+    back-wordmark-line-2: "WIZARDRY"
+    back-tagline: "GESAMTREGELWERK"
+  en:
+    back-label: "Card"
+    back-wordmark-line-1: "SWORDS"
+    back-wordmark-ampersand: "&"
+    back-wordmark-line-2: "WIZARDRY"
+    back-tagline: "COMPLETE RULES"
+
+card-types:
+  # ── item ────────────────────────────────────────────────────────────
+  # A magic item: the kind in small capitals under the title, the
+  # flavour, the plate, the stats that apply as labelled rows, the effect
+  # under the "Wirkung" banner, the notes as a bold-captioned line.
+  item:
+    front-template: templates/item-front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/item.css
+
+    translations:
+      de:
+        back-label: "Magischer Gegenstand"
+        front-table-roll-label: "Tabellenwurf:"
+        front-class-label: "Klasseneinschränkung:"
+        front-bonus-label: "Bonus:"
+        front-duration-label: "Wirkungsdauer:"
+        front-charges-label: "Ladungen:"
+        front-effect-label: "Wirkung"
+        front-notes-label: "Anmerkungen"
+      en:
+        back-label: "Magic Item"
+        front-table-roll-label: "Table roll:"
+        front-class-label: "Class:"
+        front-bonus-label: "Bonus:"
+        front-duration-label: "Duration:"
+        front-charges-label: "Charges:"
+        front-effect-label: "Effect"
+        front-notes-label: "Notes"
+
+    properties:
+      name:
+        sample:
+          de: "Mondsichelklinge"
+          en: "Crescent Blade"
+
+      description:
+        sample:
+          de: "Eine schlanke Klinge, deren Stahl im Fackelschein kühl und bläulich schimmert."
+          en: "A slender blade whose steel gleams cool and bluish in torchlight."
+
+      item-type:
+        slot: front-subtype
+        aliases: [art, gegenstandstyp, type, kategorie]
+        description:
+          de: "Art des Gegenstands — Trank, Schriftrolle, Ring, Zauberstab, Zauberstecken, Waffe, Rüstung, Sonstiges — in kleinen Kapitälchen unter dem Titel."
+          en: "The kind of item — potion, scroll, ring, wand, staff, weapon, armour, miscellaneous — in small capitals under the title."
+        sample:
+          de: "Magische Nahkampfwaffe"
+          en: "Magic melee weapon"
+
+      table-roll:
+        slot: front-table-roll
+        aliases: [tabellenwurf, würfelwurf, wuerfelwurf, dice-roll, roll]
+        description:
+          de: "Wurf auf der passenden Schatztabelle, z. B. „76–00 auf Tab. 85“. Nur, wenn die Karte auf einer Würfeltabelle steht."
+          en: "Roll on the matching treasure table, e.g. \"76–00 on table 85\". Only when the card is an entry of a roll table."
+        sample:
+          de: "4 auf Tab. 89, dann 21–25 auf Tab. 93"
+          en: "4 on table 89, then 21–25 on table 93"
+
+      class-restriction:
+        slot: front-class
+        aliases: [klasseneinschränkung, klasseneinschraenkung, klassen, classes]
+        description:
+          de: "Welche Klassen den Gegenstand verwenden können — die Codes des Regelwerks (A = alle, K = kämpferisch, R = religiös, Z = zauberkundig, D = diebisch) oder ausgeschrieben."
+          en: "Which classes may use the item — the rulebook's codes (A = any, F = fighter-like, C = clerical, M = magic-user, T = thief-like) or spelled out."
+        sample:
+          de: "K Z (Schwerter führend)"
+          en: "F M (sword wielders)"
+
+      bonus:
+        slot: front-bonus
+        aliases: [verzauberung, magic-bonus]
+        description:
+          de: "Verzauberungsbonus einer magischen Waffe oder Rüstung, z. B. „+1“."
+          en: "The enchantment bonus of a magic weapon or armour, e.g. \"+1\"."
+        sample: "+1"
+
+      duration:
+        slot: front-duration
+        aliases: [wirkungsdauer]
+        description:
+          de: "Wirkungsdauer, z. B. „1W6 + 6 Phasen“ oder „permanent“."
+          en: "How long the effect lasts, e.g. \"1d6 + 6 turns\" or \"permanent\"."
+
+      charges:
+        slot: front-charges
+        aliases: [ladungen]
+        description:
+          de: "Ladungen — die verfügbaren Anwendungen eines Stabs oder Steckens."
+          en: "Charges — the uses a wand or staff holds."
+
+      effect:
+        slot: front-effect
+        aliases: [effekt, wirkung]
+        description:
+          de: "Die Spielwirkung — Markdown, gern mehrere Absätze oder eine Liste — unter dem Banner „Wirkung“."
+          en: "The mechanical effect — markdown, paragraphs or a list — under the \"Effect\" banner."
+        sample:
+          de: "**Angriffs- und Schadensbonus von +1.** Bei Mondlicht leuchtet die Klinge wie eine Fackel."
+          en: "**+1 to hit and damage.** Under moonlight the blade glows like a torch."
+
+      notes:
+        slot: front-notes
+        aliases: [notizen, anmerkungen]
+        description:
+          de: "Zusätzliche Anmerkungen oder Sondereigenschaften, hinter der fetten Beschriftung „Anmerkungen“."
+          en: "Further notes or special qualities, after the bold \"Notes\" caption."
+
+      reference:
+        sample:
+          de: "Gesamtregelwerk S. 206, Tabelle 93"
+          en: "Complete Rules p. 206, table 93"
+
+  # ── monster ─────────────────────────────────────────────────────────
+  # A monster: the flavour and the plate, then the rulebook's stat block
+  # as labelled rows — hit dice, armour class, attacks, saving throw,
+  # specials, movement, alignment, challenge level with the experience
+  # points — and the abilities spelled out under their banner.
+  monster:
+    front-template: templates/monster-front.hbs
+    back-template: templates/back.hbs
+    stylesheet: styles/monster.css
+
+    translations:
+      de:
+        back-label: "Monster"
+        front-hit-dice-label: "Trefferwürfel:"
+        front-armor-class-label: "Rüstungsklasse:"
+        front-attacks-label: "Angriffe:"
+        front-saving-throw-label: "Rettungswurf:"
+        front-specials-label: "Besonderheiten:"
+        front-movement-label: "Bewegungsrate:"
+        front-alignment-label: "Gesinnung:"
+        front-challenge-label: "Herausforderungsgrad/EP:"
+        front-abilities-label: "Eigenschaften"
+      en:
+        back-label: "Monster"
+        front-hit-dice-label: "Hit Dice:"
+        front-armor-class-label: "Armor Class:"
+        front-attacks-label: "Attacks:"
+        front-saving-throw-label: "Saving Throw:"
+        front-specials-label: "Special:"
+        front-movement-label: "Movement:"
+        front-alignment-label: "Alignment:"
+        front-challenge-label: "Challenge Level/XP:"
+        front-abilities-label: "Abilities"
+
+    properties:
+      name:
+        sample:
+          de: "Moorschleicher"
+          en: "Bog Creeper"
+
+      description:
+        sample:
+          de: "Ein sehniger Lurch von Mannsgröße, dessen Haut die Farbe des Torfs annimmt, in dem er lauert."
+          en: "A sinewy, man-sized newt whose skin takes the colour of the peat it lurks in."
+
+      hit-dice:
+        slot: front-hit-dice
+        aliases: [trefferwürfel, trefferwuerfel, tw, hd]
+        description:
+          de: "Trefferwürfel — Anzahl und Bonus, z. B. „4 + 1“, oder mit den Trefferpunkten in Klammern."
+          en: "Hit dice — count and bonus, e.g. \"4 + 1\", or with the hit points in parentheses."
+        sample: "3 + 1"
+
+      armor-class:
+        slot: front-armor-class
+        aliases: [rüstungsklasse, ruestungsklasse, rk, ac]
+        description:
+          de: "Rüstungsklasse in beiden Notationen, absteigend [aufsteigend], z. B. „7 [12]“."
+          en: "Armor class in both notations, descending [ascending], e.g. \"7 [12]\"."
+        sample: "6 [13]"
+
+      attacks:
+        slot: front-attacks
+        aliases: [angriffe, atk]
+        description:
+          de: "Die Angriffe mit ihrem Schaden, z. B. „2 Klauen (1W3) und Biss (1W6)“."
+          en: "The attacks with their damage, e.g. \"2 claws (1d3) and bite (1d6)\"."
+        sample:
+          de: "Biss (1W6)"
+          en: "Bite (1d6)"
+
+      saving-throw:
+        slot: front-saving-throw
+        aliases: [rettungswurf, rw, save]
+        description:
+          de: "Der Rettungswurf der Kreatur — eine Zahl."
+          en: "The creature's saving throw — a number."
+        sample: 14
+
+      specials:
+        slot: front-specials
+        aliases: [besonderheiten, special, sonderfähigkeiten, sonderfaehigkeiten]
+        description:
+          de: "Die Besonderheiten als kommagetrennter Einzeiler; die Ausführung gehört in `abilities`."
+          en: "The specials as a comma-separated line; the long form belongs in `abilities`."
+        sample:
+          de: "Tarnung, Lähmender Schleim"
+          en: "Camouflage, paralysing slime"
+
+      movement:
+        slot: front-movement
+        aliases: [bewegungsrate, bewegung, move]
+        description:
+          de: "Bewegungsrate — eine Zahl, oder mit der Sonderform, z. B. „6/15 (fliegend)“."
+          en: "Movement — a number, or with the special mode, e.g. \"6/15 (flying)\"."
+        sample: "9 (schwimmend 12)"
+
+      alignment:
+        slot: front-alignment
+        aliases: [gesinnung]
+        description:
+          de: "Gesinnung — Rechtschaffen, Neutral oder Chaotisch."
+          en: "Alignment — Lawful, Neutral or Chaotic."
+        sample:
+          de: "Neutral"
+          en: "Neutral"
+
+      challenge-level:
+        slot: front-challenge
+        aliases: [herausforderungsgrad, hg, cl, challenge]
+        description:
+          de: "Herausforderungsgrad — die Stufe; die Erfahrungspunkte folgen aus `xp` mit einem Schrägstrich."
+          en: "Challenge level — the rating; the experience points from `xp` follow after a slash."
+        sample: 5
+
+      xp:
+        slot: front-xp
+        aliases: [ep, erfahrungspunkte, experience]
+        description:
+          de: "Erfahrungspunkte für das Besiegen der Kreatur, hinter dem Herausforderungsgrad."
+          en: "Experience points for defeating the creature, after the challenge level."
+        sample: 240
+
+      abilities:
+        slot: front-abilities
+        aliases: [fähigkeiten, faehigkeiten, sonderfertigkeiten, traits]
+        description:
+          de: "Die Eigenschaften ausgeführt — eine Liste von `name` und `desc`, jede als Absatz mit fettem Namen unter dem Banner „Eigenschaften“."
+          en: "The abilities spelled out — a list of `name` and `desc`, each a paragraph with its name in bold under the \"Abilities\" banner."
+        sample:
+          de:
+            - name: "Tarnung"
+              desc: "Im Moor wird der Schleicher nur bei einer 1 auf 1W6 bemerkt."
+            - name: "Lähmender Schleim"
+              desc: "Wer gebissen wird, muss einen Rettungswurf schaffen oder ist 1W4 Runden gelähmt."
+          en:
+            - name: "Camouflage"
+              desc: "In the bog the creeper is noticed only on a 1 on 1d6."
+            - name: "Paralysing slime"
+              desc: "Anyone bitten must make a saving throw or be paralysed for 1d4 rounds."
+
+      reference:
+        sample:
+          de: "Gesamtregelwerk S. 172"
+          en: "Complete Rules p. 172"
