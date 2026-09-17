@@ -14,7 +14,7 @@ import { t } from "./strings";
  * receiving the plugin's improvements — and it is self-contained, so the
  * reader can edit anything in it.
  *
- * The dialog proposes a name of the reader's own — *My Dragonbane* — and
+ * The dialog proposes a name that says what the copy is — *Copy of Dragonbane* — and
  * the original id. Keeping the id switches the bundled original off,
  * since at most one enabled system may claim an id, and no note is
  * touched. Choosing a new id leaves both on and offers to rewrite the
