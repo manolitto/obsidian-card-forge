@@ -1,0 +1,8 @@
+Sterndeuter · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   p.dcc-flavor "Liest in den Sternen, was andere …"
+   div.dcc-section "Geübte Waffe"
+   p.dcc-value "Stab (1W4)"
+   div.dcc-section "Handelsware"
+   p.dcc-value "Sternkarte"
+2. back [cf-layout-default] scale —

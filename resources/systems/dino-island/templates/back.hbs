@@ -1,0 +1,13 @@
+{{!--
+  Flucht von Dino Island — the back of a roll-table entry: the table's
+  title (else the card type's label) large at the top, the wordmark
+  centred below. White, so a boxed deck costs little ink.
+
+    back-heading   the table's title
+--}}
+<div class="card-root card-back dino-island {{card-type}}-card {{card-type}}-back">
+  <div class="dino-back-frame">
+    <div class="dino-back-label"><span class="text-scalable">{{slot "back-heading" plain=true fallback=(t "back-label")}}</span></div>
+    <div class="dino-wordmark">{{> wordmark}}</div>
+  </div>
+</div>

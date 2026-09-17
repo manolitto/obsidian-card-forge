@@ -1,0 +1,33 @@
+{{!--
+  Flucht von Dino Island — the location front.
+
+    front-category     the category, a small line over the name
+    front-title        the name, in distressed capitals over the orange rule
+    front-atmosphere   the atmosphere line, in italics
+    front-contents     what is to be found here, as a bulleted list
+--}}
+<div class="card-root card-front dino-island location-card">
+  <div class="card-header dino-entry-header">
+    {{#if (slot "front-category")}}<div class="dino-eyebrow">{{slot "front-category" plain=true}}</div>{{/if}}
+    <div class="dino-entry-name"><span class="dino-entry-title text-scalable">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{#if (slot "front-atmosphere")}}
+    <p class="dino-atmosphere">{{slot "front-atmosphere"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-contents" list=true)}}
+    <div class="dino-contents">
+      <span class="dino-label">{{slot-label "front-contents"}}</span>
+      <ul class="dino-contents-list">
+        {{#each (slot "front-contents" list=true)}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </div>
+    {{/if}}
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

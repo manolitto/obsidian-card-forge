@@ -23,26 +23,32 @@ declare module "vitest/browser" {
 const POINTS_PER_MM = 72 / 25.4;
 const systems = { get: (id: string) => loadedSystem(id) };
 
-describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e", "mini-d20"])(
-  "the %s deck prints",
-  (system) => {
-    it("to as many pages as it composed, on the paper it said", async () => {
-      const deck = await deckNote(system);
-      const built = await buildDeck(
-        deck.text,
-        deck.path,
-        fixtureDeckSource,
-        systems,
-        fixtureRenderer(),
-        document,
-        collectDiagnostics()
-      );
-      const out = deckDocument(built, `${system} deck`);
-      const pdf = await commands.printPdf(system, out.html);
-      expect(pdf.pageCount).toBe(out.pageCount);
-      expect(pdf.mediaBox.width).toBeCloseTo(out.paper.width * POINTS_PER_MM, 0);
-      expect(pdf.mediaBox.height).toBeCloseTo(out.paper.height * POINTS_PER_MM, 0);
-      expect(pdf.bytes).toBeGreaterThan(10_000);
-    });
-  }
-);
+describe.each([
+  "simple",
+  "dragonbane",
+  "eiserne-zeit",
+  "pf2e",
+  "mini-d20",
+  "dcc",
+  "dino-island",
+  "tor2e",
+])("the %s deck prints", (system) => {
+  it("to as many pages as it composed, on the paper it said", async () => {
+    const deck = await deckNote(system);
+    const built = await buildDeck(
+      deck.text,
+      deck.path,
+      fixtureDeckSource,
+      systems,
+      fixtureRenderer(),
+      document,
+      collectDiagnostics()
+    );
+    const out = deckDocument(built, `${system} deck`);
+    const pdf = await commands.printPdf(system, out.html);
+    expect(pdf.pageCount).toBe(out.pageCount);
+    expect(pdf.mediaBox.width).toBeCloseTo(out.paper.width * POINTS_PER_MM, 0);
+    expect(pdf.mediaBox.height).toBeCloseTo(out.paper.height * POINTS_PER_MM, 0);
+    expect(pdf.bytes).toBeGreaterThan(10_000);
+  });
+});

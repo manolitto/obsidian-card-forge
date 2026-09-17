@@ -1,0 +1,319 @@
+/* ── Dungeon Crawl Classics — the system stylesheet ───────────────────
+   Modelled on the rulebook's interior: cream paper, black ink, heavy
+   Roman capitals, a double-line frame around the body, and one crimson
+   accent kept for the wordmark on the back. Cinzel Black for the display
+   — the weight of the book's chapter heads — and TeX Gyre Pagella for
+   the text. Sizes are `em` and `%` throughout. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* Cinzel, three weights: regular and bold for the small-caps captions
+   and the badge, black for the title and the wordmark. OFL,
+   fonts/cinzel-OFL.txt. */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/cinzel-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/cinzel-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("fonts/cinzel-black.woff2") format("woff2");
+}
+
+/* TeX Gyre Pagella — a Palatino, the book's text face. GUST font
+   licence, fonts/pagella-GUST-FONT-LICENSE.txt. */
+@font-face {
+  font-family: "TeX Gyre Pagella";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/pagella-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "TeX Gyre Pagella";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/pagella-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "TeX Gyre Pagella";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/pagella-bold.woff2") format("woff2");
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.dcc {
+  --dcc-paper: #f5efe1;
+  --dcc-ink: #111111;
+  --dcc-accent: #a8201a;
+
+  --dcc-font-body: "TeX Gyre Pagella", serif;
+  --dcc-font-display: "Cinzel", serif;
+
+  /* The title floor is low: a long occupation beside the roll badge
+     needs the room to come down before it fits. */
+  --card-font-size-min: 2.5mm;
+  --card-font-size-max: 3.1mm;
+  --card-font-size-title-min: 2.5mm;
+  --card-font-size-title-max: 6mm;
+  --dcc-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.0635), var(--card-font-size-title-max));
+
+  font-family: var(--dcc-font-body);
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.048), var(--card-font-size-max));
+  color: var(--dcc-ink);
+  background: var(--dcc-paper);
+  overflow: hidden;
+}
+
+/* On plain paper the cream goes; the ink stays. */
+.cf-paper-plain .card-root.dcc {
+  --dcc-paper: #ffffff;
+}
+
+/* ── The title block, above the frame ──────────────────────────────── */
+
+/* A row the badge shares with the title: the badge keeps its width at
+   the left, the title takes the rest and centres in it; the sub-type
+   wraps onto its own row. */
+.dcc-title-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  column-gap: 0.5em;
+  padding: 1.1em 0.6em 0.3em;
+  margin: 0 0 0.3em;
+  background: var(--dcc-paper);
+}
+
+/* The title grows into what the badge leaves — basis 0, so its longest
+   word cannot claim the row — and wraps at spaces; a word that cannot
+   fit is what the layout engine shrinks it for. The base `.card-title`
+   is `nowrap` and hidden, so both are reset here. */
+.dcc-title-block .dcc-title {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--dcc-font-display);
+  font-weight: 900;
+  font-size: var(--dcc-font-size-title);
+  color: var(--dcc-ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  white-space: normal;
+  overflow: visible;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+.dcc-title-block .dcc-title .text-scalable {
+  display: block;
+  width: 100%;
+  white-space: normal;
+}
+.dcc-title .cf-overflow-counter {
+  font-family: var(--dcc-font-body);
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+/* The roll badge: an outlined box at the left of the row, square corners
+   like the frame's. */
+.dcc-roll-badge {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  color: var(--dcc-ink);
+  border: 0.08em solid var(--dcc-ink);
+  font-family: var(--dcc-font-display);
+  font-weight: 700;
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  padding: 0.06em 0.4em;
+  font-size: 0.78em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+/* The sub-type: small caps, dimmed, on its own row under the title. */
+.dcc-subtype {
+  flex: 1 0 100%;
+  text-align: center;
+  font-family: var(--dcc-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--dcc-ink);
+  opacity: 0.55;
+  font-size: 0.78em;
+  line-height: 1.1;
+  margin-top: 0.15em;
+}
+
+/* ── The frame: body and footer inside a double line ──────────────── */
+
+/* Thick outer line, a paper gap, thin inner line — the book's table
+   border, sharp corners. The frame holds the content and the footer as a
+   column; the content's `flex: 1` pushes the footer to the frame's foot.
+   A margin at the sides and the bottom keeps the frame clear of an
+   off-true cut. */
+.card-root.dcc .dcc-frame {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+  border: 0.36em solid var(--dcc-ink);
+  box-shadow:
+    inset 0 0 0 0.32em var(--dcc-paper),
+    inset 0 0 0 0.4em var(--dcc-ink);
+  padding: 0.85em 0.95em;
+  margin: 0 0.5em 0.5em;
+}
+
+/* ── The body's furniture ──────────────────────────────────────────── */
+
+/* A caption in bold small caps, no rule, no fill. */
+.dcc-section {
+  color: var(--dcc-ink);
+  font-family: var(--dcc-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  margin: 0.6em 0 0.1em;
+  font-size: 0.95em;
+  line-height: 1.2;
+}
+
+/* The value under a caption. */
+.dcc-value {
+  line-height: 1.3;
+  margin: 0;
+  padding: 0 0.1em;
+}
+
+/* The flavour: italic, justified. */
+.dcc-flavor {
+  font-style: italic;
+  line-height: 1.3;
+  margin: 0 0 0.4em;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* ── The footer ────────────────────────────────────────────────────── */
+
+.dcc-footer {
+  padding-top: 0.3em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+.dcc-original-name,
+.dcc-reference {
+  font-size: 0.7em;
+  font-style: italic;
+  color: var(--dcc-ink);
+  opacity: 0.6;
+}
+.dcc-reference {
+  margin-left: auto;
+  text-align: right;
+}
+.dcc-original-name-label {
+  font-weight: 700;
+  margin-right: 0.15em;
+}
+.card-root[lang|="en"] .dcc-original-name {
+  display: none;
+}
+
+/* ── The back ──────────────────────────────────────────────────────── */
+
+.card-root.dcc.card-back {
+  background: var(--dcc-paper);
+}
+.dcc-back {
+  background: var(--dcc-paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1em 0.8em;
+  flex: 1 1 0;
+}
+
+/* The card type's label over a thin rule, at the top. */
+.dcc-back-banner {
+  flex: 0 0 auto;
+  align-self: stretch;
+  color: var(--dcc-ink);
+  font-family: var(--dcc-font-display);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.1em;
+  padding-bottom: 0.3em;
+  border-bottom: 0.08em solid var(--dcc-ink);
+}
+
+/* The wordmark and the tagline, centred in the room below the banner. */
+.dcc-back-mark {
+  flex: 1 1 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.dcc-wordmark {
+  font-family: var(--dcc-font-display);
+  font-weight: 900;
+  text-align: center;
+  color: var(--dcc-accent);
+  -webkit-text-stroke: 0.045em var(--dcc-ink);
+  letter-spacing: 0.06em;
+  line-height: 0.95;
+  font-size: 2.5em;
+}
+.dcc-wordmark-line {
+  display: block;
+}
+.dcc-tagline {
+  font-family: var(--dcc-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  color: var(--dcc-ink);
+  font-size: 0.78em;
+  text-align: center;
+  letter-spacing: 0.04em;
+  margin-top: 0.5em;
+  border-top: 0.08em solid var(--dcc-ink);
+  padding-top: 0.5em;
+  max-width: 85%;
+  line-height: 1.25;
+}

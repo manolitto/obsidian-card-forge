@@ -1,0 +1,46 @@
+{{!--
+  Flucht von Dino Island — the taxonomy front: an animal family's fields.
+
+    front-title        the family's name over the orange rule
+    front-text         the introductory sentence, in italics
+    front-occurrence,
+    front-instinct     captioned lines
+    front-moves        the moves, a die-bulleted list under its caption
+    front-genera       the example genera, captioned
+--}}
+<div class="card-root card-front dino-island taxonomy-card">
+  <div class="card-header dino-entry-header dino-taxonomy-header">
+    <div class="dino-entry-name"><span class="dino-entry-title text-scalable">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{#if (slot "front-text")}}
+    <p class="dino-tax-desc">{{slot "front-text"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-occurrence")}}
+    <p class="dino-tax-field"><span class="dino-label">{{slot-label "front-occurrence"}}</span> {{slot "front-occurrence"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-instinct")}}
+    <p class="dino-tax-field"><span class="dino-label">{{slot-label "front-instinct"}}</span> {{slot "front-instinct"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-moves" list=true)}}
+    <div class="dino-moves dino-tax-moves">
+      <span class="dino-label">{{slot-label "front-moves"}}</span>
+      <ul class="dino-move-list">
+        {{#each (slot "front-moves" list=true)}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-genera")}}
+    <p class="dino-tax-field dino-tax-genera"><span class="dino-label">{{slot-label "front-genera"}}</span> {{slot "front-genera"}}</p>
+    {{/if}}
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

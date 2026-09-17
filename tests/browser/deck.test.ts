@@ -190,19 +190,25 @@ describe("buildDeck over the fixture folders", () => {
  * each cell's side, place and name, so a card that moved reads as one
  * line. `UPDATE_GOLDENS=1` rewrites them.
  */
-describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e", "mini-d20"])(
-  "the %s deck composes",
-  (system) => {
-    it("as its composition golden says", async () => {
-      const { built } = await build(system);
-      const { pages, grid } = composeDeck(built);
-      const actual = compositionText(pages, grid);
-      const golden = await commands.deckGolden(system, actual);
-      expect(
-        golden,
-        `${system}/_deck.compose.txt is missing — run with UPDATE_GOLDENS=1 to write it`
-      ).toBeDefined();
-      expect(actual).toBe(golden);
-    });
-  }
-);
+describe.each([
+  "simple",
+  "dragonbane",
+  "eiserne-zeit",
+  "pf2e",
+  "mini-d20",
+  "dcc",
+  "dino-island",
+  "tor2e",
+])("the %s deck composes", (system) => {
+  it("as its composition golden says", async () => {
+    const { built } = await build(system);
+    const { pages, grid } = composeDeck(built);
+    const actual = compositionText(pages, grid);
+    const golden = await commands.deckGolden(system, actual);
+    expect(
+      golden,
+      `${system}/_deck.compose.txt is missing — run with UPDATE_GOLDENS=1 to write it`
+    ).toBeDefined();
+    expect(actual).toBe(golden);
+  });
+});

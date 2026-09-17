@@ -1,0 +1,7 @@
+Geruechte.3 · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   span.cf-fill-2
+   div.dino-entry
+     p "Die Pterosaurier meiden die Ostklippen. Niemand …"
+   span.cf-fill-3
+2. back [cf-layout-default] scale —

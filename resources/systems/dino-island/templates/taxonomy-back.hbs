@@ -1,0 +1,15 @@
+{{!--
+  Flucht von Dino Island — the taxonomy back: the card type's label at
+  the top, the family's illustration as the hero, the wordmark at the foot.
+
+    back-image   the illustration, a picture from the vault
+--}}
+<div class="card-root card-back dino-island taxonomy-card taxonomy-back">
+  <div class="dino-back-frame">
+    <div class="dino-back-label"><span class="text-scalable">{{t "back-label"}}</span></div>
+    {{#if (slot "back-image")}}
+    <div class="dino-tax-image-wrap"><img class="dino-tax-image" src="{{slot "back-image" image=true}}" alt="" /></div>
+    {{/if}}
+    <div class="dino-wordmark">{{> wordmark}}</div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+Moorwolf · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.tor-npc-grid
+     div.tor-npc-left
+       div.tor-npc-features "Wachsam, Hungrig"
+       div.tor-stats-row
+         div.tor-stat
+           div.tor-stat-label "Ausdauer"
+           div.tor-diamond
+             div.tor-diamond-inner "10"
+         div.tor-stat
+           div.tor-stat-label "Stärke"
+           div.tor-diamond
+             div.tor-diamond-inner "1"
+         div.tor-stat
+           div.tor-stat-label "Entschlossen"
+           div.tor-diamond
+             div.tor-diamond-inner "2"
+         div.tor-stat
+           div.tor-stat-label "Parade"
+           div.tor-diamond
+             div.tor-diamond-inner "–"
+         div.tor-stat
+           div.tor-stat-label "Rüstung"
+           div.tor-diamond
+             div.tor-diamond-inner "1"
+     div.tor-npc-attribute
+       div.tor-stat-label "Attributs­stufe"
+       div.tor-diamond.tor-diamond-large
+         div.tor-diamond-inner "2"
+   div.tor-section-label "Kampffähigkeiten"
+   ul.tor-npc-proficiencies (1 items) "Biss 2 (3/14)"
+   div.tor-section-label "Grausame Fähigkeiten"
+   div.tor-npc-abilities
+     p.tor-npc-ability "Rudel. Greift nur an, wo ein …"
+2. back [cf-layout-default] scale —

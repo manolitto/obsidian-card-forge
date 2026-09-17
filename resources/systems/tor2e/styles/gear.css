@@ -1,0 +1,21 @@
+/* ── The One Ring 2E — the gear card ────────────────────────────────
+   The shared rules are in tor2e.css; the gear adds its diamond row's
+   spacing and the picture between the rules. */
+
+.gear-card .tor-stats-row {
+  padding: 0.6em 0 0.3em;
+}
+.gear-card .tor-gear-image-wrap {
+  height: 45%;
+  min-height: 24%;
+  margin: 0.3em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gear-card .tor-gear-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.158em;
+}

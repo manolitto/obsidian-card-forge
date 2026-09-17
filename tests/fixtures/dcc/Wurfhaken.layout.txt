@@ -1,0 +1,5 @@
+Wurfhaken · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   dl.dcc-stats "Menge 1 Preis 1 GM"
+   ul.dcc-notes (1 items) "Hält an Holz und Stein; an …"
+2. back [cf-layout-default] scale —

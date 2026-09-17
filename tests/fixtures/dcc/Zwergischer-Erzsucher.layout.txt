@@ -1,0 +1,9 @@
+Zwergischer-Erzsucher · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.dcc-section "Volk"
+   p.dcc-value "Zwerg"
+   div.dcc-section "Geübte Waffe"
+   p.dcc-value "Spitzhacke (als Streitaxt)"
+   div.dcc-section "Handelsware"
+   p.dcc-value "Beutel mit Erzproben"
+2. back [cf-layout-default] scale —

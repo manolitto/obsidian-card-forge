@@ -1,0 +1,29 @@
+{{!--
+  Flucht von Dino Island — the location back: the front's heading again,
+  so the two faces read as one card, then the location's moves as a
+  die-bulleted list, the wordmark small at the foot.
+
+    back-category, back-title   the same category and name as the front
+    back-moves                  the location's moves
+--}}
+<div class="card-root card-back dino-island location-card location-back">
+  <div class="card-header dino-entry-header">
+    {{#if (slot "back-category")}}<div class="dino-eyebrow">{{slot "back-category" plain=true}}</div>{{/if}}
+    <div class="dino-entry-name"><span class="dino-entry-title text-scalable">{{slot "back-title" plain=true}}</span></div>
+  </div>
+
+  <div class="card-content-container dino-location-back-content">
+    {{#if (slot "back-moves" list=true)}}
+    <div class="dino-moves">
+      <span class="dino-moves-label">{{slot-label "back-moves"}}</span>
+      <ul class="dino-move-list">
+        {{#each (slot "back-moves" list=true)}}<li>{{this}}</li>{{/each}}
+      </ul>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="card-footer dino-location-back-footer">
+    <div class="dino-wordmark">{{> wordmark}}</div>
+  </div>
+</div>

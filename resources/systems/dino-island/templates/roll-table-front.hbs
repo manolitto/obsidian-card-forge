@@ -1,0 +1,25 @@
+{{!--
+  Flucht von Dino Island — the front of a roll-table entry.
+
+    front-roll      the roll, an orange die in the top-left corner
+    front-heading   the table's title in the yellow banner, flush right
+                    like the book's page tabs; the card type's label when
+                    the note gives none
+    front-text      the entry, large and centred like a quotation
+--}}
+<div class="card-root card-front dino-island roll-table-card">
+  <div class="card-header dino-roll-header">
+    {{#if (slot "front-roll")}}<span class="dino-roll-badge"><span class="dino-roll-num">{{slot "front-roll" plain=true}}</span></span>{{/if}}
+    <div class="dino-banner"><span class="dino-title text-scalable">{{slot "front-heading" plain=true fallback=(t "card-type-label")}}<span class="cf-overflow-counter"></span></span></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    <span class="cf-fill-2"></span>
+    <div class="dino-entry">{{slot "front-text" markdown="block"}}</div>
+    <span class="cf-fill-3"></span>
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

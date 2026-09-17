@@ -1,0 +1,9 @@
+Panzerlaeufer · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   p.dino-tax-desc "Gepanzerte Pflanzenfresser, die sich lieber eingraben …"
+   p.dino-tax-field "Auftreten (Anzahl): Paarweise, die Jungen dazwischen"
+   p.dino-tax-field "Instinkt: Sich eingraben und abwarten"
+   div.dino-moves.dino-tax-moves "Spielzüge: Schwanzhieb Steck den Kopf in …"
+     ul.dino-move-list (3 items) "Schwanzhieb Steck den Kopf in den …"
+   p.dino-tax-field.dino-tax-genera "Gattungen: Saichania, Pinacosaurus"
+2. back [cf-layout-default] scale —
