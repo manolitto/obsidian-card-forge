@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  entriesAfterToggle,
   findDuplicateActiveIds,
   reconcileSystemEntries,
 } from "../src/settings/system-registry";
@@ -54,6 +55,41 @@ describe("reconcileSystemEntries", () => {
 
   it("populates an empty registry from the shipped systems", () => {
     expect(reconcileSystemEntries([], ["simple"])).toEqual([bundled("simple")]);
+  });
+});
+
+describe("entriesAfterToggle", () => {
+  it("switching on takes the id: every other active claimant goes off", () => {
+    const original = bundled("dragonbane");
+    const copy = vault("dragonbane", "card-forge/db", false);
+    const other = vault("dragonbane", "card-forge/db2");
+    const out = entriesAfterToggle(
+      [original, copy, other, bundled("simple")],
+      copy,
+      true
+    );
+    expect(out).toEqual([
+      bundled("dragonbane", false),
+      vault("dragonbane", "card-forge/db"),
+      vault("dragonbane", "card-forge/db2", false),
+      bundled("simple"),
+    ]);
+    expect(findDuplicateActiveIds(out)).toEqual([]);
+  });
+
+  it("switching off touches nothing else", () => {
+    const entries = [bundled("dragonbane"), vault("dragonbane", "card-forge/db")];
+    const out = entriesAfterToggle(entries, entries[0]!, false);
+    expect(out).toEqual([
+      bundled("dragonbane", false),
+      vault("dragonbane", "card-forge/db"),
+    ]);
+  });
+
+  it("does not mutate the entries it was given", () => {
+    const entries = [bundled("dragonbane", false)];
+    entriesAfterToggle(entries, entries[0]!, true);
+    expect(entries[0]!.active).toBe(false);
   });
 });
 

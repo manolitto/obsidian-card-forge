@@ -4,6 +4,7 @@ import type CardForgePlugin from "../main";
 import { copySystemIntoVault } from "../ui/copy-system";
 import { SystemFileSuggest } from "../ui/system-file-suggest";
 import { t } from "../ui/strings";
+import { entriesAfterToggle } from "./system-registry";
 import type { SystemEntry, UiLanguage } from "./types";
 
 /*
@@ -64,7 +65,12 @@ export class CardForgeSettingTab extends PluginSettingTab {
     );
     row.addToggle((toggle) =>
       toggle.setValue(entry.active).onChange(async (value) => {
-        entry.active = value;
+        // Switching on takes the id: any other entry claiming it goes off.
+        this.plugin.settings.systems = entriesAfterToggle(
+          this.plugin.settings.systems,
+          entry,
+          value
+        );
         await this.plugin.saveSettings();
         this.display();
       })

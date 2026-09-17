@@ -57,6 +57,26 @@ export function findDuplicateActiveIds(entries: readonly SystemEntry[]): string[
 }
 
 /**
+ * The registry after switching `entry` on or off. Switching on is the one
+ * act with a single meaning — use this one now — so every other active
+ * entry claiming the same id goes off with it, as it does after a copy
+ * that keeps the id; the settings page then never produces the state the
+ * library refuses. Switching off touches nothing else.
+ */
+export function entriesAfterToggle(
+  entries: readonly SystemEntry[],
+  entry: SystemEntry,
+  active: boolean
+): SystemEntry[] {
+  return entries.map((candidate) => {
+    if (candidate === entry) return { ...candidate, active };
+    return active && candidate.active && candidate.id === entry.id
+      ? { ...candidate, active: false }
+      : candidate;
+  });
+}
+
+/**
  * The registry after a copy: a vault entry for the copied root document, active. With
  * the original's id kept, the bundled entry goes inactive — the invariant
  * is about enabled systems, and switching back is one click. With a new
