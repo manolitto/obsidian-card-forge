@@ -1,0 +1,14 @@
+{{!--
+  The Troubleshooters — the back of a mechanic, and of a character
+  without a picture: the logo in its white box on a field of the card
+  type's colour, the card type's label under it.
+
+    back-title   the character's name under the label, where bound
+--}}
+<div class="card-root card-back troubleshooters {{card-type}}-card {{card-type}}-back">
+  <div class="ts-back">
+    <div class="ts-back-box">{{> logo split=true}}</div>
+    <div class="ts-back-label"><span class="text-scalable">{{t "back-label"}}</span></div>
+    {{#if (slot "back-title")}}<div class="ts-back-name"><span class="text-scalable">{{slot "back-title" plain=true}}</span></div>{{/if}}
+  </div>
+</div>

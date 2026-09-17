@@ -1,0 +1,114 @@
+/* ── The Troubleshooters — the gear card ────────────────────────────
+   Borderless on white, both faces. The shared rules are in
+   troubleshooters.css. */
+
+.card-root.troubleshooters.gear-card {
+  border: 0;
+  background: var(--ts-paper);
+}
+.gear-card .card-content-container {
+  padding: 0.64em 0.89em;
+}
+
+/* The name in red small capitals, top left. */
+.ts-gear-title {
+  font-family: var(--ts-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  color: #dc2f1f;
+  font-size: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.084), var(--card-font-size-title-max));
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin: 0 0 0.15em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ts-gear-title .cf-overflow-counter {
+  font-family: var(--ts-font-body);
+  font-weight: 400;
+  font-variant: normal;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+/* The picture, fitted whole into a fixed share of the body. */
+.ts-gear-image {
+  height: 42%;
+  min-height: 27%;
+  margin: 0.15em 0 0.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ts-gear-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.ts-gear-content {
+  margin: 0.2em 0;
+  line-height: 1.25;
+}
+
+/* The traits: no markers, the name in blue. */
+.ts-gear-traits {
+  list-style: none;
+  padding: 0;
+  margin: 0.2em 0;
+}
+.ts-gear-traits li {
+  line-height: 1.25;
+  margin: 0.1em 0;
+}
+.ts-gear-trait-name {
+  color: var(--ts-caption);
+  font-weight: 700;
+}
+
+.ts-gear-story-points {
+  margin-top: 0.15em;
+  line-height: 1.25;
+}
+
+/* ── The back: the logo in red turned on its side ──────────────────── */
+
+.card-root.troubleshooters.gear-back {
+  display: flex;
+}
+.ts-gear-back {
+  flex: 1 1 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Centred, then turned: the block is placed by its centre so the turn
+   keeps it there. */
+.ts-gear-back-logo {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(70deg);
+  color: var(--ts-red);
+}
+.ts-gear-back-logo .ts-logo-the {
+  font-size: 5.82cqw;
+}
+.ts-gear-back-logo .ts-logo-name {
+  font-size: 16.11cqw;
+}
+
+/* The card type's label, upright at the top right. */
+.ts-gear-back-label {
+  position: absolute;
+  top: 7%;
+  right: 7%;
+  font-family: var(--ts-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: 6.72cqw;
+  letter-spacing: 0.05em;
+  color: var(--ts-red);
+}

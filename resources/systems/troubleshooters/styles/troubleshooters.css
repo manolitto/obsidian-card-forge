@@ -1,0 +1,251 @@
+/* ── The Troubleshooters — the system stylesheet ────────────────────
+   Modelled on the rulebook's layout: a white body in a coloured frame
+   with the title on the frame's strip, sky-blue captions, orange list
+   markers, and the game's slanted comic-lettering logo on the back. Lora
+   for the display, a plain sans for the text, Bangers for the logo.
+   Sizes are `em` and `%` throughout; the backs size their lettering in
+   `cqw` so a poker and a large card draw the same picture. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* Lora, variable 400–700, upright and italic, split by range. OFL,
+   fonts/lora-OFL.txt. */
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/lora-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/lora-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/lora-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lora";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/lora-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Bangers, the comic lettering of the logo; one upright cut, slanted by
+   a skew where the logo wants it. OFL, fonts/bangers-OFL.txt. */
+@font-face {
+  font-family: "Bangers";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/bangers-regular.woff2") format("woff2");
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.troubleshooters {
+  /* The frame's colour: the game's blue; a card type sets its own. */
+  --ts-frame: #00355b;
+  --ts-paper: #ffffff;
+  --ts-ink: #000000;
+  --ts-caption: #008fd0;
+  --ts-bullet: #e36d13;
+  --ts-red: #e53629;
+
+  --ts-font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ts-font-display: "Lora", serif;
+  --ts-font-logo: "Bangers", "Impact", sans-serif;
+
+  --ts-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.0784), var(--card-font-size-title-max));
+
+  font-family: var(--ts-font-body);
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0448), var(--card-font-size-max));
+  line-height: 1.3;
+  color: var(--ts-ink);
+  background: var(--ts-frame);
+  border: 0.53em solid var(--ts-frame);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+/* ── The strip and the body ────────────────────────────────────────── */
+
+/* The title in white small capitals on the frame's colour, the card
+   type's label at its right where a front has one. */
+.ts-strip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35em;
+  padding: 0.11em 0.53em;
+  background: var(--ts-frame);
+}
+.ts-strip .ts-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--ts-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: var(--ts-font-size-title);
+  color: var(--ts-paper);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+.ts-title .cf-overflow-counter {
+  font-family: var(--ts-font-body);
+  font-weight: 400;
+  font-variant: normal;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+.ts-strip-label {
+  flex: 0 0 auto;
+  font-family: var(--ts-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: 0.95em;
+  color: var(--ts-paper);
+  letter-spacing: 0.03em;
+}
+
+.card-root.troubleshooters .card-content-container {
+  padding: 0.35em 0.71em 0.53em;
+  background: var(--ts-paper);
+}
+
+/* ── The body's furniture ──────────────────────────────────────────── */
+
+/* A caption in blue bold, a colon and a space after it. */
+.ts-caption {
+  font-weight: 700;
+  color: var(--ts-caption);
+}
+.ts-caption::after {
+  content: ": ";
+}
+.ts-line {
+  margin: 0.1em 0;
+}
+
+/* Running text, paragraphs tight. */
+.ts-prose p {
+  margin: 0 0 0.2em;
+}
+
+/* A list with orange markers. */
+.ts-list {
+  list-style: disc outside;
+  padding-left: 1em;
+  margin: 0 0 0.1em 0.3em;
+}
+.ts-list li {
+  padding: 0.05em 0;
+  line-height: 1.25;
+}
+.ts-list li::marker {
+  color: var(--ts-bullet);
+}
+
+/* The reference, small and dimmed, pushed to the foot by the filler. */
+.ts-reference {
+  font-size: 0.85em;
+  opacity: 0.6;
+  margin-top: 0.2em;
+}
+.ts-reference-right {
+  text-align: right;
+}
+
+/* ── The logo ──────────────────────────────────────────────────────── */
+
+/* "THE" small over the name, in the comic lettering, both lines
+   slanted; the block shrinks to its longest line so "THE" sits at the
+   name's left. Colour and size are the caller's. */
+.ts-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: max-content;
+  font-family: var(--ts-font-logo);
+  line-height: 0.9;
+  white-space: nowrap;
+}
+.ts-logo-the,
+.ts-logo-name {
+  display: inline-block;
+  transform: skewX(-12deg);
+  transform-origin: left baseline;
+}
+
+/* ── The framed back ───────────────────────────────────────────────── */
+
+/* A field of the frame's colour, a rounded panel lit from the centre,
+   the logo in a white square with a thick border, the card type's label
+   and, for a character, the name under it. */
+.card-root.troubleshooters.card-back {
+  border: 0;
+  display: flex;
+}
+.ts-back {
+  flex: 1 1 0;
+  margin: 4.76%;
+  border-radius: 6.35cqw;
+  background: radial-gradient(ellipse at center, #ffffff 20%, var(--ts-frame) 120%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+}
+.ts-back-box {
+  width: 62%;
+  aspect-ratio: 1 / 1;
+  border: 3.17cqw solid var(--ts-frame);
+  border-radius: 12.7%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--ts-frame);
+}
+.ts-back-box .ts-logo-the {
+  font-size: 4.25cqw;
+}
+.ts-back-box .ts-logo-name {
+  font-size: 9.85cqw;
+}
+.ts-back-label,
+.ts-back-name {
+  font-family: var(--ts-font-display);
+  font-variant: small-caps;
+  font-weight: 700;
+  color: var(--ts-frame);
+  letter-spacing: 0.01em;
+  text-align: center;
+  max-width: 100%;
+}
+.ts-back-label {
+  margin-top: 3.17cqw;
+  font-size: 7.84cqw;
+  line-height: 1;
+}
+.ts-back-name {
+  margin-top: 1.12cqw;
+  font-size: 6.72cqw;
+  line-height: 1.1;
+}

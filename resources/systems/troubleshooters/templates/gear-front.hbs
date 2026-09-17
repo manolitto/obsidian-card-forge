@@ -1,0 +1,45 @@
+{{!--
+  The Troubleshooters — the gear front, borderless on white.
+
+    front-title          the name in red small capitals, top left
+    front-image          the picture, large
+    front-text           what the kit holds
+    front-traits         a list of { name, desc }, the name in blue
+    front-story-points   the cost, after its caption
+    front-footer         the reference, small at the foot's right
+--}}
+<div class="card-root card-front troubleshooters gear-card">
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    <div class="card-title ts-gear-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+
+    {{#if (slot "front-image")}}
+    <div class="ts-gear-image"><img src="{{slot "front-image" image=true}}" alt="" /></div>
+    {{/if}}
+
+    {{#if (slot "front-text")}}
+    <p class="ts-gear-content">{{slot "front-text"}}</p>
+    {{/if}}
+
+    {{#if (slot "front-traits" list=true)}}
+    <ul class="ts-gear-traits">
+      {{#each (slot "front-traits" list=true)}}
+      <li><span class="ts-gear-trait-name">{{name}}</span> {{desc}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if (slot "front-story-points")}}
+    <div class="ts-gear-story-points"><span class="ts-caption">{{slot-label "front-story-points"}}</span>{{slot "front-story-points" markdown=false}}</div>
+    {{/if}}
+
+    <span class="cf-fill-1"></span>
+
+    {{#if (slot "front-footer")}}
+    <div class="ts-reference ts-reference-right">{{slot "front-footer" plain=true}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+/* ── The Troubleshooters — the mechanic card ────────────────────────
+   The frame in orange, both faces; the rest is the shared rules in
+   troubleshooters.css. */
+
+.card-root.troubleshooters.mechanic-card {
+  --ts-frame: #e04d19;
+}
+
+.ts-requires {
+  margin: 0.1em 0 0.25em;
+}

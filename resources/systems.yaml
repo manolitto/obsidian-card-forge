@@ -15,3 +15,4 @@ systems:
   - dino-island/dino-island.yaml
   - tor2e/tor2e.yaml
   - sw/sw.yaml
+  - troubleshooters/troubleshooters.yaml

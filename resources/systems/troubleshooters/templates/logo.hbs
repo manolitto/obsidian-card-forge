@@ -1,0 +1,16 @@
+{{!--
+  The Troubleshooters — the logo as text: "THE" small over the name in
+  comic lettering, each line slanted by the stylesheet.
+
+      {{> logo}}              the name on one line
+      {{> logo split=true}}   the name broken in two, for the square box
+--}}
+<div class="ts-logo">
+  <span class="ts-logo-the">{{t "back-logo-the"}}</span>
+  {{#if split}}
+  <span class="ts-logo-name">{{t "back-logo-name-1"}}</span>
+  <span class="ts-logo-name">{{t "back-logo-name-2"}}</span>
+  {{else}}
+  <span class="ts-logo-name">{{t "back-logo-name"}}</span>
+  {{/if}}
+</div>
