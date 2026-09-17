@@ -32,6 +32,7 @@ export interface DeckBlockContext {
   systems: { get(id: string): Promise<LoadedSystem> };
   source: DeckSource;
   exporter: DeckExporter;
+  openPreview(file: TFile): Promise<void>;
 }
 
 export function deckBlockProcessor(context: DeckBlockContext) {
@@ -107,6 +108,8 @@ export function deckBlockProcessor(context: DeckBlockContext) {
 
     if (block && file instanceof TFile) {
       const buttons = el.createDiv({ cls: "cf-deck-buttons" });
+      const preview = buttons.createEl("button", { text: t("deck.preview") });
+      preview.addEventListener("click", () => void context.openPreview(file));
       if (Platform.isDesktop)
         exportButton(buttons, "deck.export-pdf", "pdf", file, context);
       exportButton(buttons, "deck.export-html", "html", file, context);

@@ -17,6 +17,7 @@ import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
 import { TemplateEngine } from "./templates/engine";
 import { cardBlockProcessor } from "./ui/card-block";
 import { deckBlockProcessor } from "./ui/deck-block";
+import { DECK_VIEW_TYPE, DeckView, openDeckView } from "./ui/deck-view";
 import { notice, runExport } from "./ui/export-run";
 import { buildDeckBlock } from "./ui/insert-deck";
 import { buildCardBlock, insertAtCursor, type InsertMode } from "./ui/insert-card";
@@ -81,8 +82,10 @@ export default class CardForgePlugin extends Plugin {
         systems: this.systems,
         source,
         exporter: this.exporter,
+        openPreview: (file) => openDeckView(this.app, file),
       })
     );
+    this.registerView(DECK_VIEW_TYPE, (leaf) => new DeckView(leaf, this.exporter));
     this.addCommand({
       id: "export-deck-pdf",
       name: t("command.export-pdf"),
@@ -94,6 +97,16 @@ export default class CardForgePlugin extends Plugin {
       checkCallback: (checking) => this.exportDeck("html", checking, true),
     });
 
+    this.addCommand({
+      id: "preview-deck",
+      name: t("command.preview-deck"),
+      checkCallback: (checking) => {
+        const file = this.app.workspace.getActiveFile();
+        if (!file || file.extension !== "md") return false;
+        if (!checking) void openDeckView(this.app, file);
+        return true;
+      },
+    });
     this.addCommand({
       id: "insert-empty-card",
       name: t("command.insert-empty"),
