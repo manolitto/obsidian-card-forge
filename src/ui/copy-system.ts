@@ -4,7 +4,7 @@ import { entriesAfterCopy, isSystemId } from "../settings/system-registry";
 import type { SystemEntry } from "../settings/types";
 import type { LoadedSystem } from "../systems/loader";
 import { notice } from "./export-run";
-import { namesSystem, rewriteSystemId } from "./rewrite-system-id";
+import { namesSystem, rewriteDeclaration, rewriteSystemId } from "./copy-rewrites";
 import { t } from "./strings";
 
 /*
@@ -14,10 +14,11 @@ import { t } from "./strings";
  * receiving the plugin's improvements — and it is self-contained, so the
  * reader can edit anything in it.
  *
- * The dialog proposes the original id. Keeping it switches the bundled
- * original off, since at most one enabled system may claim an id, and no
- * note is touched. Choosing a new id leaves both on and offers to rewrite
- * the notes naming the old one, after a confirmation naming their count.
+ * The dialog proposes a name of the reader's own — *My Dragonbane* — and
+ * the original id. Keeping the id switches the bundled original off,
+ * since at most one enabled system may claim an id, and no note is
+ * touched. Choosing a new id leaves both on and offers to rewrite the
+ * notes naming the old one, after a confirmation naming their count.
  */
 
 /** What the copy needs from the plugin: its settings and how to persist them. */
@@ -37,6 +38,7 @@ export function copySystemIntoVault(context: CopyContext, system: LoadedSystem):
 }
 
 class CopySystemModal extends Modal {
+  private name: string;
   private folder: string;
   private id: string;
 
@@ -45,6 +47,7 @@ class CopySystemModal extends Modal {
     private readonly system: LoadedSystem
   ) {
     super(context.app);
+    this.name = t("copy.name.default", { name: system.declaration.name });
     this.folder = `card-forge/${system.id}`;
     this.id = system.id;
   }
@@ -53,6 +56,12 @@ class CopySystemModal extends Modal {
     this.setTitle(t("copy.title", { name: this.system.declaration.name }));
     const { contentEl } = this;
     contentEl.createEl("p", { text: t("copy.intro") });
+    new Setting(contentEl)
+      .setName(t("copy.name"))
+      .setDesc(t("copy.name.desc"))
+      .addText((text) =>
+        text.setValue(this.name).onChange((value) => (this.name = value))
+      );
     new Setting(contentEl)
       .setName(t("copy.folder"))
       .addText((text) =>
@@ -75,6 +84,8 @@ class CopySystemModal extends Modal {
   }
 
   private async confirm(): Promise<void> {
+    // A cleared name means the original's.
+    const name = this.name.trim() || this.system.declaration.name;
     const folder = normalizePath(this.folder.trim());
     const id = this.id.trim().toLowerCase();
     if (!folder || !isSystemId(id)) {
@@ -87,7 +98,7 @@ class CopySystemModal extends Modal {
     }
     this.close();
     try {
-      await runCopy(this.context, this.system, folder, id);
+      await runCopy(this.context, this.system, folder, id, name);
     } catch (error) {
       notice(error instanceof Error ? error.message : String(error), 12000);
     }
@@ -98,16 +109,18 @@ async function runCopy(
   context: CopyContext,
   system: LoadedSystem,
   folder: string,
-  id: string
+  id: string,
+  name: string
 ): Promise<void> {
   const { app } = context;
   await createFolders(app, folder);
   for (const path of await system.source.listFiles()) {
     const target = `${folder}/${path}`;
     await createFolders(app, target.slice(0, target.lastIndexOf("/")));
-    if (path === system.source.document && id !== system.id) {
+    const renamed = id !== system.id || name !== system.declaration.name;
+    if (path === system.source.document && renamed) {
       const text = await system.source.readText(path);
-      await app.vault.create(target, text.replace(/^id\s*:.*$/m, `id: ${id}`));
+      await app.vault.create(target, rewriteDeclaration(text, id, name));
     } else {
       const bytes = await system.source.readBinary(path as SystemPath);
       await app.vault.createBinary(target, bytesToBuffer(bytes));

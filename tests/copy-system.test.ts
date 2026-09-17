@@ -6,14 +6,48 @@ import {
 } from "../src/settings/system-registry";
 import type { SystemEntry } from "../src/settings/types";
 import { SystemLibrary } from "../src/systems/library";
-import { namesSystem, rewriteSystemId } from "../src/ui/rewrite-system-id";
+import {
+  namesSystem,
+  rewriteDeclaration,
+  rewriteSystemId,
+} from "../src/ui/copy-rewrites";
 import { completeSystem, MemoryVault } from "./helpers/systems";
 
 /**
- * The pure parts of copying a bundled system into the vault: the note
- * rewrite that touches `system:` inside the two card fences and nothing
- * else, and the registry after a copy with the id kept or changed.
+ * The pure parts of copying a bundled system into the vault: the root
+ * document with the chosen id and name, the note rewrite that touches
+ * `system:` inside the two card fences and nothing else, and the registry
+ * after a copy with the id kept or changed.
  */
+
+describe("rewriteDeclaration", () => {
+  const DOC = "# The system\nid: dragonbane\nname: Dragonbane\nlanguages: [de]\n";
+
+  it("sets id and name in place, the name quoted", () => {
+    expect(rewriteDeclaration(DOC, "dragonbane-mine", "My Dragonbane")).toBe(
+      '# The system\nid: dragonbane-mine\nname: "My Dragonbane"\nlanguages: [de]\n'
+    );
+  });
+
+  it("adds name: under id: when the document leaves the name to the id", () => {
+    expect(rewriteDeclaration("id: demo\ncard-types: {}\n", "demo", "My Demo")).toBe(
+      'id: demo\nname: "My Demo"\ncard-types: {}\n'
+    );
+  });
+
+  it("keeps the document's line endings", () => {
+    const crlf = "id: demo\r\ncard-types: {}\r\n";
+    expect(rewriteDeclaration(crlf, "demo", "Mine")).toBe(
+      'id: demo\r\nname: "Mine"\r\ncard-types: {}\r\n'
+    );
+  });
+
+  it("keeps a colon or a hash in the name a name", () => {
+    expect(rewriteDeclaration(DOC, "dragonbane", "Dragonbane: mine #2")).toContain(
+      'name: "Dragonbane: mine #2"'
+    );
+  });
+});
 
 const NOTE = [
   "---",
