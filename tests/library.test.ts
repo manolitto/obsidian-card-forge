@@ -6,6 +6,7 @@ import { completeSystem, MemoryVault } from "./helpers/systems";
 const VAULT_ENTRY: SystemEntry = {
   type: "vault",
   id: "demo",
+  name: "Demo",
   path: "Systems/demo/game-system.yaml",
   active: true,
 };
@@ -89,6 +90,7 @@ describe("the one-enabled-per-id invariant", () => {
         {
           type: "vault",
           id: "simple",
+          name: "Simple",
           path: "Systems/simple/game-system.yaml",
           active: true,
         },
@@ -114,6 +116,7 @@ describe("the one-enabled-per-id invariant", () => {
         {
           type: "vault",
           id: "simple",
+          name: "Simple",
           path: "Systems/simple/game-system.yaml",
           active: true,
         },
@@ -165,6 +168,16 @@ describe("a bundled system", () => {
   });
 });
 
+describe("what an entry is called without loading it", () => {
+  it("is the manifest's name for a bundled entry and the entry's own for a vault one", () => {
+    const library = libraryWith([]);
+    expect(library.nameOf({ type: "bundled", id: "simple", active: false })).toBe(
+      "Simple"
+    );
+    expect(library.nameOf(VAULT_ENTRY)).toBe("Demo");
+  });
+});
+
 describe("inspecting a root document before registering it", () => {
   it("returns the id to store and no reports for a complete system", async () => {
     const vault = new MemoryVault();
@@ -172,6 +185,7 @@ describe("inspecting a root document before registering it", () => {
     const library = libraryWith([], vault);
     expect(await library.inspectVaultDocument("Systems/demo/game-system.yaml")).toEqual({
       id: "demo",
+      name: "Demo",
       messages: [],
     });
   });
@@ -185,6 +199,7 @@ describe("inspecting a root document before registering it", () => {
     const library = libraryWith([], vault);
     expect(await library.inspectVaultDocument("Systems/demo/demo.yml")).toEqual({
       id: "demo",
+      name: "Demo",
       messages: [],
     });
   });

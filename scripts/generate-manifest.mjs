@@ -83,6 +83,7 @@ function readSystem(listedPath) {
   const doc = load(source);
   const id = doc && typeof doc === "object" ? String(doc.id ?? "").trim() : "";
   if (!id) fail(`${listedPath} declares no id:`);
+  const name = String(doc.name ?? "").trim() || id;
 
   const dir = dirname(documentPath);
   const document = basename(documentPath);
@@ -95,7 +96,7 @@ function readSystem(listedPath) {
       ? { text: readFileSync(full, "utf-8") }
       : { base64: readFileSync(full).toString("base64") };
   }
-  return { id, document, dir, files, bytes };
+  return { id, name, document, dir, files, bytes };
 }
 
 const listed = readListing();
@@ -120,7 +121,7 @@ for (const system of systems) {
 const entries = systems
   .map(
     (system) =>
-      `  {\n    id: ${JSON.stringify(system.id)},\n    document: ${JSON.stringify(system.document)},\n    files: ${JSON.stringify(system.files, null, 2).replace(/\n/g, "\n    ")},\n  }`
+      `  {\n    id: ${JSON.stringify(system.id)},\n    name: ${JSON.stringify(system.name)},\n    document: ${JSON.stringify(system.document)},\n    files: ${JSON.stringify(system.files, null, 2).replace(/\n/g, "\n    ")},\n  }`
   )
   .join(",\n");
 
@@ -132,6 +133,8 @@ export type BundledFile = { text: string } | { base64: string };
 export interface BundledSystem {
   /** From the system's own root document. */
   id: string;
+  /** Likewise — what the settings show without loading the system. */
+  name: string;
   /** The root document's name, at the top of the folder — as the listing names it. */
   document: string;
   /** Every file in the system's folder, keyed by "/"-separated relative path. */

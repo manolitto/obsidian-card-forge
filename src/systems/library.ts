@@ -114,15 +114,22 @@ export class SystemLibrary {
     return dropped;
   }
 
+  /** What an entry is called, without loading it — the manifest's or the entry's own word. */
+  nameOf(entry: SystemEntry): string {
+    // `||`: a saved entry may predate the stored name; the id is still a name.
+    if (entry.type === "vault") return entry.name || entry.id;
+    return BUNDLED_SYSTEMS.find((system) => system.id === entry.id)?.name ?? entry.id;
+  }
+
   /**
    * Read and check a vault system by its root document without registering
    * it, so a settings dialog can show the verdict before an entry exists.
-   * The id is the one to store on the entry; it is absent when the file is
-   * no usable system.
+   * The id and name are the ones to store on the entry; both are absent
+   * when the file is no usable system.
    */
   async inspectVaultDocument(
     path: string
-  ): Promise<{ id?: string; messages: readonly string[] }> {
+  ): Promise<{ id?: string; name?: string; messages: readonly string[] }> {
     const diagnostics = collectDiagnostics();
     if (!/\.ya?ml$/i.test(path)) {
       diagnostics.warn(`${path}: a system's root document is a .yaml or .yml file`);
@@ -156,7 +163,11 @@ export class SystemLibrary {
       /* loadSystem reports it */
     }
     const system = await loadSystem(source, id ?? "", diagnostics);
-    return { id: system?.id, messages: diagnostics.messages };
+    return {
+      id: system?.id,
+      name: system?.declaration.name,
+      messages: diagnostics.messages,
+    };
   }
 
   private async loadFresh(id: string): Promise<LoadResult> {

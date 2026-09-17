@@ -13,6 +13,7 @@ const bundled = (id: string, active = true): SystemEntry => ({
 const vault = (id: string, path: string, active = true): SystemEntry => ({
   type: "vault",
   id,
+  name: id,
   path,
   active,
 });
