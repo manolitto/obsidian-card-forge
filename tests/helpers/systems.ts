@@ -15,7 +15,8 @@ export class MemorySource implements SystemSource {
 
   constructor(
     public files: Files,
-    readonly root = "memory"
+    readonly root = "memory",
+    readonly document = "game-system.yaml" as SystemPath
   ) {}
 
   async listFiles(): Promise<SystemPath[]> {

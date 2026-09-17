@@ -2,7 +2,7 @@ import { App, normalizePath, PluginSettingTab, Setting } from "obsidian";
 import type { PaperBackground } from "../definitions/deck-settings";
 import type CardForgePlugin from "../main";
 import { copySystemIntoVault } from "../ui/copy-system";
-import { FolderSuggest } from "../ui/folder-suggest";
+import { SystemFileSuggest } from "../ui/system-file-suggest";
 import { t } from "../ui/strings";
 import type { SystemEntry, UiLanguage } from "./types";
 
@@ -13,9 +13,9 @@ import type { SystemEntry, UiLanguage } from "./types";
  * switch, and under it every message loading it produced, in the library's
  * own words, so a duplicate id shows its error on both rows and a broken
  * vault system says what is wrong with it. A bundled row offers *Copy into
- * vault*; a vault row *Remove*. A vault system is added by folder, read
- * and checked on the spot, and either registered or refused with the
- * messages under the field.
+ * vault*; a vault row *Remove*. A vault system is added by its root
+ * document, read and checked on the spot, and either registered or refused
+ * with the messages under the field.
  */
 export class CardForgeSettingTab extends PluginSettingTab {
   constructor(
@@ -45,7 +45,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
     row.setDesc(
       entry.type === "bundled"
         ? t("settings.system.bundled")
-        : t("settings.system.folder", { path: entry.path })
+        : t("settings.system.file", { path: entry.path })
     );
     row.addToggle((toggle) =>
       toggle.setValue(entry.active).onChange(async (value) => {
@@ -95,14 +95,14 @@ export class CardForgeSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
           this.display();
         },
-        inspect: (folder) => this.plugin.systems.inspectVaultFolder(folder),
+        inspect: (path) => this.plugin.systems.inspectVaultDocument(path),
       },
       result.system
     );
   }
 
   private addField(parent: HTMLElement): void {
-    let folder = "";
+    let typed = "";
     const setting = new Setting(parent)
       .setName(t("settings.add.name"))
       .setDesc(t("settings.add.desc"));
@@ -110,8 +110,8 @@ export class CardForgeSettingTab extends PluginSettingTab {
     setting.addText((text) => {
       text
         .setPlaceholder(t("settings.add.placeholder"))
-        .onChange((value) => (folder = value));
-      new FolderSuggest(this.app, text.inputEl);
+        .onChange((value) => (typed = value));
+      new SystemFileSuggest(this.app, text.inputEl);
     });
     setting.addButton((button) =>
       button
@@ -119,9 +119,9 @@ export class CardForgeSettingTab extends PluginSettingTab {
         .setCta()
         .onClick(async () => {
           messages.empty();
-          const path = normalizePath(folder.trim());
+          const path = normalizePath(typed.trim());
           if (!path || path === "/") {
-            messages.createEl("li", { text: t("settings.add.no-folder") });
+            messages.createEl("li", { text: t("settings.add.no-file") });
             return;
           }
           if (
@@ -132,7 +132,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
             messages.createEl("li", { text: t("settings.add.already", { path }) });
             return;
           }
-          const verdict = await this.plugin.systems.inspectVaultFolder(path);
+          const verdict = await this.plugin.systems.inspectVaultDocument(path);
           if (!verdict.id) {
             for (const message of verdict.messages)
               messages.createEl("li", { text: message });

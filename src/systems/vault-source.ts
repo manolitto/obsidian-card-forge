@@ -16,21 +16,27 @@ export interface VaultFiles {
 }
 
 /**
- * A system the user keeps in a folder of their vault.
+ * A system the user keeps in their vault: a root document, and the folder
+ * around it.
  *
- * Native files only — `game-system.yaml`, `game-system.css`, `front.hbs` —
- * read as they are. Obsidian's explorer does not list these extensions, so
- * such a system is authored in an external editor; the trade is one read path
- * against two.
+ * Native files only — `dragonbane.yaml`, `dragonbane.css`, `front.hbs` —
+ * read as they are. Obsidian's explorer lists these extensions only with
+ * *Detect all file extensions* switched on, so such a system is authored
+ * there or in an external editor; the trade is one read path against two.
  */
 export class VaultSystemSource implements SystemSource {
   readonly kind = "vault";
+  readonly root: string;
+  readonly document: SystemPath;
 
-  /** @param root the system folder, vault-relative, without a trailing slash. */
+  /** @param documentPath the root document, vault-relative, inside a folder. */
   constructor(
-    readonly root: string,
+    documentPath: string,
     private readonly files: VaultFiles
-  ) {}
+  ) {
+    this.root = folderOf(documentPath);
+    this.document = basename(documentPath) as SystemPath;
+  }
 
   async listFiles(): Promise<SystemPath[]> {
     const out: string[] = [];
@@ -63,6 +69,12 @@ export class VaultSystemSource implements SystemSource {
     if (!(await this.files.exists(full))) throw new MissingFileError(this.root, path);
     return full;
   }
+}
+
+/** The folder holding a vault file — `""` for one at the vault root. */
+export function folderOf(path: string): string {
+  const slash = path.lastIndexOf("/");
+  return slash < 0 ? "" : path.slice(0, slash);
 }
 
 function basename(path: string): string {

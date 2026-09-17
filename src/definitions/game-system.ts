@@ -6,11 +6,13 @@ import { parsePropertyDefs, type PropertyDefsMap } from "./property-defs";
 import { parseTranslationTables, type TranslationTables } from "./translations";
 
 /**
- * A `game-system.yaml` document, taken apart.
+ * A system document, taken apart.
  *
- * This is the ROOT of the layer cake: the file that says what a system is made
- * of, and the only place a system's own definition layers come from. Everything
- * else in `src/definitions/` folds what this hands over.
+ * This is the ROOT of the layer cake: the one YAML file at the top of a
+ * system's folder that says what the system is made of, and the only place
+ * its own definition layers come from. Everything else in `src/definitions/`
+ * folds what this hands over. The file's name is the registration's
+ * business, not this module's.
  *
  * It stops exactly where loading begins. A declared file arrives here as the
  * string an author wrote — checked for shape, branded `SystemPath`, never
@@ -168,7 +170,7 @@ const CARD_TYPE_KEYS: readonly string[] = [
 ];
 
 /**
- * Take a `game-system.yaml` document — already parsed out of its YAML — apart.
+ * Take a system document — already parsed out of its YAML — apart.
  *
  * Returns `undefined` only when there is nothing to work with: no mapping, or
  * no `id:`. Everything else is reported and survived, because a system with one
@@ -179,7 +181,7 @@ export function parseSystemDeclaration(
   diagnostics: Diagnostics
 ): SystemDeclaration | undefined {
   if (!isMapping(raw)) {
-    diagnostics.warn("game-system.yaml must be a mapping; ignoring the system");
+    diagnostics.warn("the system document must be a mapping; ignoring the system");
     return undefined;
   }
 
@@ -187,7 +189,7 @@ export function parseSystemDeclaration(
     .trim()
     .toLowerCase();
   if (!id) {
-    diagnostics.warn("game-system.yaml declares no id:; ignoring the system");
+    diagnostics.warn("the system document declares no id:; ignoring the system");
     return undefined;
   }
 

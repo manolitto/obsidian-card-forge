@@ -10,11 +10,11 @@ export interface BundledSystemEntry {
   active: boolean;
 }
 
-/** A system the user registered from a folder in their vault. */
+/** A system the user registered from a root document in their vault. */
 export interface VaultSystemEntry {
   type: "vault";
   /**
-   * Id read from the folder's `game-system.yaml` when the system was registered.
+   * Id read from the root document when the system was registered.
    *
    * The yaml stays the authority — it is read again on load and a divergence is
    * reported, never silently accepted. The copy kept here is what lets the
@@ -23,7 +23,10 @@ export interface VaultSystemEntry {
    * still appear as a named, broken entry instead of vanishing.
    */
   id: string;
-  /** Vault-relative folder holding the system. */
+  /**
+   * Vault-relative path of the root document. The folder holding it is the
+   * system; the file's name is whatever the user gave it.
+   */
   path: string;
   active: boolean;
 }

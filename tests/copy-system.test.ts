@@ -96,12 +96,17 @@ describe("entriesAfterCopy", () => {
       [other, bundled],
       "dragonbane",
       "dragonbane",
-      "card-forge/dragonbane"
+      "card-forge/dragonbane/dragonbane.yaml"
     );
     expect(out).toEqual([
       other,
       { type: "bundled", id: "dragonbane", active: false },
-      { type: "vault", id: "dragonbane", path: "card-forge/dragonbane", active: true },
+      {
+        type: "vault",
+        id: "dragonbane",
+        path: "card-forge/dragonbane/dragonbane.yaml",
+        active: true,
+      },
     ]);
     expect(findDuplicateActiveIds(out)).toEqual([]);
   });
@@ -111,11 +116,16 @@ describe("entriesAfterCopy", () => {
       [bundled],
       "dragonbane",
       "dragonbane-mine",
-      "card-forge/mine"
+      "card-forge/mine/dragonbane.yaml"
     );
     expect(out).toEqual([
       bundled,
-      { type: "vault", id: "dragonbane-mine", path: "card-forge/mine", active: true },
+      {
+        type: "vault",
+        id: "dragonbane-mine",
+        path: "card-forge/mine/dragonbane.yaml",
+        active: true,
+      },
     ]);
     expect(findDuplicateActiveIds(out)).toEqual([]);
   });
@@ -151,7 +161,7 @@ describe("the library after a registry change", () => {
     const copy: SystemEntry = {
       type: "vault",
       id: "simple",
-      path: "Systems/simple",
+      path: "Systems/simple/game-system.yaml",
       active: true,
     };
 
