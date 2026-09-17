@@ -23,6 +23,15 @@ const en = {
   "command.insert-deck": "Insert deck block",
   "command.property-reference": "Show property reference",
 
+  // ── The in-note preview ─────────────────────────────────────────
+  "preview.laying-out": "Laying out…",
+  "preview.no-card": "This note yields no card.",
+  "preview.clipped":
+    "Content was cut at the smallest type size; the card prints as shown.",
+  "preview.step": "{index} / {count}",
+  "preview.previous": "Previous card",
+  "preview.next": "Next card",
+
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systems",
   "settings.systems.desc":
@@ -64,6 +73,15 @@ const de: Strings = {
   "command.insert-sample": "Beispielkarte einfügen",
   "command.insert-deck": "Deck-Block einfügen",
   "command.property-reference": "Eigenschaften-Referenz anzeigen",
+
+  // ── The in-note preview ─────────────────────────────────────────
+  "preview.laying-out": "Wird gesetzt…",
+  "preview.no-card": "Diese Notiz ergibt keine Karte.",
+  "preview.clipped":
+    "Der Inhalt wurde bei der kleinsten Schriftgröße abgeschnitten; die Karte wird so gedruckt.",
+  "preview.step": "{index} / {count}",
+  "preview.previous": "Vorige Karte",
+  "preview.next": "Nächste Karte",
 
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systeme",

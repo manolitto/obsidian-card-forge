@@ -3,12 +3,18 @@ import { DeckExporter, type ExportFormat } from "./export/exporter";
 import { CardForgeSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
 import { DEFAULT_SETTINGS, type CardForgeSettings } from "./settings/types";
+import { CardRenderer } from "./render/renderer";
+import { VaultImageSource } from "./render/vault-images";
 import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
+import { TemplateEngine } from "./templates/engine";
+import { cardBlockProcessor } from "./ui/card-block";
 import { resolveUiLanguage, setUiLanguage, t } from "./ui/strings";
 
 export default class CardForgePlugin extends Plugin {
   override settings: CardForgeSettings = { ...DEFAULT_SETTINGS };
   systems!: SystemLibrary;
+  /** One renderer for every surface — the preview, the deck view, the export. */
+  renderer!: CardRenderer;
   exporter!: DeckExporter;
 
   override async onload(): Promise<void> {
@@ -28,6 +34,20 @@ export default class CardForgePlugin extends Plugin {
       this.app.vault.on("rename", (file, oldPath) => {
         changed(file);
         this.systems.invalidate(oldPath);
+      })
+    );
+
+    this.renderer = new CardRenderer(
+      new TemplateEngine(),
+      new VaultImageSource(this.app)
+    );
+    this.registerMarkdownCodeBlockProcessor(
+      "card-forge",
+      cardBlockProcessor({
+        app: this.app,
+        systems: this.systems,
+        renderer: this.renderer,
+        previewHeight: () => this.settings.previewHeight,
       })
     );
 

@@ -4,3 +4,37 @@
  * Card CSS does NOT belong here: it lives in resources/base-card.css and
  * resources/systems/<system>/, and is loaded by the renderer.
  */
+
+/* ── The in-note preview ─────────────────────────────────────────── */
+
+.cf-card-block {
+  margin: var(--size-4-2) 0;
+}
+
+.cf-card-placeholder,
+.cf-card-empty {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  padding: var(--size-4-2) 0;
+}
+
+.cf-card-stepping {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-2);
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+}
+
+.cf-card-stepping button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.cf-card-diagnostics {
+  margin: var(--size-4-2) 0 0;
+  padding-left: var(--size-4-4);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+}
