@@ -7,6 +7,7 @@ import {
   type TAbstractFile,
 } from "obsidian";
 import { DeckExporter, type ExportFormat } from "./export/exporter";
+import { VaultDeckSource } from "./deck/vault-source";
 import { CardForgeSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
 import { DEFAULT_SETTINGS, type CardForgeSettings } from "./settings/types";
@@ -15,6 +16,9 @@ import { VaultImageSource } from "./render/vault-images";
 import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
 import { TemplateEngine } from "./templates/engine";
 import { cardBlockProcessor } from "./ui/card-block";
+import { deckBlockProcessor } from "./ui/deck-block";
+import { notice, runExport } from "./ui/export-run";
+import { buildDeckBlock } from "./ui/insert-deck";
 import { buildCardBlock, insertAtCursor, type InsertMode } from "./ui/insert-card";
 import { pickSystemAndCardType } from "./ui/pickers";
 import { PropertyReferenceModal } from "./ui/property-reference";
@@ -61,7 +65,24 @@ export default class CardForgePlugin extends Plugin {
       })
     );
 
-    this.exporter = new DeckExporter(this.app, this.systems, this.manifest.dir ?? "");
+    const source = new VaultDeckSource(this.app);
+    this.exporter = new DeckExporter(
+      this.app,
+      this.systems,
+      this.renderer,
+      source,
+      () => this.settings.paperBackground,
+      this.manifest.dir ?? ""
+    );
+    this.registerMarkdownCodeBlockProcessor(
+      "card-forge-deck",
+      deckBlockProcessor({
+        app: this.app,
+        systems: this.systems,
+        source,
+        exporter: this.exporter,
+      })
+    );
     this.addCommand({
       id: "export-deck-pdf",
       name: t("command.export-pdf"),
@@ -82,6 +103,11 @@ export default class CardForgePlugin extends Plugin {
       id: "insert-sample-card",
       name: t("command.insert-sample"),
       editorCallback: (editor) => void this.insertCard(editor, "sample"),
+    });
+    this.addCommand({
+      id: "insert-deck-block",
+      name: t("command.insert-deck"),
+      editorCallback: (editor) => void this.insertDeck(editor),
     });
     this.addCommand({
       id: "property-reference",
@@ -131,8 +157,26 @@ export default class CardForgePlugin extends Plugin {
   ): boolean {
     const file = this.app.workspace.getActiveFile();
     if (!available || !file || file.extension !== "md") return false;
-    if (!checking) void this.exporter.run(file, format);
+    if (!checking) {
+      const progress = notice(t("progress.reading"), 0);
+      void runExport(this.exporter, file, format, (message) =>
+        progress.setMessage(`Card Forge: ${message}`)
+      ).finally(() => progress.hide());
+    }
     return true;
+  }
+
+  private async insertDeck(editor: Editor): Promise<void> {
+    const picked = await pickSystemAndCardType(
+      this.app,
+      this.systems,
+      this.settings.systems
+    );
+    if (!picked) return;
+    insertAtCursor(
+      editor,
+      buildDeckBlock(picked.system.id, [picked.cardType.declaration.id], uiLanguage())
+    );
   }
 
   async loadSettings(): Promise<void> {

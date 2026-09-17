@@ -77,7 +77,8 @@ const TAG_KEYS = [
   "exclude-tags-all",
 ] as const;
 
-const SELECTION_KEYS: readonly string[] = [
+/** The keys that say which notes are the deck, in the order the block template writes them. */
+export const SELECTION_KEYS: readonly string[] = [
   "folder",
   "system",
   "card-type",

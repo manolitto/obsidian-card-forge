@@ -99,3 +99,43 @@
   gap: var(--size-4-2);
   margin-top: var(--size-4-4);
 }
+
+/* ── The deck block ──────────────────────────────────────────────── */
+
+.cf-deck-block {
+  margin: var(--size-4-2) 0;
+  padding: var(--size-4-3) var(--size-4-4);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.cf-deck-summary {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--size-2-1) var(--size-4-4);
+  margin: 0;
+  font-size: var(--font-ui-small);
+}
+
+.cf-deck-summary dt {
+  color: var(--text-muted);
+}
+
+.cf-deck-summary dd {
+  margin: 0;
+}
+
+.cf-deck-diagnostics {
+  margin: var(--size-4-2) 0 0;
+  padding-left: var(--size-4-4);
+  font-size: var(--font-ui-small);
+  color: var(--text-warning);
+}
+
+.cf-deck-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}

@@ -34,6 +34,8 @@ export interface Baseline {
   properties: PropertyDefsMap;
   cardSettings: CardSettings;
   deckSettings: DeckSettings;
+  /** The setting keys as the document writes them, for a template that shows the defaults. */
+  defaults: Record<string, unknown>;
   stylesheet: string;
 }
 
@@ -49,8 +51,10 @@ export function readBaseline(yaml: string, stylesheet: string): Baseline {
 
   const card: Record<string, unknown> = {};
   const deck: Record<string, unknown> = {};
+  const defaults: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(doc as Record<string, unknown>)) {
     if (key === "properties") continue;
+    defaults[key] = value;
     if (isCardSettingKey(key)) card[key] = value;
     else if (isDeckSettingKey(key)) deck[key] = value;
     else diagnostics.warn(`${key}: is neither a card setting nor a deck setting`);
@@ -62,6 +66,7 @@ export function readBaseline(yaml: string, stylesheet: string): Baseline {
       {},
     cardSettings: parseCardSettings(card, diagnostics),
     deckSettings: parseDeckSettings(deck, diagnostics),
+    defaults,
     stylesheet,
   };
   if (diagnostics.messages.length > 0) {

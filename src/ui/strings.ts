@@ -68,6 +68,52 @@ const en = {
   "card-key.language":
     "The language the card is printed in — which translation table its captions come from.",
 
+  // ── The deck block and the exports ──────────────────────────────
+  "deck.system": "System",
+  "deck.card-types": "Card types",
+  "deck.all-card-types": "all",
+  "deck.folder": "Folder",
+  "deck.root-folder": "the vault root",
+  "deck.notes": "Notes",
+  "deck.notes.count": "{count} notes",
+  "deck.notes.none": "no card note matches",
+  "deck.paper": "Paper",
+  "deck.card-size": "Card size",
+  "deck.preview": "Preview",
+  "deck.export-pdf": "Export PDF",
+  "deck.export-html": "Export HTML",
+  "progress.reading": "Reading the deck…",
+  "progress.rendering": "Rendering {done} / {total}…",
+  "progress.layout": "Laying out {done} / {total}…",
+  "progress.writing": "Writing {path}…",
+  "notice.exported": "{cards} cards on {pages} pages — {path}",
+  "notice.clipped": "Cut at the smallest type size: {names}",
+  "notice.warnings": "{count} warnings — see the developer console",
+
+  // ── The keys of the deck block, for the template it writes ──────
+  "deck-key.folder":
+    'The vault folder whose card notes are the deck. Default: the deck note\'s own folder; "" is the vault root.',
+  "deck-key.include-tags-all": "A note must carry every one of these tags.",
+  "deck-key.include-tags-any": "A note must carry at least one of these tags.",
+  "deck-key.exclude-tags-any": "A note carrying any one of these tags is left out.",
+  "deck-key.exclude-tags-all": "A note carrying every one of these tags is left out.",
+  "deck-key.card-languages":
+    "Only the cards that print in one of these languages. Default: every card.",
+  "deck-key.output-path":
+    "Where the exports go, with either extension. Default: beside the deck note, under its name.",
+  "deck-key.paper-size":
+    "A preset (A3, A4, A5, Letter, Legal) or `210 x 297 mm`; a preset alone lets the deck pick the orientation that holds more cards.",
+  "deck-key.page-margin": "Blank space around the card grid, in millimetres.",
+  "deck-key.duplex-flip":
+    "Which paper edge is the binding when printing duplex, so fronts and backs align: `long-edge` or `short-edge`.",
+  "deck-key.cut-marks":
+    "The alignment marks in the margins; the fields merge, so one can change alone.",
+  "deck-key.paper-background":
+    "`textured` prints the system's background pictures, `plain` leaves them out. Default: the plugin setting.",
+  "deck-key.folder-recursive": "Include the folder's subfolders.",
+  "deck-key.card-copies":
+    "Copies per card by note name, winning over a card's own `copies`: `[{ name: Wolf, copies: 3 }]`.",
+
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systems",
   "settings.systems.desc":
@@ -157,6 +203,52 @@ const de: Strings = {
   "card-key.language":
     "Die Sprache, in der die Karte gedruckt wird — aus welcher Übersetzungstabelle ihre Beschriftungen kommen.",
 
+  // ── The deck block and the exports ──────────────────────────────
+  "deck.system": "System",
+  "deck.card-types": "Kartentypen",
+  "deck.all-card-types": "alle",
+  "deck.folder": "Ordner",
+  "deck.root-folder": "die Vault-Wurzel",
+  "deck.notes": "Notizen",
+  "deck.notes.count": "{count} Notizen",
+  "deck.notes.none": "keine Kartennotiz passt",
+  "deck.paper": "Papier",
+  "deck.card-size": "Kartengröße",
+  "deck.preview": "Vorschau",
+  "deck.export-pdf": "PDF exportieren",
+  "deck.export-html": "HTML exportieren",
+  "progress.reading": "Deck wird gelesen…",
+  "progress.rendering": "Rendern {done} / {total}…",
+  "progress.layout": "Setzen {done} / {total}…",
+  "progress.writing": "Schreibe {path}…",
+  "notice.exported": "{cards} Karten auf {pages} Seiten — {path}",
+  "notice.clipped": "Bei der kleinsten Schriftgröße abgeschnitten: {names}",
+  "notice.warnings": "{count} Warnungen — siehe Entwicklerkonsole",
+
+  // ── The keys of the deck block, for the template it writes ──────
+  "deck-key.folder":
+    'Der Vault-Ordner, dessen Kartennotizen das Deck sind. Standard: der Ordner der Deck-Notiz; "" ist die Vault-Wurzel.',
+  "deck-key.include-tags-all": "Eine Notiz muss jedes dieser Tags tragen.",
+  "deck-key.include-tags-any": "Eine Notiz muss mindestens eines dieser Tags tragen.",
+  "deck-key.exclude-tags-any": "Eine Notiz mit einem dieser Tags bleibt draußen.",
+  "deck-key.exclude-tags-all": "Eine Notiz mit allen diesen Tags bleibt draußen.",
+  "deck-key.card-languages":
+    "Nur die Karten, die in einer dieser Sprachen gedruckt werden. Standard: jede Karte.",
+  "deck-key.output-path":
+    "Wohin die Exporte gehen, mit einer der beiden Endungen. Standard: neben der Deck-Notiz, unter ihrem Namen.",
+  "deck-key.paper-size":
+    "Ein Preset (A3, A4, A5, Letter, Legal) oder `210 x 297 mm`; ein Preset allein lässt das Deck die Ausrichtung wählen, die mehr Karten fasst.",
+  "deck-key.page-margin": "Rand um das Kartenraster, in Millimetern.",
+  "deck-key.duplex-flip":
+    "Welche Papierkante beim Duplexdruck die Bindung ist, damit Vorder- und Rückseiten übereinanderliegen: `long-edge` oder `short-edge`.",
+  "deck-key.cut-marks":
+    "Die Schnittmarken in den Rändern; die Felder verschmelzen, eines lässt sich allein ändern.",
+  "deck-key.paper-background":
+    "`textured` druckt die Hintergrundbilder des Systems, `plain` lässt sie weg. Standard: die Plugin-Einstellung.",
+  "deck-key.folder-recursive": "Die Unterordner des Ordners einschließen.",
+  "deck-key.card-copies":
+    "Kopien je Karte nach Notizname, vor dem eigenen `copies` der Karte: `[{ name: Wolf, copies: 3 }]`.",
+
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systeme",
   "settings.systems.desc":
@@ -223,7 +315,16 @@ export function uiLanguage(): ResolvedLanguage {
 
 /** The string for `key` in the current language, its `{placeholders}` filled from `params`. */
 export function t(key: StringKey, params?: Record<string, string | number>): string {
-  return fill(STRINGS[current][key], params);
+  return translate(current, key, params);
+}
+
+/** The same in a named language — for a pure builder that takes the language as an argument. */
+export function translate(
+  language: ResolvedLanguage,
+  key: StringKey,
+  params?: Record<string, string | number>
+): string {
+  return fill(STRINGS[language][key], params);
 }
 
 function fill(text: string, params?: Record<string, string | number>): string {
