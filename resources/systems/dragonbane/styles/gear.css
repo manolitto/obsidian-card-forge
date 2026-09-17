@@ -1,5 +1,5 @@
 /* ── Dragonbane — Ausrüstung (generic gear) card type ────────
-   The system's look — all styling in `game-system.css`. The `Art`
+   The system's look — all styling in `dragonbane.css`. The `Art`
    property drives the back caption plaque so one template serves
    Handelsware, Werkzeug, Kleidung, Lichtquelle, etc. */
 
@@ -33,7 +33,7 @@
 }
 
 /* 3 · Inside the stats box — the tightened row rhythm (halved row padding,
-      1.25 leading, no paragraph margin) lives in `game-system.css`, shared
+      1.25 leading, no paragraph margin) lives in `dragonbane.css`, shared
       with the roll-table cards so the two decks set their stat rows
       identically. Edit it there, not here. */
 

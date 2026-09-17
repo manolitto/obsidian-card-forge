@@ -1,5 +1,5 @@
 /* Dragonbane generic card. Builds on the shared dragonbane cascade in
-   ../game-system.css — only what this card-type does differently lives here, no
+   dragonbane.css — only what this card-type does differently lives here, no
    re-declaration of the parchment / plaque / title boilerplate. All sizes are
    relative (em / %), so the design holds at every card-size preset.
 
@@ -66,8 +66,8 @@
    `.cf-front-image-fill`, which this image is not (markdown flow content, not
    the body column's flex slot).
 
-   Dragonbane DOES declare a `card-image.hbs` (../../card-image.hbs), so a body
+   Dragonbane DOES declare a `card-image.hbs` partial, so a body
    picture is actually rendered through that partial and lands here as
    `.db-body-image` — the front illustration minus its flex-slot wrap, styled in
-   ../game-system.css. This rule is what any OTHER `<img>` in the body falls back
+   dragonbane.css. This rule is what any OTHER `<img>` in the body falls back
    to, and it stays because an author can still write raw `<img>` HTML. */

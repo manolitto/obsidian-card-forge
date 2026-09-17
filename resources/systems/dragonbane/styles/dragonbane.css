@@ -534,7 +534,7 @@
        clearance where the full one needed 0.445em. What does NOT scale is the
        roll-table category tag: it hangs a FIXED 0.45em up from the plaque's
        lower edge, and the 0.66em was tuned against a three-line title's
-       descenders clearing exactly that (see roll-table/card-type.css). Hence
+       descenders clearing exactly that (see roll-table.css). Hence
        the `:has()` below — it keys on the tag actually being present, which is
        the real reason, rather than on `.roll-table-card`, which is merely
        where that happens to be true today.
@@ -572,7 +572,7 @@
    `front-side-left` at system level, because "what is this called in the
    English rulebook" is the same question on a weapon as on a spell — and 73
    gear notes were already carrying an `Englisch:` that nothing rendered. These
-   rules lived in rule/card-type.css while only that card mapped the slot;
+   rules lived in rule.css while only that card mapped the slot;
    leaving them there after the property moved up is what made a gear card emit
    the div and show nothing.
 

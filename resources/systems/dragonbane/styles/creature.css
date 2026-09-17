@@ -10,7 +10,7 @@
    the GM note) simply never fire on a card that fills no such slot.
 
    Most styles come from the shared `dragonbane`
-   cascade in `game-system.css`.  Only the Monsterangriffe attack
+   cascade in `dragonbane.css`.  Only the Monsterangriffe attack
    table — which is unique to monsters — lives here. */
 
 /* ─── Attack table ───────────────────────────────────────────── */
@@ -18,7 +18,7 @@
 /* Attack table — Dragonbrew-style: brown horizontal rules,
    alternating row tint, small-caps headers + bold attack names. */
 /* The heading directly above belongs to this table (see `.db-section-heading` in
-   game-system.css, whose own bottom margin is the other half of the gap), so the
+   dragonbane.css, whose own bottom margin is the other half of the gap), so the
    two sit as close as the type allows: no top margin at all when the heading
    precedes it. Measured on a `large` face, the box gap between them falls from
    0.64 % to 0.29 % of the card height.
