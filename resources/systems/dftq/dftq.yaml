@@ -1,0 +1,58 @@
+id: dftq
+name: "Descended from the Queen"
+
+# The prompt card of a story game built on the Descended from the Queen
+# framework: a numbered deck, each card a heading at the top over a short
+# piece of text. White, no border, no ornament — the typeface is the
+# whole look. Cormorant Garamond. The framework is language-agnostic and
+# so is the system: it carries no captions, so both languages are
+# declared and a note says which it is in. The sample values are
+# invented.
+#
+# One card type, the prompt, on a tarot card. A table note prints one
+# prompt per row.
+languages: [en, de]
+
+stylesheet: styles/dftq.css
+
+card-size: tarot
+
+# A prompt is a few sentences and almost never spills; one that does
+# goes onto a further card, not the back, which is the deck's name.
+overflow-mode: extra-cards
+
+properties:
+  heading:
+    slot: front-heading
+    aliases: [number, card-number, card-title, kartennummer, nummer, nr, überschrift, ueberschrift]
+    description:
+      en: "The heading at the top of the front — the card's number, as written (\"17\", \"Q2\", \"Instructions 2\")."
+      de: "Die Überschrift oben auf der Vorderseite — die Nummer der Karte, wie geschrieben („17“, „Q2“)."
+    sample: "17"
+
+  description:
+    slot: front-text
+    aliases: [text, prompt, question, frage, body, beschreibung]
+    description:
+      en: "The prompt — the card's text, markdown."
+      de: "Der Prompt — der Text der Karte, Markdown."
+    sample:
+      en: "Whoever wants to may draw the first card."
+      de: "Wer möchte, darf die erste Karte ziehen."
+
+  game-name:
+    slot: back-title
+    aliases: [back-title, deck-title, game, spiel, rücktitel, ruecktitel]
+    description:
+      en: "The game's or the deck's name, centred on the back. Without one the back is white."
+      de: "Der Name des Spiels oder des Decks, mittig auf der Rückseite. Ohne ihn bleibt die Rückseite weiß."
+    sample:
+      en: "For the Court"
+      de: "Für den Hof"
+
+card-types:
+  # The heading over a short rule, the prompt lifted a little above the
+  # centre; the back the deck's name.
+  prompt:
+    front-template: templates/prompt-front.hbs
+    back-template: templates/back.hbs

@@ -1,0 +1,11 @@
+{{!--
+  Descended from the Queen — the back: the deck's name centred on white,
+  or nothing.
+
+    back-title   the game's or the deck's name
+--}}
+<div class="card-root card-back dftq prompt-card prompt-back">
+  {{#if (slot "back-title")}}
+  <div class="dftq-back-title"><span class="text-scalable">{{slot "back-title" plain=true}}</span></div>
+  {{/if}}
+</div>

@@ -17,3 +17,4 @@ systems:
   - sw/sw.yaml
   - troubleshooters/troubleshooters.yaml
   - 5e/5e.yaml
+  - dftq/dftq.yaml
