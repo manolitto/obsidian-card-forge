@@ -23,7 +23,7 @@ declare module "vitest/browser" {
 const POINTS_PER_MM = 72 / 25.4;
 const systems = { get: (id: string) => loadedSystem(id) };
 
-describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e"])(
+describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e", "mini-d20"])(
   "the %s deck prints",
   (system) => {
     it("to as many pages as it composed, on the paper it said", async () => {

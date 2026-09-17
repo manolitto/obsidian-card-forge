@@ -1,0 +1,46 @@
+{{!--
+  MINI D20 — the bestiary front: the rulebook's six-column stat block.
+
+    front-stat-1 … 6   TW TP RK RW BW A, captions from the translations
+    front-abilities    the special abilities, one line per entry
+--}}
+<div class="card-root card-front mini-d20 bestiary-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    <span class="cf-fill-1"></span>
+
+    <div class="mini-d20-stats mini-d20-bestiary-stats">
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-1"}}</div>
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-2"}}</div>
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-3"}}</div>
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-4"}}</div>
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-5"}}</div>
+      <div class="mini-d20-stat-h">{{slot-label "front-stat-6"}}</div>
+      <div class="mini-d20-stat-v">{{slot "front-stat-1" markdown=false}}</div>
+      <div class="mini-d20-stat-v">{{slot "front-stat-2" markdown=false}}</div>
+      <div class="mini-d20-stat-v">{{slot "front-stat-3" markdown=false}}</div>
+      <div class="mini-d20-stat-v">{{slot "front-stat-4" markdown=false}}</div>
+      <div class="mini-d20-stat-v">{{slot "front-stat-5" markdown=false}}</div>
+      <div class="mini-d20-stat-v mini-d20-stat-v-actions">{{slot "front-stat-6" markdown=false}}</div>
+    </div>
+
+    {{#if (slot "front-abilities" list=true)}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-abilities"}}</div>
+    <div class="mini-d20-prose">
+      {{#each (slot "front-abilities" list=true)}}<p>{{this}}</p>{{/each}}
+    </div>
+    {{/if}}
+
+    {{> flavour}}
+
+    <span class="cf-fill-2"></span>
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

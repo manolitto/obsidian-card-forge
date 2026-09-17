@@ -1,0 +1,77 @@
+/* ── MINI D20 — the generic card ────────────────────────────────────
+   The shared rules are in mini-d20.css. A free face: the header's red
+   rule and the footer's line appear only with something in them — the
+   template stamps `mini-d20-has-header` / `mini-d20-has-footer` on the
+   root — and a face with neither gets its edge insets from the content
+   column instead. */
+
+.card-root.mini-d20.generic-card .card-content-container::before {
+  display: none;
+}
+.card-root.mini-d20.generic-card.mini-d20-has-header .card-content-container::before {
+  display: block;
+}
+
+.card-root.mini-d20.generic-card .mini-d20-footer::before {
+  display: none;
+}
+.card-root.mini-d20.generic-card.mini-d20-has-footer .mini-d20-footer::before,
+.card-root.mini-d20.generic-card.cf-front-has-next .mini-d20-footer::before {
+  display: block;
+}
+
+.card-root.mini-d20.generic-card:not(.mini-d20-has-header) .card-content-container {
+  padding-top: calc(var(--card-height, 88mm) * 0.03);
+}
+.card-root.mini-d20.generic-card:not(.mini-d20-has-footer):not(.cf-front-has-next) .card-content-container {
+  padding-bottom: calc(var(--card-height, 88mm) * 0.05);
+}
+.card-root.mini-d20.generic-card:not(.mini-d20-has-footer):not(.cf-front-has-next) .mini-d20-footer {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* A subtitle without a label row above it sits right under the title. */
+.card-root.mini-d20.generic-card .mini-d20-generic-subtitle {
+  border-top: none;
+  padding: 0.15em 0 0;
+  font-size: 0.95em;
+}
+
+/* The body: block markdown, its `###` heads like the section captions. */
+.mini-d20-generic-body {
+  text-align: left;
+}
+.mini-d20-generic-body > :first-child {
+  margin-top: 0;
+}
+.mini-d20-generic-body > :last-child {
+  margin-bottom: 0;
+}
+.mini-d20-generic-body p {
+  margin: 0.35em 0;
+}
+.mini-d20-generic-body h3,
+.mini-d20-generic-body h4 {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mini-d20-ink);
+  text-align: center;
+  font-size: 0.9em;
+  margin: 0.5em 0 0.15em;
+}
+.mini-d20-generic-body ul,
+.mini-d20-generic-body ol {
+  margin: 0.2em 0;
+  padding-left: 1.2em;
+}
+.mini-d20-generic-body li {
+  margin: 0.1em 0;
+}
+
+/* A text back is a column like the front, not the centred wordmark back. */
+.card-root.mini-d20.generic-text-back {
+  align-items: stretch;
+  justify-content: flex-start;
+}

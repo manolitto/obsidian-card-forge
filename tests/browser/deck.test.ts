@@ -190,7 +190,7 @@ describe("buildDeck over the fixture folders", () => {
  * each cell's side, place and name, so a card that moved reads as one
  * line. `UPDATE_GOLDENS=1` rewrites them.
  */
-describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e"])(
+describe.each(["simple", "dragonbane", "eiserne-zeit", "pf2e", "mini-d20"])(
   "the %s deck composes",
   (system) => {
     it("as its composition golden says", async () => {

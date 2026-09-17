@@ -1,0 +1,41 @@
+{{!--
+  MINI D20 — the generic front: a free face with the typed cards' chrome
+  on demand.
+
+    front-icon-left, front-icon-right     any bundled icon, by its path
+    front-type-label, front-subtype       the small caps over the icons
+    front-title, front-tagline            the title and its subtitle
+    front-text                            the body, block markdown —
+                                          written in the block, or the
+                                          note's `## Vorderseite` section
+    front-footer                          the footer
+
+  The header and the footer's red line appear only with something in
+  them; the stylesheet keys on the two classes stamped on the root.
+--}}
+<div class="card-root card-front mini-d20 generic-card generic-front{{#if (or (slot "front-title") (slot "front-tagline") (slot "front-icon-left") (slot "front-icon-right") (slot "front-type-label") (slot "front-subtype"))}} mini-d20-has-header{{/if}}{{#if (slot "front-footer")}} mini-d20-has-footer{{/if}}">
+  {{#if (or (slot "front-title") (slot "front-tagline") (slot "front-icon-left") (slot "front-icon-right") (slot "front-type-label") (slot "front-subtype"))}}
+  <div class="card-header">
+    {{#if (slot "front-type-label")}}<span class="mini-d20-type-main">{{slot "front-type-label" plain=true}}</span>{{/if}}
+    {{#if (slot "front-subtype")}}<span class="mini-d20-type-sub">{{slot "front-subtype" plain=true}}</span>{{/if}}
+    <span class="mini-d20-icon mini-d20-icon-left">{{#if (slot "front-icon-left")}}{{asset (slot "front-icon-left" plain=true) inline=true}}{{/if}}</span>
+    {{#if (slot "front-title")}}
+    <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></span></div>
+    {{/if}}
+    <span class="mini-d20-icon mini-d20-icon-right">{{#if (slot "front-icon-right")}}{{asset (slot "front-icon-right" plain=true) inline=true}}{{/if}}</span>
+    {{#if (slot "front-tagline")}}
+    <div class="mini-d20-tagline{{#unless (or (slot "front-type-label") (slot "front-subtype"))}} mini-d20-generic-subtitle{{/unless}}">{{slot "front-tagline"}}</div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{#if (slot "front-text")}}
+    <div class="mini-d20-generic-body">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

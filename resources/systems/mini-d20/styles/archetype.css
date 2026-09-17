@@ -1,0 +1,37 @@
+/* ── MINI D20 — the archetype card ──────────────────────────────────
+   The shared rules are in mini-d20.css; the archetype adds its three
+   stat columns, the two-column skill list and the allowed-gear rows. */
+
+.mini-d20-archetype-stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+.mini-d20-archetype-stats .mini-d20-stat-v {
+  font-size: 0.95em;
+  padding: 0.1em 0.15em;
+  align-self: center;
+}
+
+/* Four columns — name, bonus, name, bonus — filled left to right, so the
+   list's odd entries land in the left half and the even ones in the right. */
+.mini-d20-archetype-skills {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content 1fr;
+  column-gap: 0.35em;
+  row-gap: 0.08em;
+  align-items: baseline;
+  margin: 0.1em 0 0.3em;
+  font-size: 0.9em;
+}
+.mini-d20-archetype-skill-name {
+  font-weight: 600;
+  color: var(--mini-d20-ink);
+}
+.mini-d20-archetype-skill-bonus {
+  font-weight: 800;
+  color: var(--mini-d20-ink);
+  margin-right: 0.25em;
+}
+
+.mini-d20-archetype-allowed {
+  border-top: 0.5pt solid var(--mini-d20-rule);
+}

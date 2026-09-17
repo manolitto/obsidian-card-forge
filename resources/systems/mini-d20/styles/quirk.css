@@ -1,0 +1,25 @@
+/* ── MINI D20 — the quirk card ──────────────────────────────────────
+   The shared rules are in mini-d20.css; the quirk adds the roll badge
+   that takes the right icon's place in the header: a white numeral on a
+   solid ink disc, an icon's footprint, a stadium for a range. */
+
+.mini-d20-roll {
+  box-sizing: border-box;
+  height: 2.2em;
+  min-width: 2.2em;
+  padding: 0 0.35em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--mini-d20-paper);
+  background-color: var(--mini-d20-ink);
+  border-radius: 999em;
+}
+.mini-d20-roll-num {
+  font-size: 1.45em;
+  line-height: 1;
+}

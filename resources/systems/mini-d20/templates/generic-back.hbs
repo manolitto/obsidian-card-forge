@@ -1,0 +1,51 @@
+{{!--
+  MINI D20 — the generic back. With a title, a subtitle, a body or a
+  footer it is a second text face like the front; with none of them it is
+  the wordmark back, and the note may still put an icon and a label above
+  and below the wordmark.
+
+    back-title, back-tagline, back-text, back-footer   the text face
+    back-icon-top, back-type-label,
+    back-icon-bottom, back-subtype                     the wordmark back
+--}}
+{{#if (or (slot "back-title") (slot "back-tagline") (slot "back-text") (slot "back-footer"))}}
+<div class="card-root card-back mini-d20 generic-card generic-back generic-text-back{{#if (or (slot "back-title") (slot "back-tagline"))}} mini-d20-has-header{{/if}}{{#if (slot "back-footer")}} mini-d20-has-footer{{/if}}">
+  {{#if (or (slot "back-title") (slot "back-tagline"))}}
+  <div class="card-header">
+    {{#if (slot "back-title")}}
+    <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "back-title" plain=true}}</span></span></div>
+    {{/if}}
+    {{#if (slot "back-tagline")}}
+    <div class="mini-d20-tagline mini-d20-generic-subtitle">{{slot "back-tagline"}}</div>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{#if (slot "back-text")}}
+    <div class="mini-d20-generic-body">{{slot "back-text" markdown="block"}}</div>
+    {{/if}}
+    </div>
+  </div>
+
+  <div class="card-footer mini-d20-footer">
+    {{#if (slot "back-footer")}}<div class="mini-d20-reference">{{slot "back-footer" plain=true}}</div>{{/if}}
+  </div>
+</div>
+{{else}}
+<div class="card-root card-back mini-d20 generic-card generic-back">
+  <div class="mini-d20-back-frame">
+    <div class="mini-d20-back-group mini-d20-back-group-top">
+      <div class="mini-d20-back-icon mini-d20-back-icon-top">{{#if (slot "back-icon-top")}}{{asset (slot "back-icon-top" plain=true) inline=true}}{{/if}}</div>
+      {{#if (slot "back-type-label")}}<div class="mini-d20-back-cardtype"><span class="text-scalable">{{slot "back-type-label" plain=true}}</span></div>{{/if}}
+    </div>
+    <div class="mini-d20-wordmark">{{> wordmark}}</div>
+    <div class="mini-d20-back-tagline">{{t "back-tagline"}}</div>
+    <div class="mini-d20-back-group mini-d20-back-group-bottom">
+      <div class="mini-d20-back-icon mini-d20-back-icon-bottom">{{#if (slot "back-icon-bottom")}}{{asset (slot "back-icon-bottom" plain=true) inline=true}}{{/if}}</div>
+      {{#if (slot "back-subtype")}}<div class="mini-d20-back-subtype"><span class="text-scalable">{{slot "back-subtype" plain=true}}</span></div>{{/if}}
+    </div>
+  </div>
+</div>
+{{/if}}

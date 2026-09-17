@@ -1,0 +1,47 @@
+{{!--
+  MINI D20 — the equipment front.
+
+    front-style, front-damage, front-reach,
+    front-ac-modifier, front-price   a label / value block; a weapon fills
+                                     the damage and the reach, armour the
+                                     modifier, everything a price
+    front-effect                     what a general item or an artefact does
+    front-notes                      a note, led by its caption
+--}}
+<div class="card-root card-front mini-d20 equipment-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (or (slot "front-style") (slot "front-damage") (slot "front-reach") (slot "front-ac-modifier") (slot "front-price"))}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-rows mini-d20-equipment-stats">
+      {{#if (slot "front-style")}}<div class="mini-d20-row-label">{{slot-label "front-style"}}</div><div class="mini-d20-row-value">{{slot "front-style" markdown=false}}</div>{{/if}}
+      {{#if (slot "front-damage")}}<div class="mini-d20-row-label">{{slot-label "front-damage"}}</div><div class="mini-d20-row-value">{{slot "front-damage" markdown=false}}</div>{{/if}}
+      {{#if (slot "front-reach")}}<div class="mini-d20-row-label">{{slot-label "front-reach"}}</div><div class="mini-d20-row-value">{{slot "front-reach" markdown=false}}</div>{{/if}}
+      {{#if (slot "front-ac-modifier")}}<div class="mini-d20-row-label">{{slot-label "front-ac-modifier"}}</div><div class="mini-d20-row-value">{{slot "front-ac-modifier" markdown=false}}</div>{{/if}}
+      {{#if (slot "front-price")}}<div class="mini-d20-row-label">{{slot-label "front-price"}}</div><div class="mini-d20-row-value">{{slot "front-price" markdown=false}}</div>{{/if}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-effect")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-effect"}}</div>
+    <div class="mini-d20-prose">{{slot "front-effect" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-notes")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <p class="mini-d20-trait"><span class="mini-d20-trait-name">{{slot-label "front-notes"}}</span>{{slot "front-notes"}}</p>
+    {{/if}}
+
+    {{> flavour}}
+
+    <span class="cf-fill-2"></span>
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

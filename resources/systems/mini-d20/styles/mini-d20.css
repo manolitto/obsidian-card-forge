@@ -1,0 +1,548 @@
+/* ── MINI D20 — the system stylesheet ────────────────────────────────
+   Modelled on the MINI D20 rulebook: white paper, black ink, a brick-red
+   hairline under table heads and along the card's foot, the stacked red
+   "MiNI / D20" wordmark on the back. Merriweather for the text — the
+   book's face, semi-bold as its regular — and a wedge-serif display face
+   for the titles, outlined and with a hard offset shadow for the engraved
+   look. No ornament beyond that: the book has none.
+
+   Every rule here serves all eight card types; what one card type adds
+   lives in its own stylesheet. Sizes are `em` and `%` throughout. */
+
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+
+/* Merriweather — a variable face in both styles, so one file serves the
+   semi-bold body and the black emphasis. OFL, fonts/merriweather-OFL.txt. */
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/merriweather-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/merriweather-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/merriweather-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Merriweather";
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/merriweather-italic-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Wellfleet — the wedge-serif display face of the titles and the
+   wordmark. OFL, fonts/wellfleet-OFL.txt. */
+@font-face {
+  font-family: "Wellfleet";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/wellfleet-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Wellfleet";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/wellfleet-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.mini-d20 {
+  /* Three inks: white paper, black, and the brick red of the book's rules.
+     The brighter crimson is the cover wordmark's, and the back's. */
+  --mini-d20-paper: #ffffff;
+  --mini-d20-ink: #000000;
+  --mini-d20-ink-soft: #3a3a3a;
+  --mini-d20-rule: #8e1410;
+  --mini-d20-wordmark-red: #cd1719;
+
+  --mini-d20-font-body: "Merriweather", serif;
+  --mini-d20-font-display: "Wellfleet", serif;
+
+  /* The type budget: the body follows the card's width — 2.85 mm on a
+     poker card — between a floor and a ceiling; the title likewise. */
+  --card-font-size-min: 2.3mm;
+  --card-font-size-max: 3mm;
+  --card-font-size-title-min: 3.6mm;
+  --card-font-size-title-max: 6.5mm;
+  --mini-d20-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 63mm) * 0.0825), var(--card-font-size-title-max));
+
+  background-color: var(--mini-d20-paper);
+  color: var(--mini-d20-ink);
+  font-family: var(--mini-d20-font-body);
+  /* The book sets Merriweather semi-bold as its regular. */
+  font-weight: 600;
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 63mm) * 0.0452), var(--card-font-size-max));
+  line-height: 1.22;
+  overflow-wrap: break-word;
+}
+
+/* Bold on a semi-bold body is the black weight — a real cut of the
+   variable face, in the PDF as on screen. */
+.card-root.mini-d20 strong,
+.card-root.mini-d20 b {
+  font-weight: 900;
+}
+
+/* The content column, inset 5 % at the sides like the back's frame. */
+.card-root.mini-d20 .card-content-container {
+  padding: 0 5%;
+}
+
+/* ── The header: labels over icons, the title between ──────────────── */
+
+/* A grid of three columns: the side columns are exactly an icon wide, so
+   the title column is centred whatever the labels' widths; a label wider
+   than its column overflows inward across the empty middle of its row and
+   never moves the title. Row 1 the two labels, row 2 the icons and the
+   title, row 3 the tagline. The title grows downward when it wraps, away
+   from the labels. */
+.card-root.mini-d20 .card-header {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr) 2.2em;
+  align-items: start;
+  column-gap: 0.5em;
+  row-gap: 0.1em;
+  padding: calc(var(--card-height, 88mm) * 0.03) 5% 0;
+}
+
+/* The two icons, row 2: the card type's own at the left in full ink, the
+   derived one at the right a shade softer. Inline SVGs filled with
+   `currentColor`; an empty span collapses. */
+.mini-d20-icon {
+  width: 2.2em;
+  height: 2.2em;
+  padding-bottom: 0.2em;
+  color: var(--mini-d20-ink-soft);
+}
+.mini-d20-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+.mini-d20-icon:empty {
+  display: none;
+}
+.mini-d20-icon-left {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: start;
+  color: var(--mini-d20-ink);
+}
+.mini-d20-icon-right {
+  grid-column: 3;
+  grid-row: 2;
+  justify-self: end;
+}
+
+/* Row 1: the card type's label at the left, the sub-type at the right,
+   in spaced small caps. */
+.card-root.mini-d20 .mini-d20-type-main,
+.card-root.mini-d20 .mini-d20-type-sub {
+  grid-row: 1;
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.18em;
+  font-size: 0.85em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  overflow: visible;
+}
+.card-root.mini-d20 .mini-d20-type-main {
+  grid-column: 1;
+  justify-self: start;
+  color: var(--mini-d20-ink);
+}
+.card-root.mini-d20 .mini-d20-type-sub {
+  grid-column: 3;
+  justify-self: end;
+  color: var(--mini-d20-ink-soft);
+}
+
+/* The red hairline under the whole header, drawn on the content column so
+   the padding gives it the 5 % inset. */
+.card-root.mini-d20 .card-content-container::before {
+  content: "";
+  display: block;
+  border-top: 0.5pt solid var(--mini-d20-rule);
+  margin-bottom: 0.2em;
+}
+
+/* A first block that carries its own top rule would double the one above. */
+.card-root.mini-d20 .card-body-scalable > :first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* Row 3: the motto, set off by a faint rule above; part of the card's
+   opening, so not on a continuation face — nor the label row. */
+.card-root.mini-d20 .mini-d20-tagline {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--mini-d20-ink-soft);
+  text-align: center;
+  font-size: 0.85em;
+  margin: 0;
+  padding: 0.3em 0 0.45em;
+  border-top: 0.5pt solid color-mix(in srgb, var(--mini-d20-rule) 28%, transparent);
+}
+.card-root.mini-d20.cf-front-continued .mini-d20-tagline,
+.card-root.mini-d20.cf-front-continued .mini-d20-type-main,
+.card-root.mini-d20.cf-front-continued .mini-d20-type-sub {
+  display: none;
+}
+
+/* The title, row 2 between the icons: outlined display caps on white with
+   a hard offset shadow — the book's chapter banners. At least an icon's
+   height, so a one-line title centres against the icons. */
+.mini-d20-title-strip {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  min-height: 2.2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+  margin: 0;
+}
+.mini-d20-title {
+  font-family: var(--mini-d20-font-display);
+  font-weight: 400;
+  color: var(--mini-d20-paper);
+  -webkit-text-stroke: 0.045em var(--mini-d20-ink);
+  text-shadow: 0.018em 0.018em 0 var(--mini-d20-ink);
+  font-size: var(--mini-d20-font-size-title);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.mini-d20-title .cf-overflow-counter {
+  font-family: var(--mini-d20-font-body);
+  font-weight: 600;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--mini-d20-ink-soft);
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+/* ── The body's furniture ──────────────────────────────────────────── */
+
+/* A section caption: spaced capitals, centred. */
+.mini-d20-subheader {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mini-d20-ink);
+  font-size: 0.85em;
+  text-align: center;
+  margin: 0.4em 0 0.15em;
+}
+
+/* Running text: the rule of an ability, a creature's abilities, an item's
+   effect, one paragraph per entry. */
+.mini-d20-prose {
+  font-weight: 600;
+  color: var(--mini-d20-ink);
+  margin: 0.25em 0;
+  text-align: left;
+}
+.mini-d20-prose p {
+  margin: 0.15em 0;
+}
+.mini-d20-prose ul {
+  margin: 0.1em 0 0.1em 1em;
+  padding: 0;
+}
+.mini-d20-prose li {
+  margin: 0.05em 0;
+}
+
+/* A stat block: a row of captions over a row of values, the red hairline
+   between them. */
+.mini-d20-stats {
+  display: grid;
+  align-items: center;
+  row-gap: 0.1em;
+  margin: 0.2em 0 0.35em;
+}
+.mini-d20-stat-h {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  text-align: center;
+  color: var(--mini-d20-ink);
+  padding: 0.08em 0.15em;
+  border-bottom: 0.5pt solid var(--mini-d20-rule);
+}
+.mini-d20-stat-v {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--mini-d20-ink);
+  padding: 0 0.15em;
+  text-align: center;
+  align-self: start;
+  line-height: 1.15;
+}
+
+/* Labelled rows: a bold label column and its values. */
+.mini-d20-rows {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.6em;
+  row-gap: 0.08em;
+  margin: 0.2em 0 0.3em;
+  padding-top: 0.18em;
+}
+.mini-d20-row-label {
+  font-weight: 800;
+  color: var(--mini-d20-ink);
+  font-size: 0.9em;
+}
+.mini-d20-row-value {
+  font-weight: 600;
+  color: var(--mini-d20-ink);
+  font-size: 0.9em;
+}
+
+/* The pills an ability or a people wears. */
+.mini-d20-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25em 0.3em;
+  margin: 0.15em 0 0.35em;
+}
+.mini-d20-tag {
+  display: inline-block;
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  color: var(--mini-d20-ink);
+  background-color: var(--mini-d20-paper);
+  font-size: 0.72em;
+  line-height: 1;
+  padding: 0.28em 0.7em;
+  border: 0.08em solid var(--mini-d20-ink);
+  border-radius: 999em;
+  white-space: nowrap;
+}
+
+/* A bold caption leading a line — a note on a piece of equipment. */
+.mini-d20-trait {
+  margin: 0.15em 0;
+  text-indent: -0.6em;
+  padding-left: 0.6em;
+}
+.mini-d20-trait-name {
+  font-weight: 800;
+  color: var(--mini-d20-ink);
+}
+.mini-d20-trait-name::after {
+  content: ": ";
+}
+
+/* The picture: the body column's flexible seat, uncropped, between a
+   floor of 15 % and a ceiling of half the card. */
+.mini-d20-image {
+  display: block;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: calc(var(--card-height, 88mm) * 0.15);
+  max-height: calc(var(--card-height, 88mm) * 0.5);
+  object-fit: contain;
+  margin: 0.2em 0 0.3em;
+}
+
+/* The flavour line: italic, soft, anchored at the foot of the body by its
+   automatic top margin — except on a continuation face, where the tail
+   should start at the top. */
+.mini-d20-flavour {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--mini-d20-ink-soft);
+  margin: auto 0 0.15em;
+  text-align: left;
+  display: block;
+}
+.cf-body-continued .mini-d20-flavour {
+  margin-top: 0;
+}
+
+/* ── The footer ────────────────────────────────────────────────────── */
+
+/* The red line, the reference under it at the right, the bottom inset
+   matching the back's frame. On every front, so the arrow has its place. */
+.mini-d20-footer {
+  --mini-d20-footer-bar-top: 0.5em;
+  position: relative;
+  margin: 0 5%;
+  padding-top: calc(var(--mini-d20-footer-bar-top) + 0.3em);
+  padding-bottom: calc(var(--card-height, 88mm) * 0.05);
+  display: flex;
+  justify-content: flex-end;
+}
+.mini-d20-footer::before {
+  content: "";
+  position: absolute;
+  top: var(--mini-d20-footer-bar-top);
+  left: 0;
+  right: 0;
+  border-top: 0.5pt solid var(--mini-d20-rule);
+}
+.mini-d20-reference {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.72em;
+  color: var(--mini-d20-ink-soft);
+  white-space: nowrap;
+}
+
+/* The "continues" arrow sits on the line at its right end, shown only on
+   a front another front follows; the line then stops short of it. */
+.mini-d20-continues {
+  display: none;
+  position: absolute;
+  top: var(--mini-d20-footer-bar-top);
+  right: 0;
+  transform: translateY(-50%);
+  margin: 0;
+  font-weight: 800;
+  font-size: 0.95em;
+  line-height: 1;
+  color: var(--mini-d20-rule);
+}
+.card-root.mini-d20.cf-front-has-next .mini-d20-continues {
+  display: block;
+}
+.card-root.mini-d20.cf-front-has-next .mini-d20-footer::before {
+  right: 1.4em;
+}
+
+/* ── The wordmark back ─────────────────────────────────────────────── */
+
+.card-root.mini-d20.card-back {
+  background-color: var(--mini-d20-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-d20-back-frame {
+  position: absolute;
+  inset: 5%;
+  border: 0.6pt solid var(--mini-d20-rule);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.6em;
+}
+
+/* The two icons, each centred in its half of the free space with its
+   label under it: the card type's above the wordmark, the derived one
+   below the tagline. */
+.mini-d20-back-group {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+}
+.mini-d20-back-icon {
+  color: var(--mini-d20-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mini-d20-back-icon svg {
+  display: block;
+  width: 3.6em;
+  height: 3.6em;
+  fill: currentColor;
+}
+.mini-d20-back-icon-bottom {
+  color: var(--mini-d20-ink-soft);
+}
+.mini-d20-back-cardtype {
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.22em;
+  color: var(--mini-d20-ink);
+  font-size: 1.2em;
+  text-align: center;
+  text-transform: lowercase;
+}
+.mini-d20-back-subtype {
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.22em;
+  color: var(--mini-d20-ink-soft);
+  font-size: 1em;
+  text-align: center;
+  text-transform: lowercase;
+}
+.mini-d20-back-tagline {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mini-d20-ink-soft);
+  font-size: 0.6em;
+  text-align: center;
+  margin-top: 0.2em;
+}
+
+/* The wordmark: two lines in the display face, red with a black outline
+   and a hard shadow, the second line set in — the cover's stack. */
+.mini-d20-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 0.88;
+}
+.mini-d20-wordmark-line {
+  font-family: var(--mini-d20-font-display);
+  font-weight: 400;
+  font-size: 3.6em;
+  color: var(--mini-d20-wordmark-red);
+  -webkit-text-stroke: 0.04em var(--mini-d20-ink);
+  text-shadow: 0.025em 0.025em 0 var(--mini-d20-ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 0.88;
+}
+.mini-d20-wordmark-line-2 {
+  margin-left: 0.55em;
+}

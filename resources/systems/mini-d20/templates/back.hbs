@@ -1,0 +1,27 @@
+{{!--
+  MINI D20 — the back of the six typed card types.
+
+  A hairline frame; the card type's icon with its label above the
+  wordmark, the tagline under it, and below that the icon the front's
+  right corner derived, with the sub-type under it.
+
+    back-icon-top      the card type's own icon — the same property as the
+                       front's left icon
+    back-icon-bottom   derived through the card type's classifier, as the
+                       front's right icon is
+    back-subtype       the archetype, the category, the kind
+--}}
+<div class="card-root card-back mini-d20 {{card-type}}-card {{card-type}}-back">
+  <div class="mini-d20-back-frame">
+    <div class="mini-d20-back-group mini-d20-back-group-top">
+      <div class="mini-d20-back-icon mini-d20-back-icon-top">{{#if (slot "back-icon-top")}}{{asset (slot "back-icon-top" plain=true) inline=true}}{{/if}}</div>
+      <div class="mini-d20-back-cardtype"><span class="text-scalable">{{t "back-label"}}</span></div>
+    </div>
+    <div class="mini-d20-wordmark">{{> wordmark}}</div>
+    <div class="mini-d20-back-tagline">{{t "back-tagline"}}</div>
+    <div class="mini-d20-back-group mini-d20-back-group-bottom">
+      <div class="mini-d20-back-icon mini-d20-back-icon-bottom">{{#if (slot "back-icon-bottom")}}{{#if (slot-class "back-icon-bottom")}}{{asset (slot-class "back-icon-bottom") inline=true}}{{/if}}{{/if}}</div>
+      {{#if (slot "back-subtype")}}<div class="mini-d20-back-subtype"><span class="text-scalable">{{slot "back-subtype" plain=true}}</span></div>{{/if}}
+    </div>
+  </div>
+</div>

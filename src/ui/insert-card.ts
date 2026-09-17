@@ -50,7 +50,9 @@ export function buildCardBlock(
       lines.push(`  ${key}:`);
       continue;
     }
-    const sample = propertySample(def, language);
+    // A property with a default and no sample is answered already; the
+    // default written out is the truer example.
+    const sample = propertySample(def, language) ?? def.default;
     if (sample === undefined) lines.push(`  ${key}: # ${t("insert.no-sample")}`);
     else lines.push(...yamlLines(key, sample));
   }

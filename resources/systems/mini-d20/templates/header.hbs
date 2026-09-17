@@ -1,0 +1,33 @@
+{{!--
+  MINI D20 — the header of the six typed fronts.
+
+  A three-column grid: the card type's label over its icon at the left,
+  the sub-type over its icon at the right, the name between the icons.
+
+    front-icon-left     the card type's own icon — a path, preset per type
+    front-icon-right    DERIVED: the place holds the archetype, the
+                        category, the kind, the people's name, and the card
+                        type's classifier turns it into an icon's path
+    front-roll          a quirk's roll, as a badge where the right icon is
+    front-title         the name, in outlined display caps
+    front-subtype       the small caps under the right icon
+    front-tagline       an italic motto under the row
+
+  An icon is the SVG itself, inline, so it takes the ink colour. A place
+  without a value, or a value the classifier has no icon for, leaves its
+  span empty and the stylesheet collapses it.
+--}}
+<div class="card-header">
+  <span class="mini-d20-type-main">{{t "card-type-label"}}</span>
+  {{#if (slot "front-subtype")}}<span class="mini-d20-type-sub">{{slot "front-subtype" plain=true}}</span>{{/if}}
+  <span class="mini-d20-icon mini-d20-icon-left">{{#if (slot "front-icon-left")}}{{asset (slot "front-icon-left" plain=true) inline=true}}{{/if}}</span>
+  <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></span></div>
+  {{#if (slot "front-roll")}}
+  <span class="mini-d20-roll mini-d20-icon-right"><span class="mini-d20-roll-num">{{slot "front-roll" plain=true}}</span></span>
+  {{else}}
+  <span class="mini-d20-icon mini-d20-icon-right">{{#if (slot "front-icon-right")}}{{#if (slot-class "front-icon-right")}}{{asset (slot-class "front-icon-right") inline=true}}{{/if}}{{/if}}</span>
+  {{/if}}
+  {{#if (slot "front-tagline")}}
+  <div class="mini-d20-tagline">{{slot "front-tagline"}}</div>
+  {{/if}}
+</div>

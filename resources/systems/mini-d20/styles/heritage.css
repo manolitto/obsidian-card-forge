@@ -1,0 +1,27 @@
+/* ── MINI D20 — the heritage card ───────────────────────────────────
+   The shared rules are in mini-d20.css; the heritage adds the table of
+   example names: three columns under a red hairline, the last name's
+   wider so a row stays on one line. */
+
+.mini-d20-heritage-names {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2.3fr;
+  align-items: baseline;
+  margin: 0.2em 0 0.1em;
+}
+.mini-d20-heritage-name-h {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.78em;
+  text-align: center;
+  color: var(--mini-d20-ink);
+  padding: 0.08em 0.15em;
+  border-bottom: 0.5pt solid var(--mini-d20-rule);
+}
+.mini-d20-heritage-name-v {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--mini-d20-ink);
+  padding: 0.08em 0.15em;
+  text-align: center;
+}

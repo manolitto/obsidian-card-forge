@@ -1,0 +1,12 @@
+{{!--
+  MINI D20 — the foot of every front: the brick-red line, the reference
+  under it at the right, and the arrow that shows only on a front another
+  front follows. Rendered on every front, so the arrow has its place on a
+  continuation face.
+
+    front-footer   the source reference
+--}}
+<div class="card-footer mini-d20-footer">
+  {{#if (slot "front-footer")}}<div class="mini-d20-reference">{{slot "front-footer" plain=true}}</div>{{/if}}
+  <span class="mini-d20-continues">→</span>
+</div>

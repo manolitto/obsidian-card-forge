@@ -1,0 +1,44 @@
+{{!--
+  MINI D20 — the heritage front.
+
+    front-tags     the pills
+    front-effect   the people's trait, under its caption
+    front-names    example names — rows of male, female and lastname, as a
+                   three-column table under its caption
+--}}
+<div class="card-root card-front mini-d20 heritage-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> tags}}
+
+    {{#if (slot "front-effect")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-effect"}}</div>
+    <div class="mini-d20-prose">{{slot "front-effect" markdown="block"}}</div>
+    {{/if}}
+
+    {{#if (slot "front-names" list=true)}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-names"}}</div>
+    <div class="mini-d20-heritage-names">
+      <div class="mini-d20-heritage-name-h">{{t "front-names-male-label"}}</div>
+      <div class="mini-d20-heritage-name-h">{{t "front-names-female-label"}}</div>
+      <div class="mini-d20-heritage-name-h">{{t "front-names-lastname-label"}}</div>
+      {{#each (slot "front-names" list=true)}}
+      <div class="mini-d20-heritage-name-v">{{male}}</div>
+      <div class="mini-d20-heritage-name-v">{{female}}</div>
+      <div class="mini-d20-heritage-name-v">{{lastname}}</div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{> flavour}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

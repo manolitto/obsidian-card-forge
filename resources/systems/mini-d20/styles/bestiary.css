@@ -1,0 +1,11 @@
+/* ── MINI D20 — the bestiary card ───────────────────────────────────
+   The shared rules are in mini-d20.css; the bestiary adds its stat block:
+   five narrow numeric columns and a wider one for the actions, which may
+   wrap. */
+
+.mini-d20-bestiary-stats {
+  grid-template-columns: repeat(5, minmax(min-content, 1fr)) minmax(min-content, 2.4fr);
+}
+.mini-d20-stat-v-actions {
+  white-space: normal;
+}

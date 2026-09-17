@@ -1,0 +1,8 @@
+{{!--
+  MINI D20 — the row of pills an ability or a people carries.
+
+    front-tags   a list; each entry one stadium-shaped pill
+--}}
+{{#if (slot "front-tags" list=true)}}
+<div class="mini-d20-tags">{{#each (slot "front-tags" list=true plain=true)}}<span class="mini-d20-tag">{{this}}</span>{{/each}}</div>
+{{/if}}
