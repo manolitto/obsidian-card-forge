@@ -1,0 +1,22 @@
+{{!--
+  The One Ring — the back of both card types.
+
+    back-image   the picture, edge to edge, the name over its foot
+    back-title   the name on the picture
+
+  Without a picture: the ornament on a parchment gradient, the card
+  type's label under it.
+--}}
+<div class="card-root card-back tor2e {{card-type}}-card {{card-type}}-back">
+  {{#if (slot "back-image")}}
+  <div class="tor-back tor-back-picture">
+    <img class="tor-back-image" src="{{slot "back-image" image=true}}" alt="" />
+    {{#if (slot "back-title")}}<div class="tor-back-overlay"><div class="tor-back-name"><span class="text-scalable">{{slot "back-title" plain=true}}</span></div></div>{{/if}}
+  </div>
+  {{else}}
+  <div class="tor-back tor-back-plain">
+    <div class="tor-back-inner"><img class="tor-back-ornament" src="{{asset "assets/the-one-ring-ornament.webp"}}" alt="" /></div>
+    <div class="tor-back-label"><span class="text-scalable">{{t "back-label"}}</span></div>
+  </div>
+  {{/if}}
+</div>

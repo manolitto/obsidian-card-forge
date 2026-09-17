@@ -1,0 +1,73 @@
+/* ── The One Ring 2E — the adversary card ───────────────────────────
+   The shared rules are in tor2e.css; the adversary adds its tighter
+   field, the grid of features and diamonds beside the large attribute
+   diamond, and the lists. */
+
+.npc-card .card-content-container {
+  padding: 0.126em 0.236em 0.158em;
+}
+.tor-npc-grid {
+  display: flex;
+  gap: 0.158em;
+  margin-bottom: 0.079em;
+  align-items: flex-end;
+}
+.tor-npc-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+}
+.tor-npc-features {
+  font-style: italic;
+  color: var(--tor-text);
+  line-height: 1.3;
+}
+.tor-npc-left .tor-stats-row {
+  justify-content: space-between;
+}
+.tor-npc-attribute {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+.tor-npc-attribute .tor-stat-label {
+  font-size: 0.55em;
+  letter-spacing: 0.03em;
+  max-width: 6em;
+}
+
+.tor-npc-proficiencies {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tor-npc-proficiencies li {
+  padding: 0.05em 0;
+}
+.tor-npc-ability {
+  margin: 0.15em 0;
+}
+.tor-npc-abilities em,
+.tor-npc-abilities i {
+  color: var(--tor-accent);
+  font-weight: 600;
+}
+.tor-npc-description {
+  font-size: 0.9em;
+  font-style: italic;
+  color: var(--tor-text);
+  opacity: 0.85;
+  margin-bottom: 0.3em;
+  line-height: 1.2;
+}
+.tor-npc-description p {
+  margin: 0;
+}
+.tor-description-rule {
+  margin-bottom: 0;
+}

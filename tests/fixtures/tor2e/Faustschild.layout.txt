@@ -1,0 +1,19 @@
+Faustschild · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.tor-stats-row
+     div.tor-stat
+       div.tor-stat-label "Paradebonus"
+       div.tor-diamond
+         div.tor-diamond-inner "+1"
+     div.tor-stat
+       div.tor-stat-label "Belastung"
+       div.tor-diamond
+         div.tor-diamond-inner "2"
+   div.tor-separator
+   p.tor-line "Anmerkungen: Lässt sich zusammen mit einer …"
+   span.cf-fill-1
+   div.tor-separator
+   span.cf-fill-2
+   div.tor-separator
+   div.tor-reference "(Regelbuch S. 76)"
+2. back [cf-layout-default] scale —

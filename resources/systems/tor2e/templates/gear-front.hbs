@@ -1,0 +1,60 @@
+{{!--
+  The One Ring — the gear front.
+
+    front-title                        the name in the dark header
+    front-damage, front-protection,
+    front-parry-modifier, front-injury,
+    front-injury-1h, front-injury-2h   the key numbers in diamonds, each
+                                       shown when the gear has it
+    front-load                         always, 0 when not given
+    front-proficiency, front-type,
+    front-standard, front-notes        captioned lines
+    front-image                        the picture, between two rules
+    front-footer                       the source, centred at the foot
+
+  The kind in the header's corner follows from the stats: a parry
+  modifier makes a shield, a protection value an armour, else a weapon.
+--}}
+<div class="card-root card-front tor2e gear-card">
+  <div class="card-header tor-header">
+    <div class="card-title tor-title"><span class="text-scalable">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></div>
+    <div class="tor-header-right"><div class="tor-kind"><span class="text-scalable">{{#if (slot "front-parry-modifier")}}{{t "type-shield"}}{{else if (slot "front-protection")}}{{t "type-armour"}}{{else}}{{t "type-weapon"}}{{/if}}</span></div></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    <div class="tor-stats-row">
+      {{#if (slot "front-damage")}}{{> diamond for="front-damage"}}{{/if}}
+      {{#if (slot "front-protection")}}{{> diamond for="front-protection"}}{{/if}}
+      {{#if (slot "front-parry-modifier")}}{{> diamond for="front-parry-modifier"}}{{/if}}
+      {{#if (slot "front-injury")}}{{> diamond for="front-injury"}}{{/if}}
+      {{#if (slot "front-injury-1h")}}{{> diamond for="front-injury-1h"}}{{/if}}
+      {{#if (slot "front-injury-2h")}}{{> diamond for="front-injury-2h"}}{{/if}}
+      <div class="tor-stat"><div class="tor-stat-label">{{slot-label "front-load"}}</div><div class="tor-diamond"><div class="tor-diamond-inner"><span class="text-scalable">{{slot "front-load" markdown=false fallback="0"}}</span></div></div></div>
+    </div>
+
+    {{#if (or (slot "front-proficiency") (slot "front-type") (slot "front-standard") (slot "front-notes"))}}
+    <div class="tor-separator"></div>
+    {{/if}}
+
+    {{#if (slot "front-proficiency")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-proficiency"}}</span> {{slot "front-proficiency"}}</p>{{/if}}
+    {{#if (slot "front-type")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-type"}}</span> {{slot "front-type" plain=true}}</p>{{/if}}
+    {{#if (slot "front-standard")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-standard"}}</span> {{slot "front-standard"}}</p>{{/if}}
+    {{#if (slot "front-notes")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-notes"}}</span> {{slot "front-notes"}}</p>{{/if}}
+
+    <span class="cf-fill-1"></span>
+    <div class="tor-separator"></div>
+
+    {{#if (slot "front-image")}}
+    <div class="tor-gear-image-wrap"><img class="tor-gear-image" src="{{slot "front-image" image=true}}" alt="" /></div>
+    {{/if}}
+
+    <span class="cf-fill-2"></span>
+    <div class="tor-separator"></div>
+
+    {{#if (slot "front-footer")}}<div class="tor-reference">({{slot "front-footer" plain=true}})</div>{{/if}}
+
+    </div>
+  </div>
+</div>

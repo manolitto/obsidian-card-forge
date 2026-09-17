@@ -1,0 +1,62 @@
+{{!--
+  The One Ring — the adversary front.
+
+    front-title                          the name in the dark header
+    front-features                       the distinctive features, in italics
+    front-endurance, front-might,
+    front-hate | front-resolve,
+    front-parry, front-armour            the small diamonds; hate or, for
+                                         a creature without it, resolve
+    front-attribute                      the attribute level, the large one
+    front-proficiencies                  the combat proficiencies, a list
+    front-abilities                      the fell abilities, a list, a line
+                                         break in one kept
+    front-text                           the description, in italics
+--}}
+<div class="card-root card-front tor2e npc-card">
+  <div class="card-header tor-header">
+    <div class="card-title tor-title"><span class="text-scalable">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></div>
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    <div class="tor-npc-grid">
+      <div class="tor-npc-left">
+        {{#if (slot "front-features")}}<div class="tor-npc-features">{{slot "front-features"}}</div>{{/if}}
+        <div class="tor-stats-row">
+          {{> diamond for="front-endurance"}}
+          {{> diamond for="front-might"}}
+          {{#if (slot "front-hate")}}{{> diamond for="front-hate"}}{{else}}{{> diamond for="front-resolve"}}{{/if}}
+          {{> diamond for="front-parry"}}
+          {{> diamond for="front-armour"}}
+        </div>
+      </div>
+      <div class="tor-npc-attribute">
+        <div class="tor-stat-label">{{slot-label "front-attribute"}}</div>
+        <div class="tor-diamond tor-diamond-large"><div class="tor-diamond-inner"><span class="text-scalable">{{slot "front-attribute" markdown=false}}</span></div></div>
+      </div>
+    </div>
+
+    {{#if (slot "front-proficiencies" list=true)}}
+    <div class="tor-section-label">{{slot-label "front-proficiencies"}}</div>
+    <ul class="tor-npc-proficiencies">
+      {{#each (slot "front-proficiencies" list=true)}}<li>{{this}}</li>{{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if (slot "front-abilities" list=true)}}
+    <div class="tor-section-label">{{slot-label "front-abilities"}}</div>
+    <div class="tor-npc-abilities">
+      {{#each (slot "front-abilities" list=true linebreaks=true)}}<p class="tor-npc-ability">{{this}}</p>{{/each}}
+    </div>
+    {{/if}}
+
+    {{#if (slot "front-text")}}
+    <div class="tor-section-label tor-description-rule"></div>
+    <div class="tor-npc-description">{{slot "front-text" markdown="block"}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+</div>

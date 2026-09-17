@@ -1,0 +1,31 @@
+Jagdspeer · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 0.71
+   div.tor-stats-row
+     div.tor-stat
+       div.tor-stat-label "Schaden"
+       div.tor-diamond
+         div.tor-diamond-inner "4"
+     div.tor-stat
+       div.tor-stat-label "Verletzung (1-händig)"
+       div.tor-diamond
+         div.tor-diamond-inner "14"
+     div.tor-stat
+       div.tor-stat-label "Verletzung (2-händig)"
+       div.tor-diamond
+         div.tor-diamond-inner "16"
+     div.tor-stat
+       div.tor-stat-label "Belastung"
+       div.tor-diamond
+         div.tor-diamond-inner "2"
+   div.tor-separator
+   p.tor-line "Kampffähigkeit: Speere"
+   p.tor-line "Mindest-Lebensstandard: Bescheiden"
+   p.tor-line "Anmerkungen: Kann ein- oder beidhändig geführt …"
+   span.cf-fill-1
+   div.tor-separator
+   div.tor-gear-image-wrap
+     img.tor-gear-image
+   span.cf-fill-2
+   div.tor-separator
+   div.tor-reference "(Regelbuch S. 74)"
+2. back [cf-layout-default] scale —
