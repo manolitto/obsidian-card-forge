@@ -1,0 +1,21 @@
+{{!--
+  5E — one feature section of the block.
+
+      {{> entries for="front-actions"}}
+
+  The place's caption as the section head, then its entries as
+  paragraphs, each led by its name in bold italics with a full stop. An
+  entry without a name is a plain paragraph — a preamble. The traits
+  pass `head=false`: they stand under a rule, not a head. Nothing prints
+  when the place is empty.
+--}}
+{{#if (slot for list=true)}}
+{{#if head}}
+<h3 class="dd-section-head cf-keep-with-next">{{slot-label for}}</h3>
+{{else}}
+{{> rule}}
+{{/if}}
+{{#each (slot for list=true)}}
+<p class="dd-entry">{{#if name}}<span class="dd-entry-name">{{name}}</span>{{/if}}{{desc}}</p>
+{{/each}}
+{{/if}}

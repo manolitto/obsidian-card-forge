@@ -1,0 +1,322 @@
+/* ── 5E — the system stylesheet ─────────────────────────────────────
+   The stat block as the rulebook prints it: parchment, dark-red
+   headings, a tapered red rule between the sections, an orange bar at
+   the top and the foot, the six scores in a row. Bookinsanity for the
+   text, Mr Eaves Small Caps for the section heads, Scaly Sans for the
+   scores, Nodesto Caps Condensed for the title. Sizes are `em` and `%`
+   throughout; the plain back sizes its mark in `cqw`. */
+
+/* ── Fonts — the Solbera fonts, CC BY-SA 4.0, fonts/solbera-LICENSE.txt ── */
+
+@font-face {
+  font-family: "Bookinsanity";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-bookinsanity-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bookinsanity";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-bookinsanity-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bookinsanity";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-bookinsanity-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bookinsanity";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-bookinsanity-bold-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Mr Eaves Small Caps";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-mr-eaves-small-caps.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Scaly Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-scaly-sans-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Scaly Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-scaly-sans-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Scaly Sans";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-scaly-sans-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Scaly Sans";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-scaly-sans-bold-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-nodesto-caps-condensed-regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-nodesto-caps-condensed-bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/solbera-nodesto-caps-condensed-italic.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Nodesto Caps Condensed";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/solbera-nodesto-caps-condensed-bold-italic.woff2") format("woff2");
+}
+
+/* ── The palette and the type ──────────────────────────────────────── */
+
+.card-root.dd {
+  --dd-parchment: #fdf1dc;
+  --dd-rule: #922610;
+  --dd-heading: #7a200d;
+  --dd-bar: #e69a28;
+  --dd-ink: #1f1a17;
+
+  --dd-font-body: "Bookinsanity", serif;
+  --dd-font-display: "Mr Eaves Small Caps", serif;
+  --dd-font-scores: "Scaly Sans", sans-serif;
+  --dd-font-title: "Nodesto Caps Condensed", serif;
+
+  /* A dense block — a dragon with its legendary actions — shrinks to
+     half its size before it spills, so the floor is low. Sizes are
+     set for the large card the two types print on. */
+  --card-font-size-min: 1.5mm;
+  --dd-font-size-title: clamp(var(--card-font-size-title-min), calc(var(--card-width, 88.9mm) * 0.066), var(--card-font-size-title-max));
+
+  font-family: var(--dd-font-body);
+  font-size: clamp(var(--card-font-size-min), calc(var(--card-width, 88.9mm) * 0.0317), var(--card-font-size-max));
+  line-height: 1.3;
+  color: var(--dd-ink);
+  background: var(--dd-parchment);
+  border-radius: 0.4em;
+  overflow: hidden;
+}
+
+/* On plain paper the parchment goes; the ink stays. */
+.cf-paper-plain .card-root.dd {
+  --dd-parchment: #ffffff;
+}
+
+/* ── The bars, the title, the block ────────────────────────────────── */
+
+/* The orange bar at the top and the foot, a hairline of black on each
+   edge, run a touch past the sides. */
+.dd-bar {
+  flex: 0 0 auto;
+  height: 0.42em;
+  background: var(--dd-bar);
+  border-top: 0.06em solid #000;
+  border-bottom: 0.06em solid #000;
+  margin: 0 -0.25em;
+}
+.card-root.dd .dd-bar:last-child {
+  margin-top: auto;
+}
+
+.dd-header {
+  padding: 0.5em 0.75em 0;
+}
+.dd-header .dd-title {
+  font-family: var(--dd-font-title);
+  font-weight: 700;
+  font-size: var(--dd-font-size-title);
+  line-height: 1;
+  color: var(--dd-heading);
+  letter-spacing: 0.02em;
+}
+.dd-title .cf-overflow-counter {
+  font-family: var(--dd-font-body);
+  font-weight: 400;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+.card-root.dd .card-content-container {
+  padding: 0.3em 0.75em 0.5em;
+}
+
+/* The italic line under the name. */
+.dd-subtitle {
+  font-style: italic;
+  font-size: 0.95em;
+  line-height: 1.15;
+  margin: 0 0 0.1em;
+}
+
+/* The tapered rule: a lens, thicker in the middle than at its ends. */
+.dd-rule {
+  display: block;
+  width: 100%;
+  height: 0.32em;
+  margin: 0.18em 0;
+  fill: var(--dd-rule);
+  overflow: visible;
+}
+
+/* A line of the block: the caption in bold red, the value after it. */
+.dd-line {
+  margin: 0.05em 0;
+  line-height: 1.25;
+}
+.dd-line-label {
+  font-weight: 700;
+  color: var(--dd-heading);
+}
+
+/* The six scores in a row. */
+.dd-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  text-align: center;
+  font-family: var(--dd-font-scores);
+  margin: 0.15em 0;
+  line-height: 1.15;
+}
+.dd-ability-label {
+  font-weight: 700;
+  color: var(--dd-heading);
+  font-size: 0.95em;
+}
+
+/* A section head: small capitals in red over a red line. The face is
+   small capitals by design, so a lower-case word prints as one. */
+.dd-section-head {
+  font-family: var(--dd-font-display);
+  font-weight: 400;
+  font-size: 1.25em;
+  color: var(--dd-heading);
+  letter-spacing: 0.02em;
+  border-bottom: 0.08em solid var(--dd-heading);
+  margin: 0.5em 0 0.18em;
+  padding-bottom: 0.04em;
+}
+
+/* An entry: the name in bold italics, a full stop, the text running
+   on. */
+.dd-entry {
+  margin: 0.2em 0;
+  line-height: 1.3;
+}
+.dd-entry-name {
+  font-style: italic;
+  font-weight: 700;
+}
+.dd-entry-name::after {
+  content: ".";
+  margin-right: 0.3em;
+  font-style: normal;
+}
+
+/* ── The back ──────────────────────────────────────────────────────── */
+
+.card-root.dd.card-back {
+  display: flex;
+  flex-direction: column;
+}
+
+/* With a picture: the label, the picture fitted whole, the name, all
+   between the bars. */
+.dd-back-label {
+  flex: 0 0 auto;
+  text-align: center;
+  font-family: var(--dd-font-display);
+  font-size: 1.1em;
+  letter-spacing: 0.06em;
+  color: var(--dd-heading);
+  padding: 0.3em 0;
+}
+.dd-back-picture {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.dd-back-picture img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.dd-back-name {
+  flex: 0 0 auto;
+  text-align: center;
+  font-family: var(--dd-font-title);
+  font-weight: 700;
+  font-size: 1.4em;
+  color: var(--dd-heading);
+  padding: 0.2em 0.4em 0.4em;
+  line-height: 1.05;
+}
+
+/* Without one: the d20 in the heading red, the wordmark, the name,
+   centred on the parchment. */
+.dd-plain-back {
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  text-align: center;
+  container-type: inline-size;
+}
+.dd-d20 {
+  width: 38cqw;
+  height: 38cqw;
+  color: var(--dd-heading);
+  opacity: 0.85;
+  margin-bottom: 0.6em;
+}
+.dd-d20 svg {
+  width: 100%;
+  height: 100%;
+}
+.dd-wordmark {
+  font-family: var(--dd-font-title);
+  font-weight: 700;
+  font-size: 9cqw;
+  letter-spacing: 0.08em;
+  color: var(--dd-heading);
+  line-height: 1;
+}

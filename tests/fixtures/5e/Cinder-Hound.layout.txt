@@ -1,0 +1,39 @@
+Cinder-Hound · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   p.dd-subtitle "Medium beast, unaligned"
+   svg.dd-rule
+   p.dd-line "Armor Class 13 (natural armor)"
+   p.dd-line "Hit Points 22 (4d8 + 4)"
+   p.dd-line "Speed 40 ft."
+   svg.dd-rule
+   div.dd-abilities.cf-keep-together
+     div
+       div.dd-ability-label "STR"
+       div.dd-ability-value "15 (+2)"
+     div
+       div.dd-ability-label "DEX"
+       div.dd-ability-value "14 (+2)"
+     div
+       div.dd-ability-label "CON"
+       div.dd-ability-value "13 (+1)"
+     div
+       div.dd-ability-label "INT"
+       div.dd-ability-value "3 (-4)"
+     div
+       div.dd-ability-label "WIS"
+       div.dd-ability-value "12 (+1)"
+     div
+       div.dd-ability-label "CHA"
+       div.dd-ability-value "6 (-2)"
+   svg.dd-rule
+   p.dd-line "Skills Perception +3, Stealth +4"
+   p.dd-line "Damage Immunities fire"
+   p.dd-line "Senses darkvision 60 ft., passive Perception …"
+   p.dd-line "Languages —"
+   p.dd-line "Challenge 1 (200 XP)"
+   svg.dd-rule
+   p.dd-entry "Keen Smell The hound has advantage …"
+   h3.dd-section-head.cf-keep-with-next "Actions"
+   p.dd-entry "Bite Melee Weapon Attack: +4 to …"
+   p.dd-entry "Ember Breath (Recharge 5–6) The hound …"
+2. back [cf-layout-default] scale —

@@ -16,3 +16,4 @@ systems:
   - tor2e/tor2e.yaml
   - sw/sw.yaml
   - troubleshooters/troubleshooters.yaml
+  - 5e/5e.yaml

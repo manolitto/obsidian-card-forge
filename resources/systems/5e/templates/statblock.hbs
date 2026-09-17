@@ -1,0 +1,58 @@
+{{!--
+  5E — the stat block both card types share, above the sections a card
+  type adds.
+
+    front-size, front-type, front-alignment   the italic line under the
+                                              name
+    front-ac, front-hp, front-speed           the top lines
+    front-habitat, front-treasure, front-gear the 2024 lines, where set
+    front-str … front-cha                     six scores in a row; a
+                                              missing one prints as —
+    front-saves … front-languages             the lines that are set
+    front-cr, front-xp,                       one line: the rating, the
+    front-proficiency-bonus                   XP in parentheses, the
+                                              bonus where set
+    front-traits                              paragraphs under a rule
+    front-actions, front-bonus-actions,
+    front-reactions                           sections under their heads
+--}}
+{{#if (or (slot "front-size") (slot "front-type") (slot "front-alignment"))}}
+<p class="dd-subtitle">{{#if (slot "front-size")}}{{slot "front-size" plain=true}}{{/if}}{{#if (slot "front-type")}}{{#if (slot "front-size")}} {{/if}}{{slot "front-type" plain=true}}{{/if}}{{#if (slot "front-alignment")}}, {{slot "front-alignment" plain=true}}{{/if}}</p>
+{{/if}}
+
+{{> rule}}
+
+{{#if (slot "front-ac")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-ac"}}</span> {{slot "front-ac"}}</p>{{/if}}
+{{#if (slot "front-hp")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-hp"}}</span> {{slot "front-hp"}}</p>{{/if}}
+{{#if (slot "front-speed")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-speed"}}</span> {{slot "front-speed"}}</p>{{/if}}
+{{#if (slot "front-habitat")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-habitat"}}</span> {{slot "front-habitat"}}</p>{{/if}}
+{{#if (slot "front-treasure")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-treasure"}}</span> {{slot "front-treasure"}}</p>{{/if}}
+{{#if (slot "front-gear")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-gear"}}</span> {{slot "front-gear"}}</p>{{/if}}
+
+{{> rule}}
+
+<div class="dd-abilities cf-keep-together">
+  <div><div class="dd-ability-label">{{slot-label "front-str"}}</div><div class="dd-ability-value">{{slot "front-str" plain=true fallback="—"}}</div></div>
+  <div><div class="dd-ability-label">{{slot-label "front-dex"}}</div><div class="dd-ability-value">{{slot "front-dex" plain=true fallback="—"}}</div></div>
+  <div><div class="dd-ability-label">{{slot-label "front-con"}}</div><div class="dd-ability-value">{{slot "front-con" plain=true fallback="—"}}</div></div>
+  <div><div class="dd-ability-label">{{slot-label "front-int"}}</div><div class="dd-ability-value">{{slot "front-int" plain=true fallback="—"}}</div></div>
+  <div><div class="dd-ability-label">{{slot-label "front-wis"}}</div><div class="dd-ability-value">{{slot "front-wis" plain=true fallback="—"}}</div></div>
+  <div><div class="dd-ability-label">{{slot-label "front-cha"}}</div><div class="dd-ability-value">{{slot "front-cha" plain=true fallback="—"}}</div></div>
+</div>
+
+{{> rule}}
+
+{{#if (slot "front-saves")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-saves"}}</span> {{slot "front-saves"}}</p>{{/if}}
+{{#if (slot "front-skills")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-skills"}}</span> {{slot "front-skills"}}</p>{{/if}}
+{{#if (slot "front-vulnerabilities")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-vulnerabilities"}}</span> {{slot "front-vulnerabilities"}}</p>{{/if}}
+{{#if (slot "front-resistances")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-resistances"}}</span> {{slot "front-resistances"}}</p>{{/if}}
+{{#if (slot "front-immunities")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-immunities"}}</span> {{slot "front-immunities"}}</p>{{/if}}
+{{#if (slot "front-condition-immunities")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-condition-immunities"}}</span> {{slot "front-condition-immunities"}}</p>{{/if}}
+{{#if (slot "front-senses")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-senses"}}</span> {{slot "front-senses"}}</p>{{/if}}
+{{#if (slot "front-languages")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-languages"}}</span> {{slot "front-languages"}}</p>{{/if}}
+{{#if (slot "front-cr")}}<p class="dd-line"><span class="dd-line-label">{{slot-label "front-cr"}}</span> {{slot "front-cr" plain=true}}{{#if (slot "front-xp")}} ({{slot "front-xp" plain=true}} {{slot-label "front-xp"}}){{/if}}{{#if (slot "front-proficiency-bonus")}} &nbsp; <span class="dd-line-label">{{slot-label "front-proficiency-bonus"}}</span> {{slot "front-proficiency-bonus" plain=true}}{{/if}}</p>{{/if}}
+
+{{> entries for="front-traits" head=false}}
+{{> entries for="front-actions" head=true}}
+{{> entries for="front-bonus-actions" head=true}}
+{{> entries for="front-reactions" head=true}}

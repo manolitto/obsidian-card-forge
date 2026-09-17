@@ -201,6 +201,7 @@ describe.each([
   "tor2e",
   "sw",
   "troubleshooters",
+  "5e",
 ])("the %s deck composes", (system) => {
   it("as its composition golden says", async () => {
     const { built } = await build(system);
