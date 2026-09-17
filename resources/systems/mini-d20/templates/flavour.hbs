@@ -1,0 +1,17 @@
+{{!--
+  MINI D20 — the tail of a typed front: the picture, then the flavour.
+
+    front-image   takes the room the stats leave, uncropped
+    front-text    the italic line at the foot, bottom-anchored
+
+  The spacers are flex weights in the body column: with a picture and a
+  flavour line the stats sit at the top and the two share the rest.
+--}}
+{{#if (slot "front-image")}}
+<span class="cf-fill-1 cf-keep-with-next"></span>
+<img class="mini-d20-image cf-keep-with-next" src="{{slot "front-image" image=true}}" />
+{{/if}}
+{{#if (slot "front-text")}}
+<span class="cf-fill-1 cf-keep-with-next"></span>
+<p class="mini-d20-flavour">{{slot "front-text"}}</p>
+{{/if}}

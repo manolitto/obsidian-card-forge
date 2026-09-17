@@ -1,0 +1,24 @@
+/* ── MINI D20 — the ability card ────────────────────────────────────
+   The shared rules are in mini-d20.css; the ability adds the tag notes:
+   what a tag means for this archetype, set small and italic under a red
+   hairline so it reads as a footnote to the effect. */
+
+.mini-d20-ability-notes {
+  margin: 0.3em 0 0;
+  padding-top: 0.2em;
+  border-top: 0.5pt solid var(--mini-d20-rule);
+  font-style: italic;
+  font-size: 0.82em;
+  color: var(--mini-d20-ink-soft);
+  text-align: left;
+}
+.mini-d20-ability-note {
+  margin: 0.08em 0;
+  line-height: 1.2;
+}
+.mini-d20-ability-note-key {
+  font-style: normal;
+  font-weight: 800;
+  color: var(--mini-d20-ink);
+  margin-right: 0.25em;
+}

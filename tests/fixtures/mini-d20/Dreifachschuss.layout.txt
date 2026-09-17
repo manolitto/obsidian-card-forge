@@ -1,0 +1,12 @@
+Dreifachschuss · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.mini-d20-tags "Aktiv Fernkampf"
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-subheader.cf-keep-with-next "Wirkung"
+   div.mini-d20-prose
+     p "Du kannst mit einer Fernkampfwaffe bis …"
+   span.cf-fill-2
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-ability-notes
+     div.mini-d20-ability-note "[Aktiv] Zweimal täglich je Charakterstufe."
+2. back [cf-layout-default] scale —

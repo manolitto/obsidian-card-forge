@@ -1,0 +1,37 @@
+{{!--
+  MINI D20 — the ability front.
+
+    front-tags     the pills
+    front-effect   the rule, under its caption
+    front-notes    what a tag means for this archetype — a list of
+                   single-key pairs, set small under a hairline
+--}}
+<div class="card-root card-front mini-d20 ability-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> tags}}
+
+    {{#if (slot "front-effect")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-effect"}}</div>
+    <div class="mini-d20-prose">{{slot "front-effect" markdown="block"}}</div>
+    <span class="cf-fill-2"></span>
+    {{/if}}
+
+    {{#if (slot "front-notes" list=true)}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-ability-notes">
+      {{#each (slot "front-notes" list=true)}}{{#each this}}<div class="mini-d20-ability-note"><span class="mini-d20-ability-note-key">[{{@key}}]</span> {{this}}</div>{{/each}}{{/each}}
+    </div>
+    {{/if}}
+
+    {{> flavour}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

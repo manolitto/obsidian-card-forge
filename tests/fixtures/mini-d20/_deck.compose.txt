@@ -1,0 +1,25 @@
+4 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 16 marks
+   front #1 at 10.5, 16.5 cover/Deckblatt
+   front #2 at 73.5, 16.5 archetype/Schurk
+   front #3 at 136.5, 16.5 ability/Dreifachschuss
+   front #4 at 10.5, 104.5 heritage/Zwerg
+   front #5 at 73.5, 104.5 bestiary/Goblin
+   front #6 at 136.5, 104.5 bestiary/Nebelgeist
+   front #7 at 10.5, 192.5 equipment/Heiltrank
+   front #8 at 73.5, 192.5 equipment/Kurzschwert
+   front #9 at 136.5, 192.5 quirk/Eigenheit-07
+2. back · 16 marks
+   back #1 at 136.5, 16.5 cover/Deckblatt
+   back #2 at 73.5, 16.5 archetype/Schurk
+   back #3 at 10.5, 16.5 ability/Dreifachschuss
+   back #4 at 136.5, 104.5 heritage/Zwerg
+   back #5 at 73.5, 104.5 bestiary/Goblin
+   back #6 at 10.5, 104.5 bestiary/Nebelgeist
+   back #7 at 136.5, 192.5 equipment/Heiltrank
+   back #8 at 73.5, 192.5 equipment/Kurzschwert
+   back #9 at 10.5, 192.5 quirk/Eigenheit-07
+3. front · 8 marks
+   front #10 at 10.5, 16.5 generic/Hausregel
+4. back · 8 marks
+   back #10 at 136.5, 16.5 generic/Hausregel

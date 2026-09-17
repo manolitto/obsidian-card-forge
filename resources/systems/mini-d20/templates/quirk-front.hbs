@@ -1,0 +1,30 @@
+{{!--
+  MINI D20 — the quirk front: the roll as a badge in the header's right
+  corner, the quirk's text as the body, a picture when the note has one.
+
+    front-text   the quirk (the description, bound here as the body)
+--}}
+<div class="card-root card-front mini-d20 quirk-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{#if (slot "front-text")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <div class="mini-d20-prose mini-d20-quirk-text">{{slot "front-text" markdown="block"}}</div>
+    {{#unless (slot "front-image")}}
+    <span class="cf-fill-2"></span>
+    {{/unless}}
+    {{/if}}
+
+    {{#if (slot "front-image")}}
+    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <img class="mini-d20-image cf-keep-with-next" src="{{slot "front-image" image=true}}" />
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

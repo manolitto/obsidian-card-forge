@@ -12,7 +12,9 @@ import { slotClassHelper, slotHelper, slotLabelHelper } from "./slot";
  *                          visible marker an author can spot on the card
  *   {{asset "path"}}       a file of the system as a `data:` URI; with
  *                          `inline=true`, an SVG's markup itself, so the
- *                          icon takes the text colour
+ *                          icon takes the text colour. The path may be a
+ *                          literal, or a value the document names — a
+ *                          classifier's token, `{{asset (slot-class "x")}}`
  *   (or a b …)             the first argument that is present — for a hull
  *                          around several places, `{{#if (or (slot "a") (slot "b"))}}`
  *   (eq a b)               whether two values read the same — for a plaque
@@ -50,13 +52,17 @@ export function registerHelpers(hb: typeof Handlebars): void {
 
   // Helpers are synchronous and the source is not, so a file cannot be read
   // here: the engine reads every `{{asset "…"}}` literal it finds in a
-  // template before the render, and this is the lookup. A path that is not
-  // in the map was either reported missing when the system loaded, or is not
-  // a literal — which the scan cannot see, so it cannot exist.
+  // template, and every asset the root document names, before the render,
+  // and this is the lookup. A path that is not in the map was either
+  // reported missing when the system loaded, or is composed from something
+  // neither the templates nor the document say — which cannot be served.
   hb.registerHelper("asset", function (...args: unknown[]) {
-    const { argument: path, options } = helperArgs(args);
+    const { argument, options } = helperArgs(args);
     const state = stateOf(options);
-    if (typeof path !== "string") {
+    // A rendered slot arrives as a `SafeString`; its text is the path.
+    const path =
+      argument instanceof Handlebars.SafeString ? argument.toString() : argument;
+    if (typeof path !== "string" || path === "") {
       state.diagnostics.warn(
         `{{asset}} without a path in ${state.where}; rendering nothing`
       );
@@ -67,7 +73,7 @@ export function registerHelpers(hb: typeof Handlebars): void {
     const asset = state.assets.get(path);
     if (asset === undefined) {
       state.diagnostics.warn(
-        `${call} in ${state.where}: no such file, or the path is not a literal; rendering nothing`
+        `${call} in ${state.where}: no such file, or a path neither a template nor the document names; rendering nothing`
       );
       return "";
     }

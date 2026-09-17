@@ -125,16 +125,20 @@ type Compiled = Handlebars.TemplateDelegate<TemplateContext>;
 /**
  * One system's compiled templates: faces by path, compiled on first use;
  * the declared partials, compiled together on first use; and the assets
- * their `{{asset "…"}}` literals name, read once each.
+ * their `{{asset "…"}}` literals name, read once each, beside every asset
+ * the root document names — a classifier's token, a property's default.
  *
  * The asset map grows as templates compile. A helper is synchronous and the
- * source is not, so the read has to happen before the render — and it can
- * only find a literal, which is also all the loader checks.
+ * source is not, so the read has to happen before the render — and what it
+ * can find is a literal in a template or a value in the document, which is
+ * also all the loader checks. A path composed at render from anything else
+ * cannot be served.
  */
 class SystemTemplates {
   private readonly faces = new Map<string, Promise<Compiled>>();
   private declaredPartials?: Promise<Record<string, Compiled>>;
   private readonly assetReads = new Map<string, Promise<void>>();
+  private documentAssets?: Promise<void>;
   readonly assets = new Map<string, Asset>();
 
   constructor(
@@ -169,6 +173,7 @@ class SystemTemplates {
   private async compile(path: SystemPath): Promise<Compiled> {
     const text = await this.system.source.readText(path);
     await this.readAssets(text);
+    await this.readDocumentAssets();
     try {
       // Parsed eagerly so a syntax error surfaces here, with the path, rather
       // than at the first render.
@@ -184,10 +189,24 @@ class SystemTemplates {
    * system loaded — and the helper reports the miss again at the call.
    */
   private async readAssets(hbs: string): Promise<void> {
-    const reads: Promise<void>[] = [];
+    const paths: SystemPath[] = [];
     for (const ref of templateAssetReferences(hbs)) {
       const path = parseSystemPath(ref.path, ref.where, IGNORE_DIAGNOSTICS);
-      if (!path || this.assetReads.has(path)) continue;
+      if (path) paths.push(path);
+    }
+    await this.read(paths);
+  }
+
+  /** The assets the root document names, once. */
+  private readDocumentAssets(): Promise<void> {
+    if (!this.documentAssets) this.documentAssets = this.read(this.system.documentAssets);
+    return this.documentAssets;
+  }
+
+  private async read(paths: readonly SystemPath[]): Promise<void> {
+    const reads: Promise<void>[] = [];
+    for (const path of paths) {
+      if (this.assetReads.has(path)) continue;
       const read = readAsset(this.system.source, path).then(
         (asset) => {
           this.assets.set(path, asset);

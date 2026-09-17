@@ -1,0 +1,32 @@
+{{!--
+  MINI D20 — the cover front: the deck's title, an italic subtitle, the
+  cover art or — without one — the wordmark, and a centred colophon.
+
+    front-title     the deck's title
+    front-tagline   the subtitle
+    front-image     the cover art
+    front-footer    edition, date, version
+--}}
+<div class="card-root card-front mini-d20 cover-card cover-front">
+  <div class="card-header">
+    <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></span></div>
+    {{#if (slot "front-tagline")}}
+    <div class="mini-d20-tagline mini-d20-cover-subtitle">{{slot "front-tagline"}}</div>
+    {{/if}}
+  </div>
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+    {{#if (slot "front-image")}}
+    <img class="mini-d20-image mini-d20-cover-art" src="{{slot "front-image" image=true}}" />
+    {{else}}
+    <div class="mini-d20-wordmark mini-d20-cover-wordmark">{{> wordmark}}</div>
+    {{/if}}
+    </div>
+  </div>
+
+  <div class="card-footer mini-d20-footer">
+    {{#if (slot "front-footer")}}<div class="mini-d20-reference mini-d20-cover-footer">{{slot "front-footer" plain=true}}</div>{{/if}}
+    <span class="mini-d20-continues">→</span>
+  </div>
+</div>

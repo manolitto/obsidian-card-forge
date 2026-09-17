@@ -1,0 +1,43 @@
+Schurk · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 0.90
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-stats.mini-d20-archetype-stats
+     div.mini-d20-stat-h "TP"
+     div.mini-d20-stat-h "RK"
+     div.mini-d20-stat-h "RW"
+     div.mini-d20-stat-v "12"
+     div.mini-d20-stat-v "10"
+     div.mini-d20-stat-v "11"
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-subheader.cf-keep-with-next "Fertigkeitsboni"
+   div.mini-d20-archetype-skills
+     div.mini-d20-archetype-skill-name "Heimlichkeit"
+     div.mini-d20-archetype-skill-bonus "+4"
+     div.mini-d20-archetype-skill-name "Fingerfertigkeit"
+     div.mini-d20-archetype-skill-bonus "+4"
+     div.mini-d20-archetype-skill-name "Akrobatik"
+     div.mini-d20-archetype-skill-bonus "+3"
+     div.mini-d20-archetype-skill-name "Wahrnehmung"
+     div.mini-d20-archetype-skill-bonus "+3"
+     div.mini-d20-archetype-skill-name "Fernkampf"
+     div.mini-d20-archetype-skill-bonus "+2"
+     div.mini-d20-archetype-skill-name "Nahkampf"
+     div.mini-d20-archetype-skill-bonus "+2"
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-rows.mini-d20-archetype-allowed
+     div.mini-d20-row-label "Erlaubte Rüstungen"
+     div.mini-d20-row-value "Leicht"
+     div.mini-d20-row-label "Erlaubte Waffen"
+     div.mini-d20-row-value "Leicht, Mittel"
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-subheader.cf-keep-with-next "Fähigkeiten"
+   div.mini-d20-prose
+     p "Du startest mit zwei Fähigkeiten."
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-subheader.cf-keep-with-next "Stufenaufstieg"
+   div.mini-d20-prose
+     p "+ 4 TP pro Stufe."
+     p "- 1 RW pro Stufe."
+     p "Bei jedem Stufenaufstieg bis Stufe 4 …"
+   span.cf-fill-2
+2. back [cf-layout-default] scale —

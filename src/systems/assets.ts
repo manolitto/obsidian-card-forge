@@ -34,7 +34,7 @@ export async function readAssetUri(
  */
 export interface Asset {
   uri: string;
-  /** The file's text, for an SVG; a bitmap or a font has none. */
+  /** The file's text, for an SVG, trimmed of surrounding whitespace; a bitmap or a font has none. */
   text?: string;
 }
 
@@ -42,8 +42,9 @@ export interface Asset {
 export async function readAsset(source: SystemSource, path: SystemPath): Promise<Asset> {
   const bytes = await source.readBinary(path);
   const asset: Asset = { uri: dataUri(bytes, path) };
-  if (assetMimeType(path) === "image/svg+xml")
-    asset.text = new TextDecoder().decode(bytes);
+  if (assetMimeType(path) === "image/svg+xml") {
+    asset.text = new TextDecoder().decode(bytes).trim();
+  }
   return asset;
 }
 

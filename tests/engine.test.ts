@@ -222,6 +222,44 @@ describe("{{asset}}", () => {
     ]);
   });
 
+  it("serves a path the document names — a classifier's token, a rendered slot", async () => {
+    const files = rootedSystem();
+    const FIRE = `<svg viewBox="0 0 8 8"><path fill="currentColor" d="M4 0l4 8H0z"/></svg>`;
+    const OTHER = `<svg viewBox="0 0 8 8"><circle fill="currentColor" cx="4" cy="4" r="4"/></svg>`;
+    files["assets/icons/fire.svg"] = FIRE;
+    files["assets/icons/other.svg"] = OTHER;
+    files["game-system.yaml"] += `
+classifiers:
+  header-title:
+    match:
+      - { pattern: "fire", token: assets/icons/fire.svg }
+    default: assets/icons/other.svg
+`;
+    files["spell/front.hbs"] =
+      `<div class="card-root">[{{asset (slot-class "header-title") inline=true}}][{{asset (slot "header-title" plain=true) inline=true}}]</div>`;
+    const { system } = await load(files);
+    expect(system.documentAssets).toEqual([
+      "assets/logo.png",
+      "assets/icons/fire.svg",
+      "assets/icons/other.svg",
+    ]);
+    const engine = new TemplateEngine();
+    const diagnostics = collectDiagnostics();
+    const fire = await engine.renderFace(
+      request(system, "spell", "front", { category: "Fire" }),
+      diagnostics
+    );
+    expect(fire).toContain(`[${FIRE}][]`);
+    const named = await engine.renderFace(
+      request(system, "spell", "front", { category: "assets/icons/other.svg" }),
+      collectDiagnostics()
+    );
+    expect(named).toContain(`[${OTHER}][${OTHER}]`);
+    expect(diagnostics.messages).toEqual([
+      '{{asset "Fire"}} in demo/spell: no such file, or a path neither a template nor the document names; rendering nothing',
+    ]);
+  });
+
   it("reports a hash key that is not inline, and an inline= that is neither true nor false", async () => {
     const files = rootedSystem();
     files["spell/front.hbs"] =
@@ -250,7 +288,7 @@ describe("{{asset}}", () => {
     );
     expect(html).toContain(`<img src="">`);
     expect(diagnostics.messages).toEqual([
-      '{{asset "assets/logo.png"}} in demo/gear: no such file, or the path is not a literal; rendering nothing',
+      '{{asset "assets/logo.png"}} in demo/gear: no such file, or a path neither a template nor the document names; rendering nothing',
     ]);
   });
 });

@@ -1,0 +1,27 @@
+Goblin · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   span.cf-fill-1
+   div.mini-d20-stats.mini-d20-bestiary-stats
+     div.mini-d20-stat-h "TW"
+     div.mini-d20-stat-h "TP"
+     div.mini-d20-stat-h "RK"
+     div.mini-d20-stat-h "RW"
+     div.mini-d20-stat-h "BW"
+     div.mini-d20-stat-h "A"
+     div.mini-d20-stat-v "1"
+     div.mini-d20-stat-v "4"
+     div.mini-d20-stat-v "12"
+     div.mini-d20-stat-v "18"
+     div.mini-d20-stat-v "1"
+     div.mini-d20-stat-v.mini-d20-stat-v-actions "1 Waffe (3 Schaden)"
+   span.cf-fill-1.cf-keep-with-next
+   div.mini-d20-subheader.cf-keep-with-next "Fähigkeiten"
+   div.mini-d20-prose
+     p "Im Sonnenlicht Angriffswurf minus 1."
+     p "Greift nur in Überzahl an und …"
+   span.cf-fill-1.cf-keep-with-next
+   img.mini-d20-image.cf-keep-with-next
+   span.cf-fill-1.cf-keep-with-next
+   p.mini-d20-flavour "Klein, gemein und immer in der …"
+   span.cf-fill-2
+2. back [cf-layout-default] scale —

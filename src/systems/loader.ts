@@ -2,7 +2,7 @@ import { load } from "js-yaml";
 import { buildAliasMap, type AliasMap } from "../definitions/bindings";
 import { mergeCardSettings, type CardSettings } from "../definitions/card-settings";
 import { mergeClassifiers, type Classifiers } from "../definitions/classifiers";
-import type { Diagnostics } from "../definitions/diagnostics";
+import { IGNORE_DIAGNOSTICS, type Diagnostics } from "../definitions/diagnostics";
 import { mergeGlyphTables, type GlyphTables } from "../definitions/glyphs";
 import {
   parseSystemDeclaration,
@@ -49,6 +49,14 @@ export interface LoadedSystem {
    */
   unusedFiles: readonly SystemPath[];
   unusedPartials: readonly string[];
+  /**
+   * Every asset the root document names — a property's `default:`, a
+   * classifier's token — that the folder has. The template engine reads
+   * these before a render beside the literals it finds in the templates,
+   * so a template may compute a path from a value: `{{asset (slot-class
+   * "front-icon") inline=true}}`.
+   */
+  documentAssets: readonly SystemPath[];
 }
 
 export interface LoadedCardType {
@@ -201,7 +209,15 @@ export async function loadSystem(
   }
 
   // ── The document's own references — a property's default, say ───
-  referenced(documentAssetReferences(doc), source.document);
+  const documentRefs = documentAssetReferences(doc);
+  referenced(documentRefs, source.document);
+  const documentAssets = [
+    ...new Set(
+      documentRefs
+        .map((ref) => parseSystemPath(ref.path, ref.where, IGNORE_DIAGNOSTICS))
+        .filter((path): path is SystemPath => path !== undefined && files.has(path))
+    ),
+  ];
 
   const unusedFiles = [...files].filter((file) => !used.has(file)) as SystemPath[];
 
@@ -248,6 +264,7 @@ export async function loadSystem(
     },
     unusedFiles,
     unusedPartials,
+    documentAssets,
   };
 }
 
