@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { collectDiagnostics } from "../src/definitions/diagnostics";
-import { BUNDLED_SYSTEMS } from "../src/generated/bundled-systems";
+import type { SystemPath } from "../src/definitions/game-system";
+import { BUNDLED_SYSTEMS, type BundledFile } from "../src/generated/bundled-systems";
 import { BundledSystemSource } from "../src/systems/bundled-source";
 import { loadSystem } from "../src/systems/loader";
 
@@ -51,6 +52,37 @@ describe.each(BUNDLED_SYSTEMS.map((system) => [system.id, system] as const))(
 
 it("ships at least the simple system", () => {
   expect(BUNDLED_SYSTEMS.map((s) => s.id)).toContain("simple");
+});
+
+/**
+ * A font or a parchment two systems both carry is one file in the plugin:
+ * the manifest holds each distinct content once, and every path with that
+ * content points at the same object.
+ */
+it("holds a file two systems share once", () => {
+  const byContent = new Map<string, BundledFile>();
+  for (const system of BUNDLED_SYSTEMS) {
+    for (const file of Object.values(system.files)) {
+      const key = "text" in file ? `text:${file.text}` : `base64:${file.base64}`;
+      const seen = byContent.get(key);
+      if (seen) expect(file).toBe(seen);
+      else byContent.set(key, file);
+    }
+  }
+});
+
+it("reads a shared file byte-exact under either path", async () => {
+  const shared: BundledFile = { base64: Buffer.from([1, 2, 3, 250]).toString("base64") };
+  const source = new BundledSystemSource({
+    id: "two",
+    name: "Two",
+    document: "two.yaml",
+    files: { "fonts/a.woff2": shared, "fonts/b.woff2": shared },
+  });
+  const a = await source.readBinary("fonts/a.woff2" as SystemPath);
+  const b = await source.readBinary("fonts/b.woff2" as SystemPath);
+  expect([...a]).toEqual([1, 2, 3, 250]);
+  expect([...b]).toEqual([1, 2, 3, 250]);
 });
 
 /** A licence, a notice, a readme: shipped beside the system, named by nobody. */

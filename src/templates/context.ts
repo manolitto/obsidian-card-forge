@@ -3,6 +3,7 @@ import type { Classifiers } from "../definitions/classifiers";
 import type { Diagnostics } from "../definitions/diagnostics";
 import type { GlyphTables } from "../definitions/glyphs";
 import type { Translations } from "../definitions/translations";
+import type { Asset } from "../systems/assets";
 
 /**
  * What a template sees, and what the helpers see. Two objects on purpose.
@@ -33,8 +34,8 @@ export interface RenderState {
   props: Record<string, unknown>;
   /** Resolved for the card's language, with the system's primary language behind it. */
   translations: Translations;
-  /** Every `{{asset "…"}}` literal the engine found, read as a `data:` URI. */
-  assets: ReadonlyMap<string, string>;
+  /** Every `{{asset "…"}}` literal the engine found, read: its `data:` URI, and an SVG's text. */
+  assets: ReadonlyMap<string, Asset>;
   /** Every picture the note refers to that the vault could answer: link target → `data:` URI. */
   images: ReadonlyMap<string, string>;
   /** Per slot, system then card type. */

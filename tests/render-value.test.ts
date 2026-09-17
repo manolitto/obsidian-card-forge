@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import {
   DEFAULT_SPEC,
   renderValue,
@@ -20,6 +20,8 @@ describe("the defaults", () => {
       markdown: true,
       linebreaks: false,
       glyph: false,
+      signed: false,
+      join: ", ",
       image: false,
       plain: false,
     });
@@ -122,17 +124,52 @@ describe("HTML in a value", () => {
 });
 
 describe("the rows the switches add", () => {
+  const reports: string[] = [];
   const env = {
     glyph: (text: string) => ({ "1h": "einhändig" })[text.toLowerCase()] ?? text,
     image: (link: string) =>
       link === "[[Beil.png]]" ? "data:image/png;base64,QQ==" : undefined,
     block: (text: string) => `<block>${text}</block>`,
+    report: (message: string) => {
+      reports.push(message);
+    },
   };
+  beforeEach(() => reports.splice(0));
 
   it("glyph: maps the raw value first, each item of a list, and leaves the rest", () => {
     expect(renderValue("1H", spec({ glyph: true }), env)).toBe("einhändig");
     expect(renderValue(["1h", "x"], spec({ glyph: true }), env)).toBe("einhändig, x");
     expect(renderValue("1H", spec({}), env)).toBe("1H");
+  });
+
+  it("signed: puts the sign on a number, leaves 0, a signed value and a word alone", () => {
+    const s = spec({ signed: true });
+    expect(renderValue(5, s, env)).toBe("+5");
+    expect(renderValue(-2, s, env)).toBe("-2");
+    expect(renderValue(0, s, env)).toBe("0");
+    expect(renderValue("+3", s, env)).toBe("+3");
+    expect(renderValue("+2 (+4 mounted)", s, env)).toBe("+2 (+4 mounted)");
+    expect(reports).toEqual([]);
+    expect(renderValue("1d6", s, env)).toBe("1d6");
+    expect(reports).toEqual([
+      'signed=true on "1d6", which is not a number; leaving it as it is',
+    ]);
+  });
+
+  it("signed: each item of a list, after its glyph", () => {
+    expect(renderValue([3, "1h", -1], spec({ signed: true, glyph: true }), env)).toBe(
+      "+3, einhändig, -1"
+    );
+  });
+
+  it("join: the separator of a list — a scalar and an empty list are what they were", () => {
+    const s = spec({ join: " / " });
+    expect(renderValue(["Athletics", "Acrobatics"], s, env)).toBe(
+      "Athletics / Acrobatics"
+    );
+    expect(renderValue("Athletics", s, env)).toBe("Athletics");
+    expect(renderValue([], s, env)).toBe("");
+    expect(renderValue(["a", "b"], spec({ join: "" }), env)).toBe("ab");
   });
 
   it("image: yields the resolved URI and nothing else, and nothing for a miss", () => {
