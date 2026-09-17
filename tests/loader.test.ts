@@ -155,31 +155,32 @@ describe("check 1 — what is declared or referenced must exist", () => {
   });
 });
 
-describe("check 2 — what exists must be declared or referenced", () => {
-  it("reports a file nothing uses, with its size", async () => {
+describe("what exists but nothing names", () => {
+  it("is handed back as data, not reported — a vault folder may hold what its owner keeps there", async () => {
     const files = completeSystem();
     files["assets/forgotten.png"] = new Uint8Array(2048);
-    const { diagnostics } = await load(files);
-    expect(diagnostics.messages).toEqual([
-      'demo: "assets/forgotten.png", 2 KB is neither declared nor referenced by anything',
+    files["notes.md"] = "design notes";
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([]);
+    expect(system!.unusedFiles).toEqual([
+      "assets/forgotten.png",
+      "fonts/OFL.txt",
+      "notes.md",
     ]);
   });
 
-  it("lets a licence, a readme and a .txt ride along", async () => {
-    const files = completeSystem();
-    files["LICENSE"] = "MIT";
-    files["README.md"] = "hello";
-    files["fonts/NOTICE"] = "…";
-    const { diagnostics } = await load(files);
-    expect(diagnostics.messages).toEqual([]);
+  it("is, for a complete system, the font's licence alone — the root document counts as used", async () => {
+    const { system } = await load(completeSystem());
+    expect(system!.unusedFiles).toEqual(["fonts/OFL.txt"]);
+    expect(system!.unusedPartials).toEqual([]);
   });
 
-  it("does not report a missing declared file twice", async () => {
+  it("does not list a missing declared file as unused", async () => {
     const files = completeSystem();
     delete files["back.hbs"];
-    const { diagnostics } = await load(files);
+    const { system, diagnostics } = await load(files);
     expect(diagnostics.messages).toHaveLength(2); // once per card type that names it
-    expect(diagnostics.matching("neither declared nor referenced")).toEqual([]);
+    expect(system!.unusedFiles).toEqual(["fonts/OFL.txt"]);
   });
 });
 
@@ -226,15 +227,14 @@ describe("the slot check", () => {
   });
 });
 
-describe("check 3 — partials both ways", () => {
-  it("reports a declared partial that nothing calls", async () => {
+describe("check 2 — every partial called is declared", () => {
+  it("hands back a declared partial that nothing calls as data, not a report", async () => {
     const files = completeSystem();
     files["gear/front.hbs"] =
       `<div>{{slot "header-title"}} {{slot "stat-1a"}} {{asset "assets/logo.png"}}</div>`;
-    const { diagnostics } = await load(files);
-    expect(diagnostics.messages).toEqual([
-      'demo: partial-templates: declares "stat-cell", which no template calls',
-    ]);
+    const { system, diagnostics } = await load(files);
+    expect(diagnostics.messages).toEqual([]);
+    expect(system!.unusedPartials).toEqual(["stat-cell"]);
   });
 
   it("reports a call to a partial nobody declares, naming the caller", async () => {
@@ -252,8 +252,22 @@ describe("check 3 — partials both ways", () => {
   });
 });
 
+describe("the root document", () => {
+  it("is whatever the source names — the name is free", async () => {
+    const files = completeSystem();
+    files["demo.yml"] = files["game-system.yaml"]!;
+    delete files["game-system.yaml"];
+    const diagnostics = collectDiagnostics();
+    const source = new MemorySource(files, "memory", "demo.yml" as SystemPath);
+    const system = await loadSystem(source, "demo", diagnostics);
+    expect(diagnostics.messages).toEqual([]);
+    expect(system?.id).toBe("demo");
+    expect(system?.unusedFiles).not.toContain("demo.yml");
+  });
+});
+
 describe("what the loader refuses outright", () => {
-  it("a folder without game-system.yaml", async () => {
+  it("a folder without the root document", async () => {
     const { system, diagnostics } = await load({ "front.hbs": "x" });
     expect(system).toBeUndefined();
     expect(diagnostics.messages).toEqual(["memory: no game-system.yaml; not a system"]);

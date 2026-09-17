@@ -15,11 +15,18 @@ import type { SystemPath } from "../definitions/game-system";
  *
  * Every path is a `SystemPath` — relative to the system folder, checked to
  * stay inside it. A source is never handed a string nobody checked.
+ *
+ * The root document is whatever the registration points at — the listing
+ * entry of a bundled system, the file the user picked for a vault one —
+ * and the folder holding it is the system. The name is free: the bundled
+ * systems call theirs after the system, and nothing is found by name.
  */
 export interface SystemSource {
   readonly kind: "bundled" | "vault";
   /** Where the files are, for messages — `bundled:simple`, or the vault folder. */
   readonly root: string;
+  /** The root document, at the top of the folder. */
+  readonly document: SystemPath;
   /** Every file in the system's folder, relative and `/`-separated. */
   listFiles(): Promise<SystemPath[]>;
   /** Throws `MissingFileError` for a path the source does not have. */

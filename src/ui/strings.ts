@@ -143,19 +143,19 @@ const en = {
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systems",
   "settings.systems.desc":
-    "The systems your cards can be rendered with. Bundled systems ship with the plugin; a vault system is a folder in your vault holding a game-system.yaml. At most one system per id may be switched on.",
+    "The systems your cards can be rendered with. Bundled systems ship with the plugin; a vault system is a folder in your vault with a YAML document at its top naming the system. At most one system per id may be switched on. Obsidian's file explorer lists a system's files (.yaml, .hbs, .css) only with \"Detect all file extensions\" switched on under Files and links.",
   "settings.system.bundled": "Bundled with the plugin",
-  "settings.system.folder": "Vault folder: {path}",
+  "settings.system.file": "Vault file: {path}",
   "settings.system.copy": "Copy into vault",
   "settings.system.remove": "Remove",
   "settings.add.name": "Add a vault system",
   "settings.add.desc":
-    "The folder holding the system's game-system.yaml. It is read and checked when you add it.",
-  "settings.add.placeholder": "Folder in the vault",
+    "The system's YAML document in the vault. It is read and checked when you add it.",
+  "settings.add.placeholder": "YAML file in the vault",
   "settings.add.button": "Add",
   "settings.add.registered": 'Registered system "{id}" from {path}',
   "settings.add.already": "{path} is already registered",
-  "settings.add.no-folder": "Name a folder first",
+  "settings.add.no-file": "Pick a file first",
   "settings.preferences.heading": "Preferences",
   "settings.preview-height.name": "Preview height",
   "settings.preview-height.desc":
@@ -304,19 +304,19 @@ const de: Strings = {
   // ── Settings ────────────────────────────────────────────────────
   "settings.systems.heading": "Systeme",
   "settings.systems.desc":
-    "Die Systeme, mit denen deine Karten gerendert werden. Mitgelieferte Systeme kommen mit dem Plugin; ein Vault-System ist ein Ordner in deinem Vault mit einer game-system.yaml. Pro Id darf höchstens ein System eingeschaltet sein.",
+    "Die Systeme, mit denen deine Karten gerendert werden. Mitgelieferte Systeme kommen mit dem Plugin; ein Vault-System ist ein Ordner in deinem Vault mit einem YAML-Dokument darin, das das System benennt. Pro Id darf höchstens ein System eingeschaltet sein. Obsidians Dateiexplorer zeigt die Dateien eines Systems (.yaml, .hbs, .css) nur, wenn unter „Dateien und Links“ „Alle Dateierweiterungen erkennen“ eingeschaltet ist.",
   "settings.system.bundled": "Mit dem Plugin mitgeliefert",
-  "settings.system.folder": "Vault-Ordner: {path}",
+  "settings.system.file": "Vault-Datei: {path}",
   "settings.system.copy": "In den Vault kopieren",
   "settings.system.remove": "Entfernen",
   "settings.add.name": "Vault-System hinzufügen",
   "settings.add.desc":
-    "Der Ordner mit der game-system.yaml des Systems. Er wird beim Hinzufügen gelesen und geprüft.",
-  "settings.add.placeholder": "Ordner im Vault",
+    "Das YAML-Dokument des Systems im Vault. Es wird beim Hinzufügen gelesen und geprüft.",
+  "settings.add.placeholder": "YAML-Datei im Vault",
   "settings.add.button": "Hinzufügen",
   "settings.add.registered": "System „{id}“ aus {path} registriert",
   "settings.add.already": "{path} ist bereits registriert",
-  "settings.add.no-folder": "Zuerst einen Ordner angeben",
+  "settings.add.no-file": "Zuerst eine Datei auswählen",
   "settings.preferences.heading": "Einstellungen",
   "settings.preview-height.name": "Vorschauhöhe",
   "settings.preview-height.desc":

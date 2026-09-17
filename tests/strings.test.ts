@@ -64,17 +64,17 @@ describe("t", () => {
   it("reads the current table and fills the placeholders", () => {
     setUiLanguage("en");
     expect(uiLanguage()).toBe("en");
-    expect(t("settings.system.folder", { path: "card-forge/mine" })).toBe(
-      "Vault folder: card-forge/mine"
+    expect(t("settings.system.file", { path: "card-forge/mine/mine.yaml" })).toBe(
+      "Vault file: card-forge/mine/mine.yaml"
     );
     setUiLanguage("de");
-    expect(t("settings.system.folder", { path: "card-forge/mine" })).toBe(
-      "Vault-Ordner: card-forge/mine"
+    expect(t("settings.system.file", { path: "card-forge/mine/mine.yaml" })).toBe(
+      "Vault-Datei: card-forge/mine/mine.yaml"
     );
     setUiLanguage("en");
   });
 
   it("leaves a placeholder it is not given", () => {
-    expect(t("settings.system.folder")).toBe("Vault folder: {path}");
+    expect(t("settings.system.file")).toBe("Vault file: {path}");
   });
 });

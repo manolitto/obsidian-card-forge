@@ -88,7 +88,7 @@
 
 /* A roll label too wide for the die — a two-digit range ("9–10", "11–12"),
    or any three characters without a narrow dash among them ("100"). The
-   classifier for `front-header-die` in game-system.yaml picks the token; its comment
+   classifier for `front-header-die` in dragonbane.yaml picks the token; its comment
    carries the measured widths.
 
    The die cannot grow to meet these: its clear interior is ~72 % of its box,
@@ -207,7 +207,7 @@
 
 /* A table name longer than anything in the Regelbuch — the author's own. No
    bundled card reaches this rule; see the measured table beside
-   the classifier for `front-header-subtitle` in game-system.yaml for why the threshold sits above every
+   the classifier for `front-header-subtitle` in dragonbane.yaml for why the threshold sits above every
    printed table rather than in the middle of them.
 
    0.41em is the die's `-wide` step (0.59 of 0.9) applied to this tag's 0.52em,

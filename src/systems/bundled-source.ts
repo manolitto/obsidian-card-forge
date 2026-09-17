@@ -6,9 +6,12 @@ import { MissingFileError, type SystemSource } from "./source";
 export class BundledSystemSource implements SystemSource {
   readonly kind = "bundled";
   readonly root: string;
+  readonly document: SystemPath;
 
   constructor(private readonly system: BundledSystem) {
     this.root = `bundled:${system.id}`;
+    // Listed by the build, so it is a name at the top of the folder.
+    this.document = system.document as SystemPath;
   }
 
   async listFiles(): Promise<SystemPath[]> {

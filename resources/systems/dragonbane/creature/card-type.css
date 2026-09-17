@@ -5,7 +5,7 @@
    plain caps heading over a Monsterangriffe table.
 
    It serves both kinds. What a card IS lives in `category`, not in
-   the card-type — see the creature entry in game-system.yaml. The
+   the card-type — see the creature entry in dragonbane.yaml. The
    rules below that only a monster ever triggers (the attack table,
    the GM note) simply never fire on a card that fills no such slot.
 
@@ -100,7 +100,7 @@
    `.db-front-image-wrap`'s 6em min-height is an indivisible block the
    overflow splitter cannot paginate, forcing a min-scale clip on dense
    monsters (e.g. Der Homunkulus). (The card-type declares two layout
-   candidates, `with-back` / `front-image`; see game-system.yaml.)
+   candidates, `with-back` / `front-image`; see dragonbane.yaml.)
 
    So hide the front image by default and reveal it only under the
    `front-image` layout candidate (`.cf-layout-front-image`) — the even-parity

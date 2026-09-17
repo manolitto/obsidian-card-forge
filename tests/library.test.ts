@@ -6,7 +6,7 @@ import { completeSystem, MemoryVault } from "./helpers/systems";
 const VAULT_ENTRY: SystemEntry = {
   type: "vault",
   id: "demo",
-  path: "Systems/demo",
+  path: "Systems/demo/game-system.yaml",
   active: true,
 };
 
@@ -86,12 +86,17 @@ describe("the one-enabled-per-id invariant", () => {
     const library = libraryWith(
       [
         { type: "bundled", id: "simple", active: true },
-        { type: "vault", id: "simple", path: "Systems/simple", active: true },
+        {
+          type: "vault",
+          id: "simple",
+          path: "Systems/simple/game-system.yaml",
+          active: true,
+        },
       ],
       vault
     );
     await expect(library.get("simple")).rejects.toThrow(
-      /enabled more than once — the bundled system and the vault folder "Systems\/simple"/
+      /enabled more than once — the bundled system and the vault file "Systems\/simple\/game-system.yaml"/
     );
   });
 
@@ -106,7 +111,12 @@ describe("the one-enabled-per-id invariant", () => {
     const library = libraryWith(
       [
         { type: "bundled", id: "simple", active: false },
-        { type: "vault", id: "simple", path: "Systems/simple", active: true },
+        {
+          type: "vault",
+          id: "simple",
+          path: "Systems/simple/game-system.yaml",
+          active: true,
+        },
       ],
       vault
     );
@@ -155,27 +165,50 @@ describe("a bundled system", () => {
   });
 });
 
-describe("inspecting a folder before registering it", () => {
+describe("inspecting a root document before registering it", () => {
   it("returns the id to store and no reports for a complete system", async () => {
     const vault = new MemoryVault();
     vault.addFolder("Systems/demo", completeSystem());
     const library = libraryWith([], vault);
-    expect(await library.inspectVaultFolder("Systems/demo/")).toEqual({
+    expect(await library.inspectVaultDocument("Systems/demo/game-system.yaml")).toEqual({
       id: "demo",
       messages: [],
     });
   });
 
-  it("returns no id for a folder that is not a system", async () => {
+  it("takes the document under any name, and the folder around it as the system", async () => {
+    const vault = new MemoryVault();
+    const files = completeSystem();
+    files["demo.yml"] = files["game-system.yaml"]!;
+    delete files["game-system.yaml"];
+    vault.addFolder("Systems/demo", files);
+    const library = libraryWith([], vault);
+    expect(await library.inspectVaultDocument("Systems/demo/demo.yml")).toEqual({
+      id: "demo",
+      messages: [],
+    });
+  });
+
+  it("returns no id for a file that is not there", async () => {
     const library = libraryWith([], new MemoryVault({ "Systems/x/notes.md": "" }));
-    const result = await library.inspectVaultFolder("Systems/x");
+    const result = await library.inspectVaultDocument("Systems/x/x.yaml");
     expect(result.id).toBeUndefined();
-    expect(result.messages).toEqual(["Systems/x: no game-system.yaml; not a system"]);
+    expect(result.messages).toEqual(["Systems/x: no x.yaml; not a system"]);
+  });
+
+  it("refuses a file that is not YAML, and one at the vault root", async () => {
+    const library = libraryWith([]);
+    expect(
+      (await library.inspectVaultDocument("Systems/x/notes.md")).messages[0]
+    ).toMatch(/\.yaml or \.yml/);
+    expect((await library.inspectVaultDocument("demo.yaml")).messages[0]).toMatch(
+      /folder of its own/
+    );
   });
 
   it("refuses a hidden folder, where no change would ever be noticed", async () => {
     const library = libraryWith([]);
-    const result = await library.inspectVaultFolder(".obsidian/systems/demo");
+    const result = await library.inspectVaultDocument(".obsidian/systems/demo/demo.yaml");
     expect(result.id).toBeUndefined();
     expect(result.messages[0]).toMatch(/hidden folder/);
   });

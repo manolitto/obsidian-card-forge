@@ -4,8 +4,8 @@ import { BUNDLED_SYSTEMS } from "../generated/bundled-systems";
 import { findDuplicateActiveIds } from "../settings/system-registry";
 import type { SystemEntry } from "../settings/types";
 import { BundledSystemSource } from "./bundled-source";
-import { loadSystem, SYSTEM_DOCUMENT, type LoadedSystem } from "./loader";
-import { VaultSystemSource, type VaultFiles } from "./vault-source";
+import { loadSystem, type LoadedSystem } from "./loader";
+import { folderOf, VaultSystemSource, type VaultFiles } from "./vault-source";
 
 /** The ids this build ships, in listing order — what the settings reconcile against. */
 export const BUNDLED_IDS: readonly string[] = BUNDLED_SYSTEMS.map((system) => system.id);
@@ -106,7 +106,7 @@ export class SystemLibrary {
     const dropped: string[] = [];
     for (const id of this.loaded.keys()) {
       const entry = this.enabledEntry(id);
-      if (entry?.type === "vault" && isUnder(vaultPath, entry.path)) {
+      if (entry?.type === "vault" && isUnder(vaultPath, folderOf(entry.path))) {
         this.loaded.delete(id);
         dropped.push(id);
       }
@@ -115,25 +115,36 @@ export class SystemLibrary {
   }
 
   /**
-   * Read and check a vault folder without registering it, so a settings
-   * dialog can show the verdict before an entry exists. The id is the one to
-   * store on the entry; it is absent when the folder holds no usable system.
+   * Read and check a vault system by its root document without registering
+   * it, so a settings dialog can show the verdict before an entry exists.
+   * The id is the one to store on the entry; it is absent when the file is
+   * no usable system.
    */
-  async inspectVaultFolder(
-    folder: string
+  async inspectVaultDocument(
+    path: string
   ): Promise<{ id?: string; messages: readonly string[] }> {
-    const root = folder.replace(/\/+$/, "");
     const diagnostics = collectDiagnostics();
-    if (root.split("/").some((segment) => segment.startsWith("."))) {
+    if (!/\.ya?ml$/i.test(path)) {
+      diagnostics.warn(`${path}: a system's root document is a .yaml or .yml file`);
+      return { messages: diagnostics.messages };
+    }
+    const folder = folderOf(path);
+    if (!folder) {
       diagnostics.warn(
-        `${root}: a system cannot live in a hidden folder — Obsidian does not report changes there`
+        `${path}: a system needs a folder of its own — at the vault root, the whole vault would be the system`
       );
       return { messages: diagnostics.messages };
     }
-    const source = new VaultSystemSource(root, this.files);
+    if (folder.split("/").some((segment) => segment.startsWith("."))) {
+      diagnostics.warn(
+        `${path}: a system cannot live in a hidden folder — Obsidian does not report changes there`
+      );
+      return { messages: diagnostics.messages };
+    }
+    const source = new VaultSystemSource(path, this.files);
     let id: string | undefined;
     try {
-      const doc = load(await source.readText(SYSTEM_DOCUMENT)) as Record<
+      const doc = load(await source.readText(source.document)) as Record<
         string,
         unknown
       > | null;
@@ -203,5 +214,5 @@ function isUnder(path: string, folder: string): boolean {
 function describeEntry(entry: SystemEntry): string {
   return entry.type === "bundled"
     ? "the bundled system"
-    : `the vault folder "${entry.path}"`;
+    : `the vault file "${entry.path}"`;
 }

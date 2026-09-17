@@ -11,7 +11,7 @@
 #                 settings (`card-size`, `overflow-mode`, …) are resolved once
 #                 per card through system, card type, deck and note; deck
 #                 settings (`paper-size`, `page-margin`, …) once per deck.
-#                 A system's `game-system.yaml` and a deck block are the next
+#                 A system's root document and a deck block are the next
 #                 layers up and may override any of them.
 #
 # Nothing here names a file. A reader's preference — the preview height, whether

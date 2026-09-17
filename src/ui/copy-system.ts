@@ -10,7 +10,7 @@ import { t } from "./strings";
 /*
  * A bundled system copied into the vault: every file it holds, binaries
  * included, written under a folder of the reader's choosing, registered
- * as a vault system and switched on. The copy is a cut — it stops
+ * as a vault system by its root document and switched on. The copy is a cut — it stops
  * receiving the plugin's improvements — and it is self-contained, so the
  * reader can edit anything in it.
  *
@@ -25,7 +25,8 @@ export interface CopyContext {
   app: App;
   entries(): SystemEntry[];
   save(entries: SystemEntry[]): Promise<void>;
-  inspect(folder: string): Promise<{ id?: string; messages: readonly string[] }>;
+  /** The verdict on a root document in the vault, by its path. */
+  inspect(documentPath: string): Promise<{ id?: string; messages: readonly string[] }>;
 }
 
 // ── The action ─────────────────────────────────────────────────────
@@ -104,7 +105,7 @@ async function runCopy(
   for (const path of await system.source.listFiles()) {
     const target = `${folder}/${path}`;
     await createFolders(app, target.slice(0, target.lastIndexOf("/")));
-    if (path === "game-system.yaml" && id !== system.id) {
+    if (path === system.source.document && id !== system.id) {
       const text = await system.source.readText(path);
       await app.vault.create(target, text.replace(/^id\s*:.*$/m, `id: ${id}`));
     } else {
@@ -113,13 +114,14 @@ async function runCopy(
     }
   }
 
-  const verdict = await context.inspect(folder);
+  const document = `${folder}/${system.source.document}`;
+  const verdict = await context.inspect(document);
   if (verdict.id !== id) {
     throw new Error(
       `${folder}: ${verdict.messages.join("; ") || "the copy did not load as a system"}`
     );
   }
-  await context.save(entriesAfterCopy(context.entries(), system.id, id, folder));
+  await context.save(entriesAfterCopy(context.entries(), system.id, id, document));
   notice(t("copy.done", { path: folder }), 8000);
   for (const message of verdict.messages) console.warn(`[Card Forge] ${message}`);
 

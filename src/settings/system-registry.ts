@@ -49,7 +49,7 @@ export function findDuplicateActiveIds(entries: readonly SystemEntry[]): string[
 }
 
 /**
- * The registry after a copy: a vault entry for the folder, active. With
+ * The registry after a copy: a vault entry for the copied root document, active. With
  * the original's id kept, the bundled entry goes inactive — the invariant
  * is about enabled systems, and switching back is one click. With a new
  * id both stay active; nothing is duplicated.

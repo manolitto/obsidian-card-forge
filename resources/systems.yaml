@@ -1,10 +1,11 @@
 # The bundled systems, in the order they are listed to the user.
 #
-# Each entry is the path of a system's `game-system.yaml`, relative to
-# `resources/systems/`. The system's id is in that document; nothing here
-# repeats it. A folder under `resources/systems/` that this list does not name
-# is a build error, not a system.
+# Each entry is the path of a system's root document, relative to
+# `resources/systems/`; the folder holding it is the system. The system's id
+# is in that document; nothing here repeats it. A folder under
+# `resources/systems/` that this list does not name is a build error, not a
+# system.
 systems:
-  - simple/game-system.yaml
-  - dragonbane/game-system.yaml
-  - eiserne-zeit/game-system.yaml
+  - simple/simple.yaml
+  - dragonbane/dragonbane.yaml
+  - eiserne-zeit/eiserne-zeit.yaml

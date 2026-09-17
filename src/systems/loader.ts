@@ -25,9 +25,6 @@ import {
 } from "./references";
 import type { SystemSource } from "./source";
 
-/** The document every system starts from, at the root of its folder. */
-export const SYSTEM_DOCUMENT = "game-system.yaml" as SystemPath;
-
 /**
  * A system, loaded: its declaration taken apart, every card type's definition
  * layers folded, and its files reachable through the source it came from.
@@ -43,6 +40,15 @@ export interface LoadedSystem {
    * system's, then the card type's own, with every `url()` inlined.
    */
   stylesheet(cardTypeId: string): Promise<string>;
+  /**
+   * Files in the folder that nothing declares or refers to, and declared
+   * partials no template calls. Data, not a report: a vault folder may
+   * hold whatever its owner keeps beside the system, but every byte of a
+   * bundled folder ships in the plugin, so the bundled test asserts both
+   * empty.
+   */
+  unusedFiles: readonly SystemPath[];
+  unusedPartials: readonly string[];
 }
 
 export interface LoadedCardType {
@@ -69,16 +75,17 @@ export interface LoadedCardType {
 /**
  * Load a system from wherever its files are.
  *
- * Reads `game-system.yaml`, hands the document to the definition layer, and
- * then checks the folder against the declaration in both directions:
+ * Reads the source's root document, hands it to the definition layer, and
+ * then checks the folder against the declaration:
  *
  *   1. every declared file exists, and every referenced asset exists — a
  *      miss is reported naming what declared or referenced it;
- *   2. every file in the folder is declared, referenced, or one of the few
- *      names that ride along (a licence, a readme) — a stranger is reported
- *      with its size, so a stray megabyte is noticed the day it appears;
- *   3. partials both ways: a declared partial nothing calls, and a call no
- *      declaration covers.
+ *   2. every partial a template calls is declared — a call no declaration
+ *      covers is reported naming the caller.
+ *
+ * The other direction — a file nothing names, a declared partial nothing
+ * calls — costs a vault system nothing and is handed back as data
+ * (`unusedFiles`, `unusedPartials`) rather than reported.
  *
  * Problems are reported, not thrown: a system with one broken card type
  * still shows its other four, and a face whose template is missing fails at
@@ -96,9 +103,9 @@ export async function loadSystem(
 ): Promise<LoadedSystem | undefined> {
   let text: string;
   try {
-    text = await source.readText(SYSTEM_DOCUMENT);
+    text = await source.readText(source.document);
   } catch {
-    diagnostics.warn(`${source.root}: no ${SYSTEM_DOCUMENT}; not a system`);
+    diagnostics.warn(`${source.root}: no ${source.document}; not a system`);
     return undefined;
   }
 
@@ -106,7 +113,7 @@ export async function loadSystem(
   try {
     doc = load(text);
   } catch (error) {
-    diagnostics.warn(`${source.root}/${SYSTEM_DOCUMENT}: ${describe(error)}`);
+    diagnostics.warn(`${source.root}/${source.document}: ${describe(error)}`);
     return undefined;
   }
 
@@ -115,18 +122,18 @@ export async function loadSystem(
 
   if (declaration.id !== expectedId) {
     diagnostics.warn(
-      `${source.root}: ${SYSTEM_DOCUMENT} declares id "${declaration.id}" but is registered as "${expectedId}"; not loading it`
+      `${source.root}: ${source.document} declares id "${declaration.id}" but is registered as "${expectedId}"; not loading it`
     );
     return undefined;
   }
 
   const files = new Set<string>(await source.listFiles());
-  const used = new Set<string>([SYSTEM_DOCUMENT]);
+  const used = new Set<string>([source.document]);
   const report = (message: string): void =>
     diagnostics.warn(`${declaration.id}: ${message}`);
 
   // A declared root must exist; whether it does, it counts as used, so a
-  // missing one is reported once and not again as a stranger.
+  // missing one is reported once and not again as unused.
   const declared = async (
     path: SystemPath | undefined,
     what: string
@@ -182,11 +189,9 @@ export async function loadSystem(
   if (declaration.markdownImagePartial) {
     partialsCalled.set(declaration.markdownImagePartial, "markdown-image-partial:");
   }
-  for (const name of Object.keys(declaration.partialTemplates)) {
-    if (!partialsCalled.has(name)) {
-      report(`partial-templates: declares "${name}", which no template calls`);
-    }
-  }
+  const unusedPartials = Object.keys(declaration.partialTemplates).filter(
+    (name) => !partialsCalled.has(name)
+  );
   for (const [name, caller] of partialsCalled) {
     if (!(name in declaration.partialTemplates)) {
       report(
@@ -196,19 +201,9 @@ export async function loadSystem(
   }
 
   // ── The document's own references — a property's default, say ───
-  referenced(documentAssetReferences(doc), SYSTEM_DOCUMENT);
+  referenced(documentAssetReferences(doc), source.document);
 
-  // ── Strangers ────────────────────────────────────────────────────
-  for (const file of files) {
-    if (used.has(file) || ridesAlong(file)) continue;
-    let size = "";
-    try {
-      size = `, ${formatSize((await source.readBinary(file as SystemPath)).byteLength)}`;
-    } catch {
-      /* the size is a courtesy */
-    }
-    report(`"${file}"${size} is neither declared nor referenced by anything`);
-  }
+  const unusedFiles = [...files].filter((file) => !used.has(file)) as SystemPath[];
 
   // ── Fold the layers ──────────────────────────────────────────────
   const cardTypes: Record<string, LoadedCardType> = {};
@@ -251,6 +246,8 @@ export async function loadSystem(
       }
       return pending;
     },
+    unusedFiles,
+    unusedPartials,
   };
 }
 
@@ -322,27 +319,6 @@ function slotVocabulary(properties: PropertyDefsMap): ReadonlySet<string> {
     for (const slot of def.slot ?? []) slots.add(slot);
   }
   return slots;
-}
-
-/**
- * Files that travel with a system without being part of it: a font's
- * licence, a readme. Checked by name, never declared.
- */
-function ridesAlong(path: string): boolean {
-  const name = path.slice(path.lastIndexOf("/") + 1).toLowerCase();
-  return (
-    name.startsWith("license") ||
-    name.startsWith("licence") ||
-    name.startsWith("notice") ||
-    name.startsWith("readme") ||
-    name.endsWith(".txt")
-  );
-}
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
 function describe(error: unknown): string {
