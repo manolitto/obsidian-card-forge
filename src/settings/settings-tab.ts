@@ -42,14 +42,20 @@ export class CardForgeSettingTab extends PluginSettingTab {
   }
 
   private systemRow(parent: HTMLElement, entry: SystemEntry): void {
-    const row = new Setting(parent).setName(entry.id).setClass("cf-system-row");
-    // A block, not `=> row.setName(name)`: every Obsidian component has a
-    // `then(cb)` for chaining, so a promise resolved with one is resolved
-    // with a thenable that resolves with itself — an endless microtask loop
-    // that no debugger can interrupt. Never return a component from a
-    // promise callback.
-    void this.plugin.systems.nameOf(entry).then((name) => {
-      row.setName(name);
+    const row = new Setting(parent).setClass("cf-system-row");
+    // The name, and beside it the id a note writes in `system:`. Set as one,
+    // since `setName` replaces the element's content.
+    const name = (text: string): void => {
+      row.setName(text);
+      row.nameEl.createSpan({ cls: "cf-system-id", text: entry.id });
+    };
+    name(entry.id);
+    // A block, not `=> name(text)` returning a component: every Obsidian
+    // component has a `then(cb)` for chaining, so a promise resolved with
+    // one is resolved with a thenable that resolves with itself — an
+    // endless microtask loop no debugger can interrupt.
+    void this.plugin.systems.nameOf(entry).then((text) => {
+      name(text);
     });
     row.setDesc(
       entry.type === "bundled"

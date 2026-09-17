@@ -1,14 +1,15 @@
-import { FuzzySuggestModal, Notice, type App } from "obsidian";
+import { FuzzySuggestModal, Notice, type App, type FuzzyMatch } from "obsidian";
 import type { SystemEntry } from "../settings/types";
 import type { LoadResult } from "../systems/library";
 import type { LoadedCardType, LoadedSystem } from "../systems/loader";
 import { t } from "./strings";
 
 /*
- * Two pickers in a row: a system by name, then one of its card types by
- * id — each skipped when there is exactly one to choose from. What is
- * offered is the active entries of the registry; a system that does not
- * load is still listed, so the reader sees it, and says why when chosen.
+ * Two pickers in a row: a system by name, its id beside it, then one of
+ * its card types by id — each skipped when there is exactly one to choose
+ * from. What is offered is the active entries of the registry; a system
+ * that does not load is still listed, so the reader sees it, and says why
+ * when chosen.
  */
 
 export interface PickedCardType {
@@ -42,7 +43,8 @@ export async function pickSystemAndCardType(
           app,
           loaded,
           t("picker.system"),
-          (s) => s.system?.declaration.name ?? s.id
+          (s) => s.system?.declaration.name ?? s.id,
+          (s) => s.id
         );
   if (!choice) return undefined;
   if (!choice.system) {
@@ -60,11 +62,13 @@ export async function pickSystemAndCardType(
 }
 
 /** One `FuzzySuggestModal`, as a promise: the item chosen, or nothing when dismissed. */
+/** `tag`, when given, is shown after the label as a muted monospace chip — the system id. */
 function pick<T>(
   app: App,
   items: T[],
   placeholder: string,
-  label: (item: T) => string
+  label: (item: T) => string,
+  tag?: (item: T) => string
 ): Promise<T | undefined> {
   return new Promise((resolve) => {
     let chosen = false;
@@ -74,6 +78,10 @@ function pick<T>(
       }
       getItemText(item: T): string {
         return label(item);
+      }
+      override renderSuggestion(match: FuzzyMatch<T>, el: HTMLElement): void {
+        super.renderSuggestion(match, el);
+        if (tag) el.createSpan({ cls: "cf-system-id", text: tag(match.item) });
       }
       onChooseItem(item: T): void {
         chosen = true;

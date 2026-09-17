@@ -178,7 +178,21 @@
   border: 0;
 }
 
-/* ── The settings page ───────────────────────────────────────────── */
+/* ── The settings page and the pickers ───────────────────────────── */
+
+/* A system's id beside its name — what a note writes in `system:`. A chip
+   like a hotkey's: a relative tint, so it shows on any row, light or dark,
+   and a hairline for the edge. */
+.cf-system-id {
+  margin-left: var(--size-4-2);
+  padding: var(--size-2-1) var(--size-4-1);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  background-color: var(--background-modifier-hover);
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}
 
 .cf-system-messages {
   margin: 0 0 var(--size-4-2);
