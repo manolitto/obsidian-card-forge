@@ -327,6 +327,14 @@ describe("{{slot}} with the newer switches", () => {
     expect(diagnostics.messages).toEqual([]);
   });
 
+  it("list=true keeps an item's keys as written, and finds them in any case", () => {
+    const { html } = render(
+      `{{#each (slot "front-body" list=true signed=true)}}{{#each this}}[{{@key}} {{this}}]{{/each}}{{/each}}`,
+      { data: { content: [{ REF: 8 }, { Athletik: -1 }] } }
+    );
+    expect(html).toBe("[REF +8][Athletik -1]");
+  });
+
   it("list=true is the shape of the answer, whatever join= says", () => {
     expect(
       render(`{{#each (slot "front-body" list=true join=" / ")}}[{{this}}]{{/each}}`, {
@@ -384,6 +392,23 @@ describe("{{slot-class}}", () => {
     expect(
       render(`{{slot-class "front-stat-1a" fallback="ab"}}`, { classifiers }).html
     ).toBe("narrow");
+  });
+
+  it("value= classifies that value instead — a class per item of the list form", () => {
+    const { html, diagnostics } = render(
+      `{{#each (slot "front-stat-1a" list=true plain=true)}}<i class="{{slot-class "front-stat-1a" value=this}}">{{this}}</i>{{/each}}`,
+      { data: { griff: ["ab", "[[Lang|abc]]", "x"] }, classifiers }
+    );
+    expect(html).toBe(
+      '<i class="narrow">ab</i><i class="wide">abc</i><i class="narrow">x</i>'
+    );
+    expect(diagnostics.messages).toEqual([]);
+    expect(
+      render(`{{slot-class "front-stat-1a" value="9–10"}}`, {
+        data: { griff: "7" },
+        classifiers,
+      }).html
+    ).toBe("wide");
   });
 
   it("reports a slot no classifier serves", () => {

@@ -1,0 +1,16 @@
+Speerhagel · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 0.97
+   div.pf2e-trait-row "Mechanisch Falle"
+   div.pf2e-flavor.pf2e-trap-lead
+     p "Eine Druckplatte im Boden löst einen …"
+   div.pf2e-stat-line "Bemerken Wahrnehmungswurf, SG 18 (geübt)"
+   div.pf2e-stat-line "Entschärfen Diebeskunst, SG 16 (geübt), um …"
+   hr.pf2e-divider
+   div.pf2e-stat-line "RK 16; ZÄH +9, REF +5"
+   div.pf2e-stat-line "TP 30 (BW 15); Härte 8; …"
+   hr.pf2e-divider
+   div.pf2e-entry-list
+     div.pf2e-entry "Speerhagel ⬲ Auslöser Eine Kreatur betritt …"
+     div.pf2e-entry "Fernkampfangriff Speer +11 , Schaden 1W8+4 …"
+   div.pf2e-stat-line.pf2e-trap-reset "Rücksetzer Die Speere werden von Hand …"
+2. back [cf-layout-default] scale —

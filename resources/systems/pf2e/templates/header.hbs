@@ -1,0 +1,24 @@
+{{!--
+  Pathfinder 2e — the header row of every front.
+
+    front-title         the name, in condensed caps over the red rule
+    front-title-glyph   the action cost beside it, through the glyph table
+    front-badge         the badge at the right — the level, or a skill
+    front-badge-note    a second line under the badge — the proficiency rank
+
+  The whole row is ONE `.text-scalable`: the layout engine shrinks its font
+  size until the row fits, and everything inside is sized in `em`, so the
+  badge stays at its 0.875 ratio to the title however far the title has to
+  come down. A badge that is a list — an action that serves several skills
+  — prints its entries joined with a slash.
+--}}
+<div class="card-header">
+  <div class="pf2e-header">
+    <span class="text-scalable pf2e-header-row">
+      <span class="pf2e-header-left"><span class="pf2e-name">{{slot "front-title" plain=true}}</span>{{#if (slot "front-title-glyph")}}<span class="pf2e-title-glyph">{{slot "front-title-glyph" glyph=true markdown=false}}</span>{{/if}}<span class="cf-overflow-counter"></span></span>
+      {{#if (or (slot "front-badge") (slot "front-badge-note"))}}
+      <span class="pf2e-header-right">{{#if (slot "front-badge")}}<span class="pf2e-badge">{{slot "front-badge" join=" / " markdown=false}}</span>{{/if}}{{#if (slot "front-badge-note")}}<span class="pf2e-badge-note">{{slot "front-badge-note" markdown=false}}</span>{{/if}}</span>
+      {{/if}}
+    </span>
+  </div>
+</div>

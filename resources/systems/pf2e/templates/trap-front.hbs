@@ -1,0 +1,56 @@
+{{!--
+  Pathfinder 2e — the hazard front.
+
+    front-lead                           an italic introduction
+    front-notice, front-initiative,
+    front-disarm                         the labelled lines
+    ─ rule ─
+    front-armor-class + front-saves      "RK 18; ZÄH +7, REF +5"
+    front-hit-points + front-hardness
+      + front-immunities
+    ─ rule ─
+    front-entries                        the hazard's actions and effects
+    front-reset                          the reset clause, last
+--}}
+<div class="card-root card-front pf2e trap-card">
+  {{> header}}
+
+  <div class="card-content-container">
+    <div class="card-body-scalable">
+
+    {{> trait-row}}
+
+    {{#if (slot "front-lead")}}
+    <div class="pf2e-flavor pf2e-trap-lead">{{slot "front-lead" markdown="block"}}</div>
+    {{/if}}
+
+    {{> stat-line for="front-notice"}}
+    {{> stat-line for="front-initiative"}}
+    {{> stat-line for="front-disarm"}}
+
+    {{#if (or (slot "front-armor-class") (slot "front-saves" list=true) (slot "front-hit-points") (slot "front-hardness") (slot "front-immunities"))}}
+    <hr class="pf2e-divider" />
+    {{/if}}
+
+    {{#if (or (slot "front-armor-class") (slot "front-saves" list=true))}}
+    <div class="pf2e-stat-line">{{#if (slot "front-armor-class")}}<span class="pf2e-stat-label">{{slot-label "front-armor-class"}}</span>{{slot "front-armor-class" markdown=false}}{{#if (slot "front-saves" list=true)}}; {{/if}}{{/if}}{{#if (slot "front-saves" list=true)}}{{> pairs for="front-saves"}}{{/if}}</div>
+    {{/if}}
+
+    {{#if (or (slot "front-hit-points") (slot "front-hardness") (slot "front-immunities"))}}
+    <div class="pf2e-stat-line">{{#if (slot "front-hit-points")}}<span class="pf2e-stat-label">{{slot-label "front-hit-points"}}</span>{{slot "front-hit-points" markdown=false}}{{#if (or (slot "front-hardness") (slot "front-immunities"))}}; {{/if}}{{/if}}{{#if (slot "front-hardness")}}<span class="pf2e-stat-label">{{slot-label "front-hardness"}}</span>{{slot "front-hardness" markdown=false}}{{#if (slot "front-immunities")}}; {{/if}}{{/if}}{{#if (slot "front-immunities")}}<span class="pf2e-stat-label">{{slot-label "front-immunities"}}</span>{{slot "front-immunities"}}{{/if}}</div>
+    {{/if}}
+
+    {{#if (slot "front-entries" list=true)}}
+    <hr class="pf2e-divider" />
+    {{/if}}
+    {{> entry-list}}
+
+    {{#if (slot "front-reset")}}
+    <div class="pf2e-stat-line pf2e-trap-reset"><span class="pf2e-stat-label">{{slot-label "front-reset"}}</span>{{slot "front-reset"}}</div>
+    {{/if}}
+
+    </div>
+  </div>
+
+  {{> footer}}
+</div>

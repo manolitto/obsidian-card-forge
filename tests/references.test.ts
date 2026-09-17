@@ -6,6 +6,7 @@ import {
   stylesheetReferences,
   templateAssetReferences,
   templatePartialCalls,
+  templateStringLiterals,
 } from "../src/systems/references";
 
 describe("stylesheet references", () => {
@@ -31,6 +32,19 @@ e { background: url(assets/real.png); }`;
 });
 
 describe("template references", () => {
+  it("reads nothing out of a comment — an example quoted there is not a reference", () => {
+    const hbs = `{{!--
+  Called as {{> stat-cell for="front-stat-1a"}}, shows {{asset "assets/example.png"}}.
+--}}
+{{! {{slot "front-note"}} }}
+<div>{{> header}}{{slot "front-title"}}{{asset "assets/real.png"}}</div>`;
+    expect(templateAssetReferences(hbs)).toEqual([
+      { path: "assets/real.png", where: "line 5" },
+    ]);
+    expect(templatePartialCalls(hbs).map((r) => r.path)).toEqual(["header"]);
+    expect([...templateStringLiterals(hbs)]).toEqual(["front-title", "assets/real.png"]);
+  });
+
   it("finds {{asset}} literals in either quote style", () => {
     const hbs = `<img src="{{asset "assets/logo.png"}}">\n<img src="{{ asset 'gear/assets/back.png' }}">`;
     expect(templateAssetReferences(hbs)).toEqual([

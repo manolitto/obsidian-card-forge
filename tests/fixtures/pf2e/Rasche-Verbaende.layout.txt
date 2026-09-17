@@ -1,0 +1,11 @@
+Rasche-Verbaende · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 1.00
+   div.pf2e-trait-row "Allgemein Fertigkeit Heilung Handhaben"
+   div.pf2e-stat-line "Voraussetzungen Geübt in Heilkunde"
+   div.pf2e-stat-line "Häufigkeit einmal pro Stunde"
+   div.pf2e-stat-line "Anforderungen Du hast Heilerwerkzeuge in Händen …"
+   div.pf2e-flavor.pf2e-feat-text
+     p "Du versorgst eine Wunde, ohne dich …"
+     p "Kritischer Erfolg Das Ziel erhält 2W8 …"
+   div.pf2e-stat-line.pf2e-feat-special "Speziell Du kannst dieses Talent mehrfach …"
+2. back [cf-layout-default] scale —

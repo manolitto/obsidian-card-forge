@@ -1,0 +1,17 @@
+Schattenklinge · 1 card · 2 faces · clipped: no
+1. front [cf-layout-image-bottom cf-front-first] scale 1.00
+   div.pf2e-trait-row "Selten Magisch Schatten"
+   div.pf2e-item-stats-row
+     div.pf2e-item-stats-col
+       div.pf2e-stat-line "Preis 240 GM"
+       div.pf2e-stat-line "Schaden 1W6 H"
+       div.pf2e-stat-line "Last L"
+       div.pf2e-stat-line "Nutzung In 1 Hand gehalten"
+     div.pf2e-item-image-wrap.pf2e-item-image-wrap-side
+       img.pf2e-item-image.fade-edges
+   hr.pf2e-divider
+   div.pf2e-flavor.pf2e-item-flavor
+     p "Die Klinge wirft keinen Schatten und …"
+   div.pf2e-item-image-wrap.pf2e-item-image-wrap-bottom
+     img.pf2e-item-image.fade-edges
+2. back [cf-layout-image-none] scale —

@@ -1,0 +1,20 @@
+Sumpfschleicher · 1 card · 2 faces · clipped: no
+1. front [cf-layout-image-bottom cf-front-first] scale 1.00
+   div.pf2e-trait-row "N mittelgroß Bestie Sumpf"
+   div.pf2e-stat-line "Wahrnehmung +9; Dunkelsicht, Erschütterungssinn 9 m"
+   div.pf2e-stat-line.pf2e-creature-skills "Fertigkeiten Athletik +10, Heimlichkeit +11"
+   div.pf2e-creature-attributes "ST +4, GE +2, KO +3, …"
+   hr.pf2e-divider
+   div.pf2e-stat-line "RK 18; ZÄH +11, REF +9, …"
+   div.pf2e-stat-line "TP 48; Immunitäten Gift; Resistenzen Wucht …"
+   hr.pf2e-divider
+   div.pf2e-stat-line "Laufen ⬻ 6 m, Schwimmen 9 …"
+   div.pf2e-entry-list
+     div.pf2e-entry "Nahkampfangriff ⬻ Biss +12 , Schaden …"
+     div.pf2e-entry "Nahkampfangriff ⬻ Schwanz +10 , Schaden …"
+     div.pf2e-entry "Sumpftarnung Im Schilf oder unter Wasser …"
+   div.pf2e-flavor.pf2e-creature-flavor
+     p "Ein flacher, schlammfarbener Leib mit zu …"
+   div.pf2e-creature-image-wrap
+     img.pf2e-creature-image.fade-edges
+2. back [cf-layout-image-none] scale —

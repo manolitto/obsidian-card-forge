@@ -1,0 +1,27 @@
+Nebelmantel · 2 cards · 4 faces · clipped: no
+1. front [cf-overflow-active cf-layout-image-side cf-front-first cf-front-has-next] scale 0.99
+   div.pf2e-trait-row "Ungewöhnlich Illusion Magisch"
+   div.pf2e-item-stats-row
+     div.pf2e-item-stats-col
+       div.pf2e-stat-line "Preis 360 GM"
+       div.pf2e-stat-line "Last L"
+       div.pf2e-stat-line "Nutzung Getragen (Umhang)"
+     div.pf2e-item-image-wrap.pf2e-item-image-wrap-side
+       img.pf2e-item-image.fade-edges
+   hr.pf2e-divider
+   div.pf2e-flavor.pf2e-item-flavor
+     p "Der graue Stoff dieses Mantels fühlt …"
+     p "Der Mantel gilt als Rüstung des …"
+     p "Wird der Mantel abgelegt, verliert er …"
+2. back [cf-layout-image-side cf-overflow-active] scale —
+3. front [cf-overflow-active cf-layout-image-side cf-front-continued] scale 0.99
+   div.pf2e-item-trait-notes
+     div.pf2e-item-trait-note "Illusion Ein Effekt, der die Sinne …"
+     div.pf2e-item-trait-note "Schatten Der Mantel bezieht seine Kraft …"
+   hr.pf2e-divider
+   div.pf2e-item-activations
+     div.pf2e-item-activation "Nebel rufen ⬺ (Konzentration, Handhaben) Frequenz …"
+     div.pf2e-item-activation "Im Nebel verschwinden ⬲ (Konzentration) Auslöser …"
+   div.pf2e-item-image-wrap.pf2e-item-image-wrap-bottom
+     img.pf2e-item-image.fade-edges
+4. back [cf-layout-image-side cf-overflow-active] scale —

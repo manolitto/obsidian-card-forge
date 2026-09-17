@@ -1,0 +1,13 @@
+{{!--
+  Pathfinder 2e — ONE labelled line of a stat block.
+
+      {{> stat-line for="front-price"}}
+
+  The bold label is the place's caption from the card type's translations
+  (`front-price-label: "Preis"`), the value follows on the same line with a
+  hanging indent, so a wrapped line aligns under the first word after the
+  label. The name arrives as the hash parameter `for` — not `slot`, which
+  is the helper's own name. One line on purpose: the hull and its content
+  share the line, so Handlebars keeps the caller's indentation.
+--}}
+{{#if (slot for)}}<div class="pf2e-stat-line"><span class="pf2e-stat-label">{{slot-label for}}</span>{{slot for}}</div>{{/if}}

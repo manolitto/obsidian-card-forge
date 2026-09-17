@@ -1,0 +1,11 @@
+{{!--
+  Pathfinder 2e — a run of labelled numbers on one line.
+
+      {{> pairs for="front-saves"}}      →  ZÄH +14, REF +8, WIL +11
+
+  The place holds a list of single-key maps, `- { ZÄH: 14 }`, the way the
+  saves, skills and attributes are written: each item's one key is the
+  bold label, its value the number, which gets its sign here. Items are
+  separated by a comma; the caller supplies the label in front of the run.
+--}}
+{{#each (slot for list=true signed=true)}}{{#each this}}<span class="pf2e-pair-key">{{@key}}</span> {{this}}{{/each}}{{#unless @last}}, {{/unless}}{{/each}}

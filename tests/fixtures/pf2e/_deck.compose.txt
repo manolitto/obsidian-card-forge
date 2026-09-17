@@ -1,0 +1,21 @@
+2 pages · 210 × 297 mm · 3 × 3 of 63 × 88 mm at 10.5, 16.5
+1. front · 16 marks
+   front #1 at 10.5, 16.5 creature/Grabwuehler
+   front #2 at 73.5, 16.5 creature/Grabwuehler
+   front #3 at 136.5, 16.5 creature/Sumpfschleicher
+   front #4 at 10.5, 104.5 item/Nebelmantel
+   front #5 at 73.5, 104.5 item/Nebelmantel
+   front #6 at 136.5, 104.5 item/Schattenklinge
+   front #7 at 10.5, 192.5 feat/Rasche-Verbaende
+   front #8 at 73.5, 192.5 action/Kante-ergreifen
+   front #9 at 136.5, 192.5 trap/Speerhagel
+2. back · 16 marks
+   back #1 at 136.5, 16.5 creature/Grabwuehler
+   back #2 at 73.5, 16.5 creature/Grabwuehler
+   back #3 at 10.5, 16.5 creature/Sumpfschleicher
+   back #4 at 136.5, 104.5 item/Nebelmantel
+   back #5 at 73.5, 104.5 item/Nebelmantel
+   back #6 at 10.5, 104.5 item/Schattenklinge
+   back #7 at 136.5, 192.5 feat/Rasche-Verbaende
+   back #8 at 73.5, 192.5 action/Kante-ergreifen
+   back #9 at 10.5, 192.5 trap/Speerhagel

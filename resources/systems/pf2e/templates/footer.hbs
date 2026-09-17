@@ -1,0 +1,18 @@
+{{!--
+  Pathfinder 2e — the footer of every front.
+
+    front-footer-left    the English original name, after its "engl." caption;
+                         the stylesheet hides it on an English card
+    front-footer-right   the source reference
+
+  A flex sibling of the content, so its height is reserved and it returns
+  on every continuation face. The arrow is there on every front and shown
+  by the stylesheet only on a face another front follows.
+--}}
+{{#if (or (slot "front-footer-left") (slot "front-footer-right"))}}
+<div class="card-footer pf2e-footer">
+  {{#if (slot "front-footer-left")}}<div class="pf2e-footer-left"><span class="pf2e-footer-left-label">{{slot-label "front-footer-left"}}</span> {{slot "front-footer-left" plain=true}}</div>{{/if}}
+  {{#if (slot "front-footer-right")}}<div class="pf2e-footer-right">{{slot "front-footer-right" plain=true}}</div>{{/if}}
+  <span class="pf2e-continues">→</span>
+</div>
+{{/if}}

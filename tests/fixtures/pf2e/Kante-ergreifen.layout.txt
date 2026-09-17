@@ -1,0 +1,16 @@
+Kante-ergreifen · 1 card · 2 faces · clipped: no
+1. front [cf-layout-default cf-front-first] scale 0.88
+   div.pf2e-trait-row "Handhaben"
+   div.pf2e-stat-line "Auslöser Du stürzt von einer Kante …"
+   div.pf2e-stat-line "Anforderungen Deine Hände sind nicht gefesselt."
+   div.pf2e-flavor.pf2e-action-text
+     p "Wenn du von einer Kante abstürzt, …"
+   div.pf2e-action-outcomes
+     div.pf2e-stat-line "Kritischer Erfolg Du ergreifst den Halt, …"
+     div.pf2e-stat-line "Erfolg Mit mindestens einer freien Hand …"
+     div.pf2e-stat-line "Kritischer Fehlschlag Du fällst weiter und …"
+   div.pf2e-action-callout
+     div.pf2e-action-callout-title "Sturzschaden"
+     div.pf2e-action-callout-body
+       ul (3 items) "Bis 3 m kein Schaden Je …"
+2. back [cf-layout-default] scale —

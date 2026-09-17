@@ -1,0 +1,130 @@
+/* ── Pathfinder 2e — the item card ──────────────────────────────────
+   The shared stat-block rules are in pf2e.css; this is what the item
+   adds: the stat lines beside a picture seat, the trait notes, the
+   activations, and the two picture seats the layout candidates choose
+   between. */
+
+.pf2e-item-flavor {
+  margin: 0.2em 0;
+}
+
+/* The trait notes: each entry led by a `*` from the stylesheet, then the
+   bold trait name, then its explanation, with the stat lines' hanging
+   indent so a wrapped line aligns under the name. */
+.pf2e-item-trait-notes {
+  margin: 0.1em 0;
+}
+
+.pf2e-item-trait-note {
+  margin: 0.18em 0;
+  line-height: 1.28;
+  text-indent: -1em;
+  padding-left: 1em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.pf2e-item-trait-note-name {
+  font-weight: 700;
+  margin-right: 0.25em;
+}
+
+.pf2e-item-trait-note-name::before {
+  content: "* ";
+  font-weight: 400;
+}
+
+/* The activations, same hanging indent. */
+.pf2e-item-activations {
+  margin: 0.1em 0;
+}
+
+.pf2e-item-activation {
+  margin: 0.18em 0;
+  line-height: 1.28;
+  text-indent: -1em;
+  padding-left: 1em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.pf2e-item-activation-name {
+  font-weight: 700;
+  margin-right: 0.3em;
+}
+
+.pf2e-item-activation-actions {
+  margin-right: 0.3em;
+}
+
+.pf2e-item-activation-components {
+  margin-right: 0.25em;
+}
+
+.pf2e-item-activation-label {
+  font-weight: 700;
+  margin-left: 0.2em;
+  margin-right: 0.25em;
+}
+
+/* ── The picture seats ─────────────────────────────────────────────
+   Two seats in the markup on every render: beside the stat lines, and
+   below the text. Both hidden by default — the `image-none` look — and
+   one shown by the committed candidate; the decision measures the
+   picture's height in each and keeps the taller, the side seat winning a
+   tie because it is declared first. */
+
+.pf2e-item-stats-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.6em;
+}
+
+.pf2e-item-stats-col {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.item-card .pf2e-item-image-wrap {
+  display: none;
+  min-height: 0;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The side seat: a fixed share of the row, as tall as the stat lines.
+   The picture is taken out of flow so its natural size cannot stretch
+   the row; it fills whatever box the stat lines leave. */
+.item-card .pf2e-item-image-wrap-side {
+  flex: 0 0 38%;
+  position: relative;
+}
+
+.item-card.cf-layout-image-side .pf2e-item-image-wrap-side {
+  display: flex;
+}
+
+.item-card .pf2e-item-image-wrap-side > .pf2e-item-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* The bottom seat: the full width, and whatever height is left. */
+.item-card .pf2e-item-image-wrap-bottom {
+  flex: 1 1 auto;
+  margin: 0.25em 0 0.15em;
+}
+
+.item-card.cf-layout-image-bottom .pf2e-item-image-wrap-bottom {
+  display: flex;
+}
+
+.item-card .pf2e-item-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

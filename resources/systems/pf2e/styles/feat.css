@@ -1,0 +1,11 @@
+/* ── Pathfinder 2e — the feat card ──────────────────────────────────
+   The shared stat-block rules are in pf2e.css; the feat adds only the
+   spacing of its text and the trailing "Speziell" line. */
+
+.pf2e-feat-text {
+  margin: 0.3em 0 0.2em;
+}
+
+.pf2e-feat-special {
+  margin-top: 0.4em;
+}

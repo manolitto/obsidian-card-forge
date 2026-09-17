@@ -1,0 +1,24 @@
+Grabwuehler · 1 card · 2 faces · clipped: no
+1. front [cf-layout-image-none cf-front-first] scale 0.96
+   div.pf2e-trait-row "NB groß Ungewöhnlich Untot Geistlos"
+   div.pf2e-stat-line "Wahrnehmung +12; Dunkelsicht, Lebensspüren 18 m"
+   div.pf2e-stat-line.pf2e-creature-skills "Fertigkeiten Athletik +14, Heimlichkeit +9"
+   div.pf2e-creature-attributes "ST +5, GE 0, KO +4, …"
+   div.pf2e-stat-line "Gegenstände rostige Grabbeigaben"
+   hr.pf2e-divider
+   div.pf2e-stat-line "RK 20; ZÄH +14, REF +8, …"
+   div.pf2e-stat-line "TP 70; Immunitäten Bewusstlos, Gift, Mental, …"
+   hr.pf2e-divider
+   div.pf2e-stat-line "Bewegungsrate Laufen 6 m, Graben 9 …"
+   div.pf2e-entry-list
+     div.pf2e-entry "Nahkampfangriff ⬻ Klaue +15 , Schaden …"
+     div.pf2e-entry "Nahkampfangriff ⬻ Biss +13 , Schaden …"
+     div.pf2e-entry "Grabesgriff Eine Kreatur, die von der …"
+     div.pf2e-entry "Aus der Erde ⬺ Voraussetzung Der …"
+     div.pf2e-entry "Leichenstaub ⬲ Auslöser Eine angrenzende Kreatur …"
+     div.pf2e-entry "Wildheit ⬲ Wird der Grabwühler auf …"
+   div.pf2e-flavor.pf2e-creature-flavor
+     p "Was die Totengräber liegen ließen, hat …"
+   div.pf2e-creature-image-wrap
+     img.pf2e-creature-image.fade-edges
+2. back [cf-layout-image-none] scale —
