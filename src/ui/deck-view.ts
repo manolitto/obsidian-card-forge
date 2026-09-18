@@ -156,7 +156,6 @@ export class DeckView extends ItemView {
     const height = frame.offsetHeight;
     frame.style.width = `${this.paperWidth}px`;
     frame.style.transform = `scale(${scale})`;
-    frame.style.transformOrigin = "top left";
     // The frame keeps its layout box at paper size; the sheet reserves
     // only the scaled one.
     frame.style.marginRight = `${-(this.paperWidth * (1 - scale))}px`;
