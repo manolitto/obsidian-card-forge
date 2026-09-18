@@ -1,5 +1,5 @@
 Moorschleicher · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.95
+1. front [cs-layout-default cs-front-first] scale 0.95
    p.sw-flavour "Ein sehniger Lurch in der Farbe …"
    div.sw-plate
      img.sw-plate-image
@@ -12,11 +12,11 @@ Moorschleicher · 1 card · 2 faces · clipped: no
      p.sw-stat "Bewegungsrate: 9 (schwimmend 12)"
      p.sw-stat "Gesinnung: Neutral"
      p.sw-stat "Herausforderungsgrad/EP: 5/240"
-   div.sw-banner.cf-keep-with-next
+   div.sw-banner.cs-keep-with-next
      div.sw-flourish.sw-flourish-left
      div.sw-banner-label "Eigenschaften"
      div.sw-flourish.sw-flourish-right
    div.sw-abilities
      div.sw-entry "Tarnung Im Moor wird der Schleicher …"
      div.sw-entry "Lähmender Schleim Wer gebissen wird und …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

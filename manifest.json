@@ -1,6 +1,6 @@
 {
-  "id": "card-forge",
-  "name": "Card Forge",
+  "id": "cardsmith",
+  "name": "Cardsmith",
   "version": "0.1.0",
   "minAppVersion": "1.4.10",
   "description": "Generate print-ready, double-sided card decks from your notes — board game components, RPG reference cards, or any deck you print.",

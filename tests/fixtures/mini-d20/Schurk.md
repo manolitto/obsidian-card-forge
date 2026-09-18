@@ -5,7 +5,7 @@ the level-1 stats in three columns, the skill bonuses in two, the
 allowed gear, the abilities rule and the level-up rule. Invented for
 this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: archetype

@@ -3,7 +3,7 @@
 A non-player character without a picture: the d20 back with the name.
 A missing score prints as a dash. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: 5e
   card-type: npc

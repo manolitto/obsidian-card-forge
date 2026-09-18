@@ -3,7 +3,7 @@
 Every German card note in this folder — `Haumesser` says `language: en`
 and stays out — occupations first.
 
-```card-forge-deck
+```cardsmith-deck
 system: dcc
 card-type: [occupation, equipment]
 card-languages: de

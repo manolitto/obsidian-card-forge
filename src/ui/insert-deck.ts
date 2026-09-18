@@ -6,7 +6,7 @@ import { BASELINE } from "../systems/baseline";
 import { translate, type ResolvedLanguage, type StringKey } from "./strings";
 
 /*
- * The `card-forge-deck` block the insert command writes: `system` and
+ * The `cardsmith-deck` block the insert command writes: `system` and
  * `card-type` filled in, then every other key the deck parser knows —
  * the selection keys, the deck settings, the card layer — commented out
  * with a one-line description and the baseline's default. The block is
@@ -20,7 +20,7 @@ export function buildDeckBlock(
   cardTypeIds: readonly string[],
   language: ResolvedLanguage
 ): string {
-  const lines = ["```card-forge-deck", `system: ${systemId}`];
+  const lines = ["```cardsmith-deck", `system: ${systemId}`];
   lines.push(
     cardTypeIds.length === 1
       ? `card-type: ${cardTypeIds[0]}`

@@ -1,5 +1,5 @@
 Speerhagel · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.97
+1. front [cs-layout-default cs-front-first] scale 0.97
    div.pf2e-trait-row "Mechanisch Falle"
    div.pf2e-flavor.pf2e-trap-lead
      p "Eine Druckplatte im Boden löst einen …"
@@ -13,4 +13,4 @@ Speerhagel · 1 card · 2 faces · clipped: no
      div.pf2e-entry "Speerhagel ⬲ Auslöser Eine Kreatur betritt …"
      div.pf2e-entry "Fernkampfangriff Speer +11 , Schaden 1W8+4 …"
    div.pf2e-stat-line.pf2e-trap-reset "Rücksetzer Die Speere werden von Hand …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

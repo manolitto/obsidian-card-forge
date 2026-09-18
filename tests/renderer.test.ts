@@ -13,7 +13,7 @@ describe("the renderer", () => {
     const diagnostics = collectDiagnostics();
     const note = parseNote(
       [
-        "```card-forge",
+        "```cardsmith",
         "card:",
         "  system: dragonbane",
         "  card-type: roll-table",

@@ -22,7 +22,7 @@ The generic card: a title and a subtitle, an icon and a label in the
 left corner, the body from the note's `## Vorderseite` section, a
 footer; the back a second text face from `## Rückseite`.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: generic

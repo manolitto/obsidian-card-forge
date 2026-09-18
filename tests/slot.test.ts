@@ -105,7 +105,7 @@ describe("{{slot}}", () => {
       data: { content: "**bold** & [[Link|shown]]" },
     });
     expect(html).toBe(
-      '<strong>bold</strong> &amp; <span class="cf-wikilink">shown</span>'
+      '<strong>bold</strong> &amp; <span class="cs-wikilink">shown</span>'
     );
   });
 

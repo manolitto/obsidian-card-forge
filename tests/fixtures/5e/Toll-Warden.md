@@ -3,7 +3,7 @@
 A non-player character with a picture on the back. Invented for this
 deck.
 
-```card-forge
+```cardsmith
 card:
   system: 5e
   card-type: npc

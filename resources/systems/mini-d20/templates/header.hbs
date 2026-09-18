@@ -21,7 +21,7 @@
   <span class="mini-d20-type-main">{{t "card-type-label"}}</span>
   {{#if (slot "front-subtype")}}<span class="mini-d20-type-sub">{{slot "front-subtype" plain=true}}</span>{{/if}}
   <span class="mini-d20-icon mini-d20-icon-left">{{#if (slot "front-icon-left")}}{{asset (slot "front-icon-left" plain=true) inline=true}}{{/if}}</span>
-  <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></span></div>
+  <div class="mini-d20-title-strip"><span class="text-scalable mini-d20-title"><span class="mini-d20-name">{{slot "front-title" plain=true}}</span><span class="cs-overflow-counter"></span></span></div>
   {{#if (slot "front-roll")}}
   <span class="mini-d20-roll mini-d20-icon-right"><span class="mini-d20-roll-num">{{slot "front-roll" plain=true}}</span></span>
   {{else}}

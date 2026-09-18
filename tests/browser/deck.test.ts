@@ -113,7 +113,7 @@ describe("buildDeck over the fixture folders", () => {
   it("applies a card-copies override and warns about one that names nothing", async () => {
     const { built, diagnostics } = await build(
       "simple",
-      "```card-forge-deck\nsystem: simple\ncard-copies:\n  - { name: linked-reference, copies: 3 }\n  - { name: Nobody, copies: 2 }\n```"
+      "```cardsmith-deck\nsystem: simple\ncard-copies:\n  - { name: linked-reference, copies: 3 }\n  - { name: Nobody, copies: 2 }\n```"
     );
     expect(names(built.cards).filter((n) => n === "linked-reference")).toHaveLength(3);
     expect(built.cards).toHaveLength(8);
@@ -124,7 +124,7 @@ describe("buildDeck over the fixture folders", () => {
     const deck = await deckNote("dragonbane");
     await expect(
       buildDeck(
-        "```card-forge-deck\nsystem: dragonbane\n```",
+        "```cardsmith-deck\nsystem: dragonbane\n```",
         deck.path,
         fixtureDeckSource,
         systems,
@@ -149,9 +149,9 @@ describe("buildDeck over the fixture folders", () => {
         document,
         collectDiagnostics()
       );
-    await expect(run("# Not a deck")).rejects.toThrow("no card-forge-deck block");
+    await expect(run("# Not a deck")).rejects.toThrow("no cardsmith-deck block");
     await expect(
-      run("```card-forge-deck\nsystem: simple\ninclude-tags-all: nothing-has-this\n```")
+      run("```cardsmith-deck\nsystem: simple\ninclude-tags-all: nothing-has-this\n```")
     ).rejects.toThrow("no cards");
   });
 
@@ -162,7 +162,7 @@ describe("buildDeck over the fixture folders", () => {
         Promise.resolve(
           ["Zwerg", "Elf"].map((name) => ({
             note: parseNote(
-              `\`\`\`card-forge\ncard:\n  system: simple\ndata:\n  name: ${name}\n\`\`\``,
+              `\`\`\`cardsmith\ncard:\n  system: simple\ndata:\n  name: ${name}\n\`\`\``,
               `Volk/${name}.md`,
               diagnostics
             )!,
@@ -171,7 +171,7 @@ describe("buildDeck over the fixture folders", () => {
         ),
     };
     const built = await buildDeck(
-      "```card-forge-deck\nsystem: simple\ncopies: 2\n```",
+      "```cardsmith-deck\nsystem: simple\ncopies: 2\n```",
       "Volk/Deck.md",
       memory,
       systems,

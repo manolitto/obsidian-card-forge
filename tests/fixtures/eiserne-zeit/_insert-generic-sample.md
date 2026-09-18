@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: eiserne-zeit
   card-type: generic
@@ -9,7 +9,7 @@ data:
   # Optional picture as a wikilink (`[[picture.png]]`), embed (`![[picture.png]]`) or file name. Sits below the header band across the full measure. The system is strictly black and white — a hard ink drawing fits, a greyscale photo does not.
   image: '[[wolfsfalle.png]]'
 
-  # Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures.
+  # Card body as markdown, inline in the cardsmith block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures.
   content: |-
     A set iron trap, heavy as a millstone.
     - Trigger: DEX check

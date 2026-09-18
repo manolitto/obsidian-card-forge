@@ -14,7 +14,7 @@
  *   `wikilinkInline`       links styled, everything else escaped verbatim
  *   `markdownInline`       links styled, then the inline markdown
  *
- * A wikilink always becomes `<span class="cf-wikilink">display text</span>`:
+ * A wikilink always becomes `<span class="cs-wikilink">display text</span>`:
  * a printed card has nothing to click, so what remains of a link is its text
  * and a hook a system may style. An Obsidian `#tag` is vault metadata, not
  * card content, and is dropped everywhere.
@@ -76,7 +76,7 @@ export function linkTarget(text: string): string {
 export function wikilinkInline(text: string): string {
   return escapeHtml(stripTags(text)).replace(
     WIKILINK,
-    '<span class="cf-wikilink">$2</span>'
+    '<span class="cs-wikilink">$2</span>'
   );
 }
 
@@ -97,7 +97,7 @@ export function markdownInline(text: string): string {
 
   html = renderLists(html);
 
-  html = html.replace(WIKILINK, '<span class="cf-wikilink">$2</span>');
+  html = html.replace(WIKILINK, '<span class="cs-wikilink">$2</span>');
   html = html.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
   html = html.replace(/___(.+?)___/g, "<strong><em>$1</em></strong>");
   html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");

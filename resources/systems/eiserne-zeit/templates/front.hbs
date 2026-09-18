@@ -28,13 +28,13 @@
   whole trick. The splitter moves content from the end forward, so what comes
   last can land on no face but the last one; earlier faces never carry it and
   lose no room to it. The obvious alternative — a band under the body, shown
-  on the last face by CSS — does NOT work: `.cf-front-has-next` and the other
+  on the last face by CSS — does NOT work: `.cs-front-has-next` and the other
   position markers are stamped AFTER the measure-split-scale pass, and content
   hanging on them would add height to the last face after its body was
   measured, clipping the text above it. Reserving the band on every face and
   hiding it with `visibility` would be correct but costs 17 % of the card
   height on every face — measured, and enough to push a dense card's command
-  block off the front. The band is shown by `.cf-overflow-active` instead,
+  block off the front. The band is shown by `.cs-overflow-active` instead,
   which the splitter stamps BEFORE it measures; on a card that fits, the
   designed back is the last face and carries the logo itself.
 
@@ -54,7 +54,7 @@
 
   <div class="ez-head">
     <div class="ez-band">
-      <div class="card-title"><span class="text-scalable">{{slot "head-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+      <div class="card-title"><span class="text-scalable">{{slot "head-title" plain=true}}<span class="cs-overflow-counter"></span></span></div>
     </div>
     <div class="ez-torn"></div>
   </div>

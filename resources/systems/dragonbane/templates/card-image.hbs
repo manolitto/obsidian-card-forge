@@ -13,7 +13,7 @@
   `.db-front-image-wrap` is `flex: 1 1 0` with a `min-height` — the flex
   slot of the body column. Set between two paragraphs, the picture would
   take every pixel the text leaves over. What carries over is what really
-  makes the design: the borderless seat (`cf-front-image`) and the soft edge
+  makes the design: the borderless seat (`cs-front-image`) and the soft edge
   (`fade-edges`).
 
   The cap therefore has to be restated for the body form: `.db-front-image`
@@ -23,9 +23,9 @@
   absolute length instead.
 --}}
 {{#if (eq placement "body")}}
-<img class="db-front-image db-body-image cf-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
+<img class="db-front-image db-body-image cs-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
 {{else}}
 <div class="db-front-image-wrap">
-  <img class="db-front-image cf-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
+  <img class="db-front-image cs-front-image fade-edges" src="{{url}}" alt="{{alt}}" />
 </div>
 {{/if}}

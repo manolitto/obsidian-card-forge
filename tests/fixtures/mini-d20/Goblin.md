@@ -4,7 +4,7 @@ A creature the classifier knows: `Humanoid` picks the cowled figure
 for the right icon and the back. The six-column stat block, two
 abilities, a picture, the flavour at the foot. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: bestiary

@@ -19,7 +19,7 @@ the header follows from the stats — no protection, no parry modifier,
 so a weapon; two injury diamonds for the two grips; the picture between
 the rules. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: tor2e
   card-type: gear

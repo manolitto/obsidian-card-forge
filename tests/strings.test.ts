@@ -64,12 +64,12 @@ describe("t", () => {
   it("reads the current table and fills the placeholders", () => {
     setUiLanguage("en");
     expect(uiLanguage()).toBe("en");
-    expect(t("settings.system.file", { path: "card-forge/mine/mine.yaml" })).toBe(
-      "Vault file: card-forge/mine/mine.yaml"
+    expect(t("settings.system.file", { path: "cardsmith/mine/mine.yaml" })).toBe(
+      "Vault file: cardsmith/mine/mine.yaml"
     );
     setUiLanguage("de");
-    expect(t("settings.system.file", { path: "card-forge/mine/mine.yaml" })).toBe(
-      "Vault-Datei: card-forge/mine/mine.yaml"
+    expect(t("settings.system.file", { path: "cardsmith/mine/mine.yaml" })).toBe(
+      "Vault-Datei: cardsmith/mine/mine.yaml"
     );
     setUiLanguage("en");
   });

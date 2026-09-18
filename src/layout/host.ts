@@ -8,7 +8,7 @@ import { FACE_CLASS } from "./overflow-splitter";
  * keeps the card's stylesheet from touching the page and the page's from
  * touching the card; the `div` is `visibility: hidden` rather than
  * `display: none`, since a face that is not displayed has no layout to
- * measure. Inside, one `.cf-face` wrapper per face in print order, in a
+ * measure. Inside, one `.cs-face` wrapper per face in print order, in a
  * container the overflow splitter appends further wrappers to.
  *
  * One thing the shadow root cannot do is load a font: an `@font-face` rule
@@ -75,7 +75,7 @@ export function mountLayoutHost(
 }
 
 const FONT_FACE_RULE = /@font-face\s*\{[^}]*\}/g;
-const FONTS_ATTR = "data-cf-fonts";
+const FONTS_ATTR = "data-cs-fonts";
 
 /**
  * Move a stylesheet's `@font-face` rules into the document's head, under

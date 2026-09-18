@@ -9,12 +9,12 @@ const parse = (
 ) => parseNote(text, path, diagnostics);
 
 const BLOCK =
-  "```card-forge\ncard:\n  system: dragonbane\n  card-type: gear\ndata:\n  price: 10\n```";
+  "```cardsmith\ncard:\n  system: dragonbane\n  card-type: gear\ndata:\n  price: 10\n```";
 
-describe("the card-forge block", () => {
+describe("the cardsmith block", () => {
   it("is found with spaces after the fence, and read into card:, data: and the name", () => {
     const note = parse(
-      `# Beil\n\n\`\`\`card-forge   \ncard:\n  system: x\ndata:\n  a: 1\n\`\`\`\n`
+      `# Beil\n\n\`\`\`cardsmith   \ncard:\n  system: x\ndata:\n  a: 1\n\`\`\`\n`
     );
     expect(note?.name).toBe("Beil");
     expect(note?.path).toBe("Karten/Beil.md");
@@ -32,25 +32,25 @@ describe("the card-forge block", () => {
   it("reads the first of two blocks and reports the second", () => {
     const diagnostics = collectDiagnostics();
     const note = parse(
-      `${BLOCK}\n\n\`\`\`card-forge\ndata: { price: 99 }\n\`\`\``,
+      `${BLOCK}\n\n\`\`\`cardsmith\ndata: { price: 99 }\n\`\`\``,
       diagnostics
     );
     expect(note?.data).toEqual({ price: 10 });
-    expect(diagnostics.matching("2 card-forge blocks")).toHaveLength(1);
+    expect(diagnostics.matching("2 cardsmith blocks")).toHaveLength(1);
   });
 
   it("reports broken YAML with the note named, and the note is not a card", () => {
     const diagnostics = collectDiagnostics();
-    expect(parse("```card-forge\ncard: [\n```", diagnostics)).toBeUndefined();
+    expect(parse("```cardsmith\ncard: [\n```", diagnostics)).toBeUndefined();
     expect(
-      diagnostics.matching("Karten/Beil.md: the card-forge block is not valid YAML")
+      diagnostics.matching("Karten/Beil.md: the cardsmith block is not valid YAML")
     ).toHaveLength(1);
   });
 
   it("reads the table: map in both forms, and reports a key it does not know", () => {
     const diagnostics = collectDiagnostics();
     const note = parse(
-      "```card-forge\ncard: { system: x }\ntable:\n  roll: Wurf\n  stats: [Rationen, Dauer]\ncolumns: { a: b }\n```",
+      "```cardsmith\ncard: { system: x }\ntable:\n  roll: Wurf\n  stats: [Rationen, Dauer]\ncolumns: { a: b }\n```",
       diagnostics
     );
     expect(note?.table).toEqual({ roll: "Wurf", stats: ["Rationen", "Dauer"] });
@@ -58,7 +58,7 @@ describe("the card-forge block", () => {
   });
 
   it("keeps an empty block a card with nothing said", () => {
-    expect(parse("```card-forge\n```")?.card).toEqual({});
+    expect(parse("```cardsmith\n```")?.card).toEqual({});
   });
 });
 
@@ -114,7 +114,7 @@ describe("the sections", () => {
     );
     expect(note?.sections["body"]).toBe("Before  the block.\n\n\n\nAfter.");
     expect(note?.sections["s"]).toBeUndefined();
-    expect(note?.text).not.toContain("card-forge");
+    expect(note?.text).not.toContain("cardsmith");
   });
 
   it("set nothing for an empty value — a tag line above the block is not a body", () => {

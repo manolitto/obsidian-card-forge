@@ -141,7 +141,7 @@
 
 /* On plain paper the cream goes; the rule, the pills and the banner are
    the design and stay. */
-.cf-paper-plain .card-root.pf2e {
+.cs-paper-plain .card-root.pf2e {
   background: #ffffff;
 }
 
@@ -347,7 +347,7 @@
   color: var(--pf2e-accent-red);
 }
 
-.cf-front-has-next .pf2e-continues {
+.cs-front-has-next .pf2e-continues {
   display: block;
 }
 

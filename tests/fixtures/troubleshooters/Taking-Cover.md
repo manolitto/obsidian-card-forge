@@ -3,7 +3,7 @@
 The same mechanic in English: the captions from the `en` table. The deck
 prints `de` and leaves it out. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: mechanic

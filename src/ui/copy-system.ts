@@ -48,7 +48,7 @@ class CopySystemModal extends Modal {
   ) {
     super(context.app);
     this.name = t("copy.name.default", { name: system.declaration.name });
-    this.folder = `card-forge/${system.id}`;
+    this.folder = `cardsmith/${system.id}`;
     this.id = system.id;
   }
 
@@ -136,7 +136,7 @@ async function runCopy(
   }
   await context.save(entriesAfterCopy(context.entries(), system.id, id, document));
   notice(t("copy.done", { path: folder }), 8000);
-  for (const message of verdict.messages) console.warn(`[Card Forge] ${message}`);
+  for (const message of verdict.messages) console.warn(`[Cardsmith] ${message}`);
 
   if (id !== system.id) await offerRewrite(app, system.id, id);
 }

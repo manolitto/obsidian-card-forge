@@ -11,16 +11,16 @@
     <div class="card-body-scalable">
 
     {{#if (slot "front-text")}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
     <div class="mini-d20-prose mini-d20-quirk-text">{{slot "front-text" markdown="block"}}</div>
     {{#unless (slot "front-image")}}
-    <span class="cf-fill-2"></span>
+    <span class="cs-fill-2"></span>
     {{/unless}}
     {{/if}}
 
     {{#if (slot "front-image")}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
-    <img class="mini-d20-image cf-keep-with-next" src="{{slot "front-image" image=true}}" />
+    <span class="cs-fill-1 cs-keep-with-next"></span>
+    <img class="mini-d20-image cs-keep-with-next" src="{{slot "front-image" image=true}}" />
     {{/if}}
 
     </div>

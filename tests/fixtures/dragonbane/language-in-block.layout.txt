@@ -1,5 +1,5 @@
 language-in-block · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    span.db-fill-top
    div.db-stats-box
      div.db-stats-row "Attribut GEW"
@@ -7,4 +7,4 @@ language-in-block · 1 card · 2 faces · clipped: no
    div.db-effect-block.db-effect-block-bottom
      p.db-effect-text "Knoten, Takelage und alles, was an …"
    span.db-fill-bottom
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

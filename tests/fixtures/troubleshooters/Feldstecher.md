@@ -3,7 +3,7 @@
 A gear kit with a picture, its contents, one trait and the story points.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: gear

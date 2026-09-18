@@ -10,14 +10,14 @@
 <div class="card-root card-front dino-island roll-table-card">
   <div class="card-header dino-roll-header">
     {{#if (slot "front-roll")}}<span class="dino-roll-badge"><span class="dino-roll-num">{{slot "front-roll" plain=true}}</span></span>{{/if}}
-    <div class="dino-banner"><span class="dino-title text-scalable">{{slot "front-heading" plain=true fallback=(t "card-type-label")}}<span class="cf-overflow-counter"></span></span></div>
+    <div class="dino-banner"><span class="dino-title text-scalable">{{slot "front-heading" plain=true fallback=(t "card-type-label")}}<span class="cs-overflow-counter"></span></span></div>
   </div>
 
   <div class="card-content-container">
     <div class="card-body-scalable">
-    <span class="cf-fill-2"></span>
+    <span class="cs-fill-2"></span>
     <div class="dino-entry">{{slot "front-text" markdown="block"}}</div>
-    <span class="cf-fill-3"></span>
+    <span class="cs-fill-3"></span>
     </div>
   </div>
 

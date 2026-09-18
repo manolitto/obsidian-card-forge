@@ -59,8 +59,8 @@ describe("layoutCard", () => {
     expect(out.cardTypeId).toBe("card");
     const front = roots(out.cards[0]!.front);
     expect(front.classList.contains("card-front")).toBe(true);
-    expect(front.classList.contains("cf-front-first")).toBe(true);
-    expect(front.classList.contains("cf-layout-default")).toBe(true);
+    expect(front.classList.contains("cs-front-first")).toBe(true);
+    expect(front.classList.contains("cs-layout-default")).toBe(true);
     expect(roots(out.cards[0]!.back).classList.contains("card-back")).toBe(true);
   });
 
@@ -104,7 +104,7 @@ describe("layoutCard", () => {
       expect(roots(pair.front).classList.contains("card-front")).toBe(true);
       expect(roots(pair.back).classList.contains("card-back")).toBe(true);
     }
-    expect(roots(out.cards[1]!.front).classList.contains("cf-front-continued")).toBe(
+    expect(roots(out.cards[1]!.front).classList.contains("cs-front-continued")).toBe(
       true
     );
   });
@@ -118,7 +118,7 @@ describe("layoutCard", () => {
     );
     expect(out.cards).toHaveLength(1);
     const back = roots(out.cards[0]!.back);
-    expect(back.classList.contains("cf-overflow-back-as-front")).toBe(true);
+    expect(back.classList.contains("cs-overflow-back-as-front")).toBe(true);
   });
 
   it("honours a parity candidate: three fronts and the designed back are two cards", async () => {
@@ -181,7 +181,7 @@ describe("layoutCard over the fixtures", () => {
         }
       }
       expect(
-        document.head.querySelector(`style[data-cf-fonts="${fixture.system}"]`)
+        document.head.querySelector(`style[data-cs-fonts="${fixture.system}"]`)
       ).not.toBeNull();
     }
     // The system's fonts went into the document once, and are still there.

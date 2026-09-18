@@ -1,5 +1,5 @@
 Sumpfschleicher · 1 card · 2 faces · clipped: no
-1. front [cf-layout-image-bottom cf-front-first] scale 1.00
+1. front [cs-layout-image-bottom cs-front-first] scale 1.00
    div.pf2e-trait-row "N mittelgroß Bestie Sumpf"
    div.pf2e-stat-line "Wahrnehmung +9; Dunkelsicht, Erschütterungssinn 9 m"
    div.pf2e-stat-line.pf2e-creature-skills "Fertigkeiten Athletik +10, Heimlichkeit +11"
@@ -17,4 +17,4 @@ Sumpfschleicher · 1 card · 2 faces · clipped: no
      p "Ein flacher, schlammfarbener Leib mit zu …"
    div.pf2e-creature-image-wrap
      img.pf2e-creature-image.fade-edges
-2. back [cf-layout-image-none] scale —
+2. back [cs-layout-image-none] scale —

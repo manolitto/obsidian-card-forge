@@ -1,7 +1,7 @@
 Deckblatt · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.mini-d20-wordmark.mini-d20-cover-wordmark "MiNI D20"
-2. back [cf-layout-default] scale 1.00
+2. back [cs-layout-default] scale 1.00
    div.mini-d20-cover-licence
      h3 "MINI D20"
      p "MINI D20 ist ein Rollenspiel von …"

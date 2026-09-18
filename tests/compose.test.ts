@@ -206,7 +206,7 @@ describe("cut marks", () => {
       weight: 0.5,
     });
     expect(svg).toMatch(
-      /^<svg class="cf-cut-marks" width="140mm" height="280mm" viewBox="0 0 140 280" stroke="#ff0000" stroke-width="0.5"/
+      /^<svg class="cs-cut-marks" width="140mm" height="280mm" viewBox="0 0 140 280" stroke="#ff0000" stroke-width="0.5"/
     );
     expect(svg).toContain('<line x1="7" y1="5" x2="7" y2="8"/>');
     expect(svg).not.toContain("px");

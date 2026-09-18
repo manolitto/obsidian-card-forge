@@ -17,7 +17,7 @@ const NEXT = FRONT_HAS_NEXT_CLASS;
 
 describe("computeFrontFaceMarkers", () => {
   it("marks a non-overflow single card as page 1/1 (no has-next)", () => {
-    // [front, back] — only one front face, so it is the last → no cf-front-has-next
+    // [front, back] — only one front face, so it is the last → no cs-front-has-next
     const out = computeFrontFaceMarkers([true, false]);
     expect(out[0]).toEqual({ index: 1, total: 1, classes: [FIRST] });
     expect(out[1]).toBeNull();

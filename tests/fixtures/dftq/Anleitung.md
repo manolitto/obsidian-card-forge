@@ -8,7 +8,7 @@ column, the deck's name once in the frontmatter for every row, an
 instruction that fills the face, and lines broken with `<br>` as a
 table cell must write them. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dftq
   card-type: prompt

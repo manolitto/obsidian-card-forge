@@ -5,7 +5,7 @@ import { loadNoteYaml } from "./yaml";
 /**
  * A card note, taken apart.
  *
- * A note is a card note iff it carries a `card-forge` block. The block says
+ * A note is a card note iff it carries a `cardsmith` block. The block says
  * which system and card type render it and may carry values (`data:`) and a
  * column map (`table:`); the note's frontmatter carries values too, on equal
  * standing; and the note's own text is values as well — what stands before
@@ -44,13 +44,13 @@ export type TableColumns = Record<string, string | string[]>;
 
 /** The block, line-anchored, whitespace-tolerant after the fence. */
 const CARD_FORGE_BLOCK =
-  /^```[^\S\r\n]*card-forge[^\S\r\n]*\r?\n([\s\S]*?)^```[^\S\r\n]*$/gm;
+  /^```[^\S\r\n]*cardsmith[^\S\r\n]*\r?\n([\s\S]*?)^```[^\S\r\n]*$/gm;
 
 /** A fenced code block of either kind, for taking out of the text. */
 const FENCED_CODE = /^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\S\r\n]*$/gm;
 
 /**
- * Take a note apart. `undefined` when the note has no `card-forge` block —
+ * Take a note apart. `undefined` when the note has no `cardsmith` block —
  * with nothing reported, since a note that is not a card is not a problem.
  * A block whose YAML does not parse is reported, naming the note, and the
  * note is not a card either.
@@ -68,7 +68,7 @@ export function parseNote(
   if (!first) return undefined;
   if (blocks.length > 1) {
     diagnostics.warn(
-      `${path}: ${blocks.length} card-forge blocks; reading the first and ignoring the rest`
+      `${path}: ${blocks.length} cardsmith blocks; reading the first and ignoring the rest`
     );
   }
 
@@ -100,21 +100,21 @@ function parseBlock(
     doc = loadNoteYaml(yaml);
   } catch (error) {
     diagnostics.warn(
-      `${path}: the card-forge block is not valid YAML: ${describe(error)}`
+      `${path}: the cardsmith block is not valid YAML: ${describe(error)}`
     );
     return undefined;
   }
   if (doc === null) return { card: {}, data: {} };
   if (!isMapping(doc)) {
     diagnostics.warn(
-      `${path}: the card-forge block must be a mapping with card: and data:`
+      `${path}: the cardsmith block must be a mapping with card: and data:`
     );
     return undefined;
   }
   for (const key of Object.keys(doc)) {
     if (!BLOCK_KEYS.includes(key)) {
       diagnostics.warn(
-        `${path}: "${key}:" in the card-forge block is not one of ${BLOCK_KEYS.join(", ")}; ignoring it`
+        `${path}: "${key}:" in the cardsmith block is not one of ${BLOCK_KEYS.join(", ")}; ignoring it`
       );
     }
   }

@@ -47,7 +47,7 @@ export interface RenderState {
 }
 
 /** The key the state travels under in the data frame. */
-export const STATE_KEY = "cardForge";
+export const STATE_KEY = "cardsmith";
 
 /**
  * A helper's arguments, taken apart: Handlebars always passes the options
@@ -75,6 +75,6 @@ export function helperArgs(args: unknown[]): {
  */
 export function stateOf(options: Handlebars.HelperOptions): RenderState {
   const state = (options.data as Record<string, unknown> | undefined)?.[STATE_KEY];
-  if (!state) throw new Error("a card-forge helper was called outside a face render");
+  if (!state) throw new Error("a cardsmith helper was called outside a face render");
   return state as RenderState;
 }

@@ -3,7 +3,7 @@
 A gear kit without a picture, two traits, no reference. Invented for this
 deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: gear

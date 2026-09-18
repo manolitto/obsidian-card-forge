@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: equipment

@@ -3,7 +3,7 @@
 An aliased wikilink in the reference and a bare one in the body; both show
 their display text.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   card-type: simple

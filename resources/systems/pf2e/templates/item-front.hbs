@@ -15,7 +15,7 @@
     front-activations            activated abilities, each a labelled entry
 
   Both picture seats are in the markup on every render; the stylesheet
-  shows one under the committed `.cf-layout-*` class and both share the
+  shows one under the committed `.cs-layout-*` class and both share the
   `hero` marker, of which the largest visible box is measured.
 --}}
 <div class="card-root card-front pf2e item-card">
@@ -45,7 +45,7 @@
       </div>
       {{#if (slot "front-image")}}
       <div class="pf2e-item-image-wrap pf2e-item-image-wrap-side">
-        <img class="pf2e-item-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+        <img class="pf2e-item-image fade-edges" data-cs-measure="hero" src="{{slot "front-image" image=true}}" />
       </div>
       {{/if}}
     </div>
@@ -79,7 +79,7 @@
 
     {{#if (slot "front-image")}}
     <div class="pf2e-item-image-wrap pf2e-item-image-wrap-bottom">
-      <img class="pf2e-item-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+      <img class="pf2e-item-image fade-edges" data-cs-measure="hero" src="{{slot "front-image" image=true}}" />
     </div>
     {{/if}}
 

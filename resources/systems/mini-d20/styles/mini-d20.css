@@ -209,9 +209,9 @@
   padding: 0.3em 0 0.45em;
   border-top: 0.5pt solid color-mix(in srgb, var(--mini-d20-rule) 28%, transparent);
 }
-.card-root.mini-d20.cf-front-continued .mini-d20-tagline,
-.card-root.mini-d20.cf-front-continued .mini-d20-type-main,
-.card-root.mini-d20.cf-front-continued .mini-d20-type-sub {
+.card-root.mini-d20.cs-front-continued .mini-d20-tagline,
+.card-root.mini-d20.cs-front-continued .mini-d20-type-main,
+.card-root.mini-d20.cs-front-continued .mini-d20-type-sub {
   display: none;
 }
 
@@ -245,7 +245,7 @@
   white-space: normal;
   overflow-wrap: break-word;
 }
-.mini-d20-title .cf-overflow-counter {
+.mini-d20-title .cs-overflow-counter {
   font-family: var(--mini-d20-font-body);
   font-weight: 600;
   font-size: 0.5em;
@@ -397,7 +397,7 @@
   text-align: left;
   display: block;
 }
-.cf-body-continued .mini-d20-flavour {
+.cs-body-continued .mini-d20-flavour {
   margin-top: 0;
 }
 
@@ -444,10 +444,10 @@
   line-height: 1;
   color: var(--mini-d20-rule);
 }
-.card-root.mini-d20.cf-front-has-next .mini-d20-continues {
+.card-root.mini-d20.cs-front-has-next .mini-d20-continues {
   display: block;
 }
-.card-root.mini-d20.cf-front-has-next .mini-d20-footer::before {
+.card-root.mini-d20.cs-front-has-next .mini-d20-footer::before {
   right: 1.4em;
 }
 

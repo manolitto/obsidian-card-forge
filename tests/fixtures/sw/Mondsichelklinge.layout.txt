@@ -1,5 +1,5 @@
 Mondsichelklinge · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.97
+1. front [cs-layout-default cs-front-first] scale 0.97
    p.sw-flavour "Eine schlanke Klinge, deren Stahl im …"
    div.sw-plate
      img.sw-plate-image
@@ -7,7 +7,7 @@ Mondsichelklinge · 1 card · 2 faces · clipped: no
      p.sw-stat "Tabellenwurf: 4 auf Tab. 89, dann …"
      p.sw-stat "Klasseneinschränkung: K Z (Schwerter führend)"
      p.sw-stat "Bonus: +1"
-   div.sw-banner.cf-keep-with-next
+   div.sw-banner.cs-keep-with-next
      div.sw-flourish.sw-flourish-left
      div.sw-banner-label "Wirkung"
      div.sw-flourish.sw-flourish-right
@@ -15,4 +15,4 @@ Mondsichelklinge · 1 card · 2 faces · clipped: no
      p "Angriffs- und Schadensbonus von +1. Bei …"
      p "Gegen Wesen der Nacht — Ghule, …"
    div.sw-entry "Anmerkungen Wer die Klinge bei Neumond …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

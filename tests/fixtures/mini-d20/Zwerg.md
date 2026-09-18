@@ -4,7 +4,7 @@ A people: the name picks the dwarf's face for the right icon and the
 back, the tag pill, the trait under its caption, the table of names.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: heritage

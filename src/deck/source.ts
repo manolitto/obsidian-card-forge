@@ -10,7 +10,7 @@ import type { CardNote } from "../render/note";
 export interface DeckSource {
   /**
    * Every card note under `folder` (`""` is the vault root), in path order;
-   * with `recursive`, its subfolders too. A note without a `card-forge`
+   * with `recursive`, its subfolders too. A note without a `cardsmith`
    * block is not a card note and is not listed. A note whose block cannot
    * be read is reported to `diagnostics` and not listed either.
    */

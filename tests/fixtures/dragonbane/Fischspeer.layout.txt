@@ -1,5 +1,5 @@
 Fischspeer · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    span.db-fill-top
    div.db-stats-box
      div.db-stats-row "Griff zweihändig Reichweite 2"
@@ -11,4 +11,4 @@ Fischspeer · 1 card · 2 faces · clipped: no
      div.db-stats-row.db-stats-row-wide
        p.db-trait "Voraussetzung Speere STÄ 9"
    span.db-fill-bottom
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

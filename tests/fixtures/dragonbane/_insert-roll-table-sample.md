@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: roll-table

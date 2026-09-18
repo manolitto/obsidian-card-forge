@@ -3,7 +3,7 @@
 Eine deutsche Karte, geschrieben unter den deutschen Aliassen `titel:` und
 `beschreibung:`.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   card-type: simple

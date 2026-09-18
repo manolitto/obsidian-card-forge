@@ -1,5 +1,5 @@
 Schattenklinge · 1 card · 2 faces · clipped: no
-1. front [cf-layout-image-bottom cf-front-first] scale 1.00
+1. front [cs-layout-image-bottom cs-front-first] scale 1.00
    div.pf2e-trait-row "Selten Magisch Schatten"
    div.pf2e-item-stats-row
      div.pf2e-item-stats-col
@@ -14,4 +14,4 @@ Schattenklinge · 1 card · 2 faces · clipped: no
      p "Die Klinge wirft keinen Schatten und …"
    div.pf2e-item-image-wrap.pf2e-item-image-wrap-bottom
      img.pf2e-item-image.fade-edges
-2. back [cf-layout-image-none] scale —
+2. back [cs-layout-image-none] scale —

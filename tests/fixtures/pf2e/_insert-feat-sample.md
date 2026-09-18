@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: feat

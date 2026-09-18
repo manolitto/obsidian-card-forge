@@ -3,9 +3,9 @@ import { withScalesAligned } from "./browser/helpers/layout-golden";
 
 const golden = [
   "Card · 1 card · 2 faces · clipped: no",
-  "1. front [cf-front-first cf-front-has-next] scale 0.77",
+  "1. front [cs-front-first cs-front-has-next] scale 0.77",
   '   p "Eine Beizjagd dauert einen Tag"',
-  "2. back-as-front [cf-front-continued] scale 0.77",
+  "2. back-as-front [cs-front-continued] scale 0.77",
 ].join("\n");
 
 describe("withScalesAligned", () => {

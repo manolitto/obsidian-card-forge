@@ -4,7 +4,7 @@ Every German card note in this folder — `Taking-Cover` says
 `language: en` and stays out — gear first, then mechanics, then the
 characters.
 
-```card-forge-deck
+```cardsmith-deck
 system: troubleshooters
 card-type: [gear, mechanic, npc]
 card-languages: de

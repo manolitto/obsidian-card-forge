@@ -9,7 +9,7 @@ import { loadedSystem, previewSheet, renderNote } from "./render";
  * The golden-render harness.
  *
  * A fixture is a note under `tests/fixtures/<system>/` — a markdown file with
- * a `card-forge` block, exactly what a user writes. Each renders through the
+ * a `cardsmith` block, exactly what a user writes. Each renders through the
  * real note parser, the real loader and the real renderer, and the HTML of
  * every face of every card it yields is compared byte for byte against the
  * committed golden beside it. A change to a template, a stylesheet, a

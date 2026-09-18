@@ -20,7 +20,7 @@ licences on the back — the note's own text, before the first `##`
 heading, with `###` sub-heads. This section is a property nobody binds
 and stays off the card. Listed first in the deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: cover

@@ -1,11 +1,11 @@
 import type { LayoutCandidate, OverflowMode } from "../definitions/card-settings";
 import {
-  cfApplyLayoutClasses,
-  cfEligible,
-  cfLayoutHasElementSize,
-  cfMarkersForConfig,
-  cfMeasureMarker,
-  cfMeasureWhitespace,
+  csApplyLayoutClasses,
+  csEligible,
+  csLayoutHasElementSize,
+  csMarkersForConfig,
+  csMeasureMarker,
+  csMeasureWhitespace,
   compareLayoutCandidates,
   readScaleFromTransform,
   resolveBodyMinScale,
@@ -38,47 +38,47 @@ import {
  *                       back-then-cards.
  *
  * The committed layout candidate is stamped on every card-root as the CSS hook
- * class `.cf-layout-<name>` (`cfApplyLayoutClasses`), applied BEFORE
+ * class `.cs-layout-<name>` (`csApplyLayoutClasses`), applied BEFORE
  * measurement so templates can safely show or hide body content keyed on it.
  * A set that names its parity candidates `odd` / `even` therefore gets
- * `.cf-layout-odd` / `.cf-layout-even` as its parity hooks.
+ * `.cs-layout-odd` / `.cs-layout-even` as its parity hooks.
  *
- * The splitter works on a host: a container holding one `.cf-face` wrapper per
+ * The splitter works on a host: a container holding one `.cs-face` wrapper per
  * face — the front first, the back second — each wrapping a `.card-root`. It
- * appends further `.cf-face` wrappers to the same container as it spawns
+ * appends further `.cs-face` wrappers to the same container as it spawns
  * cards. Everything here reads layout, like the font scaler it builds on.
  */
 
 export const MAX_OVERFLOW_CARDS = 8;
 /* The wrapper around each face in the host the splitter runs in. */
-export const FACE_CLASS = "cf-face";
+export const FACE_CLASS = "cs-face";
 const FACE_SELECTOR = "." + FACE_CLASS;
-export const OVERFLOW_BACK_AS_FRONT_CLASS = "cf-overflow-back-as-front";
+export const OVERFLOW_BACK_AS_FRONT_CLASS = "cs-overflow-back-as-front";
 /* Structural overflow-state hook, applied to every card-root in a committed
  * overflow group (see finalizeGroup). Applied AFTER the measure-split-scale pass
  * — it is a presentational flag only and must NOT gate front-body content size
  * (that would change the body height after the splitter measured it).
  *   OVERFLOW_ACTIVE_CLASS  — an overflow split produced more than one face. */
-export const OVERFLOW_ACTIVE_CLASS = "cf-overflow-active";
+export const OVERFLOW_ACTIVE_CLASS = "cs-overflow-active";
 
 /* Front-face position markers (see `base-card.css`, *What the layout engine
  * stamps*). Stamped on every `.card-front` root once the splitter has committed
  * the final face sequence, so template and system authors can target a front
- * face by its page-number position. Like `.cf-overflow-active`, they are
+ * face by its page-number position. Like `.cs-overflow-active`, they are
  * applied AFTER the measure-split-scale pass — a CHROME-ONLY hook that must NOT
  * gate front-body content size. */
-export const FRONT_FIRST_CLASS = "cf-front-first"; // first front page (k === 1)
-export const FRONT_CONTINUED_CLASS = "cf-front-continued"; // front page 2 or higher (k >= 2)
+export const FRONT_FIRST_CLASS = "cs-front-first"; // first front page (k === 1)
+export const FRONT_CONTINUED_CLASS = "cs-front-continued"; // front page 2 or higher (k >= 2)
 /* Stamped on every front face that is FOLLOWED BY another front face in the
  * committed sequence — i.e. all front faces EXCEPT the last one (k < total).
  * Lets CSS show a purely-declarative "continues on the next card" cue (an arrow,
  * a ribbon, …) without the splitter having to inject text into a placeholder:
- * CSS can't compare `--cf-front-index` < `--cf-front-total` itself, and the
+ * CSS can't compare `--cs-front-index` < `--cs-front-total` itself, and the
  * faces aren't DOM siblings (a continuation can land on the back), so
  * `:not(:last-child)` won't work either. This boolean marker bridges that gap.
- * Compare `.cf-front-continued`, which means the OPPOSITE end (a face that
+ * Compare `.cs-front-continued`, which means the OPPOSITE end (a face that
  * received a tail FROM a previous face). */
-export const FRONT_HAS_NEXT_CLASS = "cf-front-has-next";
+export const FRONT_HAS_NEXT_CLASS = "cs-front-has-next";
 /* All front-position classes, for the idempotent clear before re-stamping. */
 export const FRONT_MARKER_CLASSES = [
   FRONT_FIRST_CLASS,
@@ -101,19 +101,19 @@ export const FRONT_MARKER_CLASSES = [
  *                               mid-content, left on the earlier face.
  *   SPLIT_CONTINUATION_CLASS  — the cloned tail half of that wrapper, opening
  *                               the later face. */
-export const BODY_CONTINUED_CLASS = "cf-body-continued";
-export const BODY_CONTINUES_CLASS = "cf-body-continues";
-export const SPLIT_HEAD_CLASS = "cf-split-head";
-export const SPLIT_CONTINUATION_CLASS = "cf-split-continuation";
+export const BODY_CONTINUED_CLASS = "cs-body-continued";
+export const BODY_CONTINUES_CLASS = "cs-body-continues";
+export const SPLIT_HEAD_CLASS = "cs-split-head";
+export const SPLIT_CONTINUATION_CLASS = "cs-split-continuation";
 
 /* Forced card-break marker. A `%% card-break %%` line in the note body (see
- * `block-markdown.ts`) renders to an invisible `<div class="cf-card-break">`
+ * `block-markdown.ts`) renders to an invisible `<div class="cs-card-break">`
  * body block. The splitter treats it as a HARD breakpoint: content up to the
  * marker stays on the current face, the marker is consumed, and everything
  * after it flows onto a continuation face — even when the content would
  * otherwise have fit on one card. Honoured only in a spawning overflow mode
  * (the entry gate and loop guards below); inert under `none`. */
-export const CARD_BREAK_CLASS = "cf-card-break";
+export const CARD_BREAK_CLASS = "cs-card-break";
 
 /* Widow/orphan line minimum for the block-level word splitter. When cutting a
  * splittable prose block across a card boundary would leave fewer than this many
@@ -165,7 +165,7 @@ export interface FrontFaceMarker {
   index: number;
   /** Count of committed front faces. */
   total: number;
-  /** The `cf-front-*` class names to add. */
+  /** The `cs-front-*` class names to add. */
   classes: string[];
 }
 
@@ -215,7 +215,7 @@ export function roundUpToParity(
  * template, i.e. carries `.card-front`), return a parallel array describing the
  * front-position markers for each face. Front entries are
  * `{ index, total, classes:[…] }` (1-based front-page index, total committed
- * front faces, and the `cf-front-*` class names to add); back entries are
+ * front faces, and the `cs-front-*` class names to add); back entries are
  * `null` (back faces get no front markers).
  *
  * No DOM access — unit-tested directly; the DOM application is covered by the
@@ -244,7 +244,7 @@ export function computeFrontFaceMarkers(
 
 /* Stamp the front-position markers (computeFrontFaceMarkers) onto an ordered
  * list of `.card-root`s (physical print order). For every root it first CLEARS
- * any stale `cf-front-*` classes (so it is idempotent across re-finalize /
+ * any stale `cs-front-*` classes (so it is idempotent across re-finalize /
  * revert), then — on front faces only — adds the computed classes. */
 function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
   if (!orderedRoots.length) return;
@@ -263,8 +263,8 @@ function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
     if (!m) {
       /* Non-front faces carry no page numbers — drop any stale inherited props
        * so a re-finalize never leaves them set on a back face. */
-      root.style.removeProperty("--cf-front-index");
-      root.style.removeProperty("--cf-front-total");
+      root.style.removeProperty("--cs-front-index");
+      root.style.removeProperty("--cs-front-total");
       continue;
     }
     for (let a = 0; a < m.classes.length; a++) root.classList.add(m.classes[a]!);
@@ -272,8 +272,8 @@ function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
      * the visible "X / N" counter via counter()/var() in an in-flow placeholder
      * nested inside the title (attr() can't reach .card-root). See
      * `base-card.css`, *What the layout engine stamps*. */
-    root.style.setProperty("--cf-front-index", String(m.index));
-    root.style.setProperty("--cf-front-total", String(m.total));
+    root.style.setProperty("--cs-front-index", String(m.index));
+    root.style.setProperty("--cs-front-total", String(m.total));
   }
 }
 
@@ -281,8 +281,8 @@ function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
  * BEFORE its body is measured/split.
  *
  * The counter is `display:none` by default and only renders under
- * `.cf-overflow-active`, reading the inherited `--cf-front-index` /
- * `--cf-front-total` props — BOTH applied in finalizeGroup, AFTER the split has
+ * `.cs-overflow-active`, reading the inherited `--cs-front-index` /
+ * `--cs-front-total` props — BOTH applied in finalizeGroup, AFTER the split has
  * already chosen how much body content stays on each face. Because the counter
  * lives inside the scalable header row, revealing it post-split can push a tight
  * title (e.g. a long compound name pinned at the title-min floor) onto an extra
@@ -299,7 +299,7 @@ function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
  * re-wrap). The measured title sits at its pre-finalize (larger-or-equal) font,
  * so the final scaleTitles pass can only keep the header at the measured height
  * or shrink it — never grow it past the budget. A card-type with no counter
- * placeholder is unaffected (nothing renders under `.cf-overflow-active`).
+ * placeholder is unaffected (nothing renders under `.cs-overflow-active`).
  *
  * Always correct to apply: performSplit only runs once the single card already
  * overflows at the scale floor, so the committed group always has >1 face and
@@ -307,11 +307,11 @@ function applyFrontFaceMarkers(orderedRoots: ArrayLike<HTMLElement>): void {
  * props via `innerHTML`; the guard skips re-setting an inherited placeholder. */
 function reserveOverflowCounter(cardRoot: HTMLElement): void {
   cardRoot.classList.add(OVERFLOW_ACTIVE_CLASS);
-  if (!cardRoot.style.getPropertyValue("--cf-front-index")) {
-    cardRoot.style.setProperty("--cf-front-index", "1");
+  if (!cardRoot.style.getPropertyValue("--cs-front-index")) {
+    cardRoot.style.setProperty("--cs-front-index", "1");
   }
-  if (!cardRoot.style.getPropertyValue("--cf-front-total")) {
-    cardRoot.style.setProperty("--cf-front-total", "2");
+  if (!cardRoot.style.getPropertyValue("--cs-front-total")) {
+    cardRoot.style.setProperty("--cs-front-total", "2");
   }
 }
 
@@ -326,9 +326,9 @@ function pickFallback(candidates: readonly LayoutCandidate[]): LayoutCandidate {
   return candidates[0]!;
 }
 
-/* Stamp a candidate's `.cf-layout-<name>` on every card-root under `root`. */
+/* Stamp a candidate's `.cs-layout-<name>` on every card-root under `root`. */
 function stampLayout(root: ParentNode, candidate: LayoutCandidate): void {
-  cfApplyLayoutClasses(root.querySelectorAll<HTMLElement>(".card-root"), candidate);
+  csApplyLayoutClasses(root.querySelectorAll<HTMLElement>(".card-root"), candidate);
 }
 
 /* Count words in `body`'s text content. A "word" is a maximal run of
@@ -379,7 +379,7 @@ function countWords(body: Node): number {
  * the paragraph boundary instead of one word earlier.
  *
  * Keep-together: when `respectKeepTogether` (default true) and the cut
- * falls inside an element carrying the `cf-keep-together` class, the cut is
+ * falls inside an element carrying the `cs-keep-together` class, the cut is
  * moved to BEFORE the outermost such ancestor via `setStartBefore`, pushing
  * the entire marked element to the extracted tail intact (it is never split
  * across the card boundary). This takes precedence over the empty-sibling
@@ -427,14 +427,14 @@ function trimBodyToFirstNWords(
   const range = doc.createRange();
   range.selectNodeContents(body);
 
-  // Keep-together: if the cut falls inside a `cf-keep-together` element,
+  // Keep-together: if the cut falls inside a `cs-keep-together` element,
   // send the entire (outermost) marked ancestor to the tail intact instead
   // of splitting it. Climb to the OUTERMOST marked ancestor so nested
   // markers are kept together at the outer boundary.
   let keepAncestor: Element | null = null;
   if (respectKeepTogether) {
     for (let ka = cutNode.parentNode; ka && ka !== body; ka = ka.parentNode) {
-      if (ka.nodeType === 1 && (ka as Element).classList.contains("cf-keep-together")) {
+      if (ka.nodeType === 1 && (ka as Element).classList.contains("cs-keep-together")) {
         keepAncestor = ka as Element;
       }
     }
@@ -462,7 +462,7 @@ function trimBodyToFirstNWords(
   // `topLevelBlocks`), which a template nesting the note's section inside a
   // wrapper of its own never satisfies: the splitter would see one big prose
   // block and word-split straight through the entries. Honouring the boundary
-  // HERE makes it work at any depth, exactly as `cf-keep-together` does.
+  // HERE makes it work at any depth, exactly as `cs-keep-together` does.
   // Skipped when nothing renders before the child (that would empty the face —
   // same rule as above, so an oversized single entry still force-splits).
   // The flat cut (`respectBreakChildren: false`) may go through a paragraph,
@@ -571,7 +571,7 @@ function trimBodyToFirstNWords(
  * Deliberately tag-based, so it also covers a heading a TEMPLATE emits, not only
  * one rendered from a note's markdown. A heading-like element that is not an
  * `<h*>` — a `<div class="section-heading">` — keeps using the explicit
- * `cf-keep-with-next`, which composes with this. */
+ * `cs-keep-with-next`, which composes with this. */
 function isHeading(el: Node | null | undefined): boolean {
   if (!el || el.nodeType !== 1) return false;
   const t = (el as Element).tagName.toLowerCase();
@@ -579,10 +579,10 @@ function isHeading(el: Node | null | undefined): boolean {
 }
 
 /* Whether `el` must travel with the block that FOLLOWS it: explicitly marked
- * `cf-keep-with-next`, or a heading (implicit — see `isHeading`). */
+ * `cs-keep-with-next`, or a heading (implicit — see `isHeading`). */
 function bindsToNext(el: Node | null | undefined): boolean {
   if (!el || el.nodeType !== 1) return false;
-  if ((el as Element).classList.contains("cf-keep-with-next")) return true;
+  if ((el as Element).classList.contains("cs-keep-with-next")) return true;
   return isHeading(el);
 }
 
@@ -593,7 +593,7 @@ function bindsToPrev(el: Node | null | undefined): boolean {
   return !!(
     el &&
     el.nodeType === 1 &&
-    (el as Element).classList.contains("cf-keep-with-prev")
+    (el as Element).classList.contains("cs-keep-with-prev")
   );
 }
 
@@ -630,8 +630,8 @@ function precedingContent(el: Node): Element | "text" | null {
  *     move the same content (only an empty wrapper shell differs), so ascend and
  *     re-ask one level out. This is what brings a marker sitting OUTSIDE the
  *     wrapper into view at all.
- *   - the preceding sibling carries `cf-keep-with-next`, or `el` itself carries
- *     `cf-keep-with-prev`: the pair must travel together, so the cut moves before
+ *   - the preceding sibling carries `cs-keep-with-next`, or `el` itself carries
+ *     `cs-keep-with-prev`: the pair must travel together, so the cut moves before
  *     the predecessor. The two markers can interleave, which is why one loop
  *     handles both — same reasoning as `keepMarkerBoundary`.
  *
@@ -723,7 +723,7 @@ function breakChildBoundary(
     for (let i = 0; i < kids.length; i++) {
       if (kids[i] !== n) continue;
       if (!hasContentBeforeMarker(body, n)) return null;
-      // Honour cf-keep-with-next / cf-keep-with-prev around the chosen boundary.
+      // Honour cs-keep-with-next / cs-keep-with-prev around the chosen boundary.
       // The pull-back may land OUTSIDE the wrapper (a heading above the list),
       // in which case the wrapper is not straddled and needs no head repair.
       const cut = pullBackForKeepMarkers(body, n);
@@ -771,7 +771,7 @@ function topLevelBlocks(body: Node): Element[] {
  * image wrapper, a lone token). Splittable blocks (multi-word prose) are the
  * only ones the word-level search is allowed to cut through. */
 function isAtomicBlock(el: Element): boolean {
-  if (el.classList.contains("cf-keep-together")) return true;
+  if (el.classList.contains("cs-keep-together")) return true;
   const tag = el.tagName.toLowerCase();
   if (
     tag === "img" ||
@@ -869,7 +869,7 @@ const TABLE_SECTIONS: Record<string, 1> = { thead: 1, tbody: 1, tfoot: 1 };
  *
  * This is the DEFAULT, not an opt-in. Breaking between paragraphs is the normal
  * case and cutting inside a sentence is the emergency, so the engine should not
- * need to be told; `cf-keep-together` is the marker, and it says the opposite.
+ * need to be told; `cs-keep-together` is the marker, and it says the opposite.
  *
  * What a marker would assert, the test infers: EVERY element child must be
  * block-level. That is the load-bearing half. Element children alone would
@@ -1343,7 +1343,7 @@ export function moveOverflowChildren(
   // whole, as its marker says. Only a marked block that LEADS the face is
   // paginated between its children — the last resort for a block larger than
   // a face, the same rule the word split and the keep climb follow.
-  const keepWhole = k >= 1 && boundary.classList.contains("cf-keep-together");
+  const keepWhole = k >= 1 && boundary.classList.contains("cs-keep-together");
 
   if (!keepWhole && isBreakableContainer(boundary)) {
     // Boundary is a breakable container: paginate between its child items —
@@ -1380,7 +1380,7 @@ export function moveOverflowChildren(
     if (k >= 1 && atomic) {
       // Keep the whole prefix; move the atomic boundary block + everything after
       // it, intact, to the next face. Guaranteed progress (B leaves this face).
-      // `moveWholeBlockToEnd` honours cf-keep-with-next / cf-keep-with-prev: a
+      // `moveWholeBlockToEnd` honours cs-keep-with-next / cs-keep-with-prev: a
       // marked predecessor of the boundary travels with it instead of being
       // stranded as the last block, and a keep-with-prev boundary block pulls its
       // predecessor along.
@@ -1419,7 +1419,7 @@ export function moveOverflowChildren(
         // nested keep-together pushed the cut back). Move it whole instead.
         // `moveWholeBlockToEnd` resets to pristine first — required here, since the
         // preceding `maxBoundaryWordsThatFit` left `srcBody` trimmed — and honours
-        // cf-keep-with-next / cf-keep-with-prev.
+        // cs-keep-with-next / cs-keep-with-prev.
         fragment = moveWholeBlockToEnd(srcBody, originalHTML, k);
       }
 
@@ -1495,7 +1495,7 @@ export function moveOverflowChildren(
   // on the continuation (e.g. bottom-anchored content flowing to the top of the
   // next face). Classes live on the body elements, so they survive the
   // `innerHTML` resets above (which only touch children) and the destination
-  // carries `cf-body-continued` before the caller measures it.
+  // carries `cs-body-continued` before the caller measures it.
   srcBody.classList.add(BODY_CONTINUES_CLASS);
   dstContainer.classList.add(BODY_CONTINUED_CLASS);
   return { moved: 1, remainsClipped: false };
@@ -1558,11 +1558,11 @@ function extractFromBlockToEnd(body: HTMLElement, k: number): DocumentFragment |
  * walk the boundary backwards while EITHER of the two symmetric "keep" markers
  * straddles the cut:
  *
- *   - `cf-keep-with-next` on the LAST STAYING block (blocks[m-1]) — the analogue
+ *   - `cs-keep-with-next` on the LAST STAYING block (blocks[m-1]) — the analogue
  *     of Word's "Keep with next": a marked block is never left as the last block
  *     on a face while its successor is pushed entirely to the next face. A
  *     HEADING binds this way with no marker (see `bindsToNext` / `isHeading`).
- *   - `cf-keep-with-prev` on the FIRST MOVING block (blocks[m]) — the mirror
+ *   - `cs-keep-with-prev` on the FIRST MOVING block (blocks[m]) — the mirror
  *     image: a marked block (a filler / border / ornament that must sit directly
  *     below the element above it) never becomes the first block on a continuation
  *     face while its predecessor stays behind; instead the predecessor is pulled
@@ -1598,7 +1598,7 @@ export function keepMarkerBoundary(body: Node, k: number): number {
 }
 
 /* Move the block at index `k` (k >= 1) through end-of-body to the tail as one
- * intact fragment, honouring cf-keep-with-next / cf-keep-with-prev. Resets
+ * intact fragment, honouring cs-keep-with-next / cs-keep-with-prev. Resets
  * `body` to pristine first so both `topLevelBlocks` lookups — `keepMarkerBoundary`'s
  * and `extractFromBlockToEnd`'s — see correct indices (some callers reach this
  * with `body` left trimmed by a prior binary search). */
@@ -1682,7 +1682,7 @@ function wordSplitWholeBody(
  * The cloned back inherits the front's `.card-front` class — that's
  * intentional: it lets relayoutGroup() pick up the cloned body for re-scaling
  * the same as a real front body. The strategy is signalled instead by the
- * extra marker class `.cf-overflow-back-as-front` on the new card-root, a
+ * extra marker class `.cs-overflow-back-as-front` on the new card-root, a
  * template/system CSS hook (no plugin-default rules ship). */
 function splitIntoBackAsFront(
   frontBody: HTMLElement,
@@ -1824,12 +1824,12 @@ type GroupRun = SplitOutcome & CfCandidateRun;
  * markers a stylesheet keys on.
  *
  * Inputs:
- *   - root: the host — a shadow root or element holding one `.cf-face` per
+ *   - root: the host — a shadow root or element holding one `.cs-face` per
  *     face in print order, the front first.
  *   - opts: the mode, the candidate set with its decision rule, and the
  *     pristine front HTML the continuation faces are cloned from.
  *
- * Mutates the host: may append further `.cf-face` siblings so it holds every
+ * Mutates the host: may append further `.cs-face` siblings so it holds every
  * output face, front and back.
  *
  * Returns `{ clipped, cardCount }`. `clipped` is true if the splitter ran out
@@ -1854,7 +1854,7 @@ export function scaleAndSplitInDom(
   let currentCandidate = fallbackCandidate;
   let parityForce = false;
 
-  // Stamp the fallback candidate's `.cf-layout-<name>` on every card-root BEFORE
+  // Stamp the fallback candidate's `.cs-layout-<name>` on every card-root BEFORE
   // any measurement. The candidate loop re-stamps the winning candidate's class;
   // non-overflowing cards keep this fallback stamp.
   stampLayout(root, fallbackCandidate);
@@ -1927,7 +1927,7 @@ export function scaleAndSplitInDom(
   function performSplit(scale: number, needRestore: boolean): SplitState {
     if (needRestore) container!.innerHTML = pristineHTML;
 
-    // Re-stamp the rendering candidate's `.cf-layout-<name>`. A restore resets
+    // Re-stamp the rendering candidate's `.cs-layout-<name>`. A restore resets
     // the roots to the pristine snapshot's classes, and each candidate renders
     // under its own class (which conditional CSS keys on), so it must be
     // re-applied here BEFORE measuring. Clones/pads spawned below inherit it via
@@ -2195,13 +2195,13 @@ export function scaleAndSplitInDom(
   }
 
   /* Finalize a committed split group at `scale`: stamp layout + overflow-state
-   * + front-face markers (which also publish the inherited `--cf-front-*`
+   * + front-face markers (which also publish the inherited `--cs-front-*`
    * page-number custom properties the CSS counter reads), then re-run the
    * title/body relayout. Mutates `st` (may flip `st.clipped`). Runs exactly once
    * per committed result. The image-slot choice is already baked in by the
-   * committed candidate's `.cf-layout-*` class (no per-face re-pick needed). */
+   * committed candidate's `.cs-layout-*` class (no per-face re-pick needed). */
   function finalizeGroup(st: SplitState, scale: number): void {
-    // Re-assert the committed candidate's `.cf-layout-<name>` hook on every
+    // Re-assert the committed candidate's `.cs-layout-<name>` hook on every
     // card-root (covers spawned / padded faces and the re-appended real back).
     stampLayout(root, committedCandidate);
 
@@ -2219,7 +2219,7 @@ export function scaleAndSplitInDom(
     // Front-face position markers — `allRoots` is the committed face sequence
     // in physical print order (pairs 2-by-2 onto duplex cards), so this is the
     // authoritative input for the per-front page-number markers. This also
-    // publishes the inherited `--cf-front-index/total` props the CSS counter
+    // publishes the inherited `--cs-front-index/total` props the CSS counter
     // renders, so it MUST run BEFORE the title re-fit below (the counter's
     // `::after` width depends on them). Idempotent (clears stale state) so the
     // revert re-finalize is safe.
@@ -2306,7 +2306,7 @@ export function scaleAndSplitInDom(
     // The growth is unconditional rather than gated on the loud symptoms — a
     // sparse last face, a forced break — because those are only the loudest
     // cases, not the condition. A face keeps slack whenever the next block
-    // cannot follow it, and the most ordinary reason is a `cf-keep-together`
+    // cannot follow it, and the most ordinary reason is a `cs-keep-together`
     // block that no longer fits: it moves whole, and everything the floor
     // scale gave away stays given away. A card whose command list and
     // advancement table are each unbreakable renders at exactly
@@ -2367,7 +2367,7 @@ export function scaleAndSplitInDom(
   /* Render ONE layout candidate from pristine: stamp its class, run the
    * appropriate split (parity for odd/even on back-then-cards, else `any`),
    * re-stamp the class on every committed face, then measure the decision's
-   * `data-cf-measure` markers and evaluate the candidate's `eligible-if` guard.
+   * `data-cs-measure` markers and evaluate the candidate's `eligible-if` guard.
    * Returns a run object consumed by the decision comparator. */
   function renderCandidate(
     candidate: LayoutCandidate,
@@ -2387,8 +2387,8 @@ export function scaleAndSplitInDom(
       candidate: candidate,
       clipped: outcome.st.clipped,
       sizes: sizes,
-      whitespace: cfMeasureWhitespace(frontFaceRoots(outcome.st)),
-      eligible: cfEligible(candidate, sizes),
+      whitespace: csMeasureWhitespace(frontFaceRoots(outcome.st)),
+      eligible: csEligible(candidate, sizes),
     };
   }
 
@@ -2416,7 +2416,7 @@ export function scaleAndSplitInDom(
     if (!(fscale > 0)) fscale = 1;
     for (const m in markers) {
       if (Object.prototype.hasOwnProperty.call(markers, m))
-        sizes[m] = cfMeasureMarker(front, m, fscale);
+        sizes[m] = csMeasureMarker(front, m, fscale);
     }
     return sizes;
   }
@@ -2429,7 +2429,7 @@ export function scaleAndSplitInDom(
     candidates.length === 1 &&
     candidates[0]!.frontFaceCount === "any" &&
     !candidates[0]!.eligibleIf &&
-    !cfLayoutHasElementSize(layoutCfg)
+    !csLayoutHasElementSize(layoutCfg)
   ) {
     currentCandidate = candidates[0]!;
     committedCandidate = candidates[0]!;
@@ -2452,7 +2452,7 @@ export function scaleAndSplitInDom(
   // covers a two-candidate parity set (printed-cards minimize) and image
   // candidates (element-size) — and decides parity + image jointly when a
   // card type uses both.
-  const markers = cfMarkersForConfig(layoutCfg);
+  const markers = csMarkersForConfig(layoutCfg);
   const runs: GroupRun[] = [];
   for (let ci = 0; ci < candidates.length; ci++) {
     runs.push(renderCandidate(candidates[ci]!, markers));

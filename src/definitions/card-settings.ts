@@ -62,7 +62,7 @@ export type CardSide = "front" | "back" | "both";
 /**
  * One way of laying a card out. The layout engine produces every candidate,
  * measures what the decision names, and commits the winner, stamped as
- * `.cf-layout-<name>` so CSS can show or hide content per candidate. The
+ * `.cs-layout-<name>` so CSS can show or hide content per candidate. The
  * engine lives in `src/layout/`; the shape is data and is declared here.
  */
 export interface LayoutCandidate {

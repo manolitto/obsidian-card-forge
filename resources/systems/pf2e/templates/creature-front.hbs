@@ -20,7 +20,7 @@
                                         candidate finds it 10 mm of room
 
   The portrait is in the markup on every render and shown by the
-  stylesheet under `.cf-layout-image-bottom` only; `data-cf-measure="hero"`
+  stylesheet under `.cs-layout-image-bottom` only; `data-cs-measure="hero"`
   is what the candidate's guard and the decision measure.
 --}}
 <div class="card-root card-front pf2e creature-card">
@@ -73,7 +73,7 @@
 
     {{#if (slot "front-image")}}
     <div class="pf2e-creature-image-wrap">
-      <img class="pf2e-creature-image fade-edges" data-cf-measure="hero" src="{{slot "front-image" image=true}}" />
+      <img class="pf2e-creature-image fade-edges" data-cs-measure="hero" src="{{slot "front-image" image=true}}" />
     </div>
     {{/if}}
 

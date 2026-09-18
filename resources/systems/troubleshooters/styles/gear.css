@@ -23,7 +23,7 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.ts-gear-title .cf-overflow-counter {
+.ts-gear-title .cs-overflow-counter {
   font-family: var(--ts-font-body);
   font-weight: 400;
   font-variant: normal;

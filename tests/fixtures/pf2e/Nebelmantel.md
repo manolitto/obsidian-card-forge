@@ -7,7 +7,7 @@ arrow marking the first. The bottom seat has no room on either face, so
 the picture takes the side seat beside the three stat lines —
 `image-side`. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: item

@@ -2,7 +2,7 @@
  * The rewrites the copy-into-vault action makes, all pure: the copied
  * root document with the id and name the dialog chose, and — when the id
  * changed — the notes naming the old one, `system: <id>` inside a
- * `card-forge` or `card-forge-deck` fence and nowhere else.
+ * `cardsmith` or `cardsmith-deck` fence and nowhere else.
  */
 
 /**
@@ -21,12 +21,12 @@ export function rewriteDeclaration(text: string, id: string, name: string): stri
     : out.replace(/^id\s*:.*$/m, (line) => `${line}${eol}${nameLine}`);
 }
 
-const FENCE_OPEN = /^```[^\S\r\n]*card-forge(?:-deck)?[^\S\r\n]*$/;
+const FENCE_OPEN = /^```[^\S\r\n]*cardsmith(?:-deck)?[^\S\r\n]*$/;
 const FENCE_CLOSE = /^```[^\S\r\n]*$/;
 
 /**
- * `system: <from>` → `system: <to>`, inside `card-forge` and
- * `card-forge-deck` fences and nowhere else: not in prose, not in the
+ * `system: <from>` → `system: <to>`, inside `cardsmith` and
+ * `cardsmith-deck` fences and nowhere else: not in prose, not in the
  * frontmatter, not in another fence. Line endings and the line's own
  * spacing, quoting and comment are kept.
  */

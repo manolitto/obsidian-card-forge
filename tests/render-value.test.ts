@@ -29,7 +29,7 @@ describe("the defaults", () => {
 
   it("render prose with its link styled and its markdown interpreted", () => {
     expect(renderValue(PROSE, DEFAULT_SPEC)).toBe(
-      'Wirkt gegen <span class="cf-wikilink">jeden Untoten</span> &amp; <strong>Geister</strong>.'
+      'Wirkt gegen <span class="cs-wikilink">jeden Untoten</span> &amp; <strong>Geister</strong>.'
     );
   });
 
@@ -49,7 +49,7 @@ describe("markdown=false", () => {
 
   it("still styles the link, and escapes the rest", () => {
     expect(renderValue(PROSE, off)).toBe(
-      'Wirkt gegen <span class="cf-wikilink">jeden Untoten</span> &amp; **Geister**.'
+      'Wirkt gegen <span class="cs-wikilink">jeden Untoten</span> &amp; **Geister**.'
     );
   });
 
@@ -95,7 +95,7 @@ describe("empty and non-string values", () => {
 
   it("joins a list with a comma", () => {
     expect(renderValue(["Feuer", "[[Eis]]", 3], DEFAULT_SPEC)).toBe(
-      'Feuer, <span class="cf-wikilink">Eis</span>, 3'
+      'Feuer, <span class="cs-wikilink">Eis</span>, 3'
     );
   });
 

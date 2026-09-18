@@ -1,12 +1,12 @@
 Marsh-Guide · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    p.dd-subtitle "Medium humanoid (human), neutral"
    svg.dd-rule
    p.dd-line "Armor Class 12 (leather armor)"
    p.dd-line "Hit Points 9 (2d8)"
    p.dd-line "Speed 30 ft."
    svg.dd-rule
-   div.dd-abilities.cf-keep-together
+   div.dd-abilities.cs-keep-together
      div
        div.dd-ability-label "STR"
        div.dd-ability-value "11 (+0)"
@@ -32,8 +32,8 @@ Marsh-Guide · 1 card · 2 faces · clipped: no
    p.dd-line "Challenge 1/8 (25 XP)"
    svg.dd-rule
    p.dd-entry "Sure-Footed The guide ignores difficult terrain …"
-   h3.dd-section-head.cf-keep-with-next "Actions"
+   h3.dd-section-head.cs-keep-with-next "Actions"
    p.dd-entry "Quarterstaff Melee Weapon Attack: +2 to …"
-   h3.dd-section-head.cf-keep-with-next "Reactions"
+   h3.dd-section-head.cs-keep-with-next "Reactions"
    p.dd-entry "Warning Shout When a creature the …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

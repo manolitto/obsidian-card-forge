@@ -1,10 +1,10 @@
 hawk-hood · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.ez-body
      p "A stitched leather hood with a …"
      ul (2 items) "Price: 1 guilder Weight: light"
    div.ez-logo-band
      img.ez-logo
-2. back [cf-layout-default] scale 1.00
+2. back [cs-layout-default] scale 1.00
    div.ez-logo-band
      img.ez-logo

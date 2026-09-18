@@ -1,14 +1,14 @@
 Zollbeamtin · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.ts-line.ts-numbers "Initiative 5 Vitalität 4 Verteidigung 30 …"
    div.ts-line "Eigenschaften Untergebener"
-   div.ts-line.cf-keep-with-next "Angriffe"
+   div.ts-line.cs-keep-with-next "Angriffe"
    ul.ts-list (1 items) "Dienstpistole: 45 %, 5 WX, Laut …"
-   div.ts-line.cf-keep-with-next "Kompetenzen"
+   div.ts-line.cs-keep-with-next "Kompetenzen"
    ul.ts-list (4 items) "Basis: 35 % Spezial: 55 % …"
    div.ts-line "Sprachen Deutsch (Muttersprache), Französisch (fließend)"
    div.ts-prose.ts-description
      p "Prüft an der Grenze Pässe und …"
-   span.cf-fill-1
+   span.cs-fill-1
    div.ts-reference.ts-reference-right "Regelbuch S. 231"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

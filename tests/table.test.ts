@@ -20,7 +20,7 @@ const COLUMNS: TableColumns = {
 
 function rows(text: string, columns = COLUMNS, diagnostics = collectDiagnostics()) {
   const note = parseNote(
-    `${text}\n\`\`\`card-forge\ncard: { system: x }\n\`\`\`\n`,
+    `${text}\n\`\`\`cardsmith\ncard: { system: x }\n\`\`\`\n`,
     "T.md",
     diagnostics
   );
@@ -79,7 +79,7 @@ describe("tableRows", () => {
   it("is not fooled by a frontmatter pipe or a pipe in a code block", () => {
     const diagnostics = collectDiagnostics();
     const note = parseNote(
-      `---\nBuch: "[[R.pdf#page=1|p. 1]]"\n---\n\`\`\`\n| a |\n|---|\n\`\`\`\n${TABLE}\n\`\`\`card-forge\ncard: { system: x }\n\`\`\``,
+      `---\nBuch: "[[R.pdf#page=1|p. 1]]"\n---\n\`\`\`\n| a |\n|---|\n\`\`\`\n${TABLE}\n\`\`\`cardsmith\ncard: { system: x }\n\`\`\``,
       "T.md",
       diagnostics
     );

@@ -56,7 +56,7 @@ const NOTE = [
   "---",
   "# A card of system: dragonbane",
   "",
-  "```card-forge",
+  "```cardsmith",
   "card:",
   "  system: dragonbane",
   "  card-type: gear",
@@ -68,7 +68,7 @@ const NOTE = [
   "system: dragonbane",
   "```",
   "",
-  "```card-forge-deck",
+  "```cardsmith-deck",
   'system: "dragonbane" # the deck',
   "card-type: gear",
   "```",
@@ -97,15 +97,15 @@ describe("rewriteSystemId", () => {
 
   it("leaves another id, and a fence that never closes, alone", () => {
     expect(rewriteSystemId(NOTE, "simple", "x")).toBe(NOTE);
-    const open = "```card-forge\ncard:\n  system: dragonbane\n";
+    const open = "```cardsmith\ncard:\n  system: dragonbane\n";
     expect(rewriteSystemId(open, "dragonbane", "x")).toBe(
-      "```card-forge\ncard:\n  system: x\n"
+      "```cardsmith\ncard:\n  system: x\n"
     );
   });
 
   it("matches the id whatever its case, as the parser reads it", () => {
     const out = rewriteSystemId(
-      "```card-forge\ncard:\n  system: Dragonbane\n```",
+      "```cardsmith\ncard:\n  system: Dragonbane\n```",
       "dragonbane",
       "x"
     );
@@ -130,7 +130,7 @@ describe("entriesAfterCopy", () => {
       [other, bundled],
       "dragonbane",
       "dragonbane",
-      "card-forge/dragonbane/dragonbane.yaml"
+      "cardsmith/dragonbane/dragonbane.yaml"
     );
     expect(out).toEqual([
       other,
@@ -138,7 +138,7 @@ describe("entriesAfterCopy", () => {
       {
         type: "vault",
         id: "dragonbane",
-        path: "card-forge/dragonbane/dragonbane.yaml",
+        path: "cardsmith/dragonbane/dragonbane.yaml",
         active: true,
       },
     ]);
@@ -150,14 +150,14 @@ describe("entriesAfterCopy", () => {
       [bundled],
       "dragonbane",
       "dragonbane-mine",
-      "card-forge/mine/dragonbane.yaml"
+      "cardsmith/mine/dragonbane.yaml"
     );
     expect(out).toEqual([
       bundled,
       {
         type: "vault",
         id: "dragonbane-mine",
-        path: "card-forge/mine/dragonbane.yaml",
+        path: "cardsmith/mine/dragonbane.yaml",
         active: true,
       },
     ]);

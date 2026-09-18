@@ -1,14 +1,14 @@
 Nebelphiole · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    p.sw-flavour "Eine Phiole aus grünem Glas, in …"
    div.sw-stats
      p.sw-stat "Klasseneinschränkung: A"
      p.sw-stat "Wirkungsdauer: 1W6 + 6 Phasen"
-   div.sw-banner.cf-keep-with-next
+   div.sw-banner.cs-keep-with-next
      div.sw-flourish.sw-flourish-left
      div.sw-banner-label "Wirkung"
      div.sw-flourish.sw-flourish-right
    div.sw-effect
      p "Wer den Trank leert, wird zu …"
      ul (3 items) "kann durch jede Ritze und unter …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

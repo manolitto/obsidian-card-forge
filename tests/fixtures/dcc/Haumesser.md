@@ -4,7 +4,7 @@ A weapon, in English: the captions from the `en` table, the English
 original hidden because the card is English. Invented for this deck; the
 deck prints `de` and leaves it out.
 
-```card-forge
+```cardsmith
 card:
   system: dcc
   card-type: equipment

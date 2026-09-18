@@ -5,7 +5,7 @@ three legendary sections each opened by a preamble entry, the 2024
 proficiency bonus on the challenge line. The block shrinks to fit.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: 5e
   card-type: monster

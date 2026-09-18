@@ -7,7 +7,7 @@ import { parseNote } from "../src/render/note";
 
 /** A card note from its block's `card:` lines, tagged. */
 function note(path: string, card: string, tags: string[] = []): TaggedNote {
-  const text = `\`\`\`card-forge\ncard:\n${card
+  const text = `\`\`\`cardsmith\ncard:\n${card
     .split("\n")
     .map((line) => `  ${line}`)
     .join("\n")}\n\`\`\``;
@@ -65,7 +65,7 @@ describe("selecting notes", () => {
     const lost = note("K/Lost.md", "card-type: gear");
     expect(select([beil, lost], {}, diagnostics)).toEqual(["Beil"]);
     expect(
-      diagnostics.matching("K/Lost.md: the card-forge block names no system:")
+      diagnostics.matching("K/Lost.md: the cardsmith block names no system:")
     ).toHaveLength(1);
   });
 

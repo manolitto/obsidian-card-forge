@@ -1,6 +1,6 @@
 Kurzschwert · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
-   span.cf-fill-1.cf-keep-with-next
+1. front [cs-layout-default cs-front-first] scale 1.00
+   span.cs-fill-1.cs-keep-with-next
    div.mini-d20-rows.mini-d20-equipment-stats
      div.mini-d20-row-label "Art"
      div.mini-d20-row-value "Leicht"
@@ -10,7 +10,7 @@ Kurzschwert · 1 card · 2 faces · clipped: no
      div.mini-d20-row-value "Nah"
      div.mini-d20-row-label "Preis"
      div.mini-d20-row-value "8 GM"
-   span.cf-fill-1.cf-keep-with-next
+   span.cs-fill-1.cs-keep-with-next
    p.mini-d20-flavour "Eine schlanke, einhändige Klinge aus geschmiedetem …"
-   span.cf-fill-2
-2. back [cf-layout-default] scale —
+   span.cs-fill-2
+2. back [cs-layout-default] scale —

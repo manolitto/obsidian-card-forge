@@ -14,7 +14,7 @@ import { escapeHtml } from "./inline-markdown";
  * Four things Obsidian's markdown has that CommonMark does not, each an
  * extension below:
  *
- *   `[[target|alias]]`         a `.cf-wikilink` span showing the alias — the
+ *   `[[target|alias]]`         a `.cs-wikilink` span showing the alias — the
  *                              same span a value's link becomes
  *   `![[picture.png|alt]]`     the embed hook: the caller says what an
  *                              embedded picture becomes, since it has the
@@ -26,7 +26,7 @@ import { escapeHtml } from "./inline-markdown";
  *
  * The markers are Obsidian comments, so the note reads clean in Obsidian's
  * own view, and the markdown between them keeps rendering in its editor —
- * which a raw `<div class="cf-keep-together">` would not. Raw HTML in the
+ * which a raw `<div class="cs-keep-together">` would not. Raw HTML in the
  * body passes through, as markdown has it.
  */
 
@@ -55,7 +55,7 @@ const wikilink: TokenizerAndRendererExtension = {
     return { type: "wikilink", raw: match[0], text: match[2] ?? match[1] };
   },
   renderer: (token) =>
-    `<span class="cf-wikilink">${escapeHtml(String(token["text"]))}</span>`,
+    `<span class="cs-wikilink">${escapeHtml(String(token["text"]))}</span>`,
 };
 
 function imageEmbed(embed: EmbedRenderer): TokenizerAndRendererExtension {
@@ -79,7 +79,7 @@ function imageEmbed(embed: EmbedRenderer): TokenizerAndRendererExtension {
 
 // ── The pagination markers ────────────────────────────────────────
 
-/** Each name is the `cf-<name>` class the splitter reads; the list is closed on purpose. */
+/** Each name is the `cs-<name>` class the splitter reads; the list is closed on purpose. */
 export const BODY_MARKERS = [
   "keep-together",
   "keep-with-next",
@@ -129,11 +129,11 @@ const cardBreak: TokenizerAndRendererExtension = {
     if (!match) return undefined;
     return { type: "cardBreak", raw: match[0] };
   },
-  renderer: () => `<div class="cf-card-break"></div>`,
+  renderer: () => `<div class="cs-card-break"></div>`,
 };
 
 /**
- * A paired marker wraps the blocks between its lines in `<div class="cf-…">`.
+ * A paired marker wraps the blocks between its lines in `<div class="cs-…">`.
  * Same-name markers nest by depth; an unterminated one runs to the end of
  * the text rather than printing itself; a stray closer is swallowed.
  */
@@ -180,6 +180,6 @@ const bodyMarker: TokenizerAndRendererExtension = {
   renderer(token) {
     const tokens = token["tokens"];
     if (!token["marker"] || !Array.isArray(tokens) || tokens.length === 0) return "";
-    return `<div class="cf-${String(token["marker"])}">${this.parser.parse(tokens)}</div>`;
+    return `<div class="cs-${String(token["marker"])}">${this.parser.parse(tokens)}</div>`;
   },
 };

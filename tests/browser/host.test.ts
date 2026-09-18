@@ -23,7 +23,7 @@ let host: LayoutHost | undefined;
 afterEach(() => {
   host?.remove();
   host = undefined;
-  document.head.querySelectorAll("style[data-cf-fonts]").forEach((s) => s.remove());
+  document.head.querySelectorAll("style[data-cs-fonts]").forEach((s) => s.remove());
 });
 
 const front = faceHtml({ body: paragraphs(2) });
@@ -45,7 +45,7 @@ describe("mountLayoutHost", () => {
     expect(faces).toHaveLength(2);
     expect(faces[0]).toMatch(/^<div class="card-root card-front/);
     expect(faces[1]).toMatch(/^<div class="card-root card-back/);
-    expect(faces[0]).not.toContain("cf-face");
+    expect(faces[0]).not.toContain("cs-face");
 
     host.remove();
     expect(document.body.contains(host.root.host)).toBe(false);
@@ -59,7 +59,7 @@ describe("hoistFontFaces", () => {
     const stripped = hoistFontFaces(document, "sys", css);
     expect(stripped).not.toContain("@font-face");
     expect(stripped).toContain(".a { color: red; }");
-    const style = document.head.querySelector('style[data-cf-fonts="sys"]');
+    const style = document.head.querySelector('style[data-cs-fonts="sys"]');
     expect(style).not.toBeNull();
     expect(style!.textContent).toBe(FONT_RULE);
   });
@@ -69,21 +69,21 @@ describe("hoistFontFaces", () => {
     hoistFontFaces(document, "sys", `${FONT_RULE}\n.b {}`);
     const other = `@font-face { font-family: "Other"; src: local("serif"); }`;
     hoistFontFaces(document, "sys", `${FONT_RULE}\n${other}\n.c {}`);
-    const style = document.head.querySelector('style[data-cf-fonts="sys"]')!;
+    const style = document.head.querySelector('style[data-cs-fonts="sys"]')!;
     expect(style.textContent!.split("@font-face")).toHaveLength(3);
     expect(style.textContent).toContain(other);
-    expect(document.head.querySelectorAll("style[data-cf-fonts]")).toHaveLength(1);
+    expect(document.head.querySelectorAll("style[data-cs-fonts]")).toHaveLength(1);
   });
 
   it("keeps systems apart", () => {
     hoistFontFaces(document, "one", FONT_RULE);
     hoistFontFaces(document, "two", FONT_RULE);
-    expect(document.head.querySelectorAll("style[data-cf-fonts]")).toHaveLength(2);
+    expect(document.head.querySelectorAll("style[data-cs-fonts]")).toHaveLength(2);
   });
 
   it("leaves a stylesheet without fonts alone", () => {
     expect(hoistFontFaces(document, "sys", ".a {}")).toBe(".a {}");
-    expect(document.head.querySelector('style[data-cf-fonts="sys"]')).toBeNull();
+    expect(document.head.querySelector('style[data-cs-fonts="sys"]')).toBeNull();
   });
 });
 

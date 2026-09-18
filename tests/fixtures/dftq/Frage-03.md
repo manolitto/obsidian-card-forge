@@ -3,7 +3,7 @@
 A German prompt without a deck name: the back stays white. The heading
 is written under its alias `nummer`. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dftq
   card-type: prompt

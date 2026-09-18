@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: tor2e
   card-type: gear

@@ -4,7 +4,7 @@ A feat with an action cost beside its name and every labelled line the
 card type has, then the rules text and the trailing "Speziell" note.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: feat

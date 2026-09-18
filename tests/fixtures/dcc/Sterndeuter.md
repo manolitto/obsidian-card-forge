@@ -5,7 +5,7 @@ the title, the flavour, the trained weapon and the trade goods under their
 captions, the English original and the source at the foot. Invented for
 this deck — no row of any published table.
 
-```card-forge
+```cardsmith
 card:
   system: dcc
   card-type: occupation

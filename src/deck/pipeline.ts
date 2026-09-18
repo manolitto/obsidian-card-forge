@@ -64,7 +64,7 @@ export async function buildDeck(
   progress: DeckProgress = () => {}
 ): Promise<Deck> {
   const block = parseDeckBlock(text, path, diagnostics);
-  if (!block) throw new Error(`${path}: no card-forge-deck block to build a deck from`);
+  if (!block) throw new Error(`${path}: no cardsmith-deck block to build a deck from`);
   const { selection, settings, cardLayer } = block;
 
   const system = await systems.get(selection.systemId);

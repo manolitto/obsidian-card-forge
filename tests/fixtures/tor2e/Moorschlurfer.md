@@ -32,7 +32,7 @@ small diamonds with hate, the large attribute diamond, the two lists, the
 picture with the name over it on the back. This section is a property
 nobody binds and stays off the card. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: tor2e
   card-type: npc

@@ -5,7 +5,7 @@ required rank as the two-line badge, the trigger, the effect, the four
 degrees of success, and a callout with a named sub-rule at the end.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: action

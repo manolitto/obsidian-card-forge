@@ -8,9 +8,9 @@ import {
 } from "obsidian";
 import { DeckExporter, type ExportFormat } from "./export/exporter";
 import { VaultDeckSource } from "./deck/vault-source";
-import { CardForgeSettingTab } from "./settings/settings-tab";
+import { CardsmithSettingTab } from "./settings/settings-tab";
 import { reconcileSystemEntries } from "./settings/system-registry";
-import { DEFAULT_SETTINGS, type CardForgeSettings } from "./settings/types";
+import { DEFAULT_SETTINGS, type CardsmithSettings } from "./settings/types";
 import { CardRenderer } from "./render/renderer";
 import { VaultImageSource } from "./render/vault-images";
 import { BUNDLED_IDS, SystemLibrary } from "./systems/library";
@@ -25,8 +25,8 @@ import { pickSystemAndCardType } from "./ui/pickers";
 import { PropertyReferenceModal } from "./ui/property-reference";
 import { resolveUiLanguage, setUiLanguage, t, uiLanguage } from "./ui/strings";
 
-export default class CardForgePlugin extends Plugin {
-  override settings: CardForgeSettings = { ...DEFAULT_SETTINGS };
+export default class CardsmithPlugin extends Plugin {
+  override settings: CardsmithSettings = { ...DEFAULT_SETTINGS };
   systems!: SystemLibrary;
   /** One renderer for every surface — the preview, the deck view, the export. */
   renderer!: CardRenderer;
@@ -57,7 +57,7 @@ export default class CardForgePlugin extends Plugin {
       new VaultImageSource(this.app)
     );
     this.registerMarkdownCodeBlockProcessor(
-      "card-forge",
+      "cardsmith",
       cardBlockProcessor({
         app: this.app,
         systems: this.systems,
@@ -76,7 +76,7 @@ export default class CardForgePlugin extends Plugin {
       this.manifest.dir ?? ""
     );
     this.registerMarkdownCodeBlockProcessor(
-      "card-forge-deck",
+      "cardsmith-deck",
       deckBlockProcessor({
         app: this.app,
         systems: this.systems,
@@ -128,7 +128,7 @@ export default class CardForgePlugin extends Plugin {
       callback: () => void this.showReference(),
     });
 
-    this.addSettingTab(new CardForgeSettingTab(this.app, this));
+    this.addSettingTab(new CardsmithSettingTab(this.app, this));
   }
 
   private async insertCard(editor: Editor, mode: InsertMode): Promise<void> {
@@ -173,7 +173,7 @@ export default class CardForgePlugin extends Plugin {
     if (!checking) {
       const progress = notice(t("progress.reading"), 0);
       void runExport(this.exporter, file, format, (message) =>
-        progress.setMessage(`Card Forge: ${message}`)
+        progress.setMessage(`Cardsmith: ${message}`)
       ).finally(() => progress.hide());
     }
     return true;
@@ -197,7 +197,7 @@ export default class CardForgePlugin extends Plugin {
       {},
       DEFAULT_SETTINGS,
       await this.loadData()
-    ) as CardForgeSettings;
+    ) as CardsmithSettings;
     saved.systems = reconcileSystemEntries(saved.systems, BUNDLED_IDS);
     this.settings = saved;
     setUiLanguage(resolveUiLanguage(saved.language, getLanguage()));

@@ -2,7 +2,7 @@
 
 No `name` in the block: the title falls back to the note's file name.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   card-type: simple

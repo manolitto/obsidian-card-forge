@@ -81,7 +81,7 @@
 
 /* A white field on every front and continuation face. */
 .card-root.simple.card-front,
-.card-root.simple.cf-body-continued {
+.card-root.simple.cs-body-continued {
   background-color: var(--simple-paper);
   background-image: none;
 }

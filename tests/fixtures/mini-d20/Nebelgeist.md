@@ -5,7 +5,7 @@ the right corner and the back's lower half stay empty; the label still
 prints. Enough abilities that the card fills its back before it spawns
 another: the system's `back-then-cards`. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: bestiary

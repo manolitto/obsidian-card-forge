@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  cfMeasureWhitespace,
+  csMeasureWhitespace,
   processBody,
   readScaleFromTransform,
   resolveBodyMinScale,
@@ -176,7 +176,7 @@ describe("scaleFontSize", () => {
 
 describe("processBody", () => {
   const layoutClasses = (root: HTMLElement) =>
-    Array.from(root.classList).filter((c) => c.startsWith("cf-layout-"));
+    Array.from(root.classList).filter((c) => c.startsWith("cs-layout-"));
   const candidates: LayoutConfig = {
     layouts: [
       {
@@ -194,21 +194,21 @@ describe("processBody", () => {
   };
   const heroCss = (height: string) => `${TYPE}
 .hero { display: none; height: ${height}; background: #888; }
-.cf-layout-image-side .hero { display: block; }`;
+.cs-layout-image-side .hero { display: block; }`;
   const withHero = () =>
-    faceHtml({ body: `<div class="hero" data-cf-measure="hero"></div>${paragraphs(2)}` });
+    faceHtml({ body: `<div class="hero" data-cs-measure="hero"></div>${paragraphs(2)}` });
 
   it("commits the candidate whose guard the measured element clears", () => {
     const root = mount(withHero(), heroCss("15mm"));
     expect(processBody(body(root), candidates)).toBe(false);
-    expect(layoutClasses(root)).toEqual(["cf-layout-image-side"]);
+    expect(layoutClasses(root)).toEqual(["cs-layout-image-side"]);
     expect(root.querySelector<HTMLElement>(".hero")!.clientHeight).toBeGreaterThan(0);
   });
 
   it("falls back when the element measures under the guard", () => {
     const root = mount(withHero(), heroCss("5mm"));
     processBody(body(root), candidates);
-    expect(layoutClasses(root)).toEqual(["cf-layout-image-none"]);
+    expect(layoutClasses(root)).toEqual(["cs-layout-image-none"]);
   });
 
   it("skips the candidate loop for a parity-only set", () => {
@@ -225,14 +225,14 @@ describe("processBody", () => {
   });
 });
 
-describe("cfMeasureWhitespace", () => {
+describe("csMeasureWhitespace", () => {
   it("reads the unfilled share of the last front face's body", () => {
     const empty = mount(faceHtml({ body: "" }));
-    expect(cfMeasureWhitespace([empty])).toBe(1);
+    expect(csMeasureWhitespace([empty])).toBe(1);
     mounted!.unmount();
 
     const half = mount(faceHtml({ body: paragraphs(2) }));
-    const ws = cfMeasureWhitespace([half]);
+    const ws = csMeasureWhitespace([half]);
     expect(ws).toBeGreaterThan(0.3);
     expect(ws).toBeLessThan(0.8);
     mounted!.unmount();
@@ -242,6 +242,6 @@ describe("cfMeasureWhitespace", () => {
     // full body still leaves under a line's worth of gap.
     const full = mount(faceHtml({ body: paragraphs(7) }));
     scaleOneBody(body(full));
-    expect(cfMeasureWhitespace([full])).toBeLessThan(0.2);
+    expect(csMeasureWhitespace([full])).toBeLessThan(0.2);
   });
 });

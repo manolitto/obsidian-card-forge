@@ -4,7 +4,7 @@ A hazard: the level badge, an italic lead, the notice and disable lines,
 the defences behind a rule, the effects in the same list shape as a
 creature's attacks, and the reset clause last. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: trap

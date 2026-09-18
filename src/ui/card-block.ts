@@ -17,7 +17,7 @@ import { mountPreview, previewFaces } from "./preview-mount";
 import { t } from "./strings";
 
 /*
- * The `card-forge` block in reading view and live preview: the note's
+ * The `cardsmith` block in reading view and live preview: the note's
  * cards, one shown at a time, laid out and mounted at the display height.
  *
  * The block is the note's declaration, but the card is the whole note —
@@ -43,7 +43,7 @@ export interface CardBlockContext {
   previewHeight(): number;
 }
 
-/** The processor `registerMarkdownCodeBlockProcessor("card-forge", …)` takes. */
+/** The processor `registerMarkdownCodeBlockProcessor("cardsmith", …)` takes. */
 export function cardBlockProcessor(context: CardBlockContext) {
   return (_source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext): void => {
     ctx.addChild(new CardPreview(el, ctx.sourcePath, context));
@@ -88,9 +88,9 @@ class CardPreview extends MarkdownRenderChild {
     const generation = ++this.generation;
     const diagnostics = collectDiagnostics();
     this.containerEl.empty();
-    this.containerEl.addClass("cf-card-block");
+    this.containerEl.addClass("cs-card-block");
     const placeholder = this.containerEl.createDiv({
-      cls: "cf-card-placeholder",
+      cls: "cs-card-placeholder",
       text: t("preview.laying-out"),
     });
 
@@ -118,7 +118,7 @@ class CardPreview extends MarkdownRenderChild {
 
     if (this.cards.length === 0) {
       placeholder.remove();
-      this.containerEl.createDiv({ cls: "cf-card-empty", text: t("preview.no-card") });
+      this.containerEl.createDiv({ cls: "cs-card-empty", text: t("preview.no-card") });
       this.showDiagnostics([]);
       return;
     }
@@ -153,7 +153,7 @@ class CardPreview extends MarkdownRenderChild {
   }
 
   private steppingBar(): void {
-    const bar = this.containerEl.createDiv({ cls: "cf-card-stepping" });
+    const bar = this.containerEl.createDiv({ cls: "cs-card-stepping" });
     const step = (delta: number): void => {
       const next = this.index + delta;
       if (next < 0 || next >= this.cards.length) return;
@@ -188,7 +188,7 @@ class CardPreview extends MarkdownRenderChild {
   private showDiagnostics(layoutMessages: readonly string[]): void {
     const messages = [...this.noteMessages, ...layoutMessages];
     if (messages.length === 0) return;
-    const list = this.containerEl.createEl("ul", { cls: "cf-card-diagnostics" });
+    const list = this.containerEl.createEl("ul", { cls: "cs-card-diagnostics" });
     for (const message of messages) list.createEl("li", { text: message });
   }
 

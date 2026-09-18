@@ -32,7 +32,7 @@ export interface LayoutConfig {
   decision: LayoutDecision;
 }
 
-/** Element size in layout px, as measured by `cfMeasureMarker`. */
+/** Element size in layout px, as measured by `csMeasureMarker`. */
 export interface CfMeasuredSize {
   width: number;
   height: number;
@@ -76,9 +76,9 @@ export function cssPx(value: string): number {
   return isFinite(n) ? n : 0;
 }
 
-/* Horizontal-overflow probe — checks .cf-check-overflow markers under root. */
+/* Horizontal-overflow probe — checks .cs-check-overflow markers under root. */
 export function hasHorizontalOverflow(root: ShadowRoot | HTMLElement): boolean {
-  const targets = root.querySelectorAll(".cf-check-overflow");
+  const targets = root.querySelectorAll(".cs-check-overflow");
   for (let i = 0; i < targets.length; i++) {
     const el = targets[i]!;
     if (el.scrollWidth > el.clientWidth + 1) return true;
@@ -294,8 +294,8 @@ export function scaleOneBody(htmlEl: HTMLElement, forcedScale?: number): boolean
  *
  * A "layout candidate" is one named, mutually-exclusive way of rendering a card
  * (`LayoutCandidate` in the settings chain). These helpers measure
- * `data-cf-measure` markers, compare candidates against the decision rule, and
- * stamp the `.cf-layout-<name>` class. The single-card driver
+ * `data-cs-measure` markers, compare candidates against the decision rule, and
+ * stamp the `.cs-layout-<name>` class. The single-card driver
  * `pickLayoutCandidateInBody` runs inside `processBody`; the overflow splitter
  * reuses `compareLayoutCandidates` for whole-group candidates. */
 
@@ -304,7 +304,7 @@ export function scaleOneBody(htmlEl: HTMLElement, forcedScale?: number): boolean
  * scale and the per-card driver must actually loop. Parity-only configs (the
  * default `any`, or odd/even) return false: they only differ under overflow,
  * which the splitter resolves. */
-export function cfLayoutHasElementSize(cfg: LayoutConfig | undefined): boolean {
+export function csLayoutHasElementSize(cfg: LayoutConfig | undefined): boolean {
   if (!cfg) return false;
   const d = cfg.decision;
   if (d && d.order) {
@@ -319,25 +319,25 @@ export function cfLayoutHasElementSize(cfg: LayoutConfig | undefined): boolean {
 }
 
 /* Read the inline `transform: scale(N)` of a body element (default 1). */
-export function cfBodyScale(body: HTMLElement): number {
+export function csBodyScale(body: HTMLElement): number {
   const m = (body.style.transform || "").match(/scale\(([\d.]+)\)/);
   return m ? parseFloat(m[1]!) : 1;
 }
 
-/* Measure the element(s) marked `data-cf-measure="<marker>"` inside `cardRoot`,
+/* Measure the element(s) marked `data-cs-measure="<marker>"` inside `cardRoot`,
  * scaled by `scale` (the body's committed transform). Returns `{ width, height,
  * area }` in layout px. When several elements share the marker (e.g. the same
  * image rendered into a side AND a bottom slot, only one visible per candidate),
  * the LARGEST-area match wins — so the visible slot is measured and hidden ones
  * (clientHeight 0) are ignored. A missing element or a broken `<img>` (loaded but
  * zero natural size) measures 0 in every dimension. */
-export function cfMeasureMarker(
+export function csMeasureMarker(
   cardRoot: HTMLElement,
   marker: string,
   scale: number
 ): CfMeasuredSize {
   const zero = { width: 0, height: 0, area: 0 };
-  const els = cardRoot.querySelectorAll('[data-cf-measure="' + marker + '"]');
+  const els = cardRoot.querySelectorAll('[data-cs-measure="' + marker + '"]');
   if (!els.length) return zero;
   const s = isFinite(scale) && scale > 0 ? scale : 1;
   let best = zero;
@@ -367,7 +367,7 @@ export function cfMeasureMarker(
  * less than the box, so underfill is invisible that way and the metric would
  * read 0 for every face. Body children are `flex-shrink: 0` and do not grow,
  * so the last child's bottom IS the content height. */
-export function cfMeasureWhitespace(frontRoots: ArrayLike<HTMLElement>): number {
+export function csMeasureWhitespace(frontRoots: ArrayLike<HTMLElement>): number {
   if (!frontRoots.length) return 0;
   const last = frontRoots[frontRoots.length - 1];
   const body = last ? last.querySelector<HTMLElement>(".card-body-scalable") : null;
@@ -381,9 +381,9 @@ export function cfMeasureWhitespace(frontRoots: ArrayLike<HTMLElement>): number 
   return ws > 0 ? ws : 0;
 }
 
-/* Stamp `.cf-layout-<name>` on each root, clearing any prior `.cf-layout-*`.
+/* Stamp `.cs-layout-<name>` on each root, clearing any prior `.cs-layout-*`.
  * Idempotent. */
-export function cfApplyLayoutClasses(
+export function csApplyLayoutClasses(
   roots: ArrayLike<HTMLElement>,
   candidate: LayoutCandidate
 ): void {
@@ -394,17 +394,17 @@ export function cfApplyLayoutClasses(
     const cl = root.classList;
     const stale: string[] = [];
     for (let t = 0; t < cl.length; t++) {
-      if (cl[t]!.indexOf("cf-layout-") === 0) stale.push(cl[t]!);
+      if (cl[t]!.indexOf("cs-layout-") === 0) stale.push(cl[t]!);
     }
     for (let r = 0; r < stale.length; r++) cl.remove(stale[r]!);
-    cl.add("cf-layout-" + name);
+    cl.add("cs-layout-" + name);
   }
 }
 
 /* Value of one decision key for a measured run. printed-cards → integer face
  * count; element-size → the requested dimension of the run's measured marker,
  * the area when none is named. */
-function cfMetricValue(run: CfCandidateRun, key: LayoutMetric): number {
+function csMetricValue(run: CfCandidateRun, key: LayoutMetric): number {
   if (key.metric === "printed-cards") return run.printedCards || 0;
   if (key.metric === "whitespace") return run.whitespace || 0;
   if (key.metric === "element-size") {
@@ -423,15 +423,15 @@ function cfMetricValue(run: CfCandidateRun, key: LayoutMetric): number {
  * (printed-cards) compare exactly; continuous metrics use the key's `epsilon`
  * (fraction, default 0.02) so near-ties fall through to the next key. All keys
  * tied → false (the earlier-declared run is kept by the caller). */
-function cfCandidateBeats(
+function csCandidateBeats(
   a: CfCandidateRun,
   b: CfCandidateRun,
   order: readonly LayoutMetric[]
 ): boolean {
   for (let i = 0; i < order.length; i++) {
     const key = order[i]!;
-    const va = cfMetricValue(a, key);
-    const vb = cfMetricValue(b, key);
+    const va = csMetricValue(a, key);
+    const vb = csMetricValue(b, key);
     if (key.metric === "printed-cards") {
       if (va !== vb) return key.direction === "maximize" ? va > vb : va < vb;
       continue;
@@ -470,7 +470,7 @@ export function compareLayoutCandidates(
   const order = (decision && decision.order) || [];
   let best = eligible[0]!;
   for (let k = 1; k < eligible.length; k++) {
-    if (cfCandidateBeats(runs[eligible[k]!]!, runs[best]!, order)) best = eligible[k]!;
+    if (csCandidateBeats(runs[eligible[k]!]!, runs[best]!, order)) best = eligible[k]!;
   }
   return best;
 }
@@ -478,7 +478,7 @@ export function compareLayoutCandidates(
 /* Collect the markers a config needs measured: every element-size decision key
  * plus every candidate's eligibleIf element. Exported for the overflow
  * splitter's whole-group loop. */
-export function cfMarkersForConfig(cfg: LayoutConfig): Record<string, true> {
+export function csMarkersForConfig(cfg: LayoutConfig): Record<string, true> {
   const markers: Record<string, true> = {};
   const d = cfg.decision;
   if (d && d.order) {
@@ -495,7 +495,7 @@ export function cfMarkersForConfig(cfg: LayoutConfig): Record<string, true> {
 }
 
 /* Measure every needed marker for a card-root at the current body scale. */
-function cfMeasureAll(
+function csMeasureAll(
   cardRoot: HTMLElement,
   markers: Record<string, true>,
   scale: number
@@ -503,14 +503,14 @@ function cfMeasureAll(
   const sizes: Record<string, CfMeasuredSize> = {};
   for (const m in markers) {
     if (Object.prototype.hasOwnProperty.call(markers, m))
-      sizes[m] = cfMeasureMarker(cardRoot, m, scale);
+      sizes[m] = csMeasureMarker(cardRoot, m, scale);
   }
   return sizes;
 }
 
 /* Evaluate a candidate's eligibleIf guard against measured sizes. No guard → true.
  * Exported for the overflow splitter's whole-group loop. */
-export function cfEligible(
+export function csEligible(
   candidate: LayoutCandidate,
   sizes: Record<string, CfMeasuredSize>
 ): boolean {
@@ -524,13 +524,13 @@ export function cfEligible(
 }
 
 /* Single-card layout-candidate driver. For each candidate: stamp its
- * `.cf-layout-<name>`, re-fit the body, measure the referenced markers,
+ * `.cs-layout-<name>`, re-fit the body, measure the referenced markers,
  * evaluate eligibility (printed-cards is 1 for every candidate — there is no
  * overflow split at this level). Picks the winner via
  * `compareLayoutCandidates`, re-commits its classes + a final body fit, and
  * returns whether the committed body still clips at the scale floor.
  *
- * Only called by `processBody` when `cfLayoutHasElementSize(cfg)` is true; a
+ * Only called by `processBody` when `csLayoutHasElementSize(cfg)` is true; a
  * single / parity-only candidate set takes the plain `scaleOneBody` path. */
 export function pickLayoutCandidateInBody(
   body: HTMLElement,
@@ -538,25 +538,25 @@ export function pickLayoutCandidateInBody(
   cfg: LayoutConfig
 ): boolean {
   const cands = cfg.layouts;
-  const markers = cfMarkersForConfig(cfg);
+  const markers = csMarkersForConfig(cfg);
   const runs: CfCandidateRun[] = [];
   for (let i = 0; i < cands.length; i++) {
     const c = cands[i]!;
-    cfApplyLayoutClasses([cardRoot], c);
+    csApplyLayoutClasses([cardRoot], c);
     const clipped = scaleOneBody(body);
-    const sizes = cfMeasureAll(cardRoot, markers, cfBodyScale(body));
+    const sizes = csMeasureAll(cardRoot, markers, csBodyScale(body));
     runs.push({
       candidate: c,
       printedCards: 1,
       sizes: sizes,
       clipped: clipped,
-      eligible: cfEligible(c, sizes),
-      whitespace: cfMeasureWhitespace([cardRoot]),
+      eligible: csEligible(c, sizes),
+      whitespace: csMeasureWhitespace([cardRoot]),
     });
   }
   let win = compareLayoutCandidates(runs, cfg.decision);
   if (win < 0) win = 0;
-  cfApplyLayoutClasses([cardRoot], cands[win]!);
+  csApplyLayoutClasses([cardRoot], cands[win]!);
   return scaleOneBody(body);
 }
 
@@ -569,7 +569,7 @@ export function processBody(bodyEl: HTMLElement, cfg: LayoutConfig | undefined):
   // single-card scale (element-size / eligible-if). Parity-only configs (default
   // `any`, odd/even) and config-less cards take the plain scale above.
   const cardRoot = bodyEl.closest<HTMLElement>(".card-root");
-  if (cardRoot && cfg && cfLayoutHasElementSize(cfg)) {
+  if (cardRoot && cfg && csLayoutHasElementSize(cfg)) {
     if (pickLayoutCandidateInBody(bodyEl, cardRoot, cfg)) clipped = true;
   }
   return clipped;
@@ -586,7 +586,7 @@ export function readScaleFromTransform(htmlEl: HTMLElement): number {
 
 /* Run binary-search title scaling only — walks `.text-scalable` elements
  * under `root` and re-fits each title. Used by the overflow splitter for
- * the post-marker final pass, where the title's `.cf-overflow-counter`
+ * the post-marker final pass, where the title's `.cs-overflow-counter`
  * placeholder has been populated and may have widened the title's
  * scrollWidth. Bodies are deliberately not touched here — the splitter
  * manages body scale separately via the forced-scale path. */

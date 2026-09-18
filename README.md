@@ -1,10 +1,10 @@
-# Card Forge
+# Cardsmith
 
 An Obsidian plugin that turns your notes into print-ready, double-sided card
 decks: board game components, RPG reference cards, flash cards — anything you
 print on a card.
 
-A *system* is a family of cards that share a look and a vocabulary. Card Forge
+A *system* is a family of cards that share a look and a vocabulary. Cardsmith
 ships several and lets you build your own in your vault.
 
 > **Status: early.** This is a ground-up reimplementation of an older plugin of
@@ -29,7 +29,7 @@ To try it in Obsidian, link the checkout into a vault's plugin folder and
 enable the `hot-reload` community plugin there:
 
 ```bash
-ln -s "$(pwd)" /path/to/vault/.obsidian/plugins/card-forge
+ln -s "$(pwd)" /path/to/vault/.obsidian/plugins/cardsmith
 ```
 
 ## Licence

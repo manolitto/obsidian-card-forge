@@ -11,7 +11,7 @@ import { runExport } from "./export-run";
 import { t, type StringKey } from "./strings";
 
 /*
- * The `card-forge-deck` block in reading view and live preview: a summary
+ * The `cardsmith-deck` block in reading view and live preview: a summary
  * of what the deck will print, and the buttons that print it.
  *
  * The summary is what parsing and filtering yield — the system, the card
@@ -41,17 +41,17 @@ export function deckBlockProcessor(context: DeckBlockContext) {
     el: HTMLElement,
     ctx: MarkdownPostProcessorContext
   ): Promise<void> => {
-    el.addClass("cf-deck-block");
+    el.addClass("cs-deck-block");
     const file = context.app.vault.getAbstractFileByPath(ctx.sourcePath);
     const diagnostics = collectDiagnostics();
     // The parser reads a note; the block is handed over as one.
     const block = parseDeckBlock(
-      `\`\`\`card-forge-deck\n${source}\n\`\`\``,
+      `\`\`\`cardsmith-deck\n${source}\n\`\`\``,
       ctx.sourcePath,
       diagnostics
     );
 
-    const rows = el.createEl("dl", { cls: "cf-deck-summary" });
+    const rows = el.createEl("dl", { cls: "cs-deck-summary" });
     const row = (label: StringKey, value: string): HTMLElement => {
       rows.createEl("dt", { text: t(label) });
       return rows.createEl("dd", { text: value });
@@ -102,12 +102,12 @@ export function deckBlockProcessor(context: DeckBlockContext) {
     }
 
     if (diagnostics.messages.length > 0) {
-      const list = el.createEl("ul", { cls: "cf-deck-diagnostics" });
+      const list = el.createEl("ul", { cls: "cs-deck-diagnostics" });
       for (const message of diagnostics.messages) list.createEl("li", { text: message });
     }
 
     if (block && file instanceof TFile) {
-      const buttons = el.createDiv({ cls: "cf-deck-buttons" });
+      const buttons = el.createDiv({ cls: "cs-deck-buttons" });
       const preview = buttons.createEl("button", { text: t("deck.preview") });
       preview.addEventListener("click", () => void context.openPreview(file));
       if (Platform.isDesktop)

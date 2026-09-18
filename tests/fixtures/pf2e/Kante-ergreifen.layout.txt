@@ -1,5 +1,5 @@
 Kante-ergreifen · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.88
+1. front [cs-layout-default cs-front-first] scale 0.88
    div.pf2e-trait-row "Handhaben"
    div.pf2e-stat-line "Auslöser Du stürzt von einer Kante …"
    div.pf2e-stat-line "Anforderungen Deine Hände sind nicht gefesselt."
@@ -13,4 +13,4 @@ Kante-ergreifen · 1 card · 2 faces · clipped: no
      div.pf2e-action-callout-title "Sturzschaden"
      div.pf2e-action-callout-body
        ul (3 items) "Bis 3 m kein Schaden Je …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

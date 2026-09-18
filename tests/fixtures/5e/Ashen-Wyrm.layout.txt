@@ -1,12 +1,12 @@
 Ashen-Wyrm · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.56
+1. front [cs-layout-default cs-front-first] scale 0.56
    p.dd-subtitle "Huge dragon, neutral evil"
    svg.dd-rule
    p.dd-line "Armor Class 18 (natural armor)"
    p.dd-line "Hit Points 184 (16d12 + 80)"
    p.dd-line "Speed 40 ft., burrow 30 ft., …"
    svg.dd-rule
-   div.dd-abilities.cf-keep-together
+   div.dd-abilities.cs-keep-together
      div
        div.dd-ability-label "STR"
        div.dd-ability-value "25 (+7)"
@@ -37,22 +37,22 @@ Ashen-Wyrm · 1 card · 2 faces · clipped: no
    svg.dd-rule
    p.dd-entry "Legendary Resistance (3/Day) If the wyrm …"
    p.dd-entry "Ash Cloak While in ash or …"
-   h3.dd-section-head.cf-keep-with-next "Actions"
+   h3.dd-section-head.cs-keep-with-next "Actions"
    p.dd-entry "Multiattack The wyrm makes three attacks: …"
    p.dd-entry "Bite Melee Weapon Attack: +12 to …"
    p.dd-entry "Claw Melee Weapon Attack: +12 to …"
    p.dd-entry "Ash Breath (Recharge 5–6) The wyrm …"
-   h3.dd-section-head.cf-keep-with-next "Legendary Actions"
+   h3.dd-section-head.cs-keep-with-next "Legendary Actions"
    p.dd-entry "The wyrm can take 3 legendary …"
    p.dd-entry "Detect The wyrm makes a Wisdom …"
    p.dd-entry "Tail Sweep Melee Weapon Attack: +12 …"
    p.dd-entry "Smother (Costs 2 Actions) Ash swirls …"
-   h3.dd-section-head.cf-keep-with-next "Lair Actions"
+   h3.dd-section-head.cs-keep-with-next "Lair Actions"
    p.dd-entry "On initiative count 20 (losing initiative …"
    p.dd-entry "Cinder Fall Glowing cinders rain in …"
    p.dd-entry "Collapse Part of the ceiling gives …"
-   h3.dd-section-head.cf-keep-with-next "Regional Effects"
+   h3.dd-section-head.cs-keep-with-next "Regional Effects"
    p.dd-entry "The region within 6 miles of …"
    p.dd-entry "Grey Snow Fine ash falls from …"
    p.dd-entry "Dead Wells Water within 1 mile …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

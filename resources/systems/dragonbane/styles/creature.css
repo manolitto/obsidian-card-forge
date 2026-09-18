@@ -103,7 +103,7 @@
    candidates, `with-back` / `front-image`; see dragonbane.yaml.)
 
    So hide the front image by default and reveal it only under the
-   `front-image` layout candidate (`.cf-layout-front-image`) — the even-parity
+   `front-image` layout candidate (`.cs-layout-front-image`) — the even-parity
    layout that forgoes a guaranteed back, where the front becomes the only place
    the art can live. When shown, the wrap reserves at least 50% of the card
    height so the art reads as a deliberate illustration; when hidden it stays in
@@ -113,23 +113,23 @@
    own art on the FRONT only — hiding it there would delete it.
 
    Note the name clash with the `front-image` PROPERTY: the candidate
-   `front-image` is a layout (a CSS class, `.cf-layout-front-image`), the
+   `front-image` is a layout (a CSS class, `.cs-layout-front-image`), the
    property is a data key. Different namespaces,
    no interaction — the candidate governs WHETHER the front slot is shown,
    the property WHICH picture goes in it. */
 .card-root.creature-card .db-front-image { display: none; }
 .card-root.creature-card .db-front-image-wrap { min-height: 0; }
-.card-root.creature-card.cf-layout-front-image .db-front-image { display: block; }
-.card-root.creature-card.cf-layout-front-image .db-front-image-wrap {
+.card-root.creature-card.cs-layout-front-image .db-front-image { display: block; }
+.card-root.creature-card.cs-layout-front-image .db-front-image-wrap {
   min-height: calc(var(--card-height) * 0.5);
 }
 
 /* ─── Display modes: GM notes ─────────────────────────────────────
    `.db-gm-note` is GM-only flavour/tactics that should appear only when the
    card opts into a "detailed" display mode. Hidden by default; revealed when
-   `.cf-detailed` is stamped on `.card-root`. */
+   `.cs-detailed` is stamped on `.card-root`. */
 .card-root.creature-card .db-gm-note { display: none; }
-.card-root.creature-card.cf-detailed .db-gm-note {
+.card-root.creature-card.cs-detailed .db-gm-note {
   display: block;
   font-family: var(--font-display); /* matches .db-flavor */
   font-style: italic;
@@ -143,7 +143,7 @@
   overflow-wrap: break-word;
   hyphens: auto;
 }
-.card-root.creature-card.cf-detailed .db-gm-note-label {
+.card-root.creature-card.cs-detailed .db-gm-note-label {
   font-style: normal;
   font-weight: bold;
   text-transform: uppercase;

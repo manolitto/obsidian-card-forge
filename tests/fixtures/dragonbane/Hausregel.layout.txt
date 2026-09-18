@@ -1,7 +1,7 @@
 Hausregel · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.db-generic-body
      p "Ein Charakter, der eine Nacht ohne …"
-     div.cf-keep-together
+     div.cs-keep-together
        ul (2 items) "Erste Nacht: Nachteil Zweite Nacht: zwei …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

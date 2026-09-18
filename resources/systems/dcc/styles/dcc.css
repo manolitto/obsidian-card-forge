@@ -82,7 +82,7 @@
 }
 
 /* On plain paper the cream goes; the ink stays. */
-.cf-paper-plain .card-root.dcc {
+.cs-paper-plain .card-root.dcc {
   --dcc-paper: #ffffff;
 }
 
@@ -128,7 +128,7 @@
   width: 100%;
   white-space: normal;
 }
-.dcc-title .cf-overflow-counter {
+.dcc-title .cs-overflow-counter {
   font-family: var(--dcc-font-body);
   font-weight: 400;
   font-size: 0.5em;

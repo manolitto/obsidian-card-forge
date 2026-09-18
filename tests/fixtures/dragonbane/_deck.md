@@ -5,7 +5,7 @@ them — the cover sheet first, because it is listed first. The creature card
 type prints `large` on its own; a deck is one grid, so `card-size:` here
 puts every card on poker.
 
-```card-forge-deck
+```cardsmith-deck
 system: dragonbane
 card-type: [generic, gear, creature, rule, roll-table]
 card-size: poker

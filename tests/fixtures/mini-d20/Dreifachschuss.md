@@ -4,7 +4,7 @@ An ability: the archetype as a wikilink under the right icon, which it
 picks (the hood); the tags as pills; the rule under "Wirkung"; a note on
 what a tag means for this archetype. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: ability

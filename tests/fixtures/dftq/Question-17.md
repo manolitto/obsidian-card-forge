@@ -3,7 +3,7 @@
 A numbered prompt in English with the deck's name on the back. Invented
 for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dftq
   card-type: prompt

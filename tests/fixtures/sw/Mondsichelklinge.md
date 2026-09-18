@@ -3,7 +3,7 @@
 A magic weapon with every row of the item stats but the charges, a
 picture, a two-paragraph effect and a note. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: sw
   card-type: item

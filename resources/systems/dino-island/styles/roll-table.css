@@ -30,7 +30,7 @@
   letter-spacing: 0.015em;
   white-space: nowrap;
 }
-.roll-table-card .dino-title .cf-overflow-counter {
+.roll-table-card .dino-title .cs-overflow-counter {
   font-family: var(--dino-font-body);
   font-weight: 700;
   font-size: 0.5em;

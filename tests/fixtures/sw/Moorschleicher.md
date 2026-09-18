@@ -3,7 +3,7 @@
 A monster that fits its front: the flavour, a picture, the full stat
 block, two abilities. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: sw
   card-type: monster

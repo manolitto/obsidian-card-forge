@@ -8,7 +8,7 @@ not past one and a half, which is where the second way prints fewer cards —
 the decision is meant to come out for `front-image`. Invented for this deck,
 not a creature of any published bestiary.
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: creature

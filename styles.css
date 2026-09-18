@@ -7,18 +7,18 @@
 
 /* ── The in-note preview ─────────────────────────────────────────── */
 
-.cf-card-block {
+.cs-card-block {
   margin: var(--size-4-2) 0;
 }
 
-.cf-card-placeholder,
-.cf-card-empty {
+.cs-card-placeholder,
+.cs-card-empty {
   color: var(--text-muted);
   font-size: var(--font-ui-small);
   padding: var(--size-4-2) 0;
 }
 
-.cf-card-stepping {
+.cs-card-stepping {
   display: flex;
   align-items: center;
   gap: var(--size-4-2);
@@ -27,12 +27,12 @@
   color: var(--text-muted);
 }
 
-.cf-card-stepping button:disabled {
+.cs-card-stepping button:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-.cf-card-diagnostics {
+.cs-card-diagnostics {
   margin: var(--size-4-2) 0 0;
   padding-left: var(--size-4-4);
   font-size: var(--font-ui-small);
@@ -41,46 +41,46 @@
 
 /* ── The property reference ──────────────────────────────────────── */
 
-.cf-reference-modal {
+.cs-reference-modal {
   width: min(96vw, 1100px);
   max-width: none;
 }
 
-.cf-reference-table {
+.cs-reference-table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--font-ui-small);
 }
 
-.cf-reference-table th,
-.cf-reference-table td {
+.cs-reference-table th,
+.cs-reference-table td {
   padding: var(--size-4-1) var(--size-4-2);
   border-bottom: 1px solid var(--background-modifier-border);
   vertical-align: top;
   text-align: left;
 }
 
-.cf-reference-table th {
+.cs-reference-table th {
   color: var(--text-muted);
   font-weight: var(--font-semibold);
 }
 
-.cf-reference-key,
-.cf-reference-slot,
-.cf-reference-aliases {
+.cs-reference-key,
+.cs-reference-slot,
+.cs-reference-aliases {
   white-space: nowrap;
 }
 
-.cf-reference-aliases,
-.cf-reference-slot {
+.cs-reference-aliases,
+.cs-reference-slot {
   color: var(--text-muted);
 }
 
-.cf-reference-sample code {
+.cs-reference-sample code {
   white-space: pre-wrap;
 }
 
-.cf-reference-keys {
+.cs-reference-keys {
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: var(--size-4-1) var(--size-4-3);
@@ -88,12 +88,12 @@
   margin: 0;
 }
 
-.cf-reference-keys dd {
+.cs-reference-keys dd {
   margin: 0;
   color: var(--text-muted);
 }
 
-.cf-reference-footer {
+.cs-reference-footer {
   display: flex;
   justify-content: flex-end;
   gap: var(--size-4-2);
@@ -102,7 +102,7 @@
 
 /* ── The deck block ──────────────────────────────────────────────── */
 
-.cf-deck-block {
+.cs-deck-block {
   margin: var(--size-4-2) 0;
   padding: var(--size-4-3) var(--size-4-4);
   border: 1px solid var(--background-modifier-border);
@@ -110,7 +110,7 @@
   background: var(--background-secondary);
 }
 
-.cf-deck-summary {
+.cs-deck-summary {
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: var(--size-2-1) var(--size-4-4);
@@ -118,22 +118,22 @@
   font-size: var(--font-ui-small);
 }
 
-.cf-deck-summary dt {
+.cs-deck-summary dt {
   color: var(--text-muted);
 }
 
-.cf-deck-summary dd {
+.cs-deck-summary dd {
   margin: 0;
 }
 
-.cf-deck-diagnostics {
+.cs-deck-diagnostics {
   margin: var(--size-4-2) 0 0;
   padding-left: var(--size-4-4);
   font-size: var(--font-ui-small);
   color: var(--text-warning);
 }
 
-.cf-deck-buttons {
+.cs-deck-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: var(--size-4-2);
@@ -142,14 +142,14 @@
 
 /* ── The deck preview view ───────────────────────────────────────── */
 
-.cf-deck-view {
+.cs-deck-view {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 0;
 }
 
-.cf-deck-view-toolbar {
+.cs-deck-view-toolbar {
   display: flex;
   align-items: center;
   gap: var(--size-4-3);
@@ -158,7 +158,7 @@
   font-size: var(--font-ui-small);
 }
 
-.cf-deck-view-status {
+.cs-deck-view-status {
   flex: 1;
   color: var(--text-muted);
   overflow: hidden;
@@ -166,14 +166,14 @@
   white-space: nowrap;
 }
 
-.cf-deck-view-sheet {
+.cs-deck-view-sheet {
   flex: 1;
   overflow: auto;
   padding: var(--size-4-2);
   background: var(--background-secondary);
 }
 
-.cf-deck-view-frame {
+.cs-deck-view-frame {
   display: block;
   border: 0;
 }
@@ -183,7 +183,7 @@
 /* A system's id beside its name — what a note writes in `system:`. A chip
    like a hotkey's: a relative tint, so it shows on any row, light or dark,
    and a hairline for the edge. */
-.cf-system-id {
+.cs-system-id {
   margin-left: var(--size-4-2);
   padding: var(--size-2-1) var(--size-4-1);
   border: 1px solid var(--background-modifier-border);
@@ -194,13 +194,13 @@
   color: var(--text-muted);
 }
 
-.cf-system-messages {
+.cs-system-messages {
   margin: 0 0 var(--size-4-2);
   padding-left: var(--size-4-4);
   font-size: var(--font-ui-small);
   color: var(--text-warning);
 }
 
-.cf-system-messages:empty {
+.cs-system-messages:empty {
   display: none;
 }
