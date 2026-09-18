@@ -26,8 +26,12 @@ import { escapeHtml } from "./inline-markdown";
  *
  * The markers are Obsidian comments, so the note reads clean in Obsidian's
  * own view, and the markdown between them keeps rendering in its editor —
- * which a raw `<div class="cs-keep-together">` would not. Raw HTML in the
- * body passes through, as markdown has it.
+ * which a raw `<div class="cs-keep-together">` would not.
+ *
+ * Raw HTML in the body is text, as it is in a value: a note's `<b>` prints
+ * as `<b>`, and a `<img onerror>` never reaches the preview. The one tag
+ * an author may write is `<br>`, a line break where markdown would need
+ * two trailing spaces.
  */
 
 /** What an embedded picture becomes. `target` and `alt` are as the note wrote them. */
@@ -36,9 +40,15 @@ export type EmbedRenderer = (target: string, alt: string) => string;
 /** A renderer of bodies, given what to do with an embedded picture. */
 export function blockMarkdown(embed: EmbedRenderer): (text: string) => string {
   const marked = new Marked({ gfm: true });
-  marked.use({ extensions: [imageEmbed(embed), wikilink, cardBreak, bodyMarker] });
+  marked.use({
+    extensions: [imageEmbed(embed), wikilink, cardBreak, bodyMarker],
+    renderer: { html: ({ text }) => (BR.test(text) ? "<br>" : escapeHtml(text)) },
+  });
   return (text) => marked.parse(text, { async: false });
 }
+
+/** The one tag that stays a tag. */
+const BR = /^<br\s*\/?>$/i;
 
 // ── Links and pictures ────────────────────────────────────────────
 
