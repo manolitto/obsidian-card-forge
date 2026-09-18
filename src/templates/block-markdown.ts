@@ -28,10 +28,12 @@ import { escapeHtml } from "./inline-markdown";
  * own view, and the markdown between them keeps rendering in its editor —
  * which a raw `<div class="cs-keep-together">` would not.
  *
- * Raw HTML in the body is text, as it is in a value: a note's `<b>` prints
- * as `<b>`, and a `<img onerror>` never reaches the preview. The one tag
- * an author may write is `<br>`, a line break where markdown would need
- * two trailing spaces.
+ * Raw HTML in the body is text: a note's `<b>` prints as `<b>`, and a
+ * `<img onerror>` never reaches the preview. Two things an author may
+ * write stay markup — `<br>`, a line break where markdown would need two
+ * trailing spaces (the one tag a value keeps too), and an inline `<svg>`,
+ * a small drawing in the prose: a credit line's icon, a symbol no font
+ * has. See `keptHtml` for what of an SVG gets through.
  */
 
 /** What an embedded picture becomes. `target` and `alt` are as the note wrote them. */
@@ -42,13 +44,75 @@ export function blockMarkdown(embed: EmbedRenderer): (text: string) => string {
   const marked = new Marked({ gfm: true });
   marked.use({
     extensions: [imageEmbed(embed), wikilink, cardBreak, bodyMarker],
-    renderer: { html: ({ text }) => (BR.test(text) ? "<br>" : escapeHtml(text)) },
+    renderer: { html: ({ text }) => keptHtml(text) },
   });
   return (text) => marked.parse(text, { async: false });
 }
 
-/** The one tag that stays a tag. */
-const BR = /^<br\s*\/?>$/i;
+// ── Raw HTML ──────────────────────────────────────────────────────
+
+/**
+ * The tags that stay tags: `<br>`, and the elements that draw an SVG —
+ * the `<svg>` itself, a group, and the shapes. Everything an SVG can do
+ * beyond drawing is left out, so the list is closed: no `<script>`, no
+ * `<a>`, no `<image>` or `<use>` reaching for another file, no
+ * `<foreignObject>` with HTML inside, no `<style>`, no animation. A tag
+ * outside the list prints as text, wherever it stands.
+ */
+const KEPT_TAGS = new Set([
+  "br",
+  "svg",
+  "g",
+  "path",
+  "rect",
+  "circle",
+  "ellipse",
+  "line",
+  "polyline",
+  "polygon",
+]);
+
+/** An attribute a kept element may not carry: an event handler, or a link. */
+function droppedAttribute(name: string): boolean {
+  const lower = name.toLowerCase();
+  return lower.startsWith("on") || lower.endsWith("href");
+}
+
+/** A tag, or a run of text between tags — `marked` hands over either, or a whole block of both. */
+const TAG_OR_TEXT = /<[^<>]*>|[^<]+|</g;
+/** One tag taken apart: closing slash, name, attributes, self-closing slash. */
+const TAG = /^<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>$/;
+/** One attribute, its value quoted or bare. */
+const ATTRIBUTE = /([^\s"'<>=/]+)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s"'<>=`]+))?/g;
+
+/**
+ * Raw HTML as the card gets it: a kept tag as markup, minus its dropped
+ * attributes; every other tag, and the text between tags, escaped. A
+ * `<br>` comes out as the value pipeline writes it, whatever the note's
+ * spelling.
+ */
+function keptHtml(raw: string): string {
+  return raw.replace(TAG_OR_TEXT, (piece) => {
+    const tag = TAG.exec(piece);
+    if (!tag) return escapeHtml(piece);
+    const closing = tag[1] as string;
+    const name = tag[2] as string;
+    const selfClosing = tag[4] as string;
+    const lower = name.toLowerCase();
+    if (!KEPT_TAGS.has(lower)) return escapeHtml(piece);
+    if (lower === "br") return "<br>";
+    if (closing) return `</${lower}>`;
+    let attributes = "";
+    for (const attribute of (tag[3] as string).matchAll(ATTRIBUTE)) {
+      const attributeName = attribute[1] as string;
+      if (droppedAttribute(attributeName)) continue;
+      const value = attribute[2];
+      attributes +=
+        value === undefined ? ` ${attributeName}` : ` ${attributeName}=${value}`;
+    }
+    return `<${name}${attributes}${selfClosing}>`;
+  });
+}
 
 // ── Links and pictures ────────────────────────────────────────────
 

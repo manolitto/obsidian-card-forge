@@ -66,7 +66,7 @@ describe("block markdown", () => {
     expect(render("%% note to self %%")).toBe("<p>%% note to self %%</p>\n");
   });
 
-  it("prints raw HTML as text, inline and as a block, and keeps only <br>", () => {
+  it("prints raw HTML as text, inline and as a block, and keeps <br>", () => {
     expect(render("a<br/>b <b>c</b>")).toBe("<p>a<br>b &lt;b&gt;c&lt;/b&gt;</p>\n");
     expect(render("x <img src=x onerror=alert(1)> y")).toBe(
       "<p>x &lt;img src=x onerror=alert(1)&gt; y</p>\n"
@@ -75,5 +75,44 @@ describe("block markdown", () => {
       "&lt;div class=&quot;k&quot;&gt;<p>late</p>\n&lt;/div&gt;"
     );
     expect(render("one<BR>two")).toBe("<p>one<br>two</p>\n");
+    expect(render("a < b > c")).toBe("<p>a &lt; b &gt; c</p>\n");
+  });
+
+  it("keeps an inline SVG's drawing elements and their attributes", () => {
+    const icon =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="13.65" viewBox="0 0 127.14 96.36" style="vertical-align:middle"><path fill="#5865F2" d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0Z"/></svg>';
+    expect(render(`Design: ${icon} @name`)).toBe(`<p>Design: ${icon} @name</p>\n`);
+    expect(
+      render('<g><rect x="1" y="1"/><circle r="2"/><polygon points="0,0 1,1"/></g>')
+    ).toBe(
+      '<p><g><rect x="1" y="1"/><circle r="2"/><polygon points="0,0 1,1"/></g></p>\n'
+    );
+  });
+
+  it("keeps an SVG that stands as a block of its own", () => {
+    expect(
+      render(
+        'Before.\n\n<svg viewBox="0 0 2 2">\n  <path d="M0 0h2v2z"/>\n</svg>\n\nAfter.'
+      )
+    ).toBe(
+      '<p>Before.</p>\n<svg viewBox="0 0 2 2">\n  <path d="M0 0h2v2z"/>\n</svg><p>After.</p>\n'
+    );
+  });
+
+  it("drops what an SVG could do beyond drawing", () => {
+    expect(
+      render('<svg onload="alert(1)" ONMOUSEOVER=x width="1"><path d="M0"/></svg>')
+    ).toBe('<p><svg width="1"><path d="M0"/></svg></p>\n');
+    expect(render('<svg><a href="javascript:alert(1)" xlink:href="#x">t</a></svg>')).toBe(
+      "<p><svg>&lt;a href=&quot;javascript:alert(1)&quot; xlink:href=&quot;#x&quot;&gt;t&lt;/a&gt;</svg></p>\n"
+    );
+    expect(render("<svg><script>alert(1)</script></svg>")).toBe(
+      "<p><svg>&lt;script&gt;alert(1)&lt;/script&gt;</svg></p>\n"
+    );
+    expect(
+      render('<svg><use href="#x"/><image href="a.png"/><foreignObject/></svg>')
+    ).toBe(
+      "<p><svg>&lt;use href=&quot;#x&quot;/&gt;&lt;image href=&quot;a.png&quot;/&gt;&lt;foreignObject/&gt;</svg></p>\n"
+    );
   });
 });
