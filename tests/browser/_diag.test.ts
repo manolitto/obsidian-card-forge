@@ -55,6 +55,6 @@ it("diag", async () => {
     lines.push(`hyphens lang=${lang || "-"}: h=${probe.offsetHeight} scroll=${probe.scrollHeight}`);
   }
   probe.remove();
-  lines.push(`ua=${navigator.userAgent} dpr=${devicePixelRatio} fonts=${document.fonts.size}`);
+  lines.push(`ua=${navigator.userAgent} dpr=${devicePixelRatio}`);
   expect(lines.join("\n")).toBe("DIAG");
 });
