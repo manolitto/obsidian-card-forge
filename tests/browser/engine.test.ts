@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { collectDiagnostics } from "../../src/definitions/diagnostics";
 import { layoutCard, type LayoutSystem } from "../../src/layout/engine";
 import { readScaleFromTransform } from "../../src/layout/font-scaler";
@@ -167,24 +167,32 @@ describe("layoutCard", () => {
 });
 
 describe("layoutCard over the fixtures", () => {
-  it("lays every fixture out through the real loader, fonts hoisted", async () => {
-    for (const fixture of listFixtures()) {
-      const system = await loadedSystem(fixture.system);
-      for (const rendered of await renderFixture(fixture)) {
-        const diagnostics = collectDiagnostics();
-        const out = await layoutCard(rendered, system, document, diagnostics);
-        expect(diagnostics.messages, `${fixture.system}/${fixture.name}`).toEqual([]);
-        expect(out.cards.length, `${fixture.system}/${fixture.name}`).toBeGreaterThan(0);
-        for (const pair of out.cards) {
-          if (rendered.faces.front) expect(pair.front).toContain('class="card-root');
-          if (rendered.faces.back) expect(pair.back).toContain('class="card-root');
+  const fixtures = listFixtures();
+
+  describe.each(fixtures.map((f) => [`${f.system}/${f.name}`, f] as const))(
+    "fixture %s",
+    (_label, fixture) => {
+      it("lays out through the real loader, fonts hoisted", async () => {
+        const system = await loadedSystem(fixture.system);
+        for (const rendered of await renderFixture(fixture)) {
+          const diagnostics = collectDiagnostics();
+          const out = await layoutCard(rendered, system, document, diagnostics);
+          expect(diagnostics.messages).toEqual([]);
+          expect(out.cards.length).toBeGreaterThan(0);
+          for (const pair of out.cards) {
+            if (rendered.faces.front) expect(pair.front).toContain('class="card-root');
+            if (rendered.faces.back) expect(pair.back).toContain('class="card-root');
+          }
         }
-      }
-      expect(
-        document.head.querySelector(`style[data-cs-fonts="${fixture.system}"]`)
-      ).not.toBeNull();
+        expect(
+          document.head.querySelector(`style[data-cs-fonts="${fixture.system}"]`)
+        ).not.toBeNull();
+      });
     }
-    // The system's fonts went into the document once, and are still there.
+  );
+
+  afterAll(() => {
+    // Every system's fonts went into the document once, and are still there.
     expect(document.fonts.check("12px 'Source Sans 3'")).toBe(true);
   });
 });

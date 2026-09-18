@@ -26,6 +26,19 @@
   text-size-adjust: 100%;
 
   /*
+   * Linear glyph metrics. A card is measured on screen and printed through
+   * the PDF rasteriser, and the two must agree on every line break. Where
+   * the screen rasteriser hints text (FreeType on Linux), glyph advances
+   * are rounded to whole pixels at small sizes — bold labels at 11px run
+   * up to a tenth wider than they print, a line wraps early, and the
+   * scaler settles on a smaller size than the same card gets elsewhere.
+   * `geometricPrecision` measures with the unhinted advances the print
+   * uses, on every platform, and the layout no longer depends on where
+   * the card was laid out.
+   */
+  text-rendering: geometricPrecision;
+
+  /*
    * The type-size budget. A system sizes its body and title text as
    *
    *   font-size: clamp(var(--card-font-size-min),
