@@ -5,6 +5,7 @@ import {
   type CardSettings,
 } from "../definitions/card-settings";
 import { prefixDiagnostics, type Diagnostics } from "../definitions/diagnostics";
+import type { CardSize } from "../model/card-size";
 import type { LoadedCardType, LoadedSystem } from "../systems/loader";
 import type { CardNote } from "./note";
 import { tableRows } from "./table";
@@ -57,12 +58,22 @@ export function noteSystemId(
   return undefined;
 }
 
+function differs(a: CardSize | undefined, b: CardSize): boolean {
+  return a !== undefined && (a.width !== b.width || a.height !== b.height);
+}
+
+function mm(size: CardSize): string {
+  return `${size.width} × ${size.height} mm`;
+}
+
 /**
  * The note's cards, resolved against the system its block names. `[]` when
  * it cannot be. `deckLayer` is the deck's card settings when the note is
  * rendered as part of one — it folds between the card type and the note,
  * so a deck overrides what a kind of card says and a note still has the
- * last word.
+ * last word. The one exception is `cardSize`: a deck prints on one grid,
+ * so a deck that names a size prints every card at it, and a note's own
+ * size is reported as overridden.
  */
 export function resolveCards(
   note: CardNote,
@@ -78,6 +89,14 @@ export function resolveCards(
     prefixDiagnostics(diagnostics, `${note.path}: card.`)
   );
   const settings = mergeCardSettings([cardType.cardSettings, deckLayer, noteSettings]);
+  if (deckLayer?.cardSize && differs(noteSettings.cardSize, deckLayer.cardSize)) {
+    // A deck is one grid, so its size is every card's; the note's own size
+    // is for its preview. Said once per note, since the note wrote it.
+    diagnostics.warn(
+      `${note.path}: card-size ${mm(noteSettings.cardSize!)} — printed at the deck's ${mm(deckLayer.cardSize)}`
+    );
+    settings.cardSize = deckLayer.cardSize;
+  }
   const language = settings.language ?? "";
 
   const below = {
