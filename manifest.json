@@ -2,7 +2,7 @@
   "id": "cardsmith",
   "name": "Cardsmith",
   "version": "0.1.0",
-  "minAppVersion": "1.4.10",
+  "minAppVersion": "1.8.7",
   "description": "Generate print-ready, double-sided card decks from your notes — board game components, RPG reference cards, or any deck you print.",
   "author": "manolitto",
   "authorUrl": "https://github.com/manolitto",
