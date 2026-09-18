@@ -6,7 +6,7 @@ data:
   # Title on the parchment plaque at the head of the card. Falls back to the note's file name.
   name: Licences & Credits
 
-  # Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the Dragonbane logo. `front-image` does not feed this — it is front-only.
+  # Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the deck's emblem. `front-image` does not feed this — it is front-only.
   back-image: '[[Medaillon.png]]'
 
   # Card family — the large green title at the top of the back. Without it the card type's own label appears there ("Ausrüstung", "Waffe"). For roll tables put the table's name here ("Demon Roll in Melee", "Fear", "Hunting"); it then doubles as the title fallback when the table row has no name of its own. In a table note, set once in the frontmatter for all rows.

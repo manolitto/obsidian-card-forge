@@ -49,8 +49,8 @@ properties:
     slot: back-image-primary
     aliases: [rückenbild, rueckenbild, bild-rückseite]
     description:
-      de: "Bild für die Kartenrückseite als Wikilink. Ohne Angabe zeigt die Rückseite das Bild, das der Kartentyp dafür vorsieht (bei Kreaturen das Porträt), sonst das Dragonbane-Logo. `front-image` zählt hier nicht mit – es gilt nur für die Vorderseite."
-      en: "Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the Dragonbane logo. `front-image` does not feed this — it is front-only."
+      de: "Bild für die Kartenrückseite als Wikilink. Ohne Angabe zeigt die Rückseite das Bild, das der Kartentyp dafür vorsieht (bei Kreaturen das Porträt), sonst das Emblem des Decks. `front-image` zählt hier nicht mit – es gilt nur für die Vorderseite."
+      en: "Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the deck's emblem. `front-image` does not feed this — it is front-only."
     sample: "[[Medaillon.png]]"
 
   # The back's two classification lines: `category` is the big green display
