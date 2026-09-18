@@ -32,20 +32,19 @@
   `back-image` is bound there system-wide (a vault image chosen per card),
   and the creature card type binds its `artwork` behind it, because a
   creature's picture serves both faces; `back-image` is bound FIRST, so an
-  explicit back picture always wins. Without either, the system logo — and a
-  card type with a bundled back of its own (gear) hides the logo and paints
-  the wrap in its stylesheet.
+  explicit back picture always wins. Without either the wrap carries
+  `db-back-emblem` and the stylesheet paints the deck's emblem into it — a
+  d20 in a ring of the ornament green; a card type with a back of its own
+  (gear) paints its own picture under the same class.
 --}}
 <div class="card-root card-back dragonbane {{card-type}}-card {{card-type}}-back">
   <div class="db-strip db-strip-top"></div>
 
   <div class="db-back-category"><span class="text-scalable">{{slot "back-header-title" plain=true fallback=(t "back-label")}}</span></div>
 
-  <div class="db-back-image-wrap">
+  <div class="db-back-image-wrap{{#unless (slot "back-image-primary")}} db-back-emblem{{/unless}}">
     {{#if (slot "back-image-primary")}}
       <img class="db-back-image fade-edges" src="{{slot "back-image-primary" image=true}}" />
-    {{else}}
-      <img class="db-back-image db-back-logo-image" src="{{asset "assets/dragonbane-logo.png"}}" />
     {{/if}}
   </div>
 

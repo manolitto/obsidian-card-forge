@@ -41,15 +41,13 @@
    Every gear card carries the same back picture — a ring of the deck's
    two-tone knotwork green around a crossed sword and axe, drawn as inline
    %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='100' cy='100' r='88' stroke='%230a201a' stroke-width='9'/%3E%3Ccircle cx='100' cy='100' r='88' stroke='%23317a61' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%230a201a' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%23317a61' stroke-width='1.6'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M56 56 L144 144' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 56 L144 144' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%230a201a' stroke-width='6' fill='%23317a61'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%234b9983' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E in the system's own vocabulary (ink stroke, verdigris stroke over
-   it, flat fills, nothing blurred). Painted as the wrap's background, so
-   the template stays one for every card type: the logo `<img>` the back
-   falls through to is hidden here, and a note that sets its own
-   `Rückenbild:` still wins, since the wrap then holds that picture instead
-   of the logo. Keep the greens in step with --db-green / --db-green-dark by
+   it, flat fills, nothing blurred). Painted as the wrap's background under
+   the `db-back-emblem` class the template gives a wrap without a picture,
+   so it replaces the deck's emblem for this card type and the template
+   stays one for every card type; a note that sets its own `Rückenbild:`
+   still wins, since the wrap then holds that picture and no emblem class.
+   Keep the greens in step with --db-green / --db-green-dark by
    hand — a data-URI %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='100' cy='100' r='88' stroke='%230a201a' stroke-width='9'/%3E%3Ccircle cx='100' cy='100' r='88' stroke='%23317a61' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%230a201a' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%23317a61' stroke-width='1.6'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M56 56 L144 144' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 56 L144 144' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%230a201a' stroke-width='6' fill='%23317a61'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%234b9983' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E cannot read a custom property. */
-.card-root.dragonbane.gear-back .db-back-image-wrap:has(.db-back-logo-image) {
+.card-root.dragonbane.gear-back .db-back-image-wrap.db-back-emblem {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='100' cy='100' r='88' stroke='%230a201a' stroke-width='9'/%3E%3Ccircle cx='100' cy='100' r='88' stroke='%23317a61' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%230a201a' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%23317a61' stroke-width='1.6'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 144 L136 64 M136 64 L146 54 M126 60 L140 74' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M56 56 L144 144' stroke='%230a201a' stroke-width='11'/%3E%3Cpath d='M56 56 L144 144' stroke='%23317a61' stroke-width='5'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%230a201a' stroke-width='6' fill='%23317a61'/%3E%3Cpath d='M120 120 q 22 -22 44 0 q -22 22 -44 0 z' stroke='%234b9983' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") center / auto 58% no-repeat;
-}
-.card-root.dragonbane.gear-back .db-back-logo-image {
-  display: none;
 }

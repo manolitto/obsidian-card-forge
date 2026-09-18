@@ -1396,14 +1396,14 @@
   display: block;
 }
 
-/* The logo, shown when the card has no picture of its own: tighter sizing,
-   and no `.fade-edges` in the template — a wordmark should stay crisp, not
-   bleed into the paper. A card type with a bundled back of its own hides it
-   and paints the wrap instead (gear). */
-.card-root.dragonbane .db-back-image.db-back-logo-image {
-  max-width: 84%;
-  max-height: 62%;
-  object-fit: contain;
+/* The emblem, shown when the card has no picture of its own: a twenty-sided
+   die in a ring of the ornament green, drawn as inline SVG in the system's
+   own vocabulary (ink stroke, verdigris stroke over it, flat fills, nothing
+   blurred) and painted as the wrap's background at the height the logo
+   slot had. Keep the greens in step with --db-green / --db-green-dark /
+   --db-green-light by hand — a data URI cannot read a custom property. */
+.card-root.dragonbane .db-back-image-wrap.db-back-emblem {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='100' cy='100' r='88' stroke='%230a201a' stroke-width='9'/%3E%3Ccircle cx='100' cy='100' r='88' stroke='%23317a61' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%230a201a' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='73' stroke='%23317a61' stroke-width='1.6'/%3E%3Cpath d='M100 46 L53.2 73 L53.2 127 L100 154 L146.8 127 L146.8 73 Z M100 70 L74 115 L126 115 Z M100 46 L100 70 M53.2 73 L100 70 L146.8 73 M53.2 73 L74 115 L53.2 127 M74 115 L100 154 L126 115 M146.8 73 L126 115 L146.8 127' stroke='%230a201a' stroke-width='8'/%3E%3Cpath d='M100 46 L53.2 73 L53.2 127 L100 154 L146.8 127 L146.8 73 Z M100 70 L74 115 L126 115 Z M100 46 L100 70 M53.2 73 L100 70 L146.8 73 M53.2 73 L74 115 L53.2 127 M74 115 L100 154 L126 115 M146.8 73 L126 115 L146.8 127' stroke='%23317a61' stroke-width='3.2'/%3E%3Cpath d='M100 70 L74 115 L126 115 Z' fill='%234b9983' fill-opacity='0.35'/%3E%3C/g%3E%3C/svg%3E") center / auto 58% no-repeat;
 }
 
 /* ── The three spacers of the shared front ──
