@@ -335,12 +335,14 @@
   justify-content: center;
   align-items: center;
 }
+/* The flourish on a picture-less back: symmetric scrollwork around a
+   lozenge, drawn as inline SVG in the accent red (`--tor-accent`, repeated
+   by hand — a data URI cannot read a custom property) on the field colour. */
 .tor-back-ornament {
   width: 45.5%;
   aspect-ratio: 1 / 1;
   border-radius: 0.472em;
-  background-color: var(--tor-field);
-  object-fit: contain;
+  background: var(--tor-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='none' stroke='%238b1a1a' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M100 82 L114 100 L100 118 L86 100 Z' fill='%238b1a1a' stroke='none'/%3E%3Cg id='w'%3E%3Cpath d='M90 100 C 74 100 64 80 46 78 C 30 76 18 86 20 98 C 22 108 34 110 40 102 C 44 96 38 90 33 94'/%3E%3Cpath d='M90 100 C 74 100 64 120 46 122 C 30 124 18 114 20 102 C 22 92 34 90 40 98 C 44 104 38 110 33 106'/%3E%3C/g%3E%3Cuse href='%23w' transform='matrix(-1 0 0 1 200 0)'/%3E%3Cpath d='M100 126 C 106 136 104 148 100 156 C 96 148 94 136 100 126 Z' fill='%238b1a1a' stroke='none'/%3E%3Cpath d='M100 74 C 106 64 104 52 100 44 C 96 52 94 64 100 74 Z' fill='%238b1a1a' stroke='none'/%3E%3Ccircle cx='100' cy='160' r='2.6' fill='%238b1a1a' stroke='none'/%3E%3Ccircle cx='100' cy='40' r='2.6' fill='%238b1a1a' stroke='none'/%3E%3C/g%3E%3C/svg%3E") center / 92% no-repeat;
 }
 .tor-back-label {
   position: absolute;
