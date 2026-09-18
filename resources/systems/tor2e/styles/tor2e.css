@@ -130,7 +130,7 @@
   font-size: var(--tor-font-size-title);
   letter-spacing: 0.03em;
 }
-.tor-title .cf-overflow-counter {
+.tor-title .cs-overflow-counter {
   font-family: var(--tor-font-body);
   font-weight: 400;
   font-size: 0.5em;
@@ -165,7 +165,7 @@
     var(--tor-field);
   line-height: 1.25;
 }
-.cf-paper-plain .card-root.tor2e .card-content-container {
+.cs-paper-plain .card-root.tor2e .card-content-container {
   background: #ffffff;
 }
 

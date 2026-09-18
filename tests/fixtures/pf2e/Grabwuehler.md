@@ -7,7 +7,7 @@ portrait it carries finds no 10 mm below the block, so the `image-none`
 fallback commits and the picture stays on the back. Invented for this
 deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: creature

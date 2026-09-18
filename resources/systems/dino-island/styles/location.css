@@ -43,7 +43,7 @@
   color: var(--dino-orange-deep);
   font-weight: 700;
 }
-.location-card .dino-contents-list li.cf-split-continuation::before {
+.location-card .dino-contents-list li.cs-split-continuation::before {
   content: none;
 }
 .location-card .dino-contents-list li p {

@@ -3,7 +3,7 @@
 A quirk: the roll as a badge where the right icon would be, the text as
 the body. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: quirk

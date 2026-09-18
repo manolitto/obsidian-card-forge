@@ -72,8 +72,8 @@ properties:
     slot: front-body
     aliases: [text, inhalt, kartentext, body]
     description:
-      de: "Kartentext als Markdown, direkt im card-forge-Block. Hat Vorrang vor dem Notiztext. Für Tabellen und eingebettete Bilder den Notiztext benutzen."
-      en: "Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures."
+      de: "Kartentext als Markdown, direkt im cardsmith-Block. Hat Vorrang vor dem Notiztext. Für Tabellen und eingebettete Bilder den Notiztext benutzen."
+      en: "Card body as markdown, inline in the cardsmith block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures."
     sample:
       de: "Eine gestellte Falle aus Eisen, schwer wie ein Mühlstein.\n- Auslösen: GES-Probe\n- Schaden: 1w8"
       en: "A set iron trap, heavy as a millstone.\n- Trigger: DEX check\n- Damage: 1d8"

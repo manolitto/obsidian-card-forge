@@ -72,7 +72,7 @@ describe("mountPreview", () => {
     const stylesheet = await system.stylesheet(cards[0]!.cardTypeId);
     const { root } = mountAt(system, cards[0]!, faces, 350, stylesheet);
 
-    const boxes = root.querySelectorAll<HTMLElement>(".cf-preview-face");
+    const boxes = root.querySelectorAll<HTMLElement>(".cs-preview-face");
     expect(boxes).toHaveLength(2);
     const box = boxes[0]!.getBoundingClientRect();
     expect(box.height).toBeCloseTo(350, 0);
@@ -98,7 +98,7 @@ describe("mountPreview", () => {
 
     expect(root.querySelector("style")!.textContent).not.toContain("@font-face");
     expect(
-      document.head.querySelectorAll('style[data-cf-fonts="dragonbane"]')
+      document.head.querySelectorAll('style[data-cs-fonts="dragonbane"]')
     ).toHaveLength(1);
   });
 

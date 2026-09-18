@@ -38,10 +38,10 @@ export async function runExport(
 /** The build's warnings: each on the console, their count in a notice. */
 export function reportWarnings(warnings: readonly string[]): void {
   if (warnings.length === 0) return;
-  for (const message of warnings) console.warn(`[Card Forge] ${message}`);
+  for (const message of warnings) console.warn(`[Cardsmith] ${message}`);
   notice(t("notice.warnings", { count: warnings.length }), 8000);
 }
 
 export function notice(message: string, duration?: number): Notice {
-  return new Notice(`Card Forge: ${message}`, duration);
+  return new Notice(`Cardsmith: ${message}`, duration);
 }

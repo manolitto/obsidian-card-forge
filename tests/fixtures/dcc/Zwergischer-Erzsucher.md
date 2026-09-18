@@ -4,7 +4,7 @@ A demi-human occupation with a range roll and a long compound name: the
 people under its caption first, then the weapon and the goods. The name
 wraps to two lines beside the badge. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dcc
   card-type: occupation

@@ -15,7 +15,7 @@ Buch: "[[Kampagnenbuch.pdf#page=12|Kampagnenbuch S. 12]]"
 ---
 #Ausrüstung #Waffe
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: gear

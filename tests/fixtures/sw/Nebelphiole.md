@@ -3,7 +3,7 @@
 A potion: a duration and a class line, no picture, the effect a list.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: sw
   card-type: item

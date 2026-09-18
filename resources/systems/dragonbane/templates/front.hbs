@@ -74,7 +74,7 @@
       {{/if}}
 
       <div class="card-title"><span class="text-scalable">{{slot "front-header-title" plain=true}}</span></div>
-      <span class="cf-overflow-counter"></span>
+      <span class="cs-overflow-counter"></span>
     </div>
     <div class="db-strip db-strip-top"></div>
   </div>
@@ -267,7 +267,7 @@
           heading then belongs to the fitting PREFIX and the table surrenders
           only the rows that have no room.
 
-          `cf-keep-with-next` on the heading — the remaining path. When not even
+          `cs-keep-with-next` on the heading — the remaining path. When not even
           ONE row fits beside the prefix, the whole table moves on, which would
           leave the heading behind as the last block; the marker pulls the
           heading along with it. It is a no-op when the heading is block 0 of a
@@ -276,7 +276,7 @@
           fires only where it is right. --}}
     {{#if (slot "front-table" list=true)}}
     {{#if (slot-label "front-table")}}
-    <div class="db-section-heading cf-keep-with-next">{{slot-label "front-table"}}</div>
+    <div class="db-section-heading cs-keep-with-next">{{slot-label "front-table"}}</div>
     {{/if}}
     <table class="db-attack-table">
       <thead>
@@ -330,7 +330,7 @@
     {{/if}}
 
     {{!-- GM-only material: hidden by default, revealed only in the "detailed"
-          display mode, which stamps `.cf-detailed` on `.card-root`. The card
+          display mode, which stamps `.cs-detailed` on `.card-root`. The card
           type's CSS owns that gate; the place only supplies the text. --}}
     {{#if (slot "front-detail-text")}}
     <div class="db-gm-note">
@@ -370,7 +370,7 @@
 
   {{!-- "Geht weiter" — an arrowhead in the right-hand gutter, above the bottom
         ornament. Hidden by default; the stylesheet reveals it under the
-        splitter's `.cf-front-has-next`, i.e. on every front face EXCEPT the
+        splitter's `.cs-front-has-next`, i.e. on every front face EXCEPT the
         last. Absolutely positioned like the edge labels, so it costs the body
         nothing and cannot clip.
 

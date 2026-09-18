@@ -3,7 +3,7 @@
 A character without a picture: the logo back with the name under the
 label. No defence, no languages. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: npc

@@ -40,7 +40,7 @@ export function selectNotes(
       .toLowerCase();
     if (!systemId) {
       diagnostics.warn(
-        `${note.path}: the card-forge block names no system:; not in the deck`
+        `${note.path}: the cardsmith block names no system:; not in the deck`
       );
       return false;
     }

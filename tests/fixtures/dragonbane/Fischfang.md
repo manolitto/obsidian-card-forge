@@ -15,7 +15,7 @@ deck, not one of any rulebook.
 | 2–3 | Schlickaal | Reuse | W4 | Glitschig, zäh und überraschend nahrhaft. |
 | 9–10 | | Netz | 2W6 | Etwas Großes zerrt am Netz und will nicht ans Ufer. |
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: roll-table

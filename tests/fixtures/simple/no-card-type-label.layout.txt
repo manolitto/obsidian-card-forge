@@ -1,4 +1,4 @@
 no-card-type-label · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.simple-body "Audible for a mile in open …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

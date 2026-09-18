@@ -13,7 +13,7 @@ Nachteil auf alle Proben, bis er wieder geschlafen hat.
 - Zweite Nacht: zwei Nachteile
 %% /keep-together %%
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: generic

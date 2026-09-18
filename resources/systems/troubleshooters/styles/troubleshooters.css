@@ -103,7 +103,7 @@
   letter-spacing: 0.01em;
   line-height: 1.1;
 }
-.ts-title .cf-overflow-counter {
+.ts-title .cs-overflow-counter {
   font-family: var(--ts-font-body);
   font-weight: 400;
   font-variant: normal;

@@ -9,10 +9,10 @@ import { mountFace } from "./helpers/face";
  */
 
 function counterFace(props: string): string {
-  return `<div class="card-root card-front${props ? " cf-overflow-active" : ""}"
+  return `<div class="card-root card-front${props ? " cs-overflow-active" : ""}"
        style="--card-width: 63mm; --card-height: 88mm; ${props}">
   <div class="card-header">
-    <div class="card-title"><span class="text-scalable">Title</span><span class="cf-overflow-counter"></span></div>
+    <div class="card-title"><span class="text-scalable">Title</span><span class="cs-overflow-counter"></span></div>
   </div>
   <div class="card-content-container"><div class="card-body-scalable"><p>Body</p></div></div>
 </div>`;
@@ -22,7 +22,7 @@ describe("the page counter", () => {
   it("shows nothing on a card that fit", () => {
     const { root, unmount } = mountFace(counterFace(""));
     try {
-      const counter = root.querySelector<HTMLElement>(".cf-overflow-counter")!;
+      const counter = root.querySelector<HTMLElement>(".cs-overflow-counter")!;
       expect(getComputedStyle(counter).display).toBe("none");
       expect(counter.getBoundingClientRect().width).toBe(0);
     } finally {
@@ -31,14 +31,14 @@ describe("the page counter", () => {
   });
 
   it("renders the two properties inside an overflowed group", () => {
-    const short = mountFace(counterFace("--cf-front-index: 2; --cf-front-total: 3;"));
-    const long = mountFace(counterFace("--cf-front-index: 12; --cf-front-total: 13;"));
+    const short = mountFace(counterFace("--cs-front-index: 2; --cs-front-total: 3;"));
+    const long = mountFace(counterFace("--cs-front-index: 12; --cs-front-total: 13;"));
     try {
-      const a = short.root.querySelector<HTMLElement>(".cf-overflow-counter")!;
-      const b = long.root.querySelector<HTMLElement>(".cf-overflow-counter")!;
+      const a = short.root.querySelector<HTMLElement>(".cs-overflow-counter")!;
+      const b = long.root.querySelector<HTMLElement>(".cs-overflow-counter")!;
       expect(getComputedStyle(a).display).toBe("inline");
       expect(getComputedStyle(a, "::after").content).toBe(
-        'counter(cf-idx) " / " counter(cf-tot)'
+        'counter(cs-idx) " / " counter(cs-tot)'
       );
       // The text comes from the properties: two more digits, a wider box.
       const wa = a.getBoundingClientRect().width;
@@ -64,7 +64,7 @@ describe("a continued body", () => {
   it("flows from the top edge whatever the body anchors to", () => {
     const css = ".anchored { justify-content: flex-end; }";
     const bottom = mountFace(anchored(""), css);
-    const top = mountFace(anchored("cf-body-continued"), css);
+    const top = mountFace(anchored("cs-body-continued"), css);
     try {
       const gap = (root: HTMLElement) => {
         const body = root.querySelector<HTMLElement>(".card-body-scalable")!;

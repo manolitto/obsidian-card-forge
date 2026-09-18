@@ -1,5 +1,5 @@
 Moorschlurfer · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.88
+1. front [cs-layout-default cs-front-first] scale 0.88
    div.tor-npc-grid
      div.tor-npc-left
        div.tor-npc-features "Zäh, Geduldig"
@@ -37,4 +37,4 @@ Moorschlurfer · 1 card · 2 faces · clipped: no
    div.tor-section-label.tor-description-rule
    div.tor-npc-description
      p "Was im Moor versinkt, kommt nicht …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

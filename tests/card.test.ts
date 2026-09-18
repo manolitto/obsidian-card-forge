@@ -35,7 +35,7 @@ function note(text: string, diagnostics: CollectedDiagnostics = collectDiagnosti
 }
 
 const block = (card: string, rest = "") =>
-  `\`\`\`card-forge\ncard:\n${card}\n${rest}\`\`\``;
+  `\`\`\`cardsmith\ncard:\n${card}\n${rest}\`\`\``;
 
 describe("which system", () => {
   it("is what the block names, lowercased", () => {
@@ -48,7 +48,7 @@ describe("which system", () => {
     const diagnostics = collectDiagnostics();
     expect(noteSystemId(note(block("  card-type: gear")), diagnostics)).toBeUndefined();
     expect(
-      diagnostics.matching("Karten/Beil.md: the card-forge block names no system:")
+      diagnostics.matching("Karten/Beil.md: the cardsmith block names no system:")
     ).toHaveLength(1);
   });
 });

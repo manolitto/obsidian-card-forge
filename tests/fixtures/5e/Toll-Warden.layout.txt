@@ -1,12 +1,12 @@
 Toll-Warden · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    p.dd-subtitle "Medium humanoid (any race), lawful neutral"
    svg.dd-rule
    p.dd-line "Armor Class 16 (chain shirt, shield)"
    p.dd-line "Hit Points 11 (2d8 + 2)"
    p.dd-line "Speed 30 ft."
    svg.dd-rule
-   div.dd-abilities.cf-keep-together
+   div.dd-abilities.cs-keep-together
      div
        div.dd-ability-label "STR"
        div.dd-ability-value "13 (+1)"
@@ -30,6 +30,6 @@ Toll-Warden · 1 card · 2 faces · clipped: no
    p.dd-line "Senses passive Perception 12"
    p.dd-line "Languages Common"
    p.dd-line "Challenge 1/8 (25 XP)"
-   h3.dd-section-head.cf-keep-with-next "Actions"
+   h3.dd-section-head.cs-keep-with-next "Actions"
    p.dd-entry "Spear Melee or Ranged Weapon Attack: …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

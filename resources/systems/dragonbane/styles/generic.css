@@ -59,11 +59,11 @@
    the template embeds none of its own. It renders through the system's
    `card-image` partial, whose body form the system stylesheet styles: centred,
    never upscaled past its own size, capped at half the card so a logo cannot
-   crowd out the text it belongs to. Retune with `--cf-body-image-max-height` /
-   `--cf-body-image-margin` on `.generic-card` rather than redeclaring the rule.
+   crowd out the text it belongs to. Retune with `--cs-body-image-max-height` /
+   `--cs-body-image-margin` on `.generic-card` rather than redeclaring the rule.
 
-   `--cf-front-image-max-height` remains the wrong knob here: it belongs to
-   `.cf-front-image-fill`, which this image is not (markdown flow content, not
+   `--cs-front-image-max-height` remains the wrong knob here: it belongs to
+   `.cs-front-image-fill`, which this image is not (markdown flow content, not
    the body column's flex slot).
 
    Dragonbane DOES declare a `card-image.hbs` partial, so a body

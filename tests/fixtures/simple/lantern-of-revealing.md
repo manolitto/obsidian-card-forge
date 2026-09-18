@@ -2,7 +2,7 @@
 
 Every property set, and a list in the body.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   card-type: simple

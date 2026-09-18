@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: eiserne-zeit
 data:

@@ -86,8 +86,8 @@ const classes = (el: Element, prefix: string) =>
   Array.from(el.classList)
     .filter((k) => k.startsWith(prefix))
     .sort();
-const frontMarkers = (r: HTMLElement) => classes(r, "cf-front-");
-const layoutClasses = (r: HTMLElement) => classes(r, "cf-layout-");
+const frontMarkers = (r: HTMLElement) => classes(r, "cs-front-");
+const layoutClasses = (r: HTMLElement) => classes(r, "cs-layout-");
 const fits = (el: HTMLElement) => el.scrollHeight <= el.clientHeight + 1;
 const lines = (el: HTMLElement) =>
   Math.round(el.scrollHeight / parseFloat(getComputedStyle(el).lineHeight));
@@ -98,8 +98,8 @@ describe("the entry gate", () => {
     expect(result).toEqual({ clipped: true, cardCount: 1 });
     const rs = roots(container);
     expect(rs).toHaveLength(2);
-    expect(frontMarkers(rs[0]!)).toEqual(["cf-front-first"]);
-    expect(rs.some((r) => r.classList.contains("cf-overflow-active"))).toBe(false);
+    expect(frontMarkers(rs[0]!)).toEqual(["cs-front-first"]);
+    expect(rs.some((r) => r.classList.contains("cs-overflow-active"))).toBe(false);
     expect(fits(bodyOf(rs[0]!))).toBe(false);
   });
 
@@ -108,9 +108,9 @@ describe("the entry gate", () => {
     expect(result).toEqual({ clipped: false, cardCount: 1 });
     const rs = roots(container);
     expect(rs).toHaveLength(2);
-    expect(frontMarkers(rs[0]!)).toEqual(["cf-front-first"]);
-    expect(rs[0]!.style.getPropertyValue("--cf-front-total")).toBe("1");
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-default")).toBe(true);
+    expect(frontMarkers(rs[0]!)).toEqual(["cs-front-first"]);
+    expect(rs[0]!.style.getPropertyValue("--cs-front-total")).toBe("1");
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-default")).toBe(true);
   });
 });
 
@@ -132,7 +132,7 @@ describe("extra-cards", () => {
     // paragraph across the cut from one platform to the next — so the
     // shares are only held to a greedy split's shape: near-equal.
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
-    expect(container.querySelectorAll("p.cf-split-head")).toHaveLength(0);
+    expect(container.querySelectorAll("p.cs-split-head")).toHaveLength(0);
     const n1 = b1.querySelectorAll("p").length;
     const n2 = b2.querySelectorAll("p").length;
     expect(n1 + n2).toBe(14);
@@ -153,18 +153,18 @@ describe("extra-cards", () => {
     expect(bodyOf(rs[3]!).textContent).toBe("Logo");
 
     // Markers: the pagination relationship on the bodies …
-    expect(b1.classList.contains("cf-body-continues")).toBe(true);
-    expect(b2.classList.contains("cf-body-continued")).toBe(true);
+    expect(b1.classList.contains("cs-body-continues")).toBe(true);
+    expect(b2.classList.contains("cs-body-continued")).toBe(true);
     // … the page position on the fronts …
-    expect(frontMarkers(first)).toEqual(["cf-front-first", "cf-front-has-next"]);
-    expect(frontMarkers(second)).toEqual(["cf-front-continued"]);
+    expect(frontMarkers(first)).toEqual(["cs-front-first", "cs-front-has-next"]);
+    expect(frontMarkers(second)).toEqual(["cs-front-continued"]);
     expect(frontMarkers(rs[1]!)).toEqual([]);
-    expect(first.style.getPropertyValue("--cf-front-index")).toBe("1");
-    expect(second.style.getPropertyValue("--cf-front-index")).toBe("2");
-    expect(second.style.getPropertyValue("--cf-front-total")).toBe("2");
-    expect(rs[1]!.style.getPropertyValue("--cf-front-index")).toBe("");
+    expect(first.style.getPropertyValue("--cs-front-index")).toBe("1");
+    expect(second.style.getPropertyValue("--cs-front-index")).toBe("2");
+    expect(second.style.getPropertyValue("--cs-front-total")).toBe("2");
+    expect(rs[1]!.style.getPropertyValue("--cs-front-index")).toBe("");
     // … and the group flag on every face, backs included.
-    expect(rs.every((r) => r.classList.contains("cf-overflow-active"))).toBe(true);
+    expect(rs.every((r) => r.classList.contains("cs-overflow-active"))).toBe(true);
   });
 
   it("stops at the card cap and reports the clip", () => {
@@ -186,11 +186,11 @@ describe("back-then-cards", () => {
     expect(rs).toHaveLength(2);
     expect(rs.map(isFront)).toEqual([true, true]);
     const back = rs[1]!;
-    expect(back.classList.contains("cf-overflow-back-as-front")).toBe(true);
+    expect(back.classList.contains("cs-overflow-back-as-front")).toBe(true);
     expect(back.querySelector(".card-title")!.textContent).toBe("Title");
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
-    expect(frontMarkers(rs[0]!)).toEqual(["cf-front-first", "cf-front-has-next"]);
-    expect(frontMarkers(back)).toEqual(["cf-front-continued"]);
+    expect(frontMarkers(rs[0]!)).toEqual(["cs-front-first", "cs-front-has-next"]);
+    expect(frontMarkers(back)).toEqual(["cs-front-continued"]);
     expect(readScaleFromTransform(bodyOf(back))).toBe(
       readScaleFromTransform(bodyOf(rs[0]!))
     );
@@ -205,7 +205,7 @@ describe("back-then-cards", () => {
     expect(result).toEqual({ clipped: false, cardCount: 3 });
     const rs = roots(container);
     expect(rs.map(isFront)).toEqual([true, true, true, true, true, true]);
-    expect(rs.map((r) => r.classList.contains("cf-overflow-back-as-front"))).toEqual([
+    expect(rs.map((r) => r.classList.contains("cs-overflow-back-as-front"))).toEqual([
       false,
       true,
       false,
@@ -215,7 +215,7 @@ describe("back-then-cards", () => {
     ]);
     expect(readScaleFromTransform(bodyOf(rs[0]!))).toBeGreaterThan(8 / 12);
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
-    expect(rs.map((r) => r.style.getPropertyValue("--cf-front-index"))).toEqual([
+    expect(rs.map((r) => r.style.getPropertyValue("--cs-front-index"))).toEqual([
       "1",
       "2",
       "3",
@@ -223,7 +223,7 @@ describe("back-then-cards", () => {
       "5",
       "6",
     ]);
-    expect(frontMarkers(rs[5]!)).toEqual(["cf-front-continued"]);
+    expect(frontMarkers(rs[5]!)).toEqual(["cs-front-continued"]);
   });
 
   it("leaves a spawned card's back designed when nothing flows onto it", () => {
@@ -271,8 +271,8 @@ describe("where the cut lands", () => {
     const head = b1.lastElementChild as HTMLElement;
     const tail = b2.firstElementChild as HTMLElement;
     expect(head.tagName).toBe("P");
-    expect(head.classList.contains("cf-split-head")).toBe(true);
-    expect(tail.classList.contains("cf-split-continuation")).toBe(true);
+    expect(head.classList.contains("cs-split-head")).toBe(true);
+    expect(tail.classList.contains("cs-split-continuation")).toBe(true);
     expect(b1.children).toHaveLength(2);
     expect([...words(head), ...words(tail)]).toEqual(wordsOfHtml(LONG));
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
@@ -281,14 +281,14 @@ describe("where the cut lands", () => {
   it("moves an atomic block whole rather than cutting it", () => {
     // Four paragraphs, then a keep-together block too tall to follow them but
     // short enough for a face of its own: it goes over intact.
-    const block = `<div class="cf-keep-together">${paragraphs(8)}</div>`;
+    const block = `<div class="cs-keep-together">${paragraphs(8)}</div>`;
     const body = `${paragraphs(4)}${block}${paragraphs(1)}`;
     const { container, result } = split(body, "extra-cards");
     expect(result.clipped).toBe(false);
-    const blocks = container.querySelectorAll(".cf-keep-together");
+    const blocks = container.querySelectorAll(".cs-keep-together");
     expect(blocks).toHaveLength(1);
     expect(words(blocks[0]!)).toEqual(wordsOfHtml(block));
-    expect(blocks[0]!.classList.contains("cf-split-head")).toBe(false);
+    expect(blocks[0]!.classList.contains("cs-split-head")).toBe(false);
     expect(blocks[0]!.parentElement).toBe(frontBodies(container)[1]);
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
   });
@@ -304,15 +304,15 @@ describe("where the cut lands", () => {
     expect(b2.children).toHaveLength(1);
     const headWrap = b1.firstElementChild!;
     const tailWrap = b2.firstElementChild!;
-    expect(headWrap.classList.contains("cf-split-head")).toBe(true);
-    expect(tailWrap.classList.contains("cf-split-continuation")).toBe(true);
+    expect(headWrap.classList.contains("cs-split-head")).toBe(true);
+    expect(tailWrap.classList.contains("cs-split-continuation")).toBe(true);
     // The paragraphs are shared near-equally, as above: the exact count on
     // each face is the platform's line metrics' to decide.
     expect(headWrap.children.length + tailWrap.children.length).toBe(14);
     expect(
       Math.abs(headWrap.children.length - tailWrap.children.length)
     ).toBeLessThanOrEqual(2);
-    expect(container.querySelectorAll("p.cf-split-head")).toHaveLength(0);
+    expect(container.querySelectorAll("p.cs-split-head")).toHaveLength(0);
   });
 
   it("abandons a clean boundary that would leave the face a quarter full", () => {
@@ -327,7 +327,7 @@ describe("where the cut lands", () => {
     const headWrap = b1.firstElementChild!;
     expect(headWrap.children).toHaveLength(2);
     const head = headWrap.lastElementChild!;
-    expect(head.classList.contains("cf-split-head")).toBe(true);
+    expect(head.classList.contains("cs-split-head")).toBe(true);
     expect(words(head).length).toBeGreaterThan(20);
     const box = b1.getBoundingClientRect();
     expect(
@@ -353,7 +353,7 @@ describe("where the cut lands", () => {
       );
       expect(result.clipped).toBe(false);
       const parts = Array.from(
-        container.querySelectorAll<HTMLElement>(".cf-split-head, .cf-split-continuation")
+        container.querySelectorAll<HTMLElement>(".cs-split-head, .cs-split-continuation")
       );
       for (const el of parts) expect(lines(el)).toBeGreaterThanOrEqual(2);
       const [, b2] = frontBodies(container);
@@ -383,8 +383,8 @@ describe("where the cut lands", () => {
     for (const t of tables) {
       expect(t.querySelector("thead")!.textContent).toBe("NameValue");
     }
-    expect(tables[0]!.classList.contains("cf-split-head")).toBe(true);
-    expect(tables[1]!.classList.contains("cf-split-continuation")).toBe(true);
+    expect(tables[0]!.classList.contains("cs-split-head")).toBe(true);
+    expect(tables[1]!.classList.contains("cs-split-continuation")).toBe(true);
     const rowTexts = Array.from(container.querySelectorAll("tbody tr")).map(
       (r) => r.textContent
     );
@@ -434,49 +434,49 @@ describe("where the cut lands", () => {
 
 describe("%% card-break %%", () => {
   it("splits a body that fits, and the font grows back up to fill both faces", () => {
-    const body = `${paragraphs(2)}<div class="cf-card-break"></div>${paragraphs(2)}`;
+    const body = `${paragraphs(2)}<div class="cs-card-break"></div>${paragraphs(2)}`;
     const { container, result } = split(body, "extra-cards");
     expect(result).toEqual({ clipped: false, cardCount: 2 });
     const [b1, b2] = frontBodies(container) as [HTMLElement, HTMLElement];
     expect(b1.querySelectorAll("p")).toHaveLength(2);
     expect(b2.querySelectorAll("p")).toHaveLength(2);
-    expect(container.querySelectorAll(".cf-card-break")).toHaveLength(0);
+    expect(container.querySelectorAll(".cs-card-break")).toHaveLength(0);
     expect(readScaleFromTransform(b1)).toBeGreaterThan(0.95);
     expect(readScaleFromTransform(b2)).toBe(readScaleFromTransform(b1));
   });
 
   it("is inert under `none`", () => {
-    const body = `${paragraphs(2)}<div class="cf-card-break"></div>${paragraphs(2)}`;
+    const body = `${paragraphs(2)}<div class="cs-card-break"></div>${paragraphs(2)}`;
     const { container, result } = split(body, "none");
     expect(result).toEqual({ clipped: false, cardCount: 1 });
     expect(roots(container)).toHaveLength(2);
   });
 
   it("rides along when its leading part does not fit, and fires on the next face", () => {
-    const body = `${paragraphs(14)}<div class="cf-card-break"></div>${paragraphs(2)}`;
+    const body = `${paragraphs(14)}<div class="cs-card-break"></div>${paragraphs(2)}`;
     const { container, result } = split(body, "extra-cards");
     expect(result).toEqual({ clipped: false, cardCount: 3 });
     const bs = frontBodies(container);
     expect(bs[2]!.querySelectorAll("p")).toHaveLength(2);
-    expect(container.querySelectorAll(".cf-card-break")).toHaveLength(0);
+    expect(container.querySelectorAll(".cs-card-break")).toHaveLength(0);
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
   });
 });
 
 describe("keep markers", () => {
   it("moves a keep-together block whole, whatever it holds", () => {
-    const block = `<div class="cf-keep-together">${paragraphs(5)}</div>`;
+    const block = `<div class="cs-keep-together">${paragraphs(5)}</div>`;
     const body = `${paragraphs(6)}${block}${paragraphs(2)}`;
     const { container, result } = split(body, "extra-cards");
     expect(result.clipped).toBe(false);
-    const blocks = container.querySelectorAll(".cf-keep-together");
+    const blocks = container.querySelectorAll(".cs-keep-together");
     expect(blocks).toHaveLength(1);
     expect(words(blocks[0]!)).toEqual(wordsOfHtml(block));
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
   });
 
   it("splits a keep-together block larger than a face rather than spawning empty faces", () => {
-    const body = `<div class="cf-keep-together">${paragraphs(25)}</div>${paragraphs(1)}`;
+    const body = `<div class="cs-keep-together">${paragraphs(25)}</div>${paragraphs(1)}`;
     const { container, result } = split(body, "extra-cards");
     expect(result.clipped).toBe(false);
     expect(result.cardCount).toBeLessThanOrEqual(4);
@@ -500,7 +500,7 @@ describe("keep markers", () => {
   it("binds a keep-with-next block to what follows it", () => {
     let pulled = 0;
     for (let n = 6; n <= 12; n++) {
-      const body = `${paragraphs(n)}<p class="lead cf-keep-with-next">Lead-in.</p>${paragraphs(6)}`;
+      const body = `${paragraphs(n)}<p class="lead cs-keep-with-next">Lead-in.</p>${paragraphs(6)}`;
       const { container, result } = split(body, "extra-cards");
       expect(result.clipped).toBe(false);
       const bs = frontBodies(container);
@@ -529,11 +529,11 @@ describe("parity", () => {
     expect(rs.map(isFront)).toEqual([true, true, true, false]);
     expect(bodyOf(rs[3]!).textContent).toBe("Logo");
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-odd")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-odd")).toBe(true);
     expect(rs.slice(0, 3).map(frontMarkers)).toEqual([
-      ["cf-front-first", "cf-front-has-next"],
-      ["cf-front-continued", "cf-front-has-next"],
-      ["cf-front-continued"],
+      ["cs-front-first", "cs-front-has-next"],
+      ["cs-front-continued", "cs-front-has-next"],
+      ["cs-front-continued"],
     ]);
   });
 
@@ -551,7 +551,7 @@ describe("parity", () => {
     const pad = rs[2]!;
     expect(bodyOf(pad).children).toHaveLength(0);
     expect(pad.querySelector(".card-title")!.textContent).toBe("Title");
-    expect(frontMarkers(pad)).toEqual(["cf-front-continued"]);
+    expect(frontMarkers(pad)).toEqual(["cs-front-continued"]);
     expect(flowWords(container)).toEqual(wordsOfHtml(body));
   });
 
@@ -598,7 +598,7 @@ describe("candidates", () => {
     expect(result).toEqual({ clipped: false, cardCount: 2 });
     const rs = roots(container);
     expect(rs.map(isFront)).toEqual([true, true]);
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-even")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-even")).toBe(true);
   });
 
   it("declaration order breaks a tie", () => {
@@ -611,7 +611,7 @@ describe("candidates", () => {
     );
     expect(result.clipped).toBe(false);
     const rs = roots(container);
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-even")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-even")).toBe(true);
     expect(rs.map(isFront)).toEqual([true, true, true, true]);
   });
 
@@ -631,7 +631,7 @@ describe("candidates", () => {
     );
     expect(result).toEqual({ clipped: false, cardCount: 5 });
     const rs = roots(container);
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-odd")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-odd")).toBe(true);
     expect(rs.map(isFront)).toEqual([true, true, true, true, true, false]);
   });
 
@@ -652,13 +652,13 @@ describe("candidates", () => {
   });
   const HERO_CSS = `${TYPE}
 .hero { display: none; height: 10mm; background: #888; }
-.cf-layout-hero .hero { display: block; }`;
-  const heroBody = `<div class="hero" data-cf-measure="hero"></div>${paragraphs(14)}`;
+.cs-layout-hero .hero { display: block; }`;
+  const heroBody = `<div class="hero" data-cs-measure="hero"></div>${paragraphs(14)}`;
 
   it("an eligible-if guard excludes a candidate whose element measures short", () => {
     const { container } = split(heroBody, "extra-cards", guarded("30mm"), HERO_CSS);
     const rs = roots(container);
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-plain")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-plain")).toBe(true);
   });
 
   it("the measured element wins its candidate once it clears the guard", () => {
@@ -670,7 +670,7 @@ describe("candidates", () => {
     );
     expect(result.clipped).toBe(false);
     const rs = roots(container);
-    expect(rs.every((r) => layoutClasses(r).join() === "cf-layout-hero")).toBe(true);
+    expect(rs.every((r) => layoutClasses(r).join() === "cs-layout-hero")).toBe(true);
     expect(rs[0]!.querySelector<HTMLElement>(".hero")!.clientHeight).toBeGreaterThan(0);
   });
 });

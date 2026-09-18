@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: 5e
   card-type: npc

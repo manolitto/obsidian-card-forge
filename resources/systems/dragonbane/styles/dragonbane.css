@@ -256,9 +256,9 @@
 /* Plain paper: drop the parchment photo AND the vignette, leaving the cards
    on white — the ink-saving choice for a home printer. The plaques stay:
    they are the card's furniture, not its paper. The export stamps
-   `cf-paper-plain` on every page of a deck whose `paper-background` is
+   `cs-paper-plain` on every page of a deck whose `paper-background` is
    `plain` (see base-card.css, "What the export stamps"). */
-.cf-paper-plain .card-root.dragonbane {
+.cs-paper-plain .card-root.dragonbane {
   background: #ffffff;
 }
 
@@ -473,7 +473,7 @@
    neither inherits the tracking nor inflates the title's measured height
    (which would defeat the FontScaler's title auto-shrink on spawned
    overflow faces). */
-.card-root.dragonbane .cf-overflow-counter {
+.card-root.dragonbane .cs-overflow-counter {
   flex: none;
   font-family: var(--font-body);
   font-weight: 400;
@@ -491,7 +491,7 @@
    a continuation, and the two are told apart across a fanned hand without
    reading a word.
 
-   SAFE BY CONSTRUCTION, because it only ever SHRINKS the head. `.cf-front-continued`
+   SAFE BY CONSTRUCTION, because it only ever SHRINKS the head. `.cs-front-continued`
    is stamped by the overflow splitter AFTER the whole measure-split-scale
    pass has run — the marker is a chrome-only hook that must not gate
    front-body content size. Every continuation face was therefore paginated against the
@@ -552,18 +552,18 @@
    (smaller font, less padding, same width, so never more lines). Verified
    across one-, two- and three-line titles: head 19.08 -> 13.34 %,
    19.98 -> 13.34 %, 24.61 -> 19.82 %. */
-.card-root.dragonbane.cf-front-continued .db-title-plaque {
+.card-root.dragonbane.cs-front-continued .db-title-plaque {
   min-height: calc(var(--db-plaque-height) * 0.5);
   padding: calc(var(--db-plaque-ornament-dip) + 0.45em) 1.6em 0.45em;
 }
 
 /* The one plaque whose lower edge carries something of a fixed size: keep the
    full, tuned descender budget under a roll-table's category tag. */
-.card-root.dragonbane.cf-front-continued .db-title-plaque:has(.roll-table-category) {
+.card-root.dragonbane.cs-front-continued .db-title-plaque:has(.roll-table-category) {
   padding-bottom: 0.66em;
 }
 
-.card-root.dragonbane.cf-front-continued .card-title {
+.card-root.dragonbane.cs-front-continued .card-title {
   font-size: calc(var(--font-size-title) * 0.70);
 }
 
@@ -669,7 +669,7 @@
    says WHICH page this is; this says there IS another, and it says it at the
    foot of the column, where a reader looks when the text stops.
 
-   `.cf-front-has-next` is the marker made for exactly this: the splitter
+   `.cs-front-has-next` is the marker made for exactly this: the splitter
    stamps it on every front face
    followed by another. That it lands only AFTER the measure-split-scale pass
    is harmless HERE, and only because the arrow is absolutely positioned — it
@@ -734,7 +734,7 @@
   z-index: 1;
 }
 
-.card-root.dragonbane.cf-front-has-next .db-cont-arrow {
+.card-root.dragonbane.cs-front-has-next .db-cont-arrow {
   display: block;
 }
 
@@ -787,7 +787,7 @@
    resets `::marker` for that, which cannot reach a bullet drawn as `::before`,
    so the system suppresses it itself. Only a mid-line cut is
    tagged; a break BETWEEN items leaves the next item's star alone. */
-.card-root.dragonbane .card-content-container ul > li.cf-split-continuation::before {
+.card-root.dragonbane .card-content-container ul > li.cs-split-continuation::before {
   content: none;
 }
 
@@ -1267,7 +1267,7 @@
 
 /* `max-width/max-height` fit the picture inside the wrap WITHOUT upscaling a
    small image. The no-crop `object-fit: contain` comes from the base
-   `.cf-front-image` primitive. */
+   `.cs-front-image` primitive. */
 .card-root.dragonbane .db-front-image {
   max-width: 100%;
   max-height: 100%;
@@ -1285,9 +1285,9 @@
    DEFINITE length. Written with both classes so it wins over the rule above
    regardless of source order. Retune with the two base variables. */
 .card-root.dragonbane .db-front-image.db-body-image {
-  margin: var(--cf-body-image-margin, 0.5em auto);
+  margin: var(--cs-body-image-margin, 0.5em auto);
   max-width: 100%;
-  max-height: var(--cf-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
+  max-height: var(--cs-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
 }
 
 /* ═══ Card back ═══════════════════════════════════════════════════════

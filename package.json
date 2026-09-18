@@ -1,12 +1,12 @@
 {
-  "name": "obsidian-card-forge",
+  "name": "obsidian-cardsmith",
   "version": "0.1.0",
   "description": "Generate print-ready, double-sided card decks from your notes — board game components, RPG reference cards, or any deck you print.",
   "main": "main.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/manolitto/obsidian-card-forge.git"
+    "url": "git+https://github.com/manolitto/obsidian-cardsmith.git"
   },
   "keywords": [
     "obsidian",

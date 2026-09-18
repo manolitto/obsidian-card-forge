@@ -4,7 +4,7 @@ Every card note in this folder, in the order `card-type:` lists them.
 The creature card type prints `large` on its own; a deck is one grid, so
 `card-size:` here puts every card on poker.
 
-```card-forge-deck
+```cardsmith-deck
 system: pf2e
 card-type: [creature, item, feat, action, trap]
 card-size: poker

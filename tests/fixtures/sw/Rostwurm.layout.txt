@@ -1,5 +1,5 @@
 Rostwurm · 1 card · 2 faces · clipped: no
-1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 1.00
+1. front [cs-overflow-active cs-layout-default cs-front-first cs-front-has-next] scale 1.00
    p.sw-flavour "Ein segmentierter Wurm von der Länge …"
    div.sw-stats
      p.sw-stat "Trefferwürfel: 12 (60 Trefferpunkte)"
@@ -10,15 +10,15 @@ Rostwurm · 1 card · 2 faces · clipped: no
      p.sw-stat "Bewegungsrate: 6 (grabend 3)"
      p.sw-stat "Gesinnung: Chaotisch"
      p.sw-stat "Herausforderungsgrad/EP: 14"
-   div.sw-banner.cf-keep-with-next
+   div.sw-banner.cs-keep-with-next
      div.sw-flourish.sw-flourish-left
      div.sw-banner-label "Eigenschaften"
      div.sw-flourish.sw-flourish-right
-   div.sw-abilities.cf-split-head
+   div.sw-abilities.cs-split-head
      div.sw-entry "Rostfraß Jede Waffe aus Eisen oder …"
      div.sw-entry "Säureblut Wer den Wurm im Nahkampf …"
-2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 1.00
-   div.sw-abilities.cf-split-continuation
+2. back-as-front [cs-overflow-back-as-front cs-overflow-active cs-layout-default cs-front-continued] scale 1.00
+   div.sw-abilities.cs-split-continuation
      div.sw-entry "Grabend Der Wurm gräbt sich durch …"
      div.sw-entry "Immun gegen Gift Gifte jeder Art …"
      div.sw-entry "Zäher Panzer Stumpfe Waffen richten nur …"

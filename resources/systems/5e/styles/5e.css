@@ -133,7 +133,7 @@
 }
 
 /* On plain paper the parchment goes; the ink stays. */
-.cf-paper-plain .card-root.dd {
+.cs-paper-plain .card-root.dd {
   --dd-parchment: #ffffff;
 }
 
@@ -164,7 +164,7 @@
   color: var(--dd-heading);
   letter-spacing: 0.02em;
 }
-.dd-title .cf-overflow-counter {
+.dd-title .cs-overflow-counter {
   font-family: var(--dd-font-body);
   font-weight: 400;
   font-size: 0.5em;

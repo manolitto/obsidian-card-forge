@@ -7,7 +7,7 @@ name, and a short description. The block leaves the portrait room, so the
 `image-bottom` candidate commits. Invented for this deck — no creature of
 any published bestiary.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: creature

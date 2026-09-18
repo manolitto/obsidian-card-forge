@@ -1,7 +1,7 @@
 Geruechte.4 · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
-   span.cf-fill-2
+1. front [cs-layout-default cs-front-first] scale 1.00
+   span.cs-fill-2
    div.dino-entry
      p "Wer den Turm erreicht, findet dort …"
-   span.cf-fill-3
-2. back [cf-layout-default] scale —
+   span.cs-fill-3
+2. back [cs-layout-default] scale —

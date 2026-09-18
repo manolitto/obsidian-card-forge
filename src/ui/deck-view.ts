@@ -16,7 +16,7 @@ import { t } from "./strings";
  * deck note's path, so it comes back after one with a *Rebuild* waiting.
  */
 
-export const DECK_VIEW_TYPE = "card-forge-deck-preview";
+export const DECK_VIEW_TYPE = "cardsmith-deck-preview";
 
 /** CSS pixels per millimetre at the 96 dpi a browser renders `mm` at. */
 const PX_PER_MM = 96 / 25.4;
@@ -60,12 +60,12 @@ export class DeckView extends ItemView {
   override async onOpen(): Promise<void> {
     const root = this.contentEl;
     root.empty();
-    root.addClass("cf-deck-view");
-    const toolbar = root.createDiv({ cls: "cf-deck-view-toolbar" });
-    this.status = toolbar.createSpan({ cls: "cf-deck-view-status" });
+    root.addClass("cs-deck-view");
+    const toolbar = root.createDiv({ cls: "cs-deck-view-toolbar" });
+    this.status = toolbar.createSpan({ cls: "cs-deck-view-status" });
     const rebuild = toolbar.createEl("button", { text: t("view.rebuild") });
     rebuild.addEventListener("click", () => void this.build());
-    this.sheet = root.createDiv({ cls: "cf-deck-view-sheet" });
+    this.sheet = root.createDiv({ cls: "cs-deck-view-sheet" });
 
     const observer = new ResizeObserver(() => this.fit());
     observer.observe(this.sheet);
@@ -129,7 +129,7 @@ export class DeckView extends ItemView {
   private show(html: string, paperWidthMm: number): void {
     this.sheet.empty();
     this.paperWidth = paperWidthMm * PX_PER_MM;
-    const frame = this.sheet.createEl("iframe", { cls: "cf-deck-view-frame" });
+    const frame = this.sheet.createEl("iframe", { cls: "cs-deck-view-frame" });
     this.frame = frame;
     frame.addEventListener("load", () => {
       const doc = frame.contentDocument;
@@ -139,7 +139,7 @@ export class DeckView extends ItemView {
       const style = doc.createElement("style");
       style.textContent =
         "html, body { background: transparent !important; } " +
-        ".cf-page { margin: 0 auto 16px; box-shadow: 0 1px 4px rgba(0,0,0,.35); }";
+        ".cs-page { margin: 0 auto 16px; box-shadow: 0 1px 4px rgba(0,0,0,.35); }";
       doc.head.appendChild(style);
       frame.style.height = `${doc.documentElement.scrollHeight}px`;
       this.fit();

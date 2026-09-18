@@ -4,7 +4,7 @@ An animal family: the introductory sentence, the four captioned fields
 with the moves as a die-bulleted list, the illustration on the back.
 Invented for this deck — a family of no published bestiary.
 
-```card-forge
+```cardsmith
 card:
   system: dino-island
   card-type: taxonomy

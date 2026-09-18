@@ -3,7 +3,7 @@
 No `card-type-label`: the back shows the game's name alone, and no `reference`
 on the front.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   card-type: simple

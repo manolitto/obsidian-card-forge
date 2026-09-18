@@ -5,7 +5,7 @@ label / value block holds the weapon's three lines and the price, the
 flavour sits at the foot. The numbers and their nouns are joined with a
 non-breaking space. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: equipment

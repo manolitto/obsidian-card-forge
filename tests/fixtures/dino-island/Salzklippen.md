@@ -4,7 +4,7 @@ A location: the category over the name, the atmosphere line, the list of
 what is to be found; the back repeats the heading and carries the moves.
 Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dino-island
   card-type: location

@@ -4,7 +4,7 @@ A monster with more abilities than a front holds: the body runs onto the
 back and the counter appears in the title. No picture, no experience
 points beside the challenge level. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: sw
   card-type: monster

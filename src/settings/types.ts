@@ -38,7 +38,7 @@ export interface VaultSystemEntry {
  */
 export type SystemEntry = BundledSystemEntry | VaultSystemEntry;
 
-export interface CardForgeSettings {
+export interface CardsmithSettings {
   /**
    * The system registry. Systems are registered, never searched for: an
    * explicit entry is validated when it is added and its error reported where
@@ -64,7 +64,7 @@ export interface CardForgeSettings {
   paperBackground: PaperBackground;
 }
 
-export const DEFAULT_SETTINGS: CardForgeSettings = {
+export const DEFAULT_SETTINGS: CardsmithSettings = {
   systems: [],
   language: "auto",
   previewHeight: 350,

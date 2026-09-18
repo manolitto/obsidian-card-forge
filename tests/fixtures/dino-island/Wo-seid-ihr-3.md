@@ -3,7 +3,7 @@
 A single roll-table entry written in one note rather than a table row,
 with a heading of its own. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dino-island
   card-type: roll-table

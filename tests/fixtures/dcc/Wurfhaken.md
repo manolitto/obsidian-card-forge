@@ -3,7 +3,7 @@
 A piece of gear from a roll table: the roll badge, the kind under the
 title, the cost, and a footnote. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dcc
   card-type: equipment

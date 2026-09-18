@@ -33,7 +33,7 @@ export function mountFace(html: string, css = ""): MountedFace {
 }
 
 /**
- * The host the overflow splitter works in: one `.cf-face` wrapper per face,
+ * The host the overflow splitter works in: one `.cs-face` wrapper per face,
  * in print order, inside one container the splitter appends to. Same
  * stylesheet handling as `mountFace`.
  */

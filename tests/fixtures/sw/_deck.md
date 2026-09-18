@@ -3,7 +3,7 @@
 Every German card note in this folder — `Vial-of-Mist` says
 `language: en` and stays out — the items first.
 
-```card-forge-deck
+```cardsmith-deck
 system: sw
 card-type: [item, monster]
 card-languages: de

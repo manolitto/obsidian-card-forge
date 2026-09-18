@@ -112,7 +112,7 @@
   text-transform: uppercase;
   letter-spacing: 0.01em;
 }
-.dino-entry-name .cf-overflow-counter {
+.dino-entry-name .cs-overflow-counter {
   font-weight: 700;
   font-size: 0.55em;
   letter-spacing: 0;
@@ -157,7 +157,7 @@
   box-shadow: 0 0.04em 0 rgba(36, 23, 18, 0.3);
 }
 /* A move cut by a face break carries no second die on its tail. */
-.dino-move-list li.cf-split-continuation::before {
+.dino-move-list li.cs-split-continuation::before {
   content: none;
 }
 .dino-move-list li p {
@@ -196,7 +196,7 @@
   font-weight: 700;
   color: var(--dino-orange-deep);
 }
-.card-root.dino-island.cf-front-has-next .dino-continues {
+.card-root.dino-island.cs-front-has-next .dino-continues {
   display: inline;
 }
 

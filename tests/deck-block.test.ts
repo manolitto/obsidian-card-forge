@@ -3,7 +3,7 @@ import { parseDeckBlock, quoteTagValues } from "../src/deck/block";
 import { collectDiagnostics } from "../src/definitions/diagnostics";
 
 const fence = (yaml: string): string =>
-  `# Deck\n\n\`\`\`card-forge-deck\n${yaml}\n\`\`\`\n`;
+  `# Deck\n\n\`\`\`cardsmith-deck\n${yaml}\n\`\`\`\n`;
 
 const parse = (
   yaml: string,
@@ -11,17 +11,17 @@ const parse = (
   path = "Karten/Ausrüstung/Waffen.md"
 ) => parseDeckBlock(fence(yaml), path, diagnostics);
 
-describe("the card-forge-deck block", () => {
+describe("the cardsmith-deck block", () => {
   it("is found with spaces after the fence, and the note without one is not a deck", () => {
     const diagnostics = collectDiagnostics();
     const deck = parseDeckBlock(
-      "```card-forge-deck   \nsystem: dragonbane\n```",
+      "```cardsmith-deck   \nsystem: dragonbane\n```",
       "Deck.md",
       diagnostics
     );
     expect(deck?.selection.systemId).toBe("dragonbane");
     expect(
-      parseDeckBlock("```card-forge\ncard: {}\n```", "Deck.md", diagnostics)
+      parseDeckBlock("```cardsmith\ncard: {}\n```", "Deck.md", diagnostics)
     ).toBeUndefined();
     expect(diagnostics.messages).toEqual([]);
   });
@@ -34,7 +34,7 @@ describe("the card-forge-deck block", () => {
       diagnostics
     );
     expect(deck?.selection.systemId).toBe("a");
-    expect(diagnostics.matching("2 card-forge-deck blocks")).toHaveLength(1);
+    expect(diagnostics.matching("2 cardsmith-deck blocks")).toHaveLength(1);
   });
 
   it("splits the keys three ways: selection, deck settings, the card layer", () => {
@@ -116,7 +116,7 @@ describe("the card-forge-deck block", () => {
     const diagnostics = collectDiagnostics();
     expect(parse("system: [a\ncard-type: b", diagnostics)).toBeUndefined();
     expect(
-      diagnostics.matching("Waffen.md: the card-forge-deck block is not valid YAML")
+      diagnostics.matching("Waffen.md: the cardsmith-deck block is not valid YAML")
     ).toHaveLength(1);
   });
 

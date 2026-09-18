@@ -1,6 +1,6 @@
 Nebelgeist · 1 card · 2 faces · clipped: no
-1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 1.00
-   span.cf-fill-1
+1. front [cs-overflow-active cs-layout-default cs-front-first cs-front-has-next] scale 1.00
+   span.cs-fill-1
    div.mini-d20-stats.mini-d20-bestiary-stats
      div.mini-d20-stat-h "TW"
      div.mini-d20-stat-h "TP"
@@ -14,18 +14,18 @@ Nebelgeist · 1 card · 2 faces · clipped: no
      div.mini-d20-stat-v "14"
      div.mini-d20-stat-v "2"
      div.mini-d20-stat-v.mini-d20-stat-v-actions "1 Berührung (4 Schaden)"
-   span.cf-fill-1.cf-keep-with-next
-   div.mini-d20-subheader.cf-keep-with-next "Fähigkeiten"
-   div.mini-d20-prose.cf-split-head
+   span.cs-fill-1.cs-keep-with-next
+   div.mini-d20-subheader.cs-keep-with-next "Fähigkeiten"
+   div.mini-d20-prose.cs-split-head
      p "Körperlos. Nur magische Waffen und Zauber …"
      p "Nebelgestalt. Im Freien löst er sich …"
      p "Frostberührung. Wer getroffen wird, verliert seine …"
      p "Klagelaut. Einmal je Kampf: alle in …"
-2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 1.00
-   div.mini-d20-prose.cf-split-continuation
+2. back-as-front [cs-overflow-back-as-front cs-overflow-active cs-layout-default cs-front-continued] scale 1.00
+   div.mini-d20-prose.cs-split-continuation
      p "Lichtscheu. Im Sonnenlicht oder im Schein …"
      p "Gebunden. Der Nebelgeist kann den Ort …"
      p "Unruhe. Tiere in 6 Feldern werden …"
-   span.cf-fill-1.cf-keep-with-next
+   span.cs-fill-1.cs-keep-with-next
    p.mini-d20-flavour "Ein bleicher Schemen, der sich mit …"
-   span.cf-fill-2
+   span.cs-fill-2

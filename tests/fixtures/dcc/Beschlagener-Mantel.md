@@ -4,7 +4,7 @@ Armour: the AC bonus and the check penalty printed with their signs from
 bare numbers, the speed penalty and the fumble die as written. Invented
 for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dcc
   card-type: equipment

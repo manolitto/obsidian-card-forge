@@ -5,7 +5,7 @@ import type { LoadedCardType, LoadedSystem } from "../systems/loader";
 import { t } from "./strings";
 
 /*
- * The `card-forge` block the insert commands write: `card:` naming the
+ * The `cardsmith` block the insert commands write: `card:` naming the
  * system and the card type, `data:` with every property the card type
  * puts on the card — its description as a comment above, its sample as
  * the value or nothing. Pure; the goldens under `tests/fixtures/` hold it
@@ -27,7 +27,7 @@ export function buildCardBlock(
   mode: InsertMode
 ): string {
   const lines = [
-    "```card-forge",
+    "```cardsmith",
     "card:",
     `  system: ${system.id}`,
     `  card-type: ${cardType.declaration.id}`,

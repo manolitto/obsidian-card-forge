@@ -265,7 +265,7 @@ export function cutMarksSvg(page: Page, grid: Grid, marks: CutMarks): string {
     (l) => `<line x1="${mm(l.x1)}" y1="${mm(l.y1)}" x2="${mm(l.x2)}" y2="${mm(l.y2)}"/>`
   );
   return (
-    `<svg class="cf-cut-marks" width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}" ` +
+    `<svg class="cs-cut-marks" width="${width}mm" height="${height}mm" viewBox="0 0 ${width} ${height}" ` +
     `stroke="${stroke}" stroke-width="${weight}" xmlns="http://www.w3.org/2000/svg">` +
     lines.join("") +
     `</svg>`

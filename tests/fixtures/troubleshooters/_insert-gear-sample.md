@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: gear

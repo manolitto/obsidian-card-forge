@@ -1,6 +1,6 @@
 import { App, normalizePath, PluginSettingTab, Setting } from "obsidian";
 import type { PaperBackground } from "../definitions/deck-settings";
-import type CardForgePlugin from "../main";
+import type CardsmithPlugin from "../main";
 import { copySystemIntoVault } from "../ui/copy-system";
 import { SystemFileSuggest } from "../ui/system-file-suggest";
 import { t } from "../ui/strings";
@@ -19,10 +19,10 @@ import type { SystemEntry, UiLanguage } from "./types";
  * document, read and checked on the spot, and either registered or refused
  * with the messages under the field.
  */
-export class CardForgeSettingTab extends PluginSettingTab {
+export class CardsmithSettingTab extends PluginSettingTab {
   constructor(
     app: App,
-    private readonly plugin: CardForgePlugin
+    private readonly plugin: CardsmithPlugin
   ) {
     super(app, plugin);
   }
@@ -43,12 +43,12 @@ export class CardForgeSettingTab extends PluginSettingTab {
   }
 
   private systemRow(parent: HTMLElement, entry: SystemEntry): void {
-    const row = new Setting(parent).setClass("cf-system-row");
+    const row = new Setting(parent).setClass("cs-system-row");
     // The name, and beside it the id a note writes in `system:`. Set as one,
     // since `setName` replaces the element's content.
     const name = (text: string): void => {
       row.setName(text);
-      row.nameEl.createSpan({ cls: "cf-system-id", text: entry.id });
+      row.nameEl.createSpan({ cls: "cs-system-id", text: entry.id });
     };
     name(entry.id);
     // A block, not `=> name(text)` returning a component: every Obsidian
@@ -95,7 +95,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
           })
       );
     }
-    const messages = parent.createEl("ul", { cls: "cf-system-messages" });
+    const messages = parent.createEl("ul", { cls: "cs-system-messages" });
     if (!entry.active) return;
     void this.plugin.systems.load(entry.id).then((result) => {
       for (const message of result.messages) messages.createEl("li", { text: message });
@@ -126,7 +126,7 @@ export class CardForgeSettingTab extends PluginSettingTab {
     const setting = new Setting(parent)
       .setName(t("settings.add.name"))
       .setDesc(t("settings.add.desc"));
-    const messages = parent.createEl("ul", { cls: "cf-system-messages" });
+    const messages = parent.createEl("ul", { cls: "cs-system-messages" });
     setting.addText((text) => {
       text
         .setPlaceholder(t("settings.add.placeholder"))

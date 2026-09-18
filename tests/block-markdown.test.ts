@@ -18,7 +18,7 @@ describe("block markdown", () => {
 
   it("makes a wikilink the same span a value's link becomes, with or without an alias", () => {
     expect(render("See [[Troll]] and [[Troll|the troll]].")).toBe(
-      '<p>See <span class="cf-wikilink">Troll</span> and <span class="cf-wikilink">the troll</span>.</p>\n'
+      '<p>See <span class="cs-wikilink">Troll</span> and <span class="cs-wikilink">the troll</span>.</p>\n'
     );
   });
 
@@ -32,16 +32,16 @@ describe("block markdown", () => {
 
   it("turns a card-break line into a marker block", () => {
     expect(render("One.\n\n%% card-break %%\n\nTwo.")).toBe(
-      '<p>One.</p>\n<div class="cf-card-break"></div><p>Two.</p>\n'
+      '<p>One.</p>\n<div class="cs-card-break"></div><p>Two.</p>\n'
     );
   });
 
   it("wraps a paired marker's region and renders the markdown inside", () => {
     expect(render("%% keep-together %%\n**a**\n\nb\n%% /keep-together %%")).toBe(
-      '<div class="cf-keep-together"><p><strong>a</strong></p>\n<p>b</p>\n</div>'
+      '<div class="cs-keep-together"><p><strong>a</strong></p>\n<p>b</p>\n</div>'
     );
     expect(render("%% Keep-With-Next %%\nh\n%% /keep-with-next %%\n\np")).toContain(
-      '<div class="cf-keep-with-next"><p>h</p>\n</div><p>p</p>'
+      '<div class="cs-keep-with-next"><p>h</p>\n</div><p>p</p>'
     );
   });
 
@@ -50,7 +50,7 @@ describe("block markdown", () => {
       "%% keep-together %%\nouter\n%% keep-together %%\ninner\n%% /keep-together %%\nstill outer\n%% /keep-together %%"
     );
     expect(html).toBe(
-      '<div class="cf-keep-together"><p>outer</p>\n<div class="cf-keep-together"><p>inner</p>\n</div><p>still outer</p>\n</div>'
+      '<div class="cs-keep-together"><p>outer</p>\n<div class="cs-keep-together"><p>inner</p>\n</div><p>still outer</p>\n</div>'
     );
   });
 
@@ -58,7 +58,7 @@ describe("block markdown", () => {
     expect(render("a\n\n%% /keep-together %%\n\nb")).toBe("<p>a</p>\n<p>b</p>\n");
     expect(render("%% keep-together %%\n%% /keep-together %%")).toBe("");
     expect(render("%% keep-together %%\nto the end")).toBe(
-      '<div class="cf-keep-together"><p>to the end</p>\n</div>'
+      '<div class="cs-keep-together"><p>to the end</p>\n</div>'
     );
   });
 

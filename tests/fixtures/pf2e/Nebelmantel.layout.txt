@@ -1,5 +1,5 @@
 Nebelmantel · 2 cards · 4 faces · clipped: no
-1. front [cf-overflow-active cf-layout-image-side cf-front-first cf-front-has-next] scale 0.99
+1. front [cs-overflow-active cs-layout-image-side cs-front-first cs-front-has-next] scale 0.99
    div.pf2e-trait-row "Ungewöhnlich Illusion Magisch"
    div.pf2e-item-stats-row
      div.pf2e-item-stats-col
@@ -13,8 +13,8 @@ Nebelmantel · 2 cards · 4 faces · clipped: no
      p "Der graue Stoff dieses Mantels fühlt …"
      p "Der Mantel gilt als Rüstung des …"
      p "Wird der Mantel abgelegt, verliert er …"
-2. back [cf-layout-image-side cf-overflow-active] scale —
-3. front [cf-overflow-active cf-layout-image-side cf-front-continued] scale 0.99
+2. back [cs-layout-image-side cs-overflow-active] scale —
+3. front [cs-overflow-active cs-layout-image-side cs-front-continued] scale 0.99
    div.pf2e-item-trait-notes
      div.pf2e-item-trait-note "Illusion Ein Effekt, der die Sinne …"
      div.pf2e-item-trait-note "Schatten Der Mantel bezieht seine Kraft …"
@@ -24,4 +24,4 @@ Nebelmantel · 2 cards · 4 faces · clipped: no
      div.pf2e-item-activation "Im Nebel verschwinden ⬲ (Konzentration) Auslöser …"
    div.pf2e-item-image-wrap.pf2e-item-image-wrap-bottom
      img.pf2e-item-image.fade-edges
-4. back [cf-layout-image-side cf-overflow-active] scale —
+4. back [cs-layout-image-side cs-overflow-active] scale —

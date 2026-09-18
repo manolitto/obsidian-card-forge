@@ -43,7 +43,7 @@ export function exportDocument(
   const { width, height } = grid.paper;
   const cutMarks = deck.settings.cutMarks ?? {};
   const pageClass =
-    deck.settings.paperBackground === "plain" ? "cf-page cf-paper-plain" : "cf-page";
+    deck.settings.paperBackground === "plain" ? "cs-page cs-paper-plain" : "cs-page";
 
   const fonts = new Set<string>();
   const stylesheets: string[] = [];
@@ -58,9 +58,9 @@ export function exportDocument(
       .filter((cell) => cell.html !== undefined)
       .map(
         (cell) =>
-          `<div class="cf-cell" style="left:${mm(cell.x)}mm;top:${mm(cell.y)}mm;width:${mm(grid.card.width)}mm;height:${mm(grid.card.height)}mm">${cell.html}</div>`
+          `<div class="cs-cell" style="left:${mm(cell.x)}mm;top:${mm(cell.y)}mm;width:${mm(grid.card.width)}mm;height:${mm(grid.card.height)}mm">${cell.html}</div>`
       );
-    return `<div class="${pageClass}" data-cf-side="${page.side}">${cutMarksSvg(page, grid, cutMarks)}${cells.join("")}</div>`;
+    return `<div class="${pageClass}" data-cs-side="${page.side}">${cutMarksSvg(page, grid, cutMarks)}${cells.join("")}</div>`;
   });
 
   return [
@@ -91,13 +91,13 @@ function pageStyles(width: number, height: number): string {
   return [
     `@page { size: ${mm(width)}mm ${mm(height)}mm; margin: 0; }`,
     "html, body { margin: 0; padding: 0; background: #ffffff; }",
-    `.cf-page { position: relative; width: ${mm(width)}mm; height: ${mm(height)}mm; overflow: hidden; break-after: page; }`,
-    ".cf-page:last-child { break-after: auto; }",
-    ".cf-cell { position: absolute; overflow: hidden; contain: layout paint; }",
-    ".cf-cut-marks { position: absolute; left: 0; top: 0; pointer-events: none; }",
+    `.cs-page { position: relative; width: ${mm(width)}mm; height: ${mm(height)}mm; overflow: hidden; break-after: page; }`,
+    ".cs-page:last-child { break-after: auto; }",
+    ".cs-cell { position: absolute; overflow: hidden; contain: layout paint; }",
+    ".cs-cut-marks { position: absolute; left: 0; top: 0; pointer-events: none; }",
     "@media print {",
     "  html, body { width: auto; height: auto; }",
-    "  .cf-page { width: 100%; }",
+    "  .cs-page { width: 100%; }",
     "}",
   ].join("\n");
 }

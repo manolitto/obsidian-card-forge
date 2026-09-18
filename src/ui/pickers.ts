@@ -32,7 +32,7 @@ export async function pickSystemAndCardType(
     active.map(async (entry) => ({ id: entry.id, ...(await library.load(entry.id)) }))
   );
   if (loaded.length === 0) {
-    new Notice(`Card Forge: ${t("picker.no-systems")}`);
+    new Notice(`Cardsmith: ${t("picker.no-systems")}`);
     return undefined;
   }
 
@@ -48,7 +48,7 @@ export async function pickSystemAndCardType(
         );
   if (!choice) return undefined;
   if (!choice.system) {
-    new Notice(`Card Forge: ${choice.messages.join("; ")}`, 12000);
+    new Notice(`Cardsmith: ${choice.messages.join("; ")}`, 12000);
     return undefined;
   }
 
@@ -81,7 +81,7 @@ function pick<T>(
       }
       override renderSuggestion(match: FuzzyMatch<T>, el: HTMLElement): void {
         super.renderSuggestion(match, el);
-        if (tag) el.createSpan({ cls: "cf-system-id", text: tag(match.item) });
+        if (tag) el.createSpan({ cls: "cs-system-id", text: tag(match.item) });
       }
       onChooseItem(item: T): void {
         chosen = true;

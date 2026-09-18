@@ -73,7 +73,7 @@ describe("the deck template", () => {
       if (!match) continue;
       const diagnostics = collectDiagnostics();
       const deck = parseDeckBlock(
-        `\`\`\`card-forge-deck\nsystem: simple\n${match[1]}: ${match[2]}\n\`\`\``,
+        `\`\`\`cardsmith-deck\nsystem: simple\n${match[1]}: ${match[2]}\n\`\`\``,
         "Deck.md",
         diagnostics
       );

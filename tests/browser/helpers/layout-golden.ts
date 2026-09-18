@@ -11,13 +11,13 @@ import { readScaleFromTransform } from "../../../src/layout/font-scaler";
  * marker or a scale that moved by a hundredth all show as a one-line diff.
  *
  *     Beizjagd · 1 card · 2 faces · clipped: no
- *     1. front [cf-overflow-active cf-layout-default cf-front-first cf-front-has-next] scale 0.89
- *        div.ez-body.cf-split-head
+ *     1. front [cs-overflow-active cs-layout-default cs-front-first cs-front-has-next] scale 0.89
+ *        div.ez-body.cs-split-head
  *          p "Eine Beizjagd dauert einen Tag und …"
  *          p "Wird die Probe mit Vorteil abgelegt …"
- *     2. back-as-front [cf-overflow-back-as-front cf-overflow-active cf-layout-default cf-front-continued] scale 0.89
- *        div.ez-body.cf-split-continuation
- *          div.cf-keep-together
+ *     2. back-as-front [cs-overflow-back-as-front cs-overflow-active cs-layout-default cs-front-continued] scale 0.89
+ *        div.ez-body.cs-split-continuation
+ *          div.cs-keep-together
  *            h3 "Beute (1w6)"
  *            table (7 rows) "1w6 Beute 1 Nichts als Federn …"
  *        div.ez-logo-band
@@ -34,7 +34,7 @@ export function layoutGoldenText(name: string, out: LaidOutCard): string {
     if (pair.front !== undefined) faces.push({ role: "front", root: parse(pair.front) });
     if (pair.back !== undefined) {
       const root = parse(pair.back);
-      const role = root.classList.contains("cf-overflow-back-as-front")
+      const role = root.classList.contains("cs-overflow-back-as-front")
         ? "back-as-front"
         : root.classList.contains("card-front")
           ? "front"
@@ -46,7 +46,7 @@ export function layoutGoldenText(name: string, out: LaidOutCard): string {
     `${name} · ${out.cards.length} ${out.cards.length === 1 ? "card" : "cards"} · ${faces.length} faces · clipped: ${out.clipped ? "yes" : "no"}`,
   ];
   faces.forEach(({ role, root }, i) => {
-    const hooks = Array.from(root.classList).filter((c) => c.startsWith("cf-"));
+    const hooks = Array.from(root.classList).filter((c) => c.startsWith("cs-"));
     const body = root.querySelector<HTMLElement>(".card-body-scalable");
     // A body the scaler never had to shrink carries no transform: scale 1.
     const scale = body ? (readScaleFromTransform(body) || 1).toFixed(2) : "—";

@@ -17,7 +17,7 @@
     <div class="card-body-scalable">
 
     {{#if (or (slot "front-stat-1") (slot "front-stat-2") (slot "front-stat-3"))}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
     <div class="mini-d20-stats mini-d20-archetype-stats">
       <div class="mini-d20-stat-h">{{slot-label "front-stat-1"}}</div>
       <div class="mini-d20-stat-h">{{slot-label "front-stat-2"}}</div>
@@ -29,15 +29,15 @@
     {{/if}}
 
     {{#if (slot "front-skills" list=true)}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
-    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-skills"}}</div>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
+    <div class="mini-d20-subheader cs-keep-with-next">{{slot-label "front-skills"}}</div>
     <div class="mini-d20-archetype-skills">
       {{#each (slot "front-skills" list=true)}}{{#each this}}<div class="mini-d20-archetype-skill-name">{{@key}}</div><div class="mini-d20-archetype-skill-bonus">{{this}}</div>{{/each}}{{/each}}
     </div>
     {{/if}}
 
     {{#if (or (slot "front-armor") (slot "front-weapons"))}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
     <div class="mini-d20-rows mini-d20-archetype-allowed">
       {{#if (slot "front-armor")}}
       <div class="mini-d20-row-label">{{slot-label "front-armor"}}</div>
@@ -51,16 +51,16 @@
     {{/if}}
 
     {{#if (slot "front-abilities" list=true)}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
-    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-abilities"}}</div>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
+    <div class="mini-d20-subheader cs-keep-with-next">{{slot-label "front-abilities"}}</div>
     <div class="mini-d20-prose">
       {{#each (slot "front-abilities" list=true)}}<p>{{this}}</p>{{/each}}
     </div>
     {{/if}}
 
     {{#if (slot "front-level-up" list=true)}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
-    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-level-up"}}</div>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
+    <div class="mini-d20-subheader cs-keep-with-next">{{slot-label "front-level-up"}}</div>
     <div class="mini-d20-prose">
       {{#each (slot "front-level-up" list=true)}}<p>{{this}}</p>{{/each}}
     </div>
@@ -68,7 +68,7 @@
 
     {{> flavour}}
 
-    <span class="cf-fill-2"></span>
+    <span class="cs-fill-2"></span>
 
     </div>
   </div>

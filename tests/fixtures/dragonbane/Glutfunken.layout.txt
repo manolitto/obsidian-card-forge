@@ -1,7 +1,7 @@
 Glutfunken · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 0.86
+1. front [cs-layout-default cs-front-first] scale 0.86
    div.db-front-image-wrap
-     img.db-front-image.cf-front-image.fade-edges
+     img.db-front-image.cs-front-image.fade-edges
    div.db-stats-box
      div.db-stats-row "Rang 2 WP 2 je Kraftstufe"
      div.db-stats-row.db-stats-row-wide
@@ -12,4 +12,4 @@ Glutfunken · 1 card · 2 faces · clipped: no
    div.db-effect-block.db-effect-block-bottom
      p.db-effect-text "Ein Schauer glühender Funken springt von …"
      p.db-effect-text "Effekt Je Kraftstufe über der ersten: …"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

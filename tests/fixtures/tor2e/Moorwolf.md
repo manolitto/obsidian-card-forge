@@ -17,7 +17,7 @@ fell-abilities:
 A beast: resolve in place of hate, a dash for no parry, no picture — the
 ornament back with the card type's label. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: tor2e
   card-type: npc

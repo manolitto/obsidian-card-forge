@@ -138,7 +138,7 @@ const en = {
   "copy.done": "Copied into {path} and switched on",
   "copy.rewrite.title": "Rewrite the notes?",
   "copy.rewrite.body":
-    "{count} notes name system: {from} in their card-forge or card-forge-deck block. Rewrite them to {to}?",
+    "{count} notes name system: {from} in their cardsmith or cardsmith-deck block. Rewrite them to {to}?",
   "copy.rewrite.confirm": "Rewrite {count} notes",
   "copy.rewrite.skip": "Leave them",
   "copy.rewrite.done": "{count} notes rewritten",
@@ -302,7 +302,7 @@ const de: Strings = {
   "copy.done": "Nach {path} kopiert und eingeschaltet",
   "copy.rewrite.title": "Notizen umschreiben?",
   "copy.rewrite.body":
-    "{count} Notizen nennen system: {from} in ihrem card-forge- oder card-forge-deck-Block. Auf {to} umschreiben?",
+    "{count} Notizen nennen system: {from} in ihrem cardsmith- oder cardsmith-deck-Block. Auf {to} umschreiben?",
   "copy.rewrite.confirm": "{count} Notizen umschreiben",
   "copy.rewrite.skip": "So lassen",
   "copy.rewrite.done": "{count} Notizen umgeschrieben",

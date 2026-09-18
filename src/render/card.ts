@@ -53,7 +53,7 @@ export function noteSystemId(
     .trim()
     .toLowerCase();
   if (id) return id;
-  diagnostics.warn(`${note.path}: the card-forge block names no system:`);
+  diagnostics.warn(`${note.path}: the cardsmith block names no system:`);
   return undefined;
 }
 
@@ -199,7 +199,7 @@ function resolveCardType(
   const named = String(note.card["card-type"] ?? "").trim();
   if (!named) {
     diagnostics.warn(
-      `${note.path}: the card-forge block names no card-type:, and ${system.id} has ${
+      `${note.path}: the cardsmith block names no card-type:, and ${system.id} has ${
         ids.length === 0 ? "none" : `${ids.length}: ${ids.join(", ")}`
       }`
     );

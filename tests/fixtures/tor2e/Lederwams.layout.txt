@@ -1,5 +1,5 @@
 Lederwams · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.tor-stats-row
      div.tor-stat
        div.tor-stat-label "Schutz"
@@ -12,9 +12,9 @@ Lederwams · 1 card · 2 faces · clipped: no
    div.tor-separator
    p.tor-line "Art: Rüstung"
    p.tor-line "Mindest-Lebensstandard: Ärmlich"
-   span.cf-fill-1
+   span.cs-fill-1
    div.tor-separator
-   span.cf-fill-2
+   span.cs-fill-2
    div.tor-separator
    div.tor-reference "(Regelbuch S. 76)"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

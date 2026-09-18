@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: generic
@@ -18,7 +18,7 @@ data:
   # Source reference — book title with page number, or a wikilink into the vault. Set upright along the card's right edge; falls back to "DRAGONBANE".
   book-reference:
 
-  # Card body as markdown, inline in the card-forge block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures.
+  # Card body as markdown, inline in the cardsmith block. Takes precedence over the note's text. Use the note's text for tables and embedded pictures.
   content:
 
   # The section under a `## Vorderseite` heading in the note fills the card when the block sets no `content`. Fully rendered — tables, headings, lists and embedded pictures included.

@@ -90,7 +90,7 @@
 }
 
 /* On plain paper the cream goes; the ink stays. */
-.cf-paper-plain .card-root.sw {
+.cs-paper-plain .card-root.sw {
   --sw-paper: #ffffff;
 }
 
@@ -135,7 +135,7 @@
   text-align: center;
   white-space: nowrap;
 }
-.sw-title .cf-overflow-counter {
+.sw-title .cs-overflow-counter {
   font-family: var(--sw-font-body);
   font-weight: 400;
   font-size: 0.5em;

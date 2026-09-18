@@ -99,7 +99,7 @@ export const BARE_ENVIRONMENT: RenderEnvironment = {
  * and the sign; an object has no scalar rendering and yields `""`. The fallback steps in
  * after the empty check and goes through the same switches a real value
  * would. A wikilink is always rendered as its display text in a
- * `.cf-wikilink` span, before either switch — nothing on a printed card can
+ * `.cs-wikilink` span, before either switch — nothing on a printed card can
  * be clicked, and the span is the hook a system styles a reference by —
  * unless `plain` asks for the text alone.
  */

@@ -35,7 +35,7 @@ const marker = (n: FakeNode | null | undefined) =>
   isForcedBreakMarker(n as unknown as Node | null | undefined);
 
 describe("isForcedBreakMarker", () => {
-  it("true: element carrying cf-card-break", () => {
+  it("true: element carrying cs-card-break", () => {
     expect(marker(el([CARD_BREAK_CLASS]))).toBe(true);
   });
 
@@ -44,7 +44,7 @@ describe("isForcedBreakMarker", () => {
   });
 
   it("false: element without the class", () => {
-    expect(marker(el(["cf-keep-together"]))).toBe(false);
+    expect(marker(el(["cs-keep-together"]))).toBe(false);
   });
 
   it("false: a text node", () => {

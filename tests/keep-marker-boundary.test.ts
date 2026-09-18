@@ -4,8 +4,8 @@ import { keepMarkerBoundary } from "../src/layout/overflow-splitter";
 /**
  * `keepMarkerBoundary(body, k)` adjusts a whole-block split boundary backwards
  * to honour the two symmetric markers:
- *   - `cf-keep-with-next` on the LAST STAYING block (blocks[m-1])
- *   - `cf-keep-with-prev` on the FIRST MOVING block (blocks[m])
+ *   - `cs-keep-with-next` on the LAST STAYING block (blocks[m-1])
+ *   - `cs-keep-with-prev` on the FIRST MOVING block (blocks[m])
  *
  * The function only walks the DOM via firstChild / nextSibling / nodeType and
  * reads classList.contains — no layout measurement — so it is fully testable
@@ -49,38 +49,38 @@ describe("keepMarkerBoundary", () => {
     expect(keepMarkerBoundary(body([["a"], ["b"]]), 0)).toBe(0);
   });
 
-  // ── cf-keep-with-prev ─────────────────────────────────────────────────
-  it("pulls the predecessor along when the first MOVING block has cf-keep-with-prev", () => {
+  // ── cs-keep-with-prev ─────────────────────────────────────────────────
+  it("pulls the predecessor along when the first MOVING block has cs-keep-with-prev", () => {
     // [statblock, spacer, E, ornament(kwp)] — ornament is first moving (k=3).
     // Expect the boundary pulled back to 2 so E moves WITH the ornament.
-    const b = body([["statblock"], ["spacer"], ["e"], ["ornament", "cf-keep-with-prev"]]);
+    const b = body([["statblock"], ["spacer"], ["e"], ["ornament", "cs-keep-with-prev"]]);
     expect(keepMarkerBoundary(b, 3)).toBe(2);
   });
 
-  it("control: same geometry without cf-keep-with-prev leaves the ornament alone", () => {
+  it("control: same geometry without cs-keep-with-prev leaves the ornament alone", () => {
     const b = body([["statblock"], ["spacer"], ["e"], ["ornament"]]);
     expect(keepMarkerBoundary(b, 3)).toBe(3);
   });
 
   it("does NOT empty the face — a kwp block with only one predecessor is a no-op", () => {
     // [a, b(kwp)], k=1: honouring would pull to 0 (empty face). Guard stops at 1.
-    expect(keepMarkerBoundary(body([["a"], ["b", "cf-keep-with-prev"]]), 1)).toBe(1);
+    expect(keepMarkerBoundary(body([["a"], ["b", "cs-keep-with-prev"]]), 1)).toBe(1);
   });
 
-  // ── cf-keep-with-next ─────────────────────────────────────────────────
-  it("pulls a cf-keep-with-next block forward with its successor", () => {
+  // ── cs-keep-with-next ─────────────────────────────────────────────────
+  it("pulls a cs-keep-with-next block forward with its successor", () => {
     // [a, b(kwn), c], k=2: b is the last staying block, c moves → pull b along.
-    expect(keepMarkerBoundary(body([["a"], ["b", "cf-keep-with-next"], ["c"]]), 2)).toBe(
+    expect(keepMarkerBoundary(body([["a"], ["b", "cs-keep-with-next"], ["c"]]), 2)).toBe(
       1
     );
   });
 
-  it("walks back a contiguous run of cf-keep-with-next blocks", () => {
+  it("walks back a contiguous run of cs-keep-with-next blocks", () => {
     // [a, b(kwn), c(kwn), d], k=3: c then b both pulled → boundary 1.
     const b = body([
       ["a"],
-      ["b", "cf-keep-with-next"],
-      ["c", "cf-keep-with-next"],
+      ["b", "cs-keep-with-next"],
+      ["c", "cs-keep-with-next"],
       ["d"],
     ]);
     expect(keepMarkerBoundary(b, 3)).toBe(1);
@@ -88,13 +88,13 @@ describe("keepMarkerBoundary", () => {
 
   it("kwn marker not adjacent to the boundary does not fire", () => {
     // [a, b(kwn), c, d], k=3: last staying is c (unmarked), so no pull-back.
-    const b = body([["a"], ["b", "cf-keep-with-next"], ["c"], ["d"]]);
+    const b = body([["a"], ["b", "cs-keep-with-next"], ["c"], ["d"]]);
     expect(keepMarkerBoundary(b, 3)).toBe(3);
   });
 
   it("kwn last-resort: marker on the only staying block is a no-op", () => {
     // [a(kwn), b], k=1: honouring would empty the face → stays at 1.
-    expect(keepMarkerBoundary(body([["a", "cf-keep-with-next"], ["b"]]), 1)).toBe(1);
+    expect(keepMarkerBoundary(body([["a", "cs-keep-with-next"], ["b"]]), 1)).toBe(1);
   });
 
   // ── headings bind implicitly, with no marker ──────────────────────────
@@ -137,9 +137,9 @@ describe("keepMarkerBoundary", () => {
     // → boundary 1 (b, c, d all travel together).
     const b = body([
       ["a"],
-      ["b", "cf-keep-with-next"],
+      ["b", "cs-keep-with-next"],
       ["c"],
-      ["d", "cf-keep-with-prev"],
+      ["d", "cs-keep-with-prev"],
     ]);
     expect(keepMarkerBoundary(b, 3)).toBe(1);
   });

@@ -62,18 +62,18 @@ export function mountPreview(
   const width = cardSize.width * PX_PER_MM * scale;
 
   const mount = doc.createElement("div");
-  mount.className = "cf-preview";
+  mount.className = "cs-preview";
   host.appendChild(mount);
 
   const root = mount.attachShadow({ mode: "open" });
   root.innerHTML =
     `<style>${css}\n${MOUNT_CSS}</style>` +
-    `<div class="cf-preview-faces">` +
+    `<div class="cs-preview-faces">` +
     faces
       .map(
         (face) =>
-          `<div class="cf-preview-face" style="width:${width.toFixed(2)}px;height:${displayHeight}px">` +
-          `<div class="cf-preview-scale" style="transform:scale(${scale.toFixed(5)})">${face}</div>` +
+          `<div class="cs-preview-face" style="width:${width.toFixed(2)}px;height:${displayHeight}px">` +
+          `<div class="cs-preview-scale" style="transform:scale(${scale.toFixed(5)})">${face}</div>` +
           `</div>`
       )
       .join("") +
@@ -93,7 +93,7 @@ export function mountPreview(
  * of exactly the scaled size, so the boxes flow like the cards they show.
  */
 const MOUNT_CSS = `
-.cf-preview-faces { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
-.cf-preview-face { position: relative; overflow: hidden; flex: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.18); }
-.cf-preview-scale { transform-origin: top left; }
+.cs-preview-faces { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.cs-preview-face { position: relative; overflow: hidden; flex: none; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.18); }
+.cs-preview-scale { transform-origin: top left; }
 `;

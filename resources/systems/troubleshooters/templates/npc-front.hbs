@@ -15,7 +15,7 @@
 --}}
 <div class="card-root card-front troubleshooters npc-card">
   <div class="card-header ts-strip">
-    <div class="card-title ts-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cf-overflow-counter"></span></span></div>
+    <div class="card-title ts-title"><span class="text-scalable">{{slot "front-title" plain=true}}<span class="cs-overflow-counter"></span></span></div>
     <div class="ts-strip-label">{{t "card-type-label"}}</div>
   </div>
   <div class="card-content-container">
@@ -34,7 +34,7 @@
     {{/if}}
 
     {{#if (slot "front-attacks" list=true)}}
-    <div class="ts-line cf-keep-with-next"><span class="ts-caption">{{slot-label "front-attacks"}}</span></div>
+    <div class="ts-line cs-keep-with-next"><span class="ts-caption">{{slot-label "front-attacks"}}</span></div>
     <ul class="ts-list">
       {{#each (slot "front-attacks" list=true)}}
       <li>{{#if name}}{{name}} {{/if}}{{desc}}</li>
@@ -43,7 +43,7 @@
     {{/if}}
 
     {{#if (slot "front-skills" list=true)}}
-    <div class="ts-line cf-keep-with-next"><span class="ts-caption">{{slot-label "front-skills"}}</span></div>
+    <div class="ts-line cs-keep-with-next"><span class="ts-caption">{{slot-label "front-skills"}}</span></div>
     <ul class="ts-list">
       {{#each (slot "front-skills" list=true)}}
       <li>{{#if name}}{{name}} {{/if}}{{desc}}</li>
@@ -59,7 +59,7 @@
     <div class="ts-prose ts-description">{{slot "front-text" markdown="block"}}</div>
     {{/if}}
 
-    <span class="cf-fill-1"></span>
+    <span class="cs-fill-1"></span>
 
     {{#if (slot "front-footer")}}
     <div class="ts-reference ts-reference-right">{{slot "front-footer" plain=true}}</div>

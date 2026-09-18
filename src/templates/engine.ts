@@ -226,7 +226,7 @@ class SystemTemplates {
  * What an `![[embed]]` in a body becomes: the system's markdown-image
  * partial when it declares one, called with `url`, `alt` and
  * `placement="body"` so a body picture gets the design's chrome; a bare
- * `<img class="cf-body-image">` otherwise. A picture the vault could not
+ * `<img class="cs-body-image">` otherwise. A picture the vault could not
  * answer is reported and shows as its alt text in a link span, so the miss
  * is visible on the card rather than a blank.
  */
@@ -243,12 +243,12 @@ function embedRenderer(
       diagnostics.warn(
         `![[${target}]] in a body of ${where}: not a picture the vault has; showing its text`
       );
-      return `<span class="cf-wikilink">${escapeHtml(alt)}</span>`;
+      return `<span class="cs-wikilink">${escapeHtml(alt)}</span>`;
     }
     if (partial) {
       return partial({ url, alt, placement: "body" } as unknown as TemplateContext);
     }
-    return `<img class="cf-body-image" src="${escapeHtml(url)}" alt="${escapeHtml(alt)}">`;
+    return `<img class="cs-body-image" src="${escapeHtml(url)}" alt="${escapeHtml(alt)}">`;
   };
 }
 

@@ -1,5 +1,5 @@
 Fischfang.2 · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    span.db-fill-top
    div.db-effect-block.db-effect-block-top
      p.db-effect-text "Glitschig, zäh und überraschend nahrhaft."
@@ -10,4 +10,4 @@ Fischfang.2 · 1 card · 2 faces · clipped: no
      div.db-stats-row.db-stats-row-wide
        p.db-trait "Rationen W4"
    span.db-fill-bottom
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

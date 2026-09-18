@@ -3,7 +3,7 @@ import { load } from "js-yaml";
 /**
  * YAML as a note writes it — with wikilinks in it.
  *
- * A note's frontmatter and its `card-forge` block are YAML, and an author
+ * A note's frontmatter and its `cardsmith` block are YAML, and an author
  * writes `image: [[Beil.png]]` there without quoting it, because that is what
  * Obsidian itself accepts. To js-yaml the same line is a nested flow sequence
  * (`[["Beil.png"]]`), and the embed form `![[Beil.png]]` starts with a tag

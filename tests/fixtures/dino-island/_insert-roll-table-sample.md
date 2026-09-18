@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: dino-island
   card-type: roll-table

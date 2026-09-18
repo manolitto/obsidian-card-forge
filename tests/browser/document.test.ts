@@ -81,17 +81,17 @@ describe.each([
     expect(out.paper).toEqual(grid.paper);
 
     const doc = await mounted(out.html);
-    const pageEls = Array.from(doc.querySelectorAll<HTMLElement>(".cf-page"));
+    const pageEls = Array.from(doc.querySelectorAll<HTMLElement>(".cs-page"));
     expect(pageEls).toHaveLength(pages.length);
 
     pageEls.forEach((pageEl, p) => {
       const page = pages[p]!;
-      expect(pageEl.dataset["cfSide"]).toBe(page.side);
+      expect(pageEl.dataset["csSide"]).toBe(page.side);
       const box = pageEl.getBoundingClientRect();
       expect(box.width).toBeCloseTo(grid.paper.width * PX_PER_MM, 0);
       expect(box.height).toBeCloseTo(grid.paper.height * PX_PER_MM, 0);
 
-      const cells = Array.from(pageEl.querySelectorAll<HTMLElement>(".cf-cell"));
+      const cells = Array.from(pageEl.querySelectorAll<HTMLElement>(".cs-cell"));
       const placed = page.cells.filter((c) => c.html !== undefined);
       expect(cells).toHaveLength(placed.length);
       cells.forEach((cellEl, i) => {
@@ -121,13 +121,13 @@ describe.each([
 describe("plain paper", () => {
   it("stamps the pages, and a design that paints a texture drops it", async () => {
     const block = (background: string) =>
-      `\`\`\`card-forge-deck\nsystem: dragonbane\ncard-type: gear\ncard-size: poker\npaper-background: ${background}\n\`\`\``;
+      `\`\`\`cardsmith-deck\nsystem: dragonbane\ncard-type: gear\ncard-size: poker\npaper-background: ${background}\n\`\`\``;
 
     const textured = await mounted(
       deckDocument(await build("dragonbane", block("textured")), "t").html
     );
     const texturedRoot = textured.querySelector<HTMLElement>(".card-root")!;
-    expect(textured.querySelector(".cf-paper-plain")).toBeNull();
+    expect(textured.querySelector(".cs-paper-plain")).toBeNull();
     expect(
       textured.defaultView!.getComputedStyle(texturedRoot).backgroundImage
     ).toContain("url(");
@@ -136,8 +136,8 @@ describe("plain paper", () => {
     const plain = await mounted(
       deckDocument(await build("dragonbane", block("plain")), "p").html
     );
-    expect(plain.querySelectorAll(".cf-page.cf-paper-plain")).toHaveLength(
-      plain.querySelectorAll(".cf-page").length
+    expect(plain.querySelectorAll(".cs-page.cs-paper-plain")).toHaveLength(
+      plain.querySelectorAll(".cs-page").length
     );
     const plainRoot = plain.querySelector<HTMLElement>(".card-root")!;
     expect(plain.defaultView!.getComputedStyle(plainRoot).backgroundImage).toBe("none");

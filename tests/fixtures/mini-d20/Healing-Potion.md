@@ -3,7 +3,7 @@
 The English half of the bilingual pair: the same card printed in
 English, its captions from the `en` tables. Out of the German deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: equipment

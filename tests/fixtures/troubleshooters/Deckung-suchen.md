@@ -3,7 +3,7 @@
 A mechanic: what it requires, the prose, two points. Invented for this
 deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: mechanic

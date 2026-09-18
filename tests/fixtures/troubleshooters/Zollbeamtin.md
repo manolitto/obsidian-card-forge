@@ -3,7 +3,7 @@
 A character with a picture on the back, the three numbers, traits as a
 wikilink, attacks and skills, a description. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: troubleshooters
   card-type: npc

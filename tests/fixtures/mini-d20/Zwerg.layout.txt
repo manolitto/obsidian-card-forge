@@ -1,12 +1,12 @@
 Zwerg · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.mini-d20-tags "Passiv"
-   span.cf-fill-1.cf-keep-with-next
-   div.mini-d20-subheader.cf-keep-with-next "Eigenschaft"
+   span.cs-fill-1.cs-keep-with-next
+   div.mini-d20-subheader.cs-keep-with-next "Eigenschaft"
    div.mini-d20-prose
      p "+ 1 Grundschaden im Nahkampf."
-   span.cf-fill-1.cf-keep-with-next
-   div.mini-d20-subheader.cf-keep-with-next "Namen"
+   span.cs-fill-1.cs-keep-with-next
+   div.mini-d20-subheader.cs-keep-with-next "Namen"
    div.mini-d20-heritage-names
      div.mini-d20-heritage-name-h "Männlich"
      div.mini-d20-heritage-name-h "Weiblich"
@@ -20,6 +20,6 @@ Zwerg · 1 card · 2 faces · clipped: no
      div.mini-d20-heritage-name-v "Balin"
      div.mini-d20-heritage-name-v "Thora"
      div.mini-d20-heritage-name-v "Steinbart"
-   span.cf-fill-1.cf-keep-with-next
+   span.cs-fill-1.cs-keep-with-next
    p.mini-d20-flavour "Zäh, sturköpfig, im Stein zu Hause."
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

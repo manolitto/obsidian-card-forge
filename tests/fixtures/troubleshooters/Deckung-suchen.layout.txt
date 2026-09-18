@@ -1,10 +1,10 @@
 Deckung-suchen · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.ts-requires "Erfordert Bewegungsaktion"
    div.ts-prose
      p "Wer sich hinter etwas Festes duckt …"
      p "Deckung schützt nicht im Nahkampf."
    ul.ts-list (2 items) "Leichte Deckung: Angriffe auf dich sind …"
-   span.cf-fill-1
+   span.cs-fill-1
    div.ts-reference "(Regelbuch S. 98)"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

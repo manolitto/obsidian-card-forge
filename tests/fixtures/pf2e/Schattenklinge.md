@@ -5,7 +5,7 @@ would stand no taller than the lines, below the short description it has
 the rest of the card, so `image-bottom` wins the height comparison. The
 trait pills carry a rarity. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: pf2e
   card-type: item

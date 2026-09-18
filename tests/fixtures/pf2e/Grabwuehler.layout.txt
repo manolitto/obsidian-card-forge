@@ -1,5 +1,5 @@
 Grabwuehler · 1 card · 2 faces · clipped: no
-1. front [cf-layout-image-none cf-front-first] scale 0.96
+1. front [cs-layout-image-none cs-front-first] scale 0.96
    div.pf2e-trait-row "NB groß Ungewöhnlich Untot Geistlos"
    div.pf2e-stat-line "Wahrnehmung +12; Dunkelsicht, Lebensspüren 18 m"
    div.pf2e-stat-line.pf2e-creature-skills "Fertigkeiten Athletik +14, Heimlichkeit +9"
@@ -21,4 +21,4 @@ Grabwuehler · 1 card · 2 faces · clipped: no
      p "Was die Totengräber liegen ließen, hat …"
    div.pf2e-creature-image-wrap
      img.pf2e-creature-image.fade-edges
-2. back [cf-layout-image-none] scale —
+2. back [cs-layout-image-none] scale —

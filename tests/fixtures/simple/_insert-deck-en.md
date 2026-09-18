@@ -1,4 +1,4 @@
-```card-forge-deck
+```cardsmith-deck
 system: simple
 card-type: simple
 

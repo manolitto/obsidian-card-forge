@@ -17,7 +17,7 @@
 --}}
 <div class="card-root card-front tor2e gear-card">
   <div class="card-header tor-header">
-    <div class="card-title tor-title"><span class="text-scalable">{{slot "front-title" plain=true}}</span><span class="cf-overflow-counter"></span></div>
+    <div class="card-title tor-title"><span class="text-scalable">{{slot "front-title" plain=true}}</span><span class="cs-overflow-counter"></span></div>
     <div class="tor-header-right"><div class="tor-kind"><span class="text-scalable">{{#if (slot "front-parry-modifier")}}{{t "type-shield"}}{{else if (slot "front-protection")}}{{t "type-armour"}}{{else}}{{t "type-weapon"}}{{/if}}</span></div></div>
   </div>
 
@@ -43,14 +43,14 @@
     {{#if (slot "front-standard")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-standard"}}</span> {{slot "front-standard"}}</p>{{/if}}
     {{#if (slot "front-notes")}}<p class="tor-line"><span class="tor-line-label">{{slot-label "front-notes"}}</span> {{slot "front-notes"}}</p>{{/if}}
 
-    <span class="cf-fill-1"></span>
+    <span class="cs-fill-1"></span>
     <div class="tor-separator"></div>
 
     {{#if (slot "front-image")}}
     <div class="tor-gear-image-wrap"><img class="tor-gear-image" src="{{slot "front-image" image=true}}" alt="" /></div>
     {{/if}}
 
-    <span class="cf-fill-2"></span>
+    <span class="cs-fill-2"></span>
     <div class="tor-separator"></div>
 
     {{#if (slot "front-footer")}}<div class="tor-reference">({{slot "front-footer" plain=true}})</div>{{/if}}

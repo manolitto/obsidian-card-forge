@@ -5,7 +5,7 @@ table, the portrait on both faces through one property, and a GM note that
 only the detailed display mode shows. Invented for this deck — not a
 creature of any published bestiary.
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: creature

@@ -4,7 +4,7 @@ The block names no `card-type:`; the system has exactly one, so it is implied.
 This paragraph is the note's `body`, which `content` reaches last — the block
 sets `content` itself, so this text stays off the card.
 
-```card-forge
+```cardsmith
 card:
   system: simple
   language: en

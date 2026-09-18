@@ -24,7 +24,7 @@ a picture where the author put it, a table, a hard break between two faces,
 a `###` sub-heading that stays inside the body. This section is a property
 nobody binds, so it stays off the card.
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: generic

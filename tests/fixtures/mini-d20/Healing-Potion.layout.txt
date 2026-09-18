@@ -1,16 +1,16 @@
 Healing-Potion · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
-   span.cf-fill-1.cf-keep-with-next
+1. front [cs-layout-default cs-front-first] scale 1.00
+   span.cs-fill-1.cs-keep-with-next
    div.mini-d20-rows.mini-d20-equipment-stats
      div.mini-d20-row-label "Price"
      div.mini-d20-row-value "25 GP"
-   span.cf-fill-1.cf-keep-with-next
-   div.mini-d20-subheader.cf-keep-with-next "Effect"
+   span.cs-fill-1.cs-keep-with-next
+   div.mini-d20-subheader.cs-keep-with-next "Effect"
    div.mini-d20-prose
      p "Heals 10 HP. Works at once, …"
-   span.cf-fill-1.cf-keep-with-next
+   span.cs-fill-1.cs-keep-with-next
    p.mini-d20-trait "Notes One potion per fight."
-   span.cf-fill-1.cf-keep-with-next
-   img.mini-d20-image.cf-keep-with-next
-   span.cf-fill-2
-2. back [cf-layout-default] scale —
+   span.cs-fill-1.cs-keep-with-next
+   img.mini-d20-image.cs-keep-with-next
+   span.cs-fill-2
+2. back [cs-layout-default] scale —

@@ -3,7 +3,7 @@
 A monster with a picture on the back: the block with a trait and two
 actions. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: 5e
   card-type: monster

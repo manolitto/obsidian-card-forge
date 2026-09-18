@@ -1,4 +1,4 @@
-```card-forge
+```cardsmith
 card:
   system: dftq
   card-type: prompt

@@ -4,7 +4,7 @@ A spell with a picture on top, no source of its own (the right edge falls
 back to the system's name), and a `subcategory` that equals `category`, so
 the back's caption plaque stays out. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: dragonbane
   card-type: rule

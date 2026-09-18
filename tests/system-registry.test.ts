@@ -38,18 +38,18 @@ describe("reconcileSystemEntries", () => {
   });
 
   it("keeps vault entries in place", () => {
-    const mine = vault("mine", "card-forge/mine", false);
+    const mine = vault("mine", "cardsmith/mine", false);
     const result = reconcileSystemEntries([mine, bundled("simple")], ["simple"]);
     expect(result).toEqual([mine, bundled("simple")]);
   });
 
   it("rebuilds every entry from its known keys, so nothing else in the saved file survives", () => {
     const saved = [
-      { ...vault("mine", "card-forge/mine"), name: "Mine", note: "x" },
+      { ...vault("mine", "cardsmith/mine"), name: "Mine", note: "x" },
       { ...bundled("simple"), name: "Simple" },
     ] as unknown as SystemEntry[];
     const result = reconcileSystemEntries(saved, ["simple"]);
-    expect(result).toEqual([vault("mine", "card-forge/mine"), bundled("simple")]);
+    expect(result).toEqual([vault("mine", "cardsmith/mine"), bundled("simple")]);
     expect(Object.keys(result[0]!)).toEqual(["type", "id", "path", "active"]);
   });
 
@@ -61,8 +61,8 @@ describe("reconcileSystemEntries", () => {
 describe("entriesAfterToggle", () => {
   it("switching on takes the id: every other active claimant goes off", () => {
     const original = bundled("dragonbane");
-    const copy = vault("dragonbane", "card-forge/db", false);
-    const other = vault("dragonbane", "card-forge/db2");
+    const copy = vault("dragonbane", "cardsmith/db", false);
+    const other = vault("dragonbane", "cardsmith/db2");
     const out = entriesAfterToggle(
       [original, copy, other, bundled("simple")],
       copy,
@@ -70,19 +70,19 @@ describe("entriesAfterToggle", () => {
     );
     expect(out).toEqual([
       bundled("dragonbane", false),
-      vault("dragonbane", "card-forge/db"),
-      vault("dragonbane", "card-forge/db2", false),
+      vault("dragonbane", "cardsmith/db"),
+      vault("dragonbane", "cardsmith/db2", false),
       bundled("simple"),
     ]);
     expect(findDuplicateActiveIds(out)).toEqual([]);
   });
 
   it("switching off touches nothing else", () => {
-    const entries = [bundled("dragonbane"), vault("dragonbane", "card-forge/db")];
+    const entries = [bundled("dragonbane"), vault("dragonbane", "cardsmith/db")];
     const out = entriesAfterToggle(entries, entries[0]!, false);
     expect(out).toEqual([
       bundled("dragonbane", false),
-      vault("dragonbane", "card-forge/db"),
+      vault("dragonbane", "cardsmith/db"),
     ]);
   });
 
@@ -95,12 +95,12 @@ describe("entriesAfterToggle", () => {
 
 describe("findDuplicateActiveIds", () => {
   it("says nothing when a vault copy shadows a switched-off bundled original", () => {
-    const entries = [bundled("dragonbane", false), vault("dragonbane", "card-forge/db")];
+    const entries = [bundled("dragonbane", false), vault("dragonbane", "cardsmith/db")];
     expect(findDuplicateActiveIds(entries)).toEqual([]);
   });
 
   it("reports the id when both are active", () => {
-    const entries = [bundled("dragonbane"), vault("dragonbane", "card-forge/db")];
+    const entries = [bundled("dragonbane"), vault("dragonbane", "cardsmith/db")];
     expect(findDuplicateActiveIds(entries)).toEqual(["dragonbane"]);
   });
 

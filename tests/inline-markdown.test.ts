@@ -90,16 +90,16 @@ describe("markdownInline", () => {
   describe("wikilinks", () => {
     it("shows a plain link as its target and an aliased link as its alias", () => {
       expect(markdownInline("siehe [[Rüstung]]")).toBe(
-        'siehe <span class="cf-wikilink">Rüstung</span>'
+        'siehe <span class="cs-wikilink">Rüstung</span>'
       );
       expect(markdownInline("siehe [[Regelbuch#S51|Regelbuch S. 49]]")).toBe(
-        'siehe <span class="cf-wikilink">Regelbuch S. 49</span>'
+        'siehe <span class="cs-wikilink">Regelbuch S. 49</span>'
       );
     });
 
     it("handles the embed form without leaving the `!` behind", () => {
       expect(markdownInline("![[Rüstung]]")).toBe(
-        '<span class="cf-wikilink">Rüstung</span>'
+        '<span class="cs-wikilink">Rüstung</span>'
       );
     });
   });
@@ -112,7 +112,7 @@ describe("markdownInline", () => {
 describe("wikilinkInline", () => {
   it("styles wikilinks and leaves the rest as literal text", () => {
     expect(wikilinkInline("[[Schwert]] und [[Schild|Buckler]]")).toBe(
-      '<span class="cf-wikilink">Schwert</span> und <span class="cf-wikilink">Buckler</span>'
+      '<span class="cs-wikilink">Schwert</span> und <span class="cs-wikilink">Buckler</span>'
     );
   });
 

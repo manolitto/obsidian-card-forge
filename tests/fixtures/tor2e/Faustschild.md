@@ -9,7 +9,7 @@ reference: Regelbuch S. 76
 
 A shield: the parry modifier makes it one. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: tor2e
   card-type: gear

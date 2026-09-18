@@ -31,7 +31,7 @@ export class PropertyReferenceModal extends Modal {
   override onOpen(): void {
     const { contentEl } = this;
     contentEl.empty();
-    this.modalEl.addClass("cf-reference-modal");
+    this.modalEl.addClass("cs-reference-modal");
     this.setTitle(
       t("reference.title", {
         system: this.system.declaration.name,
@@ -49,10 +49,10 @@ export class PropertyReferenceModal extends Modal {
       ([, def]) => (def.slot?.length ?? 0) > 0
     );
     if (bound.length === 0) {
-      parent.createDiv({ cls: "cf-reference-empty", text: t("insert.no-properties") });
+      parent.createDiv({ cls: "cs-reference-empty", text: t("insert.no-properties") });
       return;
     }
-    const table = parent.createEl("table", { cls: "cf-reference-table" });
+    const table = parent.createEl("table", { cls: "cs-reference-table" });
     const head = table.createEl("thead").createEl("tr");
     for (const column of ["key", "description", "aliases", "sample", "slot"] as const) {
       head.createEl("th", { text: t(`reference.${column}`) });
@@ -60,23 +60,23 @@ export class PropertyReferenceModal extends Modal {
     const body = table.createEl("tbody");
     for (const [key, def] of bound) {
       const row = body.createEl("tr");
-      row.createEl("td", { cls: "cf-reference-key" }).createEl("code", { text: key });
+      row.createEl("td", { cls: "cs-reference-key" }).createEl("code", { text: key });
       row.createEl("td", { text: propertyDescription(def, this.language) ?? "" });
       row.createEl("td", {
-        cls: "cf-reference-aliases",
+        cls: "cs-reference-aliases",
         text: (def.aliases ?? []).join(", "),
       });
-      row.createEl("td", { cls: "cf-reference-sample" }).createEl("code", {
+      row.createEl("td", { cls: "cs-reference-sample" }).createEl("code", {
         text: sampleText(propertySample(def, this.language)),
       });
-      row.createEl("td", { cls: "cf-reference-slot", text: (def.slot ?? []).join(", ") });
+      row.createEl("td", { cls: "cs-reference-slot", text: (def.slot ?? []).join(", ") });
     }
   }
 
   /** The keys of `card:` — the two that name the card, then every card setting. */
   private cardKeys(parent: HTMLElement): void {
     parent.createEl("h3", { text: t("reference.card-keys") });
-    const list = parent.createEl("dl", { cls: "cf-reference-keys" });
+    const list = parent.createEl("dl", { cls: "cs-reference-keys" });
     for (const key of ["system", "card-type", ...CARD_SETTING_KEYS]) {
       list.createEl("dt").createEl("code", { text: key });
       list.createEl("dd", { text: t(`card-key.${key}` as StringKey) });
@@ -84,7 +84,7 @@ export class PropertyReferenceModal extends Modal {
   }
 
   private footer(parent: HTMLElement): void {
-    const footer = parent.createDiv({ cls: "cf-reference-footer" });
+    const footer = parent.createDiv({ cls: "cs-reference-footer" });
     const button = (label: StringKey, cls: string, onClick: () => void): void => {
       const el = footer.createEl("button", { text: t(label), cls });
       el.addEventListener("click", onClick);
@@ -96,7 +96,7 @@ export class PropertyReferenceModal extends Modal {
 
   private insert(mode: InsertMode): void {
     if (!this.target) {
-      new Notice(`Card Forge: ${t("reference.no-editor")}`);
+      new Notice(`Cardsmith: ${t("reference.no-editor")}`);
       return;
     }
     insertAtCursor(this.target.editor, this.block(mode));
@@ -106,7 +106,7 @@ export class PropertyReferenceModal extends Modal {
 
   private async copy(): Promise<void> {
     await navigator.clipboard.writeText(this.block("sample"));
-    new Notice(`Card Forge: ${t("reference.copied")}`);
+    new Notice(`Cardsmith: ${t("reference.copied")}`);
   }
 
   private block(mode: InsertMode): string {

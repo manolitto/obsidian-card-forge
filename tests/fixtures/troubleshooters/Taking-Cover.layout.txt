@@ -1,9 +1,9 @@
 Taking-Cover · 1 card · 2 faces · clipped: no
-1. front [cf-layout-default cf-front-first] scale 1.00
+1. front [cs-layout-default cs-front-first] scale 1.00
    div.ts-requires "Requires Move action"
    div.ts-prose
      p "Whoever ducks behind something solid is …"
    ul.ts-list (2 items) "Light cover: Attacks against you are …"
-   span.cf-fill-1
+   span.cs-fill-1
    div.ts-reference "(Rulebook p. 98)"
-2. back [cf-layout-default] scale —
+2. back [cs-layout-default] scale —

@@ -15,7 +15,7 @@
     <div class="card-body-scalable">
 
     {{#if (or (slot "front-style") (slot "front-damage") (slot "front-reach") (slot "front-ac-modifier") (slot "front-price"))}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
     <div class="mini-d20-rows mini-d20-equipment-stats">
       {{#if (slot "front-style")}}<div class="mini-d20-row-label">{{slot-label "front-style"}}</div><div class="mini-d20-row-value">{{slot "front-style" markdown=false}}</div>{{/if}}
       {{#if (slot "front-damage")}}<div class="mini-d20-row-label">{{slot-label "front-damage"}}</div><div class="mini-d20-row-value">{{slot "front-damage" markdown=false}}</div>{{/if}}
@@ -26,19 +26,19 @@
     {{/if}}
 
     {{#if (slot "front-effect")}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
-    <div class="mini-d20-subheader cf-keep-with-next">{{slot-label "front-effect"}}</div>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
+    <div class="mini-d20-subheader cs-keep-with-next">{{slot-label "front-effect"}}</div>
     <div class="mini-d20-prose">{{slot "front-effect" markdown="block"}}</div>
     {{/if}}
 
     {{#if (slot "front-notes")}}
-    <span class="cf-fill-1 cf-keep-with-next"></span>
+    <span class="cs-fill-1 cs-keep-with-next"></span>
     <p class="mini-d20-trait"><span class="mini-d20-trait-name">{{slot-label "front-notes"}}</span>{{slot "front-notes"}}</p>
     {{/if}}
 
     {{> flavour}}
 
-    <span class="cf-fill-2"></span>
+    <span class="cs-fill-2"></span>
 
     </div>
   </div>

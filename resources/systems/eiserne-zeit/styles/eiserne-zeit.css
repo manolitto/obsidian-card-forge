@@ -278,7 +278,7 @@
      0.72em: the title then stands (top − bottom) / 2 below the band's
      middle, whether the band's height comes from `min-height` or from its
      content. The constant sum is a condition, not polish: on later faces
-     the band's height keys on `.cf-front-continued`, a marker the splitter
+     the band's height keys on `.cs-front-continued`, a marker the splitter
      stamps only AFTER the split — a head growing there after the fact would
      clip the text (see "The head on later faces"). */
   padding: calc(0.36em + var(--ez-torn-ink) / 2) var(--ez-margin-x)
@@ -344,7 +344,7 @@
 }
 
 /* The page counter ("2 / 3") — small and quiet behind the title. It is
-   shown by the base stylesheet alone, and only under `.cf-overflow-active`,
+   shown by the base stylesheet alone, and only under `.cs-overflow-active`,
    which a card that fits never carries; the base rule also keeps it on one
    line and spaces it off the title. The look is the system's.
 
@@ -356,7 +356,7 @@
    rule's `white-space: nowrap`; not wrapping BEFORE it is the markup's
    doing — the placeholder sits inside the title's `.text-scalable` span in
    front.hbs, not beside it. */
-.card-root.eiserne-zeit .cf-overflow-counter {
+.card-root.eiserne-zeit .cs-overflow-counter {
   font-family: var(--ez-font-body);
   font-weight: 400;
   font-size: 0.5em;
@@ -457,7 +457,7 @@
    Only the mid-item cut is meant: when the break falls BETWEEN two items
    the splitter stamps nothing, and the next face's first item keeps its
    cross. */
-.card-root.eiserne-zeit .ez-body ul > li.cf-split-continuation::before {
+.card-root.eiserne-zeit .ez-body ul > li.cs-split-continuation::before {
   content: none;
 }
 
@@ -594,12 +594,12 @@
    text. That is the back — never face 1 — and every continuation front.
 
    This is the one case where a post-measure marker may change the body's
-   height. `.cf-front-continued` is stamped AFTER the measure-split-scale
+   height. `.cs-front-continued` is stamped AFTER the measure-split-scale
    pass, so the splitter budgets for the LARGE head and the face gets more
    room than planned afterwards. That direction is harmless (the face is at
    most a little emptier); the other way round — growing the head after the
    fact — would be clipping.                                                 */
-.card-root.eiserne-zeit.cf-front-continued .ez-band,
+.card-root.eiserne-zeit.cs-front-continued .ez-band,
 .card-root.eiserne-zeit.card-back .ez-band {
   min-height: calc(var(--card-height, 88mm) * var(--ez-band-height) * 0.5);
   /* The same arithmetic as above with the smaller padding sum (0.52em):
@@ -609,7 +609,7 @@
   padding-top:    calc(0.26em + var(--ez-torn-ink) / 2);
   padding-bottom: calc(0.26em - var(--ez-torn-ink) / 2);
 }
-.card-root.eiserne-zeit.cf-front-continued .card-title,
+.card-root.eiserne-zeit.cs-front-continued .card-title,
 .card-root.eiserne-zeit.card-back .card-title {
   font-size: calc(var(--ez-font-size-title) * 0.55);
 }
@@ -631,7 +631,7 @@
    the foot band: an arrow pointing right as the sign that the text goes on
    on the next face. On EVERY face but the last.
 
-   `.cf-front-has-next` exists for exactly this — the splitter stamps it on
+   `.cs-front-has-next` exists for exactly this — the splitter stamps it on
    every front that another follows. That it is set only AFTER the
    measure-split-scale pass is harmless here: the arrow is absolutely
    positioned, changes no height and can clip nothing. That is what the
@@ -666,7 +666,7 @@
   background-position: center;
   background-size: contain;
 }
-.card-root.eiserne-zeit.cf-front-has-next .ez-cont-arrow {
+.card-root.eiserne-zeit.cs-front-has-next .ez-cont-arrow {
   display: block;
 }
 
@@ -711,13 +711,13 @@
 
    The obvious way would be wrong. A band below the body, shown on the last
    face by CSS, would add height there after the measurement and clip the
-   text: `.cf-front-has-next` is stamped only AFTER the measure-split-scale
+   text: `.cs-front-has-next` is stamped only AFTER the measure-split-scale
    pass. Reserving it on every face and hiding it with `visibility` would be
    correct but costs 17 % of the card height on EVERY face — measured, and
    enough to push a dense card's command block off face 1 (its text area
    ended at 72.3 % instead of 89.3 %). Do not reintroduce it.
 
-   Shown on a front only under `.cf-overflow-active` — that class the
+   Shown on a front only under `.cs-overflow-active` — that class the
    splitter sets BEFORE it measures (it reserves the page counter's room in
    the same step), so it may influence height. Without an overflow the
    designed back is the last face and carries the logo; on the front it
@@ -742,7 +742,7 @@
 .card-root.eiserne-zeit .ez-logo-band {
   display: none;
 }
-.card-root.eiserne-zeit.cf-overflow-active .ez-logo-band,
+.card-root.eiserne-zeit.cs-overflow-active .ez-logo-band,
 .card-root.eiserne-zeit.card-back .ez-logo-band {
   display: flex;
   flex: 1 1 0;

@@ -124,25 +124,25 @@
 /* ── Vertical spacers ──────────────────────────────────────────── */
 
 /*
- * `<span class="cf-fill-N"></span>` in a flex column claims a share of the
- * free vertical space, N being its weight: `cf-fill-1` above an element and
- * `cf-fill-2` below it parks the element a third of the way down. A basis of
+ * `<span class="cs-fill-N"></span>` in a flex column claims a share of the
+ * free vertical space, N being its weight: `cs-fill-1` above an element and
+ * `cs-fill-2` below it parks the element a third of the way down. A basis of
  * 0 means a spacer collapses to nothing on a full card, so it never takes
  * room from content, and the shorthand restores `flex-shrink: 1` against the
  * rule above.
  */
-.cf-fill-1  { flex: 1  1 0; }
-.cf-fill-2  { flex: 2  1 0; }
-.cf-fill-3  { flex: 3  1 0; }
-.cf-fill-4  { flex: 4  1 0; }
-.cf-fill-5  { flex: 5  1 0; }
-.cf-fill-6  { flex: 6  1 0; }
-.cf-fill-7  { flex: 7  1 0; }
-.cf-fill-8  { flex: 8  1 0; }
-.cf-fill-9  { flex: 9  1 0; }
-.cf-fill-10 { flex: 10 1 0; }
-.cf-fill-11 { flex: 11 1 0; }
-.cf-fill-12 { flex: 12 1 0; }
+.cs-fill-1  { flex: 1  1 0; }
+.cs-fill-2  { flex: 2  1 0; }
+.cs-fill-3  { flex: 3  1 0; }
+.cs-fill-4  { flex: 4  1 0; }
+.cs-fill-5  { flex: 5  1 0; }
+.cs-fill-6  { flex: 6  1 0; }
+.cs-fill-7  { flex: 7  1 0; }
+.cs-fill-8  { flex: 8  1 0; }
+.cs-fill-9  { flex: 9  1 0; }
+.cs-fill-10 { flex: 10 1 0; }
+.cs-fill-11 { flex: 11 1 0; }
+.cs-fill-12 { flex: 12 1 0; }
 
 /* ── What a note's own markdown puts on a card ──────────────────── */
 
@@ -154,11 +154,11 @@
  * so a logo cannot crowd out the text it belongs to; a system retunes the
  * two variables rather than restating the rule.
  */
-.cf-body-image {
+.cs-body-image {
   display: block;
-  margin: var(--cf-body-image-margin, 0.5em auto);
+  margin: var(--cs-body-image-margin, 0.5em auto);
   max-width: 100%;
-  max-height: var(--cf-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
+  max-height: var(--cs-body-image-max-height, calc(var(--card-height, 88mm) * 0.5));
   object-fit: contain;
 }
 
@@ -168,10 +168,10 @@
  * the current face, what follows flows onto a continuation face, even when
  * everything would have fit on one card. `display: none` keeps it a
  * zero-height block the splitter can still see as a top-level boundary.
- * The paired markers — `cf-keep-together`, `cf-keep-with-next`,
- * `cf-keep-with-prev` — are pure splitter signals and ship no rule.
+ * The paired markers — `cs-keep-together`, `cs-keep-with-next`,
+ * `cs-keep-with-prev` — are pure splitter signals and ship no rule.
  */
-.cf-card-break {
+.cs-card-break {
   display: none;
 }
 
@@ -184,18 +184,18 @@
  *
  * Stamped BEFORE measurement — safe to show or hide body content:
  *
- *   .cf-layout-<name>   The committed layout candidate, one of the names a
+ *   .cs-layout-<name>   The committed layout candidate, one of the names a
  *                       card type declares under `layouts:`. Every candidate
  *                       is rendered from the same DOM, so a candidate's
  *                       conditional elements exist in the template and are
  *                       toggled here, never added or removed:
  *
- *                           .cf-layout-image-side   .my-bottom-image { display: none; }
- *                           .cf-layout-image-bottom .my-side-image   { display: none; }
+ *                           .cs-layout-image-side   .my-bottom-image { display: none; }
+ *                           .cs-layout-image-bottom .my-side-image   { display: none; }
  *
  *                       Parity keys on the same hook: a card type whose
  *                       candidates are `odd` and `even` styles
- *                       `.cf-layout-even` when no real back is guaranteed.
+ *                       `.cs-layout-even` when no real back is guaranteed.
  *
  * Stamped AFTER measurement — chrome only. Their values depend on the
  * committed face count, so by the time they appear the splitter has already
@@ -204,33 +204,33 @@
  * block would clip. Headers, footers and absolutely positioned ornaments are
  * what they are for.
  *
- *   .cf-overflow-active         On every root of a group that overflowed into
+ *   .cs-overflow-active         On every root of a group that overflowed into
  *                               more than one face. Absent on a card that fit.
- *   .cf-overflow-back-as-front  Under `back-then-cards`, on the back that was
+ *   .cs-overflow-back-as-front  Under `back-then-cards`, on the back that was
  *                               replaced by a copy of the front so the text
  *                               could continue there. No rule ships; a system
  *                               dims or annotates the copy as it likes.
- *   .cf-front-first             The first front face of the group.
- *   .cf-front-continued         Every front face after the first — one that
+ *   .cs-front-first             The first front face of the group.
+ *   .cs-front-continued         Every front face after the first — one that
  *                               received text from an earlier face.
- *   .cf-front-has-next          Every front face but the last — one whose
+ *   .cs-front-has-next          Every front face but the last — one whose
  *                               text goes on. CSS cannot compare the two
  *                               counters below, and `:not(:last-child)` fails
  *                               because a continuation may sit on a back and
  *                               the faces are not siblings, so a "continues
  *                               on the next card" cue keys on this instead.
- *   --cf-front-index            The face's number among the group's fronts,
- *   --cf-front-total            and how many there are — inherited custom
+ *   --cs-front-index            The face's number among the group's fronts,
+ *   --cs-front-total            and how many there are — inherited custom
  *                               properties on the front root, so a counter
  *                               nested anywhere below can read them. Set on
  *                               fronts inside an overflowed group only.
  *
- * A card that fit is `.cf-front-first` with a count of 1 and nothing else.
+ * A card that fit is `.cs-front-first` with a count of 1 and nothing else.
  */
 
 /*
  * The page counter. A template that wants "2 / 3" beside its title renders
- * an empty `<span class="cf-overflow-counter"></span>` where the counter
+ * an empty `<span class="cs-overflow-counter"></span>` where the counter
  * should sit; the engine writes nothing into it and only publishes the two
  * properties above. The text is composed here, and only inside an overflowed
  * group — a card that fit never carries the class, so it never shows a
@@ -238,13 +238,13 @@
  * across two lines it would grow the header after the body was measured.
  * The look is a quiet default; a system restates it on its own selector.
  */
-.cf-overflow-counter {
+.cs-overflow-counter {
   display: none;
 }
 
-.cf-overflow-active .cf-overflow-counter {
+.cs-overflow-active .cs-overflow-counter {
   display: inline;
-  counter-reset: cf-idx var(--cf-front-index) cf-tot var(--cf-front-total);
+  counter-reset: cs-idx var(--cs-front-index) cs-tot var(--cs-front-total);
   font-size: 0.7em;
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
@@ -252,8 +252,8 @@
   white-space: nowrap;
 }
 
-.cf-overflow-active .cf-overflow-counter::after {
-  content: counter(cf-idx) " / " counter(cf-tot);
+.cs-overflow-active .cs-overflow-counter::after {
+  content: counter(cs-idx) " / " counter(cs-tot);
 }
 
 /*
@@ -261,34 +261,34 @@
  * marks the pieces so CSS can undo styling that is only right at the start
  * of a text.
  *
- * On the body: `.cf-body-continues` on the `.card-body-scalable` that gave
- * up a tail, `.cf-body-continued` on the one that received it. A received
+ * On the body: `.cs-body-continues` on the `.card-body-scalable` that gave
+ * up a tail, `.cs-body-continued` on the one that received it. A received
  * tail must flow from the top edge, so a body that anchors its content to
  * the bottom — `justify-content: flex-end`, a child with `margin-top: auto`
- * — is re-anchored here; a system whose `cf-fill-*` spacer floats a tail
+ * — is re-anchored here; a system whose `cs-fill-*` spacer floats a tail
  * down collapses that spacer under the same hook itself.
  *
  * On a block: when the cut falls inside a paragraph, list item or table, the
- * head left behind is `.cf-split-head` and the cloned tail that opens the
- * next face is `.cf-split-continuation`. The tail is not the start of a
+ * head left behind is `.cs-split-head` and the cloned tail that opens the
+ * next face is `.cs-split-continuation`. The tail is not the start of a
  * block, so what marks a start is reset on it — a first-line or hanging
  * indent, a top margin, a drop cap, a list marker — and the head loses the
  * bottom margin that would sit against the card edge. The rules are scoped
  * under `.card-body-scalable` so they outweigh a one-class element rule
  * without `!important`. A bullet drawn as `li::before` rather than a marker
  * is out of this file's reach; the system that draws it suppresses it on
- * `li.cf-split-continuation::before` beside the rule that draws it.
+ * `li.cs-split-continuation::before` beside the rule that draws it.
  */
-.card-body-scalable.cf-body-continued {
+.card-body-scalable.cs-body-continued {
   justify-content: flex-start;
 }
 
-.card-body-scalable .cf-split-continuation {
+.card-body-scalable .cs-split-continuation {
   text-indent: 0;
   margin-top: 0;
 }
 
-.card-body-scalable .cf-split-continuation::first-letter {
+.card-body-scalable .cs-split-continuation::first-letter {
   initial-letter: normal;
   font-size: inherit;
   font-weight: inherit;
@@ -296,11 +296,11 @@
   float: none;
 }
 
-.card-body-scalable .cf-split-continuation::marker {
+.card-body-scalable .cs-split-continuation::marker {
   content: none;
 }
 
-.card-body-scalable .cf-split-head {
+.card-body-scalable .cs-split-head {
   margin-bottom: 0;
 }
 
@@ -310,7 +310,7 @@
  * A deck's faces go onto pages in an export document, and the document
  * carries one hook a design may key on:
  *
- *   .cf-paper-plain    On every `.cf-page` of a deck whose `paper-background`
+ *   .cs-paper-plain    On every `.cs-page` of a deck whose `paper-background`
  *                      is `plain`: the reader wants the cards on white paper,
  *                      without the system's textures — the parchment photo,
  *                      the vignette, the torn edge. A system that paints such
@@ -318,7 +318,7 @@
  *                      leaves its furniture — plaques, rules, ornaments — in
  *                      place, since those are the design and not the paper:
  *
- *                          .cf-paper-plain .card-root.my-system { background: #fff; }
+ *                          .cs-paper-plain .card-root.my-system { background: #fff; }
  *
  *                      The in-note preview never stamps it: a card shown on
  *                      screen shows its design.

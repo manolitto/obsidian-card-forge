@@ -102,7 +102,7 @@
   position: relative;
 }
 
-.item-card.cf-layout-image-side .pf2e-item-image-wrap-side {
+.item-card.cs-layout-image-side .pf2e-item-image-wrap-side {
   display: flex;
 }
 
@@ -118,7 +118,7 @@
   margin: 0.25em 0 0.15em;
 }
 
-.item-card.cf-layout-image-bottom .pf2e-item-image-wrap-bottom {
+.item-card.cs-layout-image-bottom .pf2e-item-image-wrap-bottom {
   display: flex;
 }
 

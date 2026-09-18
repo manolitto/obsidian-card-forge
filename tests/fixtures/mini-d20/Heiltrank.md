@@ -5,7 +5,7 @@ right, the effect under its caption, the picture in the room that is
 left. The German half of a bilingual pair — the deck prints `de` and
 leaves `Healing-Potion` out. Invented for this deck.
 
-```card-forge
+```cardsmith
 card:
   system: mini-d20
   card-type: equipment

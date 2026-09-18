@@ -14,7 +14,7 @@ import { loadNoteYaml } from "../render/yaml";
 import { BASELINE } from "../systems/baseline";
 
 /**
- * The `card-forge-deck` block, taken apart.
+ * The `cardsmith-deck` block, taken apart.
  *
  * A deck note is a note with such a block. The block says which notes are
  * the deck — a folder, a system, card types, tags, languages — and how the
@@ -89,7 +89,7 @@ export const SELECTION_KEYS: readonly string[] = [
 
 /** The block, line-anchored, whitespace-tolerant after the fence. */
 const DECK_BLOCK =
-  /^```[^\S\r\n]*card-forge-deck[^\S\r\n]*\r?\n([\s\S]*?)^```[^\S\r\n]*$/gm;
+  /^```[^\S\r\n]*cardsmith-deck[^\S\r\n]*\r?\n([\s\S]*?)^```[^\S\r\n]*$/gm;
 
 /**
  * Take a deck note apart. `undefined` when the note has no deck block — with
@@ -107,7 +107,7 @@ export function parseDeckBlock(
   if (!first) return undefined;
   if (blocks.length > 1) {
     diagnostics.warn(
-      `${path}: ${blocks.length} card-forge-deck blocks; reading the first and ignoring the rest`
+      `${path}: ${blocks.length} cardsmith-deck blocks; reading the first and ignoring the rest`
     );
   }
 
@@ -116,13 +116,13 @@ export function parseDeckBlock(
     doc = loadNoteYaml(quoteTagValues(first[1] ?? ""));
   } catch (error) {
     diagnostics.warn(
-      `${path}: the card-forge-deck block is not valid YAML: ${describe(error)}`
+      `${path}: the cardsmith-deck block is not valid YAML: ${describe(error)}`
     );
     return undefined;
   }
   if (doc === null) doc = {};
   if (!isMapping(doc)) {
-    diagnostics.warn(`${path}: the card-forge-deck block must be a mapping`);
+    diagnostics.warn(`${path}: the cardsmith-deck block must be a mapping`);
     return undefined;
   }
 
@@ -135,7 +135,7 @@ export function parseDeckBlock(
     else if (isCardSettingKey(key)) cardRaw[key] = value;
     else {
       diagnostics.warn(
-        `${path}: "${key}:" is not a key of the card-forge-deck block; ignoring it`
+        `${path}: "${key}:" is not a key of the cardsmith-deck block; ignoring it`
       );
     }
   }
@@ -144,7 +144,7 @@ export function parseDeckBlock(
     .trim()
     .toLowerCase();
   if (!systemId) {
-    diagnostics.warn(`${path}: the card-forge-deck block names no system:`);
+    diagnostics.warn(`${path}: the cardsmith-deck block names no system:`);
     return undefined;
   }
 
