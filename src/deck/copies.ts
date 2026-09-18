@@ -21,7 +21,9 @@ export interface DeckCard {
 }
 
 /**
- * The deck's physical cards, each printed as often as it should be.
+ * The deck's physical cards, each printed as often as it should be, each
+ * with the faces its `side` keeps — a card that says `front` contributes
+ * no back, and a deck of such cards prints no back pages at all.
  *
  * Copies multiply physical cards, not notes: a card whose text spilled onto
  * three faces, printed twice, is six physical cards, the two runs
@@ -45,9 +47,15 @@ export function applyCopies(
     for (const entry of override) matched.add(entry);
     const count = override.at(-1)?.copies ?? card.settings.copies ?? 1;
 
+    const side = card.settings.side ?? "both";
     for (let i = 0; i < count; i++) {
       for (const faces of card.cards) {
-        out.push({ name: card.name, cardTypeId: card.cardTypeId, ...faces });
+        out.push({
+          name: card.name,
+          cardTypeId: card.cardTypeId,
+          ...(faces.front === undefined || side === "back" ? {} : { front: faces.front }),
+          ...(faces.back === undefined || side === "front" ? {} : { back: faces.back }),
+        });
       }
     }
   }

@@ -56,7 +56,7 @@ card-type: simple
 # How the winning layout is chosen; a design's concern.
 # layout-decision: {order: [{metric: printed-cards, direction: minimize}], tie-break: declaration-order}
 
-# Which face the in-note preview shows: `front`, `back` or `both`.
+# Which faces the card has, in the preview and in a deck: `front`, `back` or `both`.
 # side: both
 
 # Height of the in-note preview, in pixels.

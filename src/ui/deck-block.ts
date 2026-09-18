@@ -85,6 +85,9 @@ export function deckBlockProcessor(context: DeckBlockContext) {
         if (size) sizes.add(`${size.width} × ${size.height} mm`);
       }
       row("deck.card-size", [...sizes].join(", "));
+      if (cardLayer.side === "front" || cardLayer.side === "back") {
+        row("deck.sides", t(`deck.sides.${cardLayer.side}`));
+      }
 
       if (system) {
         const listed = await context.source.listNotes(

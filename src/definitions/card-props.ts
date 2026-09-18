@@ -117,7 +117,7 @@ function aliasResolvingProxy(
   const reverse = reverseAliasMap(aliases);
   return new Proxy(target, {
     get(t, prop, receiver) {
-      if (typeof prop !== "string") return Reflect.get(t, prop, receiver);
+      if (typeof prop !== "string") return Reflect.get(t, prop, receiver) as unknown;
       if (Object.prototype.hasOwnProperty.call(t, prop)) return t[prop];
       return resolveByAlias(t, prop, aliases, reverse);
     },

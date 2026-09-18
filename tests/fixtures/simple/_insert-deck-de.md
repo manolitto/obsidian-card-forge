@@ -56,7 +56,7 @@ card-type: simple
 # Wie das gewinnende Layout gewählt wird; Sache des Designs.
 # layout-decision: {order: [{metric: printed-cards, direction: minimize}], tie-break: declaration-order}
 
-# Welche Seite die Vorschau in der Notiz zeigt: `front`, `back` oder `both`.
+# Welche Seiten die Karte hat, in der Vorschau und im Deck: `front`, `back` oder `both`.
 # side: both
 
 # Höhe der Vorschau in der Notiz, in Pixeln.

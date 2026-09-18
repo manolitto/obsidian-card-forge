@@ -59,7 +59,7 @@ export function parseSettings<S extends object>(
       );
       continue;
     }
-    out[field] = parsed as S[keyof S];
+    out[field] = parsed;
   }
   return out;
 }

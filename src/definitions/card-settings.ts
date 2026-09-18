@@ -38,7 +38,7 @@ export interface CardSettings {
   layouts?: LayoutCandidate[];
   /** How the winning layout candidate is chosen. */
   layoutDecision?: LayoutDecision;
-  /** Which face the in-note preview shows. Deck output always renders both. */
+  /** Which faces the card has — in the preview, and on the sheet. */
   side?: CardSide;
   /** Height of the in-note preview, in pixels. */
   displayHeight?: number;

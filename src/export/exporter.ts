@@ -7,7 +7,7 @@ import type { CardRenderer } from "../render/renderer";
 import type { SystemLibrary } from "../systems/library";
 import { t } from "../ui/strings";
 import { deckDocument, type DeckDocument } from "./document";
-import { printDeckPdf } from "./pdf";
+import { printDeckPdf, type TempFile } from "./pdf";
 
 export type ExportFormat = "pdf" | "html";
 
@@ -90,7 +90,7 @@ export class DeckExporter {
 
     const written =
       format === "pdf"
-        ? await this.write(path, await printDeckPdf(doc, this.tempPath()))
+        ? await this.write(path, await printDeckPdf(doc, this.tempFile()))
         : await this.write(path, doc.html);
     if (format === "pdf") {
       await this.app.workspace.getLeaf("split").openFile(written);
@@ -125,14 +125,27 @@ export class DeckExporter {
       : vault.createBinary(path, content);
   }
 
-  /** An absolute path under the plugin's folder; the PDF export is desktop-only, where the adapter has one. */
-  private tempPath(): string {
+  /**
+   * The document's file for the print window, under the plugin's own folder
+   * so it lands in no one's way — through the adapter, which on the desktop
+   * is the file system and knows its absolute root.
+   */
+  private tempFile(): TempFile {
     const adapter = this.app.vault.adapter;
     if (!(adapter instanceof FileSystemAdapter)) {
       throw new Error(
         "The PDF export needs Obsidian's desktop app; the HTML export works everywhere."
       );
     }
-    return `${adapter.getBasePath()}/${this.pluginDir}/tmp/deck.html`;
+    const folder = normalizePath(`${this.pluginDir}/tmp`);
+    const path = `${folder}/deck.html`;
+    return {
+      absolutePath: `${adapter.getBasePath()}/${path}`,
+      write: async (html) => {
+        if (!(await adapter.exists(folder))) await adapter.mkdir(folder);
+        await adapter.write(path, html);
+      },
+      remove: () => adapter.remove(path),
+    };
   }
 }

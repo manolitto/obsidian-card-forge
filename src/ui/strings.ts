@@ -60,7 +60,8 @@ const en = {
     "What a card does when its text does not fit at the smallest type size: `none` clips, `extra-cards` continues on further cards, `back-then-cards` fills the back first.",
   "card-key.layouts": "The named ways the card may be laid out; a design's concern.",
   "card-key.layout-decision": "How the winning layout is chosen; a design's concern.",
-  "card-key.side": "Which face the in-note preview shows: `front`, `back` or `both`.",
+  "card-key.side":
+    "Which faces the card has, in the preview and in a deck: `front`, `back` or `both`.",
   "card-key.display-height": "Height of the in-note preview, in pixels.",
   "card-key.copies": "How many times the card is printed in a deck.",
   "card-key.expand-by-roll":
@@ -79,6 +80,9 @@ const en = {
   "deck.notes.none": "no card note matches",
   "deck.paper": "Paper",
   "deck.card-size": "Card size",
+  "deck.sides": "Sides",
+  "deck.sides.front": "fronts only",
+  "deck.sides.back": "backs only",
   "deck.preview": "Preview",
   "deck.export-pdf": "Export PDF",
   "deck.export-html": "Export HTML",
@@ -224,7 +228,7 @@ const de: Strings = {
   "card-key.layout-decision":
     "Wie das gewinnende Layout gewählt wird; Sache des Designs.",
   "card-key.side":
-    "Welche Seite die Vorschau in der Notiz zeigt: `front`, `back` oder `both`.",
+    "Welche Seiten die Karte hat, in der Vorschau und im Deck: `front`, `back` oder `both`.",
   "card-key.display-height": "Höhe der Vorschau in der Notiz, in Pixeln.",
   "card-key.copies": "Wie oft die Karte in einem Deck gedruckt wird.",
   "card-key.expand-by-roll":
@@ -243,6 +247,9 @@ const de: Strings = {
   "deck.notes.none": "keine Kartennotiz passt",
   "deck.paper": "Papier",
   "deck.card-size": "Kartengröße",
+  "deck.sides": "Seiten",
+  "deck.sides.front": "nur Vorderseiten",
+  "deck.sides.back": "nur Rückseiten",
   "deck.preview": "Vorschau",
   "deck.export-pdf": "PDF exportieren",
   "deck.export-html": "HTML exportieren",

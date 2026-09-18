@@ -1,5 +1,3 @@
-import { mkdir, unlink, writeFile } from "fs/promises";
-import { dirname } from "path";
 import type { DeckDocument } from "./document";
 
 /*
@@ -11,7 +9,19 @@ import type { DeckDocument } from "./document";
  * accepts — waits for its fonts and pictures, and prints through
  * `printToPDF` onto the paper the document was composed for. Nothing is
  * injected into the window: the document is complete when it gets there.
+ *
+ * The file is the caller's: written and removed through the vault's
+ * adapter, so nothing here reaches for Node's file system, and the bundle
+ * evaluates on a phone even though this function is never called there.
  */
+
+/** Where the document goes for the print window to load. */
+export interface TempFile {
+  /** The absolute path, as `loadFile` wants it. */
+  absolutePath: string;
+  write(html: string): Promise<void>;
+  remove(): Promise<void>;
+}
 
 /** The parts of Electron's main-process API this module touches, as `@electron/remote` exposes them. */
 interface PrintWindow {
@@ -45,25 +55,23 @@ const READY = `(async () => {
 })()`;
 
 /**
- * Print the document to PDF. `tempPath` is an absolute path this module
- * may write the document to and remove again — under the plugin's own
- * folder, so it lands in no one's way. Resolves to the PDF's bytes as an
+ * Print the document to PDF. `file` is where the document is written for
+ * the window and removed from again. Resolves to the PDF's bytes as an
  * `ArrayBuffer` sized to the PDF and nothing else.
  */
 export async function printDeckPdf(
   doc: DeckDocument,
-  tempPath: string
+  file: TempFile
 ): Promise<ArrayBuffer> {
   const remote = loadRemote();
-  await mkdir(dirname(tempPath), { recursive: true });
-  await writeFile(tempPath, doc.html, "utf-8");
+  await file.write(doc.html);
 
   const win = new remote.BrowserWindow({
     show: false,
     webPreferences: { nodeIntegration: false, contextIsolation: true },
   });
   try {
-    await win.loadFile(tempPath);
+    await win.loadFile(file.absolutePath);
     await win.webContents.executeJavaScript(READY);
     const pdf = await win.webContents.printToPDF({
       printBackground: true,
@@ -86,15 +94,18 @@ export async function printDeckPdf(
     ) as ArrayBuffer;
   } finally {
     win.close();
-    await unlink(tempPath).catch(() => undefined);
+    await file.remove().catch(() => undefined);
   }
 }
+
+/** The renderer's `require`, which the desktop app provides and a phone does not. */
+declare const require: (id: string) => unknown;
 
 /** The main-process bridge Obsidian ships; an error naming what is missing when it is not there. */
 function loadRemote(): Remote {
   try {
     // A dynamic require: the module exists only in Obsidian's desktop app.
-    return (require as (id: string) => Remote)("@electron/remote");
+    return require("@electron/remote") as Remote;
   } catch {
     throw new Error(
       "The PDF export needs Obsidian's desktop app; the HTML export works everywhere."

@@ -1,5 +1,4 @@
 import { Modal, normalizePath, Setting, TFile, type App } from "obsidian";
-import type { SystemPath } from "../definitions/game-system";
 import { entriesAfterCopy, isSystemId } from "../settings/system-registry";
 import type { SystemEntry } from "../settings/types";
 import type { LoadedSystem } from "../systems/loader";
@@ -122,7 +121,7 @@ async function runCopy(
       const text = await system.source.readText(path);
       await app.vault.create(target, rewriteDeclaration(text, id, name));
     } else {
-      const bytes = await system.source.readBinary(path as SystemPath);
+      const bytes = await system.source.readBinary(path);
       await app.vault.createBinary(target, bytesToBuffer(bytes));
     }
   }

@@ -38,6 +38,29 @@ describe("copies", () => {
     });
   });
 
+  it("keeps the faces a card's side says — front alone, back alone, or both", () => {
+    const sided = (side: "front" | "back" | "both") => {
+      const card = laidOut("K/Beil.md", 2);
+      card.card.settings = { side };
+      return card;
+    };
+    const out = applyCopies(
+      [sided("front"), sided("back"), sided("both")],
+      undefined,
+      collectDiagnostics()
+    );
+    expect(out.map((c) => [c.front, c.back])).toEqual([
+      ["Beil 1", undefined],
+      ["Beil 2", undefined],
+      [undefined, "Beil back"],
+      [undefined, "Beil back"],
+      ["Beil 1", "Beil back"],
+      ["Beil 2", "Beil back"],
+    ]);
+    expect(out[0]).not.toHaveProperty("back");
+    expect(out[2]).not.toHaveProperty("front");
+  });
+
   it("repeats a card's own copies as consecutive runs of its physical cards", () => {
     const out = applyCopies(
       [laidOut("K/Lang.md", 2, 2), laidOut("K/Beil.md", 1, 3)],

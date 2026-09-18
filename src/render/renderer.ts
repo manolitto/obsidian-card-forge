@@ -11,8 +11,8 @@ import type { CardNote } from "./note";
  * A note in, its cards out — each with every face its card type declares.
  *
  * This is the one entry point every surface calls: the in-note preview, the
- * deck, the export. Both faces always render; which one a preview shows is
- * the caller's to pick from `settings.side`, and deck output prints both.
+ * deck, the export. Both faces always render; which ones a preview shows
+ * and a deck prints is the caller's to pick from `settings.side`.
  * The settings ride along for their consumers — `copies` for the deck,
  * `overflowMode` and `layouts` for the layout engine.
  */

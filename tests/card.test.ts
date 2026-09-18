@@ -134,6 +134,32 @@ describe("the settings", () => {
     expect(card?.settings.copies).toBe(3); // the note over the deck
   });
 
+  it("print a note at the deck's card-size, whatever the note says, and say so", async () => {
+    const sys = await system();
+    const diagnostics = collectDiagnostics();
+    const deck = { cardSize: { width: 63, height: 88 } };
+    const [card] = resolveCards(
+      note(block("  system: demo\n  card-type: gear\n  card-size: tarot")),
+      sys,
+      diagnostics,
+      deck
+    );
+    expect(card?.settings.cardSize).toEqual({ width: 63, height: 88 });
+    expect(diagnostics.messages).toEqual([
+      "Karten/Beil.md: card-size 70 × 120 mm — printed at the deck's 63 × 88 mm",
+    ]);
+
+    // The same size in other words is not an override.
+    const quiet = collectDiagnostics();
+    resolveCards(
+      note(block("  system: demo\n  card-type: gear\n  card-size: 63x88")),
+      sys,
+      quiet,
+      deck
+    );
+    expect(quiet.messages).toEqual([]);
+  });
+
   it("report a card: key that is neither system, card-type nor a setting", async () => {
     const diagnostics = collectDiagnostics();
     resolveCards(

@@ -62,8 +62,18 @@ describe("block markdown", () => {
     );
   });
 
-  it("leaves an unknown comment as text, and raw HTML as HTML", () => {
+  it("leaves an unknown comment as text", () => {
     expect(render("%% note to self %%")).toBe("<p>%% note to self %%</p>\n");
-    expect(render("a<br/>b <b>c</b>")).toBe("<p>a<br/>b <b>c</b></p>\n");
+  });
+
+  it("prints raw HTML as text, inline and as a block, and keeps only <br>", () => {
+    expect(render("a<br/>b <b>c</b>")).toBe("<p>a<br>b &lt;b&gt;c&lt;/b&gt;</p>\n");
+    expect(render("x <img src=x onerror=alert(1)> y")).toBe(
+      "<p>x &lt;img src=x onerror=alert(1)&gt; y</p>\n"
+    );
+    expect(render('<div class="k">\n\nlate\n\n</div>')).toBe(
+      "&lt;div class=&quot;k&quot;&gt;<p>late</p>\n&lt;/div&gt;"
+    );
+    expect(render("one<BR>two")).toBe("<p>one<br>two</p>\n");
   });
 });

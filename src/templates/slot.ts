@@ -216,7 +216,7 @@ function caseInsensitiveFields(fields: Record<string, unknown>): Record<string, 
   return new Proxy(fields, {
     get(t, prop, receiver) {
       const key = resolve(prop);
-      return key === undefined ? Reflect.get(t, prop, receiver) : t[key];
+      return key === undefined ? (Reflect.get(t, prop, receiver) as unknown) : t[key];
     },
     has(t, prop) {
       return resolve(prop) !== undefined || Reflect.has(t, prop);
