@@ -1,6 +1,6 @@
-| Würfelwurf | Name | Voraussetzungen | Rationen | Beschreibung |
-| ---------- | ---- | --------------- | -------- | ------------ |
-|            |      |                 |          |              |
+| Würfelwurf | Wurf-Min | Wurf-Max | Name | Voraussetzungen | Rationen | Beschreibung |
+| ---------- | -------- | -------- | ---- | --------------- | -------- | ------------ |
+|            |          |          |      |                 |          |              |
 
 ```cardsmith
 card:
@@ -9,6 +9,12 @@ card:
 table:
   # Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. "01", "23–24", "98–100". For numeric queries and sorting see `roll-min` and `roll-max`.
   roll: Würfelwurf
+
+  # Lower bound of the roll range as an integer. For single-value rolls, `roll-min == roll-max`.
+  roll-min: Wurf-Min
+
+  # Upper bound of the roll range as an integer.
+  roll-max: Wurf-Max
 
   # Title of the table row (e.g. "Oar snapped", "Mist perch"). When absent, `category` takes its place — for tables whose rows carry no names.
   name: Name

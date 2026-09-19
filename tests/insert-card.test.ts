@@ -63,9 +63,11 @@ describe("the sample block", () => {
         );
         expect(note, cardType.declaration.id).toBeDefined();
         const cards = resolveCards(note!, system, diagnostics);
-        // A card type with a sample table is one card per row; any other, one.
+        // A card type with a sample table is at least one card per row — more
+        // when a row's roll range expands; any other card type is one.
         const rows = sampleTableOf(system, cardType)?.rows.length ?? 1;
-        expect(cards, cardType.declaration.id).toHaveLength(rows);
+        expect(cards.length, cardType.declaration.id).toBeGreaterThanOrEqual(rows);
+        if (rows === 1) expect(cards, cardType.declaration.id).toHaveLength(1);
         for (const card of cards) expect(card.cardTypeId).toBe(cardType.declaration.id);
         expect(diagnostics.messages, cardType.declaration.id).toEqual([]);
       }
@@ -98,10 +100,10 @@ describe("a sample table", () => {
     const block = buildCardBlock(system, system.cardTypes["roll-table"]!, "de", "sample");
     const lines = block.split("\n");
     expect(lines[0]).toMatch(
-      /^\| Würfelwurf +\| Name +\| Voraussetzungen \| Rationen \| Beschreibung +\|$/
+      /^\| Würfelwurf +\| Wurf-Min \| Wurf-Max \| Name +\| Voraussetzungen \| Rationen \| Beschreibung +\|$/
     );
-    expect(lines[1]).toMatch(/^\| -+ \| -+ \| -+ \| -+ \| -+ \|$/);
-    expect(lines[2]).toMatch(/^\| 1 +\| Nebelbarsch/);
+    expect(lines[1]).toMatch(/^\| -+ \| -+ \| -+ \| -+ \| -+ \| -+ \| -+ \|$/);
+    expect(lines[2]).toMatch(/^\| 1 +\| 1 +\| 1 +\| Nebelbarsch/);
     expect(block).toContain("table:\n");
     expect(block).toContain("  roll: Würfelwurf\n");
     expect(block).toContain("  stats:\n    - Voraussetzungen\n    - Rationen\n");
