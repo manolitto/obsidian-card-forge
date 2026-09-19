@@ -56,3 +56,22 @@ card-types:
   prompt:
     front-template: templates/prompt-front.hbs
     back-template: templates/back.hbs
+    # What *Insert sample card* writes: a table note, one prompt per row,
+    # the game's name once in `data:` for every row. Invented prompts.
+    sample-table:
+      en:
+        columns:
+          heading: Card
+          description: Prompt
+        rows:
+          - { Card: "1", Prompt: "What did you leave behind to join the Queen's journey?" }
+          - { Card: "2", Prompt: "Which of the Queen's orders did you follow without believing in it?" }
+          - { Card: "3", Prompt: "Who among the company do you trust the least, and why?" }
+      de:
+        columns:
+          heading: Karte
+          description: Frage
+        rows:
+          - { Karte: "1", Frage: "Was hast du zurückgelassen, um die Königin zu begleiten?" }
+          - { Karte: "2", Frage: "Welchem Befehl der Königin bist du gefolgt, ohne daran zu glauben?" }
+          - { Karte: "3", Frage: "Wem im Gefolge traust du am wenigsten, und warum?" }

@@ -9,6 +9,19 @@ back-template: templates/back.hbs
 stylesheet: styles/roll-table.css
 expand-by-roll: true
 
+# What *Insert sample card* writes for this card type: a table note, the
+# roll and the entry as columns, the table's title once in `data:` for
+# every row. The rumours are invented for this design.
+sample-table:
+  de:
+    columns:
+      roll: Wurf
+      description: Gerücht
+    rows:
+      - { Wurf: "1", Gerücht: "Kompasse funktionieren auf der Insel nicht so, wie sie sollten." }
+      - { Wurf: "2", Gerücht: "Nachts hört man aus dem Komplex Musik — immer dasselbe Lied." }
+      - { Wurf: "3", Gerücht: "Die Pterosaurier meiden die Ostklippen. Niemand weiß, warum." }
+
 translations:
   de:
     card-type-label: "Tabelle"

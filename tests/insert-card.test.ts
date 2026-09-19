@@ -5,7 +5,7 @@ import { collectDiagnostics } from "../src/definitions/diagnostics";
 import { BUNDLED_SYSTEMS } from "../src/generated/bundled-systems";
 import { parseNote } from "../src/render/note";
 import { resolveCards } from "../src/render/card";
-import type { LoadedSystem } from "../src/systems/loader";
+import type { LoadedCardType, LoadedSystem } from "../src/systems/loader";
 import { buildCardBlock, type InsertMode } from "../src/ui/insert-card";
 import { FIXTURES_DIR } from "./helpers/render-fixture";
 import { loadedSystem } from "./helpers/render";
@@ -18,6 +18,12 @@ import { loadedSystem } from "./helpers/render";
  */
 
 const UPDATE = process.env["UPDATE_GOLDENS"] === "1";
+
+/** The sample table the builder writes for the card type, in `en` or the system's first language. */
+function sampleTableOf(system: LoadedSystem, cardType: LoadedCardType) {
+  const tables = cardType.declaration.sampleTable;
+  return tables?.["en"] ?? tables?.[system.declaration.languages[0] ?? ""];
+}
 const MODES: InsertMode[] = ["empty", "sample"];
 
 const cases = BUNDLED_SYSTEMS.flatMap((system) =>
@@ -57,8 +63,10 @@ describe("the sample block", () => {
         );
         expect(note, cardType.declaration.id).toBeDefined();
         const cards = resolveCards(note!, system, diagnostics);
-        expect(cards, cardType.declaration.id).toHaveLength(1);
-        expect(cards[0]!.cardTypeId).toBe(cardType.declaration.id);
+        // A card type with a sample table is one card per row; any other, one.
+        const rows = sampleTableOf(system, cardType)?.rows.length ?? 1;
+        expect(cards, cardType.declaration.id).toHaveLength(rows);
+        for (const card of cards) expect(card.cardTypeId).toBe(cardType.declaration.id);
         expect(diagnostics.messages, cardType.declaration.id).toEqual([]);
       }
     }
@@ -81,5 +89,53 @@ describe("the sample block", () => {
     const de = buildCardBlock(system, cardType, "de", "sample");
     const fr = buildCardBlock(system, cardType, "fr", "sample");
     expect(fr).toBe(de);
+  });
+});
+
+describe("a sample table", () => {
+  it("is written as a table note: the table, the columns under table:, the rest under data:", async () => {
+    const system = await loadedSystem("dragonbane");
+    const block = buildCardBlock(system, system.cardTypes["roll-table"]!, "de", "sample");
+    const lines = block.split("\n");
+    expect(lines[0]).toMatch(
+      /^\| Würfelwurf +\| Name +\| Voraussetzungen \| Rationen \| Beschreibung +\|$/
+    );
+    expect(lines[1]).toMatch(/^\| -+ \| -+ \| -+ \| -+ \| -+ \|$/);
+    expect(lines[2]).toMatch(/^\| 1 +\| Nebelbarsch/);
+    expect(block).toContain("table:\n");
+    expect(block).toContain("  roll: Würfelwurf\n");
+    expect(block).toContain("  stats:\n    - Voraussetzungen\n    - Rationen\n");
+    // A column property is not repeated under data:.
+    expect(block.slice(block.indexOf("data:"))).not.toMatch(
+      /^ {2}(name|roll|stats|description):/m
+    );
+    expect(block.slice(block.indexOf("data:"))).toMatch(/^ {2}category:/m);
+  });
+
+  it("is a headed, empty table in the empty mode", async () => {
+    const system = await loadedSystem("dino-island");
+    const block = buildCardBlock(system, system.cardTypes["roll-table"]!, "de", "empty");
+    const lines = block.split("\n");
+    expect(lines[0]).toMatch(/^\| Wurf \| Gerücht \|$/);
+    expect(lines[2]).toMatch(/^\| +\| +\|$/);
+    expect(block).toContain("table:\n");
+    expect(block).toMatch(/^ {2}heading:$/m);
+  });
+
+  it("reports a column that is not a property of the card type", async () => {
+    const { loadSystem } = await import("../src/systems/loader");
+    const { MemorySource, completeSystem } = await import("./helpers/systems");
+    const files = completeSystem();
+    files["game-system.yaml"] = files["game-system.yaml"]!.toString().replace(
+      "card-types:\n  gear:\n",
+      "card-types:\n  gear:\n    sample-table:\n      en:\n        columns: { nosuch: Header }\n        rows: [{ Header: x }]\n"
+    );
+    const diagnostics = collectDiagnostics();
+    await loadSystem(new MemorySource(files), "demo", diagnostics);
+    expect(
+      diagnostics.matching(
+        'demo: card-types.gear.sample-table.en names the column "nosuch", which is not a property of the card type'
+      )
+    ).toHaveLength(1);
   });
 });

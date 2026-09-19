@@ -1,17 +1,28 @@
+| Würfelwurf | Name         | Voraussetzungen | Rationen | Beschreibung                                               |
+| ---------- | ------------ | --------------- | -------- | ---------------------------------------------------------- |
+| 1          | Nebelbarsch  | Angel oder Netz | W6       | Ein fetter Barsch mit milchigen Augen, schmeckt nach Moos. |
+| 2–3        | Schlickaal   | Reuse           | W4       | Glitschig, zäh und überraschend nahrhaft.                  |
+| 4–6        | Flussforelle | Angel           | W8       | Silbern und schnell; beißt nur in der Dämmerung.           |
+
 ```cardsmith
 card:
   system: dragonbane
   card-type: roll-table
-data:
+table:
+  # Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. "01", "23–24", "98–100". For numeric queries and sorting see `roll-min` and `roll-max`.
+  roll: Würfelwurf
+
   # Title of the table row (e.g. "Oar snapped", "Mist perch"). When absent, `category` takes its place — for tables whose rows carry no names.
-  name: Oar snapped
+  name: Name
+
+  # Free label/value pairs for table-specific values — "Rations: 2d6", "Requirements: weapon or trap", "Healing time: d6 days of rest".
+  stats:
+    - Voraussetzungen
+    - Rationen
 
   # The narrative half of the table entry — what happens.
-  description: The oar snaps mid-stroke and the boat swings across the current.
-
-  # Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. "01", "23–24", "98–100". For numeric queries and sorting see `roll-min` and `roll-max`.
-  roll: '01'
-
+  description: Beschreibung
+data:
   # Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the deck's emblem. `front-image` does not feed this — it is front-only.
   back-image: '[[Medaillon.png]]'
 
@@ -38,11 +49,4 @@ data:
 
   # Free-form note rendered unobtrusively on the card.
   note: 'Optional: roll only in mist.'
-
-  # Free label/value pairs for table-specific values — "Rations: 2d6", "Requirements: weapon or trap", "Healing time: d6 days of rest".
-  stats:
-    - name: Requirements
-      desc: Rod or net
-    - name: Rations
-      desc: d6
 ```

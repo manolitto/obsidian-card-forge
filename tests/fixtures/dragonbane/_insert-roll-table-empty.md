@@ -1,17 +1,26 @@
+| Würfelwurf | Name | Voraussetzungen | Rationen | Beschreibung |
+| ---------- | ---- | --------------- | -------- | ------------ |
+|            |      |                 |          |              |
+
 ```cardsmith
 card:
   system: dragonbane
   card-type: roll-table
-data:
+table:
+  # Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. "01", "23–24", "98–100". For numeric queries and sorting see `roll-min` and `roll-max`.
+  roll: Würfelwurf
+
   # Title of the table row (e.g. "Oar snapped", "Mist perch"). When absent, `category` takes its place — for tables whose rows carry no names.
-  name:
+  name: Name
+
+  # Free label/value pairs for table-specific values — "Rations: 2d6", "Requirements: weapon or trap", "Healing time: d6 days of rest".
+  stats:
+    - Voraussetzungen
+    - Rationen
 
   # The narrative half of the table entry — what happens.
-  description:
-
-  # Die-roll result (range or single value) under which this card appears in the source table. Display form — e.g. "01", "23–24", "98–100". For numeric queries and sorting see `roll-min` and `roll-max`.
-  roll:
-
+  description: Beschreibung
+data:
   # Card-back image as a wikilink. Without it the back shows what the card type provides (a creature's portrait), else the deck's emblem. `front-image` does not feed this — it is front-only.
   back-image:
 
@@ -38,7 +47,4 @@ data:
 
   # Free-form note rendered unobtrusively on the card.
   note:
-
-  # Free label/value pairs for table-specific values — "Rations: 2d6", "Requirements: weapon or trap", "Healing time: d6 days of rest".
-  stats:
 ```

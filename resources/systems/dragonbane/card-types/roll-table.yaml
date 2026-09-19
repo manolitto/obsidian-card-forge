@@ -14,6 +14,21 @@ stylesheet: styles/roll-table.css
 card-size: poker
 expand-by-roll: true
 
+# What *Insert sample card* writes for this card type: a table note, one
+# row per entry, the columns as the block's `table:` map. The rows are
+# invented — a fishing table of this design's own, not a rulebook's.
+sample-table:
+  de:
+    columns:
+      roll: Würfelwurf
+      name: Name
+      stats: [Voraussetzungen, Rationen]
+      description: Beschreibung
+    rows:
+      - { Würfelwurf: "1", Name: Nebelbarsch, Voraussetzungen: Angel oder Netz, Rationen: W6, Beschreibung: "Ein fetter Barsch mit milchigen Augen, schmeckt nach Moos." }
+      - { Würfelwurf: "2–3", Name: Schlickaal, Voraussetzungen: Reuse, Rationen: W4, Beschreibung: "Glitschig, zäh und überraschend nahrhaft." }
+      - { Würfelwurf: "4–6", Name: Flussforelle, Voraussetzungen: Angel, Rationen: W8, Beschreibung: "Silbern und schnell; beißt nur in der Dämmerung." }
+
 translations:
   de:
     back-label: "Würfeltabelle"
