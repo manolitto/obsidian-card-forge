@@ -61,6 +61,7 @@ them must keep it.
 | `eiserne-zeit/assets/eiserne-zeit-logo.png`, and the torn paper edge and the cross fleury drawn as inline SVG in the system's stylesheet | eiserne-zeit | The publisher's logo and two elements of the publisher's own graphic design. **Bundled with the explicit permission of Markus Schauta (Gazer Press, Vienna).** The permission covers their use in this plugin; it does not transfer to anyone extracting them for other use. |
 | `pf2e/assets/p-mark.webp` | pf2e | Paizo's Pathfinder "P" mark, from Paizo's Community Use Package, re-encoded to WebP without any change to colour, typography, design or proportions. Paizo property, used under the Community Use Policy — see the notice below. |
 | The gear back of `dragonbane` and the emblem on its picture-less backs; the flourish on `tor2e`'s picture-less backs | dragonbane, tor2e | Inline SVG drawn for this project (MIT), in each system's stylesheet. |
+| `docs/images/*.png` | — | Renders of the plugin's own test fixtures — invented cards of the `mini-d20` and `simple` systems — made for the README. The icons on the MINI D20 cards are game-icons.net's (above). |
 
 The parchment texture and the two ornament bitmaps of the Dragonbane
 system are under clarification with the author of the template they come
