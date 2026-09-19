@@ -97,6 +97,8 @@ const en = {
   "progress.layout": "Laying out {done} / {total}…",
   "progress.writing": "Writing {path}…",
   "notice.exported": "{cards} cards on {pages} pages — {path}",
+  "notice.html-written":
+    "Obsidian shows no HTML: open {path} from the file manager, or share it from there.",
   "notice.clipped": "Cut at the smallest type size: {names}",
   "notice.warnings": "{count} warnings — see the developer console",
 
@@ -265,6 +267,8 @@ const de: Strings = {
   "progress.layout": "Setzen {done} / {total}…",
   "progress.writing": "Schreibe {path}…",
   "notice.exported": "{cards} Karten auf {pages} Seiten — {path}",
+  "notice.html-written":
+    "Obsidian zeigt kein HTML an: {path} im Dateimanager öffnen oder von dort teilen.",
   "notice.clipped": "Bei der kleinsten Schriftgröße abgeschnitten: {names}",
   "notice.warnings": "{count} Warnungen — siehe Entwicklerkonsole",
 
