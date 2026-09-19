@@ -167,10 +167,28 @@
 }
 
 .cs-deck-view-sheet {
+  position: relative;
   flex: 1;
   overflow: auto;
   padding: var(--size-4-2);
   background: var(--background-secondary);
+}
+
+/* The build's progress over the sheet area while a deck builds — large
+   enough to read across a room, and the only thing there on a phone until
+   the pages arrive. */
+.cs-deck-view-building {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--size-4-4);
+  text-align: center;
+  font-size: var(--font-ui-large);
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  z-index: 1;
 }
 
 .cs-deck-view-frame {
