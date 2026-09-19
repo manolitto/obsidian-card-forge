@@ -1,6 +1,6 @@
 {
   "name": "obsidian-cardsmith",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Generate print-ready, double-sided card decks from your notes — board game components, RPG reference cards, or any deck you print.",
   "main": "main.js",
   "license": "MIT",
