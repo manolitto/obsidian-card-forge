@@ -193,28 +193,44 @@ function imagesLoadedIn(root: ShadowRoot): boolean {
 }
 
 /**
- * True when every web font the faces' text-bearing elements are set in has
- * loaded. Reads the first family off each element's computed `font-family`
- * and asks the document's font set; a family that has no `@font-face` — a
- * system font — always checks true, so this only blocks on genuinely
- * pending web fonts.
+ * True when no web font the faces' text is set in is still loading. Every
+ * family in each text-bearing element's `font-family` stack is looked up
+ * among the document's declared faces, and a face of that family in the
+ * `loading` state means the text was measured in a fallback. Faces that
+ * are `unloaded` are fine — layout requested nothing from them (a
+ * `unicode-range` subset the text never reaches) — and a family with no
+ * `@font-face`, a system font, is not asked.
+ *
+ * The statuses, not `FontFaceSet.check()`: Chromium answers `check()` with
+ * true for a face that is loading, so a card measured on that answer is
+ * measured in the fallback and prints too wide.
  */
 function fontsLoadedFor(root: ShadowRoot): boolean {
   const doc = root.ownerDocument;
   const win = doc.defaultView;
   if (!win) return true;
+  const loading = loadingFamilies(doc);
+  if (loading.size === 0) return true;
   const els = root.querySelectorAll<HTMLElement>(
     ".card-title, .text-scalable, .card-body-scalable, .card-body-scalable *"
   );
   for (let i = 0; i < els.length; i++) {
-    const cs = win.getComputedStyle(els[i]!);
-    const family = (cs.fontFamily.split(",")[0] ?? "").trim().replace(/^['"]|['"]$/g, "");
-    if (!family || !cs.fontSize) continue;
-    try {
-      if (!doc.fonts.check(`${cs.fontSize} "${family}"`)) return false;
-    } catch {
-      // A malformed family or size is not a font to wait for.
+    for (const raw of win.getComputedStyle(els[i]!).fontFamily.split(",")) {
+      if (loading.has(unquoted(raw))) return false;
     }
   }
   return true;
+}
+
+/** The families with a face still loading. */
+function loadingFamilies(doc: Document): Set<string> {
+  const out = new Set<string>();
+  doc.fonts.forEach((face) => {
+    if (face.status === "loading") out.add(unquoted(face.family));
+  });
+  return out;
+}
+
+function unquoted(family: string): string {
+  return family.trim().replace(/^['"]|['"]$/g, "");
 }
