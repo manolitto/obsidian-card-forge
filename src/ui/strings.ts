@@ -164,6 +164,8 @@ const en = {
   "settings.add.placeholder": "YAML file in the vault",
   "settings.add.button": "Add",
   "settings.add.registered": 'Registered system "{id}" from {path}',
+  "settings.add.replaced":
+    'Switched off {count} other systems with the id "{id}" — a note names its system by id, and the one just added is the one meant.',
   "settings.add.already": "{path} is already registered",
   "settings.add.no-file": "Pick a file first",
   "settings.preferences.heading": "Preferences",
@@ -334,6 +336,8 @@ const de: Strings = {
   "settings.add.placeholder": "YAML-Datei im Vault",
   "settings.add.button": "Hinzufügen",
   "settings.add.registered": "System „{id}“ aus {path} registriert",
+  "settings.add.replaced":
+    "{count} andere Systeme mit der Id „{id}“ ausgeschaltet — eine Notiz nennt ihr System über die Id, und gemeint ist das gerade hinzugefügte.",
   "settings.add.already": "{path} ist bereits registriert",
   "settings.add.no-file": "Zuerst eine Datei auswählen",
   "settings.preferences.heading": "Einstellungen",
