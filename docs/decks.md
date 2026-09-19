@@ -96,14 +96,11 @@ notes it found and of which types, paper, card size — and three buttons:
   deck note under its name (or at `output-path`) and opens in a new pane.
   Desktop only.
 - **Export HTML** writes the same pages as one self-contained file,
-  fonts and pictures included, and hands it on: on the desktop it opens
-  in whatever opens HTML — the browser, with its print dialog — and on a
-  phone it goes to the share sheet where the app can offer one, from
-  where a browser, a printer or the file manager can take it. Where it
-  cannot, the notice says so, and the file waits beside the note for the
-  file manager. Obsidian itself shows no HTML; its file explorer lists
-  the file only with *Detect all file extensions* switched on under
-  *Files and links*.
+  fonts and pictures included, and opens it in whatever the system opens
+  HTML with — the browser, with its print dialog, on the desktop and on a
+  phone alike. Obsidian itself shows no HTML; its file explorer lists the
+  file only with *Detect all file extensions* switched on under *Files
+  and links*.
 
 The same three are commands in the palette, for the deck note that is
 open: *Preview deck*, *Export deck as PDF*, *Export deck as HTML*.
