@@ -96,6 +96,27 @@ export function entriesAfterCopy(
   return [...kept, { type: "vault", id: copyId, path, active: true }];
 }
 
+/**
+ * The entries after a vault system is added: the new entry switched on,
+ * and every other entry of the same id switched off — a note names its
+ * system by id, so the one just added is the one meant, as with a copy
+ * that keeps its id. Returns the entries and the ones it switched off.
+ */
+export function entriesAfterAdd(
+  entries: readonly SystemEntry[],
+  id: string,
+  path: string
+): { entries: SystemEntry[]; switchedOff: SystemEntry[] } {
+  const switchedOff = entries.filter((entry) => entry.active && entry.id === id);
+  const kept = entries.map((entry) =>
+    switchedOff.includes(entry) ? { ...entry, active: false } : entry
+  );
+  return {
+    entries: [...kept, { type: "vault", id, path, active: true }],
+    switchedOff,
+  };
+}
+
 /** What a system id may be: lowercase letters, digits and hyphens, as every bundled one is. */
 export function isSystemId(id: string): boolean {
   return /^[a-z0-9][a-z0-9-]*$/.test(id);

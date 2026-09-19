@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  entriesAfterAdd,
   entriesAfterCopy,
   findDuplicateActiveIds,
   isSystemId,
@@ -218,5 +219,48 @@ describe("the library after a registry change", () => {
     expect((await library.load("simple")).system).toBeUndefined();
     expect((await library.loadBundled("simple")).system?.id).toBe("simple");
     expect((await library.loadBundled("nothing")).messages[0]).toMatch(/not bundled/);
+  });
+});
+
+describe("entriesAfterAdd", () => {
+  it("switches off every other system of the same id, bundled or vault, and names them", () => {
+    const bundled: SystemEntry = { type: "bundled", id: "simple", active: true };
+    const other: SystemEntry = { type: "bundled", id: "dragonbane", active: true };
+    const older: SystemEntry = {
+      type: "vault",
+      id: "simple",
+      path: "old/simple.yaml",
+      active: true,
+    };
+    const off: SystemEntry = {
+      type: "vault",
+      id: "simple",
+      path: "off/simple.yaml",
+      active: false,
+    };
+    const { entries, switchedOff } = entriesAfterAdd(
+      [bundled, other, older, off],
+      "simple",
+      "cardsmith/simple/simple.yaml"
+    );
+    expect(switchedOff).toEqual([bundled, older]);
+    expect(entries).toEqual([
+      { ...bundled, active: false },
+      other,
+      { ...older, active: false },
+      off,
+      { type: "vault", id: "simple", path: "cardsmith/simple/simple.yaml", active: true },
+    ]);
+    expect(findDuplicateActiveIds(entries)).toEqual([]);
+  });
+
+  it("switches nothing off for a new id", () => {
+    const bundled: SystemEntry = { type: "bundled", id: "simple", active: true };
+    const { entries, switchedOff } = entriesAfterAdd([bundled], "mine", "mine/mine.yaml");
+    expect(switchedOff).toEqual([]);
+    expect(entries).toEqual([
+      bundled,
+      { type: "vault", id: "mine", path: "mine/mine.yaml", active: true },
+    ]);
   });
 });

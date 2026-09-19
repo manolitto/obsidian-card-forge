@@ -12,9 +12,11 @@ it was registered from — and offers *Copy into vault* for a bundled one
 and *Remove* for a vault one.
 
 A note names its system by id (`system: dragonbane`), so **at most one
-system per id may be switched on**. Two rows with the same id both switched
-on are marked, and the plugin refuses to render that system until one is
-off. That is how a copy replaces the original (below).
+system per id may be switched on**. Adding a vault system, or copying a
+bundled one under its own id, switches every other system of that id
+off — the one just added is the one meant. Two rows with the same id
+both switched on by hand are marked, and the plugin refuses to render
+that system until one is off.
 
 ### Adding a system of your own
 
@@ -23,7 +25,9 @@ that names the system — see [Writing a system](authoring/system.md). Pick
 that document in *Add a vault system*; the field suggests every `.yaml`
 and `.yml` file in the vault. The document is read and checked when you
 add it: a missing face, stylesheet or picture is reported there and then,
-and the system is not registered until it loads clean.
+and the system is not registered until it loads clean. A system of the
+same id that was on — a bundled one, an older copy — is switched off for
+it, and a notice says so.
 
 Obsidian's file explorer shows a system's files (`.yaml`, `.hbs`, `.css`)
 only with *Detect all file extensions* switched on under *Files and

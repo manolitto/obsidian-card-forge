@@ -1,10 +1,10 @@
-import { App, normalizePath, PluginSettingTab, Setting } from "obsidian";
+import { App, Notice, normalizePath, PluginSettingTab, Setting } from "obsidian";
 import type { PaperBackground } from "../definitions/deck-settings";
 import type CardsmithPlugin from "../main";
 import { copySystemIntoVault } from "../ui/copy-system";
 import { SystemFileSuggest } from "../ui/system-file-suggest";
 import { t } from "../ui/strings";
-import { entriesAfterToggle } from "./system-registry";
+import { entriesAfterAdd, entriesAfterToggle } from "./system-registry";
 import type { SystemEntry, UiLanguage } from "./types";
 
 /*
@@ -159,13 +159,19 @@ export class CardsmithSettingTab extends PluginSettingTab {
               messages.createEl("li", { text: message });
             return;
           }
-          this.plugin.settings.systems.push({
-            type: "vault",
-            id: verdict.id,
-            path,
-            active: true,
-          });
+          const { entries, switchedOff } = entriesAfterAdd(
+            this.plugin.settings.systems,
+            verdict.id,
+            path
+          );
+          this.plugin.settings.systems = entries;
           await this.plugin.saveSettings();
+          new Notice(t("settings.add.registered", { id: verdict.id, path }));
+          if (switchedOff.length > 0) {
+            new Notice(
+              t("settings.add.replaced", { id: verdict.id, count: switchedOff.length })
+            );
+          }
           this.display();
         })
     );
