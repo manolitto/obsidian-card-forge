@@ -139,6 +139,23 @@ export interface CardTypeDeclaration {
   properties?: PropertyDefsMap;
   /** The card type's layer of the card-setting chain — see `SystemDeclaration`. */
   cardSettings: CardSettings;
+  /**
+   * The table note *Insert sample card* writes for this card type, per
+   * language — for a kind of card that is one row of a table. Without it
+   * the sample is one card from the properties' samples.
+   */
+  sampleTable?: Record<string, SampleTable>;
+}
+
+/**
+ * A sample table note: the columns as the block's `table:` map — property
+ * to column header, a list of headers for a list property — and the rows
+ * by header. Its shape is the note's, so the sample reads as one an
+ * author would write.
+ */
+export interface SampleTable {
+  columns: Record<string, string | string[]>;
+  rows: Record<string, string>[];
 }
 
 /**
@@ -167,6 +184,7 @@ const CARD_TYPE_KEYS: readonly string[] = [
   "glyphs",
   "classifiers",
   "properties",
+  "sample-table",
 ];
 
 /**
@@ -333,7 +351,82 @@ function parseCardType(
   const properties = parsePropertyDefs(raw["properties"], diagnostics);
   if (properties) out.properties = properties;
 
+  const sampleTable = parseSampleTables(
+    raw["sample-table"],
+    `${context}.sample-table`,
+    diagnostics
+  );
+  if (sampleTable) out.sampleTable = sampleTable;
+
   return out;
+}
+
+/** `sample-table:` — one table per language; a language whose table is unusable is dropped. */
+function parseSampleTables(
+  raw: unknown,
+  context: string,
+  diagnostics: Diagnostics
+): Record<string, SampleTable> | undefined {
+  if (raw === null || raw === undefined) return undefined;
+  const out: Record<string, SampleTable> = {};
+  for (const [language, table] of Object.entries(asMapping(raw, context, diagnostics))) {
+    const parsed = parseSampleTable(table, `${context}.${language}`, diagnostics);
+    if (parsed) out[language] = parsed;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+function parseSampleTable(
+  raw: unknown,
+  context: string,
+  diagnostics: Diagnostics
+): SampleTable | undefined {
+  if (!isMapping(raw)) {
+    diagnostics.warn(`${context} must be a mapping of columns: and rows:; ignoring it`);
+    return undefined;
+  }
+  const columns: Record<string, string | string[]> = {};
+  for (const [property, header] of Object.entries(
+    asMapping(raw["columns"], `${context}.columns`, diagnostics)
+  )) {
+    if (typeof header === "string" && header.trim()) columns[property] = header.trim();
+    else if (
+      Array.isArray(header) &&
+      header.every((h) => typeof h === "string" && h.trim())
+    )
+      columns[property] = header.map((h) => h.trim());
+    else
+      diagnostics.warn(
+        `${context}.columns.${property} must be a header or a list of headers; ignoring it`
+      );
+  }
+  if (Object.keys(columns).length === 0) {
+    diagnostics.warn(`${context} names no columns; ignoring it`);
+    return undefined;
+  }
+  const rows: Record<string, string>[] = [];
+  for (const [index, row] of asList(
+    raw["rows"],
+    `${context}.rows`,
+    diagnostics
+  ).entries()) {
+    if (!isMapping(row)) {
+      diagnostics.warn(
+        `${context}.rows[${index}] must be a mapping of header to cell; ignoring it`
+      );
+      continue;
+    }
+    const cells: Record<string, string> = {};
+    for (const [header, cell] of Object.entries(row)) {
+      if (cell !== null && cell !== undefined) cells[header] = String(cell);
+    }
+    rows.push(cells);
+  }
+  if (rows.length === 0) {
+    diagnostics.warn(`${context} has no rows; ignoring it`);
+    return undefined;
+  }
+  return { columns, rows };
 }
 
 /** Everything that is not structure. */

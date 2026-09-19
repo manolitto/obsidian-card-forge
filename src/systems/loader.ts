@@ -248,6 +248,7 @@ export async function loadSystem(
   }
 
   checkSlots(declaration, cardTypes, templates, report);
+  checkSampleTables(cardTypes, report);
 
   const stylesheets = new Map<string, Promise<string>>();
   return {
@@ -414,4 +415,28 @@ function slotVocabulary(properties: PropertyDefsMap): ReadonlySet<string> {
 
 function describe(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+/**
+ * A sample table's columns are properties of its card type — the map is
+ * what the inserted block writes under `table:`, and a column no property
+ * answers would be a sample that renders nothing.
+ */
+function checkSampleTables(
+  cardTypes: Record<string, LoadedCardType>,
+  report: (message: string) => void
+): void {
+  for (const cardType of Object.values(cardTypes)) {
+    for (const [language, table] of Object.entries(
+      cardType.declaration.sampleTable ?? {}
+    )) {
+      for (const property of Object.keys(table.columns)) {
+        if (!(property in cardType.properties)) {
+          report(
+            `card-types.${cardType.declaration.id}.sample-table.${language} names the column "${property}", which is not a property of the card type`
+          );
+        }
+      }
+    }
+  }
 }
