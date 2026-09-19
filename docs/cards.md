@@ -146,6 +146,7 @@ that was cut at the floor — is listed under the card, once per note.
 
 Two commands write blocks for you: *Insert empty card definition* puts a
 block with every property of the chosen system and card type as a
-comment, and *Insert sample card* fills them in with sample values. *Show
+comment, and *Insert sample card* fills them in with sample values — for
+a card type that is one row of a table, as a table note with a few rows. *Show
 property reference* opens the same list as a table, with each property's
 aliases and description.

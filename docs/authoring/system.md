@@ -41,6 +41,21 @@ root where they make sense — `front-template`, `back-template`,
 settings — each layered over the system's. A card type with one template
 prints one face.
 
+A card type that is one row of a table — a roll table, a prompt deck —
+declares a `sample-table:` per language, and *Insert sample card* then
+writes a table note rather than a single card: the columns as the block's
+`table:` map, property to column header, and the rows by header.
+
+```yaml from=resources/systems/dino-island/card-types/roll-table.yaml
+sample-table:
+  de:
+    columns:
+      roll: Wurf
+      description: Gerücht
+    rows:
+      - { Wurf: "1", Gerücht: "Kompasse funktionieren auf der Insel nicht so, wie sie sollten." }
+```
+
 ```yaml from=resources/systems/simple/simple.yaml
 card-types:
   # The one, universal card type. As the system's only one, a note need not
