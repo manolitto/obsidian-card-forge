@@ -213,6 +213,22 @@
   color: var(--text-muted);
 }
 
+/* On a phone a row's toggle and button leave the name and its description
+   a few letters of width. There the controls wrap under the text, which
+   takes the whole row. */
+.is-mobile .cs-system-row.setting-item {
+  flex-wrap: wrap;
+}
+.is-mobile .cs-system-row .setting-item-info {
+  flex-basis: 100%;
+  margin-right: 0;
+}
+.is-mobile .cs-system-row .setting-item-control {
+  width: 100%;
+  justify-content: flex-start;
+  margin-top: var(--size-4-2);
+}
+
 .cs-system-messages {
   margin: 0 0 var(--size-4-2);
   padding-left: var(--size-4-4);

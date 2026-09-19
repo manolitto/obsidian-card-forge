@@ -124,6 +124,7 @@ export class CardsmithSettingTab extends PluginSettingTab {
   private addField(parent: HTMLElement): void {
     let typed = "";
     const setting = new Setting(parent)
+      .setClass("cs-system-row")
       .setName(t("settings.add.name"))
       .setDesc(t("settings.add.desc"));
     const messages = parent.createEl("ul", { cls: "cs-system-messages" });
