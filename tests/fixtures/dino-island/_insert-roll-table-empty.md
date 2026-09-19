@@ -1,14 +1,18 @@
+| Wurf | Gerücht |
+| ---- | ------- |
+|      |         |
+
 ```cardsmith
 card:
   system: dino-island
   card-type: roll-table
-data:
-  # The entry's text — the card's text (markdown).
-  description:
-
+table:
   # The entry's roll — the orange die at the top left.
-  roll:
+  roll: Wurf
 
+  # The entry's text — the card's text (markdown).
+  description: Gerücht
+data:
   # Source reference — rulebook page or wikilink, small at the foot.
   reference:
 
