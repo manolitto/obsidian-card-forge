@@ -112,7 +112,16 @@ export function deckBlockProcessor(context: DeckBlockContext) {
     if (block && file instanceof TFile) {
       const buttons = el.createDiv({ cls: "cs-deck-buttons" });
       const preview = buttons.createEl("button", { text: t("deck.preview") });
-      preview.addEventListener("click", () => void context.openPreview(file));
+      preview.addEventListener("click", () => {
+        // The view builds the deck and shows its own progress; the button
+        // only has to say that something is happening until the view is up.
+        preview.disabled = true;
+        preview.setText(t("progress.starting"));
+        void context.openPreview(file).finally(() => {
+          preview.disabled = false;
+          preview.setText(t("deck.preview"));
+        });
+      });
       if (Platform.isDesktop)
         exportButton(buttons, "deck.export-pdf", "pdf", file, context);
       exportButton(buttons, "deck.export-html", "html", file, context);
@@ -148,6 +157,7 @@ function exportButton(
   });
   button.addEventListener("click", () => {
     button.disabled = true;
+    button.setText(t("progress.starting"));
     void runExport(context.exporter, file, format, (message) =>
       button.setText(message)
     ).then(() => {
