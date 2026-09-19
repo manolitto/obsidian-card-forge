@@ -1,5 +1,5 @@
 import { ItemView, TFile, type App, type WorkspaceLeaf } from "obsidian";
-import type { DeckExporter } from "../export/exporter";
+import type { BuiltDeck, DeckExporter } from "../export/exporter";
 import { reportWarnings } from "./export-run";
 import { t } from "./strings";
 
@@ -105,24 +105,39 @@ export class DeckView extends ItemView {
       return;
     }
     this.building = true;
+    // The build's progress, large in the sheet area as well as in the
+    // toolbar: on a phone the view fills the screen the moment it opens,
+    // and a line of small text in the toolbar is not what says "working".
+    const building = this.sheet.createDiv({
+      cls: "cs-deck-view-building",
+      text: t("progress.starting"),
+    });
+    this.status.setText(t("progress.starting"));
+    const progress = (message: string) => {
+      this.status.setText(message);
+      building.setText(message);
+    };
     try {
-      const { deck, doc, warnings } = await this.exporter.build(file, (message) =>
-        this.status.setText(message)
-      );
-      this.show(doc.html, doc.paper.width);
-      const summary = [
-        t("view.summary", { cards: deck.cards.length, pages: doc.pageCount }),
-      ];
-      if (deck.clipped.length > 0) {
-        summary.push(t("notice.clipped", { names: deck.clipped.join(", ") }));
-      }
-      this.status.setText(summary.join(" · "));
-      reportWarnings(warnings);
+      this.present(await this.exporter.build(file, progress));
     } catch (error) {
       this.status.setText(error instanceof Error ? error.message : String(error));
     } finally {
+      building.remove();
       this.building = false;
     }
+  }
+
+  /** Show a deck someone built — this view on *Rebuild*, or the deck block's button. */
+  present({ deck, doc, warnings }: BuiltDeck): void {
+    this.show(doc.html, doc.paper.width);
+    const summary = [
+      t("view.summary", { cards: deck.cards.length, pages: doc.pageCount }),
+    ];
+    if (deck.clipped.length > 0) {
+      summary.push(t("notice.clipped", { names: deck.clipped.join(", ") }));
+    }
+    this.status.setText(summary.join(" · "));
+    reportWarnings(warnings);
   }
 
   /** The document into a fresh frame at paper width, then scaled to the pane. */
@@ -165,21 +180,30 @@ export class DeckView extends ItemView {
 
 /**
  * Show the deck of `file` in a view beside it: the one already showing it,
- * or a new split. Used by the command and by the deck block's button.
+ * or a new split. With `built`, the deck was built by the caller — the
+ * deck block's button, which showed the progress in its own label — and
+ * the view presents it; without, the view builds it itself, as the
+ * command asks.
  */
-export async function openDeckView(app: App, file: TFile): Promise<void> {
+export async function openDeckView(
+  app: App,
+  file: TFile,
+  built?: BuiltDeck
+): Promise<void> {
   const existing = app.workspace
     .getLeavesOfType(DECK_VIEW_TYPE)
     .find((leaf) => (leaf.view as DeckView).getState()["path"] === file.path);
   if (existing) {
     await app.workspace.revealLeaf(existing);
+    if (built) (existing.view as DeckView).present(built);
     return;
   }
   const leaf = app.workspace.getLeaf("split");
   await leaf.setViewState({
     type: DECK_VIEW_TYPE,
-    state: { path: file.path, build: true } satisfies DeckViewState,
+    state: { path: file.path, build: !built } satisfies DeckViewState,
     active: true,
   });
   await app.workspace.revealLeaf(leaf);
+  if (built) (leaf.view as DeckView).present(built);
 }

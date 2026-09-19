@@ -82,7 +82,7 @@ export default class CardsmithPlugin extends Plugin {
         systems: this.systems,
         source,
         exporter: this.exporter,
-        openPreview: (file) => openDeckView(this.app, file),
+        openPreview: (file, built) => openDeckView(this.app, file, built),
       })
     );
     this.registerView(DECK_VIEW_TYPE, (leaf) => new DeckView(leaf, this.exporter));

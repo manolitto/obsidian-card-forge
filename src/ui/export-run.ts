@@ -26,6 +26,9 @@ export async function runExport(
       }),
       8000
     );
+    if (result.destination === "written") {
+      notice(t("notice.html-written", { path: result.path }), 12000);
+    }
     if (result.clipped.length > 0) {
       notice(t("notice.clipped", { names: result.clipped.join(", ") }), 12000);
     }
