@@ -80,11 +80,13 @@ export async function buildDeck(
     );
   }
 
+  const paint = paintBetween(doc);
   const rendered: (RenderedCard & { path: string })[] = [];
   for (const [index, { note }] of notes.entries()) {
     const cards = await renderer.render(note, system, diagnostics, cardLayer);
     for (const card of cards) rendered.push({ ...card, path: note.path });
     progress("render", index + 1, notes.length);
+    await paint();
   }
   if (rendered.length === 0) {
     throw new Error(
@@ -110,6 +112,7 @@ export async function buildDeck(
     if (out.clipped) clipped.push(out.name);
     laidOut.push({ path: card.path, card: out });
     progress("layout", index + 1, ordered.length);
+    await paint();
   }
 
   return {
@@ -119,6 +122,24 @@ export async function buildDeck(
     stylesheets: [...stylesheets.values()],
     outputPath: block.outputPath,
     clipped,
+  };
+}
+
+/**
+ * A pause for the page to paint, taken once every hundred milliseconds
+ * or so of work. Rendering and layout yield between cards, but only to
+ * the microtask queue; without a frame in between, a progress label the
+ * caller draws is never seen until the deck is done — and a large deck
+ * looks like nothing happening. A frame per card would be a second on a
+ * hundred cards; a frame per hundred milliseconds is a tenth of that.
+ */
+function paintBetween(doc: Document): () => Promise<void> {
+  const win = doc.defaultView;
+  let last = performance.now();
+  return async () => {
+    if (!win || performance.now() - last < 100) return;
+    await new Promise<void>((resolve) => win.requestAnimationFrame(() => resolve()));
+    last = performance.now();
   };
 }
 
