@@ -1,4 +1,11 @@
-import { FileSystemAdapter, normalizePath, Platform, TFile, type App } from "obsidian";
+import {
+  CapacitorAdapter,
+  FileSystemAdapter,
+  normalizePath,
+  Platform,
+  TFile,
+  type App,
+} from "obsidian";
 import { buildDeck, type Deck } from "../deck/pipeline";
 import type { DeckSource } from "../deck/source";
 import type { PaperBackground } from "../definitions/deck-settings";
@@ -11,11 +18,27 @@ import { printDeckPdf, type TempFile } from "./pdf";
 
 export type ExportFormat = "pdf" | "html";
 
+/** A deck built and composed into its document, with what the build reported. */
+export interface BuiltDeck {
+  deck: Deck;
+  doc: DeckDocument;
+  warnings: string[];
+}
+
+/**
+ * Where an export went after it was written: `pane` for a PDF in an
+ * Obsidian pane, `app` for an HTML file handed to the desktop's default
+ * app, `shared` for one handed to a phone's share sheet, `written` when
+ * the file could only be left beside the note.
+ */
+export type ExportDestination = "pane" | "app" | "shared" | "written";
+
 /** What an export produced, for whoever started it to announce. */
 export interface ExportResult {
   path: string;
   /** The written file, in the vault's index the moment it exists. */
   file: TFile;
+  destination: ExportDestination;
   cards: number;
   pages: number;
   /** Names of the cards cut at the type floor. */
@@ -48,10 +71,7 @@ export class DeckExporter {
   ) {}
 
   /** The deck and its document, without writing anything. Throws the message the user should see. */
-  async build(
-    file: TFile,
-    progress: ExportProgress
-  ): Promise<{ deck: Deck; doc: DeckDocument; warnings: string[] }> {
+  async build(file: TFile, progress: ExportProgress): Promise<BuiltDeck> {
     progress(t("progress.reading"));
     const diagnostics = collectDiagnostics();
     const deck = await buildDeck(
@@ -92,15 +112,18 @@ export class DeckExporter {
       format === "pdf"
         ? await this.write(path, await printDeckPdf(doc, this.tempFile()))
         : await this.write(path, doc.html);
+    let destination: ExportDestination;
     if (format === "pdf") {
       await this.app.workspace.getLeaf("split").openFile(written);
+      destination = "pane";
     } else {
-      await this.openHtml(written);
+      destination = await this.openHtml(written);
     }
 
     return {
       path,
       file: written,
+      destination,
       cards: deck.cards.length,
       pages: doc.pageCount,
       clipped: deck.clipped,
@@ -132,16 +155,30 @@ export class DeckExporter {
    * itself, so on the desktop the file opens in whatever the system opens
    * HTML with — the browser, where the print dialog is — and on a phone it
    * goes to the share sheet, from where it reaches a browser, a printer or
-   * the file system. Where neither is possible the notice's path is all
-   * there is, and the file waits beside the note.
+   * the file system: through the app's own share bridge where there is
+   * one, else the web's. Where neither takes the file, it waits beside
+   * the note and the caller says so.
    */
-  private async openHtml(file: TFile): Promise<void> {
+  private async openHtml(file: TFile): Promise<ExportDestination> {
     const adapter = this.app.vault.adapter;
     if (Platform.isDesktopApp && adapter instanceof FileSystemAdapter) {
       const shell = loadShell();
       if (shell) {
         await shell.openPath(`${adapter.getBasePath()}/${file.path}`);
-        return;
+        return "app";
+      }
+    }
+    if (adapter instanceof CapacitorAdapter) {
+      const share = loadNativeShare();
+      if (share) {
+        const full = adapter.getFullPath(file.path);
+        const uri = /^[a-z]+:\/\//i.test(full) ? full : `file://${full}`;
+        try {
+          await share.share({ title: file.basename, files: [uri] });
+          return "shared";
+        } catch {
+          // The sheet was closed, or the platform would not take the file.
+        }
       }
     }
     if (typeof navigator.share === "function") {
@@ -149,12 +186,15 @@ export class DeckExporter {
         type: "text/html",
       });
       if (navigator.canShare?.({ files: [shared] })) {
-        // A share sheet the user closes again is not an error.
-        await navigator
-          .share({ files: [shared], title: file.basename })
-          .catch(() => undefined);
+        try {
+          await navigator.share({ files: [shared], title: file.basename });
+          return "shared";
+        } catch {
+          // Likewise.
+        }
       }
     }
+    return "written";
   }
 
   /**
@@ -180,6 +220,18 @@ export class DeckExporter {
       remove: () => adapter.remove(path),
     };
   }
+}
+
+/** What of the mobile app's share bridge the exporter touches. */
+interface NativeShare {
+  share(options: { title: string; files: string[] }): Promise<unknown>;
+}
+
+/** The share plugin of the mobile app's runtime, when the page carries it. */
+function loadNativeShare(): NativeShare | undefined {
+  const runtime = (window as { Capacitor?: { Plugins?: { Share?: NativeShare } } })
+    .Capacitor;
+  return runtime?.Plugins?.Share;
 }
 
 /** What of Electron's shell the exporter touches. */

@@ -88,8 +88,9 @@ last. A deck without backs prints no blank sheets.
 The deck block shows a summary — system, card types, folder, how many
 notes it found and of which types, paper, card size — and three buttons:
 
-- **Preview** opens the deck in a pane of its own, the pages scaled to the
-  pane's width, with *Rebuild* in the toolbar.
+- **Preview** builds the deck — the button counts the cards as they
+  render and lay out — and opens it in a pane of its own, the pages
+  scaled to the pane's width, with *Rebuild* in the toolbar.
 - **Export PDF** builds the deck and prints it: fronts and backs on
   alternating pages, the paper the block says. The file lands beside the
   deck note under its name (or at `output-path`) and opens in a new pane.
@@ -97,10 +98,12 @@ notes it found and of which types, paper, card size — and three buttons:
 - **Export HTML** writes the same pages as one self-contained file,
   fonts and pictures included, and hands it on: on the desktop it opens
   in whatever opens HTML — the browser, with its print dialog — and on a
-  phone it goes to the share sheet, from where a browser, a printer or
-  the Files app can take it. Obsidian itself shows no HTML; its file
-  explorer lists the file only with *Detect all file extensions* switched
-  on under *Files and links*.
+  phone it goes to the share sheet where the app can offer one, from
+  where a browser, a printer or the file manager can take it. Where it
+  cannot, the notice says so, and the file waits beside the note for the
+  file manager. Obsidian itself shows no HTML; its file explorer lists
+  the file only with *Detect all file extensions* switched on under
+  *Files and links*.
 
 The same three are commands in the palette, for the deck note that is
 open: *Preview deck*, *Export deck as PDF*, *Export deck as HTML*.

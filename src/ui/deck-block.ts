@@ -3,11 +3,11 @@ import { parseDeckBlock } from "../deck/block";
 import { selectNotes } from "../deck/select";
 import type { DeckSource } from "../deck/source";
 import { collectDiagnostics } from "../definitions/diagnostics";
-import type { DeckExporter, ExportFormat } from "../export/exporter";
+import type { BuiltDeck, DeckExporter, ExportFormat } from "../export/exporter";
 import type { PaperSize } from "../model/paper-size";
 import { noteCardTypeId } from "../render/card";
 import type { LoadedSystem } from "../systems/loader";
-import { runExport } from "./export-run";
+import { notice, runExport } from "./export-run";
 import { t, type StringKey } from "./strings";
 
 /*
@@ -32,7 +32,7 @@ export interface DeckBlockContext {
   systems: { get(id: string): Promise<LoadedSystem> };
   source: DeckSource;
   exporter: DeckExporter;
-  openPreview(file: TFile): Promise<void>;
+  openPreview(file: TFile, built: BuiltDeck): Promise<void>;
 }
 
 export function deckBlockProcessor(context: DeckBlockContext) {
@@ -113,14 +113,21 @@ export function deckBlockProcessor(context: DeckBlockContext) {
       const buttons = el.createDiv({ cls: "cs-deck-buttons" });
       const preview = buttons.createEl("button", { text: t("deck.preview") });
       preview.addEventListener("click", () => {
-        // The view builds the deck and shows its own progress; the button
-        // only has to say that something is happening until the view is up.
+        // The block builds the deck and counts the cards in the button, as
+        // the export buttons do, and hands the view the result — so the
+        // button that was pressed is where the work is seen.
         preview.disabled = true;
         preview.setText(t("progress.starting"));
-        void context.openPreview(file).finally(() => {
-          preview.disabled = false;
-          preview.setText(t("deck.preview"));
-        });
+        void context.exporter
+          .build(file, (message) => preview.setText(message))
+          .then((built) => context.openPreview(file, built))
+          .catch((error: unknown) =>
+            notice(error instanceof Error ? error.message : String(error), 12000)
+          )
+          .finally(() => {
+            preview.disabled = false;
+            preview.setText(t("deck.preview"));
+          });
       });
       if (Platform.isDesktop)
         exportButton(buttons, "deck.export-pdf", "pdf", file, context);
