@@ -15,6 +15,9 @@ import { expect, it } from "vitest";
 
 const ROOT = join(__dirname, "..");
 
+/** The test type-checks the whole of src/ — a compile, which a CI runner takes seconds over. */
+const COMPILE_TIMEOUT = 60_000;
+
 interface Use {
   name: string;
   since: string;
@@ -89,18 +92,22 @@ function newer(a: string, b: string): boolean {
   return false;
 }
 
-it("declares a minAppVersion no older than the newest API it calls", () => {
-  const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf-8")) as {
-    minAppVersion: string;
-  };
-  const uses = [...obsidianApiUses().values()].sort((a, b) =>
-    newer(a.since, b.since) ? -1 : 1
-  );
-  expect(uses.length).toBeGreaterThan(0);
+it(
+  "declares a minAppVersion no older than the newest API it calls",
+  () => {
+    const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf-8")) as {
+      minAppVersion: string;
+    };
+    const uses = [...obsidianApiUses().values()].sort((a, b) =>
+      newer(a.since, b.since) ? -1 : 1
+    );
+    expect(uses.length).toBeGreaterThan(0);
 
-  const tooNew = uses.filter((use) => newer(use.since, manifest.minAppVersion));
-  expect(
-    tooNew.map((use) => `${use.since}  ${use.name}  (${use.where})`),
-    `manifest.json says minAppVersion ${manifest.minAppVersion}, but src/ uses API newer than that`
-  ).toEqual([]);
-});
+    const tooNew = uses.filter((use) => newer(use.since, manifest.minAppVersion));
+    expect(
+      tooNew.map((use) => `${use.since}  ${use.name}  (${use.where})`),
+      `manifest.json says minAppVersion ${manifest.minAppVersion}, but src/ uses API newer than that`
+    ).toEqual([]);
+  },
+  COMPILE_TIMEOUT
+);
