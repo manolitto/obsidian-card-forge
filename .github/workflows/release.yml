@@ -1,0 +1,50 @@
+name: Release
+
+# A pushed tag that is a version — `0.9.0`, no `v`, as Obsidian's installer
+# and BRAT expect — builds the plugin on CI and drafts a GitHub release
+# under that tag with the three files a plugin release holds. The notes
+# are written by hand on the draft before it is published; the tag must
+# equal the version in manifest.json, which tests/version.test.ts holds to
+# package.json and versions.json.
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24.x"
+          cache: npm
+
+      - run: npm ci
+
+      - name: The tag is the manifest's version
+        run: |
+          version="$(node -p "require('./manifest.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "manifest.json says $version, the tag is $GITHUB_REF_NAME" >&2
+            exit 1
+          fi
+
+      # Also checks main.js against the bundle-size budget (postbuild).
+      - run: npm run build
+
+      - name: Draft the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --draft \
+            --title "$GITHUB_REF_NAME" \
+            --notes "Release notes to follow." \
+            main.js manifest.json styles.css
